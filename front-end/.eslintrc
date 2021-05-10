@@ -1,0 +1,35 @@
+{
+	"parserOptions": {
+		"ecmaVersion": 11,
+		"ecmaFeatures": {
+			"experimentalObjectRestSpread": true
+		}
+	},
+	"env": {
+		"es2020": true
+	},
+	"extends": [
+		"standard",
+		"prettier",
+		"plugin:react/recommended"
+	],
+	"plugins": ["react", "react-hooks"],
+	"rules": {
+		"no-undef": 1,
+		"no-unused-expressions": ["error", { "allowShortCircuit": true }],
+		"dot-notation": "off",
+		"react/display-name": 0,
+		"react-hooks/rules-of-hooks": "error",
+		"react-hooks/exhaustive-deps": "warn",
+		"react/react-in-jsx-scope": "off",
+		"no-unused-vars": ["error", { "varsIgnorePattern": "_" }]
+	},
+	"settings": {
+		"react": {
+			"createClass": "createReactClass",
+			"pragma": "React",
+			"fragment": "Fragment",
+			"version": "detect"
+		}
+	}
+}

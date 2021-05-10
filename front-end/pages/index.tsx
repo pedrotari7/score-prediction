@@ -12,8 +12,8 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to Typescript Next.js!
+        <h1 className="text-red text-8xl">
+          Welcome to Typescript Tailwind Next.js!
         </h1>
 
         <p className={styles.description}>
