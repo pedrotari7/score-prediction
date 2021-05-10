@@ -5,7 +5,11 @@ module.exports = {
 		extend: {},
 		colors: {
 			transparent: 'transparent',
-			red: '#EF4444',
+			dark: '#2e282aff',
+			blue: '#3292a4ff',
+			light: '#e1ededff',
+			pink: '#e89ba0ff',
+			red: '#9b0808ff',
 		},
 	},
 	variants: {
