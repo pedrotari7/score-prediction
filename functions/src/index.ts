@@ -1,10 +1,10 @@
-import * as functions from "firebase-functions";
+import * as functions from 'firebase-functions';
 
-import express from "express";
+import express from 'express';
 
 const app = express();
 
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   const date = new Date();
   const hours = (date.getHours() % 12) + 1; // London is UTC + 1hr;
   res.send(`
@@ -15,17 +15,18 @@ app.get("/", (req, res) => {
         <script src="/script.js"></script>
       </head>
       <body>
+        <h1>Test trigger</h1>
         <p>In London, the clock strikes:
-          <span id="bongs">${"BONG ".repeat(hours)}</span></p>
+          <span id="bongs">${'BONG '.repeat(hours)}</span></p>
         <button onClick="refresh(this)">Refresh</button>
       </body>
     </html>`);
 });
 
-app.get("/api", (req, res) => {
+app.get('/api', (req, res) => {
   const date = new Date();
   const hours = (date.getHours() % 12) + 1; // London is UTC + 1hr;
-  res.json({ bongs: "BONG ".repeat(hours) });
+  res.json({ bongs: 'BONG '.repeat(hours) });
 });
 
-exports.app = functions.region("europe-west1").https.onRequest(app);
+exports.app = functions.region('europe-west1').https.onRequest(app);
