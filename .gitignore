@@ -105,3 +105,4 @@ dist
 
 # Firebase
 .firebase/
+functions/.runtimeconfig.json

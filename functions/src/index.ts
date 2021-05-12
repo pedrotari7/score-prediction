@@ -1,32 +1,30 @@
 import * as functions from 'firebase-functions';
-
 import express from 'express';
+import axios from 'axios';
 
 const app = express();
 
-app.get('/', (req, res) => {
-  const date = new Date();
-  const hours = (date.getHours() % 12) + 1; // London is UTC + 1hr;
-  res.send(`
-      <!doctype html>
-      <head>
-        <title>Time</title>
-        <link rel="stylesheet" href="/style.css">
-        <script src="/script.js"></script>
-      </head>
-      <body>
-        <h1>Test trigger</h1>
-        <p>In London, the clock strikes:
-          <span id="bongs">${'BONG '.repeat(hours)}</span></p>
-        <button onClick="refresh(this)">Refresh</button>
-      </body>
-    </html>`);
+// const API_SPORTS_URL = 'https://v3.football.api-sports.io';
+
+const getStandings = async () => {
+  try {
+    const response = await axios.get('https://v3.football.api-sports.io/standings?league=4&season=2020', {
+      headers: {
+        'x-rapidapi-host': 'v3.football.api-sports.io',
+        'x-rapidapi-key': functions.config().apisports.key,
+      },
+    });
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
+app.get('/standings', async (req, res) => {
+  const standings = await getStandings();
+  res.json({ ...standings.data.response?.[0]?.league });
 });
 
-app.get('/api', (req, res) => {
-  const date = new Date();
-  const hours = (date.getHours() % 12) + 1; // London is UTC + 1hr;
-  res.json({ bongs: 'BONG '.repeat(hours) });
-});
-
-exports.app = functions.region('europe-west1').https.onRequest(app);
+exports.api = functions.region('europe-west1').https.onRequest(app);
