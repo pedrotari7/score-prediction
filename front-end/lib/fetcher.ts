@@ -1,6 +1,6 @@
-export default async function fetcher(...args) {
+export default async function fetcher(url: string, ...args: any[]) {
 	try {
-		const response = await fetch(...args);
+		const response = await fetch(url, ...args);
 		const data = await response.json();
 
 		if (response.ok) {
