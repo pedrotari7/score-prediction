@@ -5,12 +5,11 @@ module.exports = {
     node: true,
   },
   extends: [
-    'eslint:recommended',
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:import/typescript',
-    'google',
     'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -22,7 +21,10 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint', 'import'],
   rules: {
-    'quotes': ['error', 'single'],
+    '@typescript-eslint/indent': ['error', 2],
+    quotes: ['error', 'single'],
     'object-curly-spacing': 0,
+    'max-len': ['error', { code: 120 }],
+    'quote-props': ['error', 'as-needed'],
   },
 };
