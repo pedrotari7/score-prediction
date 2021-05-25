@@ -35,6 +35,14 @@ const getStandings = async (opts: Record<string, unknown> = {}) => await get('st
 
 const getFixtures = async (opts: Record<string, unknown> = {}) => await get('fixtures', opts);
 
+const decodeToken = async (token: string) => {
+  try {
+    return await admin.auth().verifyIdToken(token);
+  } catch (error) {
+    return;
+  }
+};
+
 app.get('/fetch-standings', async (_, res) => {
   const response = await getStandings();
 
@@ -62,14 +70,29 @@ app.get('/fetch-fixtures', async (_, res) => {
   res.json({ ...fixtures.data.response });
 });
 
-app.get('/standings', async (_, res) => {
+app.get('/standings', async (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(401).json({ error: 'No credentials sent!' });
+  }
+  const decodedToken = await decodeToken(req.headers.authorization);
+
+  if (!decodedToken) return res.status(401).json({ error: 'Invalid Token' });
+
   const document = await admin.firestore().collection('euro2020').doc('standings').get();
-  res.json({ ...document.data() });
+  return res.json({ ...document.data() });
 });
 
-app.get('/fixtures', async (_, res) => {
+app.get('/fixtures', async (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(401).json({ error: 'No credentials sent!' });
+  }
+
+  const decodedToken = await decodeToken(req.headers.authorization);
+
+  if (!decodedToken) return res.status(401).json({ error: 'Invalid Token' });
+
   const document = await admin.firestore().collection('euro2020').doc('fixtures').get();
-  res.json({ ...document.data() });
+  return res.json({ ...document.data() });
 });
 
 exports.api = functions.region('europe-west1').https.onRequest(app);

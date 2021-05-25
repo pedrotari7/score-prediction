@@ -53,8 +53,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 		const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
 		const { uid, email } = token;
 
-		const standings = await fetchStandings();
-		const fixtures = await fetchFixtures();
+		const standings = await fetchStandings(cookies.token);
+		const fixtures = await fetchFixtures(cookies.token);
 
 		const sorted = Object.entries(standings).sort();
 
