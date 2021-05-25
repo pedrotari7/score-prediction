@@ -8,7 +8,8 @@
     "start": "npm run shell",
     "deploy": "yarn firebase deploy --only functions",
     "logs": "yarn firebase functions:log",
-    "firebase": "firebase"
+    "firebase": "firebase",
+    "ci": "yarn install --frozen-lockfile"
   },
   "engines": {
     "node": "12"

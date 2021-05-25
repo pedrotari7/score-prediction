@@ -4,7 +4,8 @@
   "description": "Score prediction game",
   "main": "index.js",
   "scripts": {
-    "firebase": "firebase"
+    "firebase": "firebase",
+    "ci": "yarn install --frozen-lockfile"
   },
   "author": "",
   "license": "ISC",
