@@ -2,20 +2,16 @@ import { GetServerSidePropsContext } from 'next';
 
 import nookies from 'nookies';
 
-import fetchFixtures from './api/fetchFixtures';
-import Game from '../components/Game';
 import { firebaseAdmin } from '../lib/firebaseAdmin';
 import PageLayout from '../components/PageLayout';
 
-const Fixts = ({ fixtures }: { fixtures: Object }) => {
+const Info = ({ message }: { message: string }) => {
 	return (
-		<PageLayout title={'Score Predictio'}>
+		<PageLayout title={'Score Prediction'}>
 			<div>
-				<main className="bg-dark min-h-screen flex flex-col justify-center select-none text-light">
-					{Object.values(fixtures).map(game => (
-						<Game game={game} key={game.fixture.id} />
-					))}
-				</main>
+				<div className="bg-dark flex flex-col min-h-screen items-center justify-center select-none text-light">
+					<p>{message}</p>
+				</div>
 			</div>
 		</PageLayout>
 	);
@@ -24,14 +20,12 @@ const Fixts = ({ fixtures }: { fixtures: Object }) => {
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	try {
 		const cookies = nookies.get(ctx);
-
-		await firebaseAdmin.auth().verifyIdToken(cookies.token);
-
-		const fixtures = await fetchFixtures(cookies.token);
+		const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
+		const { uid, email } = token;
 
 		return {
 			props: {
-				fixtures,
+				message: `Your email is ${email} and your UID is ${uid}.`,
 			},
 		};
 	} catch (err) {
@@ -45,4 +39,4 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	}
 };
 
-export default Fixts;
+export default Info;
