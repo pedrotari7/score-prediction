@@ -21,7 +21,7 @@ jobs:
       - name: Install Dependencies
         run: yarn ci
         working-directory: ./functions
-      - name: Deploy to Firebase
+      - name: Deploy functions to Firebase
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only functions
