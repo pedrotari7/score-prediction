@@ -73,3 +73,11 @@ app.get('/fixtures', async (_, res) => {
 });
 
 exports.api = functions.region('europe-west1').https.onRequest(app);
+
+export const addUser = functions.auth.user().onCreate(user => {
+  return admin
+    .firestore()
+    .collection('users')
+    .doc(user.uid)
+    .set(JSON.parse(JSON.stringify(user)));
+});
