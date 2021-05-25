@@ -1,7 +1,7 @@
 import Head from 'next/head';
 
 const PageLayout = ({ title, children }: { title: string; children: JSX.Element }) => (
-	<div className="flex flex-col h-screen overflow-hidden">
+	<div className="flex flex-col h-screen">
 		<Head>
 			<title>{title}</title>
 			<link rel="icon" href="/favicon.ico" />

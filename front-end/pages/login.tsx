@@ -3,7 +3,7 @@ import { firebaseClient } from '../lib/firebaseClient';
 import PageLayout from '../components/PageLayout';
 
 const uiConfig = {
-	signInFlow: 'popup',
+	signInFlow: 'redirect',
 	signInSuccessUrl: '/',
 	signInOptions: [firebaseClient.auth.GoogleAuthProvider.PROVIDER_ID],
 };
