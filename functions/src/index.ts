@@ -49,7 +49,7 @@ app.get('/fetch-standings', async (_, res) => {
   const standings = response.data.response?.[0]?.league.standings;
 
   const standsObj = standings.reduce((acc: Record<string, unknown>, stand: Array<any>) => {
-    acc[stand[0].group] = stand;
+    acc[stand[0].group.split(':')[1]?.trimStart()] = stand;
     return acc;
   }, {});
 

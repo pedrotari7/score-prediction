@@ -10,6 +10,8 @@
     "ci": "yarn install --frozen-lockfile"
   },
   "dependencies": {
+    "@headlessui/react": "^1.2.0",
+    "@heroicons/react": "^1.0.1",
     "firebase": "^8.6.2",
     "firebase-admin": "^9.8.0",
     "luxon": "^1.27.0",
