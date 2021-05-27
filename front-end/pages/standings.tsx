@@ -9,7 +9,7 @@ import PageLayout from '../components/PageLayout';
 
 const Stands = ({ standings }: { standings: [string, any][] }) => {
 	return (
-		<PageLayout title={'Score Predictio'}>
+		<PageLayout title={'Score Prediction'}>
 			<div>
 				<main className="bg-dark min-h-screen flex flex-col justify-center select-none text-light">
 					<Standings standings={standings} />

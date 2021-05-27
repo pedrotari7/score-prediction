@@ -9,7 +9,7 @@ import PageLayout from '../components/PageLayout';
 
 const Home = ({ fixtures }: { fixtures: Object }) => {
 	return (
-		<PageLayout title={'Score Predictio'}>
+		<PageLayout title={'Score Prediction'}>
 			<div className="bg-dark min-h-screen ">
 				<main className="flex flex-col justify-center select-none text-light m-6">
 					{Object.values(fixtures).map(game => (
