@@ -6,6 +6,8 @@ import axios from 'axios';
 
 const app = express();
 
+const europe = functions.region('europe-west1');
+
 admin.initializeApp();
 
 const API_SPORTS_URL = 'https://v3.football.api-sports.io';
@@ -97,12 +99,14 @@ app.get('/fixtures', async (req, res) => {
   return res.json({ ...document.data() });
 });
 
-exports.api = functions.region('europe-west1').https.onRequest(app);
+exports.api = europe.https.onRequest(app);
 
-export const addUser = functions.auth.user().onCreate(async user => {
+export const addUser = europe.auth.user().onCreate(async user => {
   const isAdmin = ADMIN_USERS.includes(user.email!);
 
-  await admin.auth().setCustomUserClaims(user.uid, { admin: isAdmin });
+  if (user.emailVerified) {
+    await admin.auth().setCustomUserClaims(user.uid, { admin: isAdmin });
+  }
 
   return await admin
     .firestore()

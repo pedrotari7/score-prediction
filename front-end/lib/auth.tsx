@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, createContext } from 'react';
 import nookies from 'nookies';
 import { firebaseClient } from './firebaseClient';
 
-type User = firebaseClient.User | null;
+type User = (firebaseClient.User & { admin?: boolean }) | null;
 
 export const AuthContext = createContext<{ user: User }>({ user: null });
 
