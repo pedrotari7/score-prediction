@@ -10,6 +10,8 @@ admin.initializeApp();
 
 const API_SPORTS_URL = 'https://v3.football.api-sports.io';
 
+const ADMIN_USERS = ['pedrotari7@gmail.com'];
+
 const buildUrl = (url: string, opts: Record<string, unknown>) =>
   url +
   '?' +
@@ -97,10 +99,14 @@ app.get('/fixtures', async (req, res) => {
 
 exports.api = functions.region('europe-west1').https.onRequest(app);
 
-export const addUser = functions.auth.user().onCreate(user => {
-  return admin
+export const addUser = functions.auth.user().onCreate(async user => {
+  const isAdmin = ADMIN_USERS.includes(user.email!);
+
+  await admin.auth().setCustomUserClaims(user.uid, { admin: isAdmin });
+
+  return await admin
     .firestore()
     .collection('users')
     .doc(user.uid)
-    .set(JSON.parse(JSON.stringify(user)));
+    .set(JSON.parse(JSON.stringify({ ...user, admin: isAdmin })));
 });
