@@ -86,15 +86,18 @@ app.get('/fetch-fixtures', async (req, res) => {
 
   if (!decodedToken.admin) return res.status(403).json({ error: 'Forbidden' });
 
+  const previousFixtures = await admin.firestore().collection('euro2020').doc('fixtures').get();
+
   const fixtures = await getFixtures({ from: '2021-06-09', to: '2021-07-15' });
 
-  await admin
-    .firestore()
-    .collection('euro2020')
-    .doc('fixtures')
-    .set({ ...fixtures.data.response });
+  const fixtureMap = fixtures.data.response.reduce((acc: any, game: any) => {
+    acc[game.fixture.id] = { ...game, predictions: previousFixtures.data()?.[game.fixture.id].predictions || {} };
+    return acc;
+  }, {});
 
-  return res.json({ ...fixtures.data.response });
+  await admin.firestore().collection('euro2020').doc('fixtures').set(fixtureMap);
+
+  return res.json(fixtureMap);
 });
 
 app.get('/standings', async (req, res) => {
@@ -120,6 +123,22 @@ app.get('/fixtures', async (req, res) => {
 
   const document = await admin.firestore().collection('euro2020').doc('fixtures').get();
   return res.json({ ...document.data() });
+});
+
+app.post('/update-fixtures', async (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(401).json({ error: 'No credentials sent!' });
+  }
+
+  const decodedToken = await decodeToken(req.headers.authorization);
+
+  if (!decodedToken) return res.status(401).json({ error: 'Invalid Token' });
+
+  const fixtures = JSON.parse(req.body);
+
+  await admin.firestore().collection('euro2020').doc('fixtures').set(fixtures);
+
+  return res.json({ ...fixtures });
 });
 
 exports.api = europe.https.onRequest(app);

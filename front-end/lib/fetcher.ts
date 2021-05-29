@@ -1,10 +1,10 @@
-export default async function fetcher(url: string, token: string, ...args: any[]) {
+export default async function fetcher(url: string, token: string, options: any = {}) {
 	try {
 		const response = await fetch(url, {
 			headers: {
 				Authorization: `${token}`,
 			},
-			...args,
+			...options,
 		});
 		const data = await response.json();
 
