@@ -150,9 +150,13 @@ export const addUser = europe.auth.user().onCreate(async user => {
     await admin.auth().setCustomUserClaims(user.uid, { admin: isAdmin });
   }
 
+  const { uid, displayName, email, photoURL } = user;
+
+  const score = { points: 0, exact: 0, result: 0, onescore: 0 };
+
   return await admin
     .firestore()
     .collection('users')
     .doc(user.uid)
-    .set(JSON.parse(JSON.stringify({ ...user, admin: isAdmin })));
+    .set({ uid, displayName, email, photoURL, admin: isAdmin, score });
 });
