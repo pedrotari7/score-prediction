@@ -21,8 +21,10 @@ export const AuthProvider = ({ children }: any) => {
 				return;
 			}
 
+			const isAdmin = (await user.getIdTokenResult()).claims.admin;
+
 			const token = await user.getIdToken();
-			setUser(user);
+			setUser({ ...user, admin: isAdmin });
 			nookies.destroy(null, 'token');
 			nookies.set(null, 'token', token, { path: '/' });
 		});

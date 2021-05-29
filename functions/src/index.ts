@@ -1,10 +1,13 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
+import cors from 'cors';
 import express from 'express';
 import axios from 'axios';
 
 const app = express();
+
+app.use(cors({ origin: ['http://localhost:3000', 'https://score-prediction.com'] }));
 
 const europe = functions.region('europe-west1');
 
@@ -47,7 +50,17 @@ const decodeToken = async (token: string) => {
   }
 };
 
-app.get('/fetch-standings', async (_, res) => {
+app.get('/fetch-standings', async (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(401).json({ error: 'No credentials sent!' });
+  }
+
+  const decodedToken = await decodeToken(req.headers.authorization);
+
+  if (!decodedToken) return res.status(401).json({ error: 'Invalid Token' });
+
+  if (!decodedToken.admin) res.status(403).json({ error: 'Forbidden' });
+
   const response = await getStandings();
 
   const standings = response.data.response?.[0]?.league.standings;
@@ -59,10 +72,20 @@ app.get('/fetch-standings', async (_, res) => {
 
   await admin.firestore().collection('euro2020').doc('standings').set(standsObj);
 
-  res.json(standsObj);
+  return res.json(standsObj);
 });
 
-app.get('/fetch-fixtures', async (_, res) => {
+app.get('/fetch-fixtures', async (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(401).json({ error: 'No credentials sent!' });
+  }
+
+  const decodedToken = await decodeToken(req.headers.authorization);
+
+  if (!decodedToken) return res.status(401).json({ error: 'Invalid Token' });
+
+  if (!decodedToken.admin) return res.status(403).json({ error: 'Forbidden' });
+
   const fixtures = await getFixtures({ from: '2021-06-09', to: '2021-07-15' });
 
   await admin
@@ -71,7 +94,7 @@ app.get('/fetch-fixtures', async (_, res) => {
     .doc('fixtures')
     .set({ ...fixtures.data.response });
 
-  res.json({ ...fixtures.data.response });
+  return res.json({ ...fixtures.data.response });
 });
 
 app.get('/standings', async (req, res) => {

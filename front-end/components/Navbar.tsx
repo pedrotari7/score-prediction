@@ -94,7 +94,7 @@ export default function Navbar() {
 														<Menu.Item>
 															{({ active }) => (
 																<a
-																	href="#"
+																	href="/settings"
 																	onClick={async () => {}}
 																	className={classNames(
 																		active ? 'bg-gray-100' : '',
