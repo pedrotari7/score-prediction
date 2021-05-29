@@ -2,10 +2,10 @@ import { GetServerSidePropsContext } from 'next';
 
 import nookies from 'nookies';
 
-import fetchStandings from './api/fetchStandings';
 import Standings from '../components/Standings';
 import { firebaseAdmin } from '../lib/firebaseAdmin';
 import PageLayout from '../components/PageLayout';
+import { fetchStandings } from './api';
 
 const Stands = ({ standings }: { standings: [string, any][] }) => {
 	return (

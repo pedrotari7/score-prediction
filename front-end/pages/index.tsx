@@ -2,10 +2,10 @@ import { GetServerSidePropsContext } from 'next';
 
 import nookies from 'nookies';
 
-import fetchFixtures from './api/fetchFixtures';
 import Game from '../components/Game';
 import { firebaseAdmin } from '../lib/firebaseAdmin';
 import PageLayout from '../components/PageLayout';
+import { fetchFixtures } from './api';
 
 const Home = ({ fixtures }: { fixtures: Object }) => {
 	return (

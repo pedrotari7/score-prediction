@@ -4,8 +4,7 @@ import nookies from 'nookies';
 
 import { firebaseAdmin } from '../lib/firebaseAdmin';
 import PageLayout from '../components/PageLayout';
-import resetStandings from './api/resetStandings';
-import resetFixtures from './api/resetFixtures';
+import { resetFixtures, resetStandings } from './api';
 
 const Settings = ({ token }: { token: string }) => {
 	return (
