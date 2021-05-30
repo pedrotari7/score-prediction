@@ -17,6 +17,10 @@ module.exports = {
 				pink: '#e89ba0',
 				red: '#9b0808',
 			},
+			boxShadow: {
+				pop: '0px 2px 40px rgba(0, 0, 0, 0.33)',
+				panel: '0px 2px 4px rgba(0, 0, 0, 0.33)',
+			},
 		},
 	},
 	variants: {

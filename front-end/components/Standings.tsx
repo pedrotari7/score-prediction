@@ -1,15 +1,16 @@
 const Standings = ({ standings }: { standings: [string, any][] }) => {
 	return (
-		<div>
+		<div className="flex flex-row flex-wrap justify-center">
 			{standings.map(([title, standing]) => {
 				return (
-					<div key={title} className="ml-6 mt-6">
-						<h2 className="text-4xl  text-light mb-4">{title}</h2>
+					<div key={title} className="m-8 p-10 shadow-pop rounded-md text-center flex flex-col">
+						<h2 className="text-4xl text-light mb-4 text-left">{title}</h2>
 						<table className="text-light">
 							<thead>
-								<tr className="text-left">
-									<th>Pos</th>
-									<th>Team</th>
+								<tr className="text-center">
+									<th></th>
+									<th></th>
+
 									<th>Pld</th>
 									<th>W</th>
 									<th>D</th>
@@ -18,30 +19,29 @@ const Standings = ({ standings }: { standings: [string, any][] }) => {
 									<th>GA</th>
 									<th>GD</th>
 									<th>Pts</th>
-									<th>Description</th>
 								</tr>
 							</thead>
 
 							<tbody>
 								{standing.map((place: any) => {
 									return (
-										<tr key={place.rank}>
-											<td>{place.rank}</td>
-											<td className="flex flex-row items-center">
+										<tr key={place.rank} className="">
+											<td className="mr">
 												<img className="object-cover h-3 w-5 mr-2" src={place.team.logo} />
-												<span>{place.team.name}</span>
 											</td>
-											<td>{place.all.played}</td>
-											<td>{place.all.win}</td>
-											<td>{place.all.draw}</td>
-											<td>{place.all.loss}</td>
+											<td className="">
+												<span className="hidden md:flex">{place.team.name}</span>
+											</td>
 
-											<td>{place.all.goals.for}</td>
-											<td>{place.all.goals.against}</td>
-											<td>{place.all.goals.for - place.all.goals.against}</td>
-											<td>{place.points}</td>
+											<td className="w-6">{place.all.played}</td>
+											<td className="w-6">{place.all.win}</td>
+											<td className="w-6">{place.all.draw}</td>
+											<td className="w-6">{place.all.lose}</td>
 
-											<td>{place.description}</td>
+											<td className="w-6">{place.all.goals.for}</td>
+											<td className="w-6">{place.all.goals.against}</td>
+											<td className="w-6">{place.all.goals.for - place.all.goals.against}</td>
+											<td className="w-6">{place.points}</td>
 										</tr>
 									);
 								})}

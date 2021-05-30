@@ -17,14 +17,14 @@ export interface UserResult {
 
 const Rankings = ({ users }: { users: User[] }) => {
 	return (
-		<div>
+		<div className="flex justify-center m-6 p-6 shadow-pop rounded-md">
 			<table className="text-light text-center">
 				<thead>
 					<tr className="text-left">
 						<th></th>
 						<th>Exact</th>
 						<th>Correct Result</th>
-						<th>Correct Team Score</th>
+						<th>Team Score</th>
 						<th>Groups</th>
 						<th>Points</th>
 					</tr>

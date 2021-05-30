@@ -30,11 +30,11 @@ const Game = ({ updatePrediction, gameID }: { updatePrediction: Function; gameID
 	const prediction = game?.predictions[userInfo.uid] || DEFAULT_PREDICTION;
 
 	return (
-		<div className="text-light flex flex-row items-center justify-evenly my-2 rounded p-2 bg-gray-900">
+		<div className="text-light flex flex-row items-center justify-evenly my-2 rounded p-2 bg-gray-900 shadow-panel">
 			<span className="text-xs w-2/12">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm')}</span>
 
 			<div className="flex flex-row items-center justify-end w-4/12">
-				<span className="mr-2">{game?.teams.home.name}</span>
+				<span className="invisible sm:visible mr-2">{game?.teams.home.name}</span>
 				<img className="object-cover h-3 w-5 mr-2" src={game?.teams.home.logo} />
 				<ScoreInput
 					value={prediction.home}
@@ -54,9 +54,9 @@ const Game = ({ updatePrediction, gameID }: { updatePrediction: Function; gameID
 					}
 				/>
 				<img className="object-cover h-3 w-5 ml-2" src={game?.teams.away.logo} />
-				<span className="ml-2">{game?.teams.away.name}</span>
+				<span className="invisible sm:visible ml-2">{game?.teams.away.name}</span>
 			</div>
-			<span className="text-xs text-right w-2/12">
+			<span className="text-xs text-right w-0 md:w-2/12 invisible md:visible">
 				{game?.fixture.venue.name}, {game?.fixture.venue.city}
 			</span>
 		</div>

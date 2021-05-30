@@ -51,7 +51,8 @@ export interface Fixtures {
 
 const FixturesPage = ({ fixtures, updatePrediction }: { fixtures: Fixtures; updatePrediction: Function }) => {
 	return (
-		<main className="flex flex-col justify-center select-none text-light m-6">
+		<main className="flex flex-col justify-center select-none text-light m-8 p-8 shadow-pop rounded-md">
+			<p className="text-4xl mb-2">Predictions</p>
 			{Object.values(fixtures).map(game => (
 				<Game
 					gameID={game.fixture.id}
