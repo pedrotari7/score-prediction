@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { ChangeEvent, useContext } from 'react';
 import FixturesContext from '../context/FixturesContext';
-import UserIDContext from '../context/UserIDContext';
+import UserContext from '../context/UserContext';
 import { classNames } from '../lib/utils/reactHelper';
 
 const ScoreInput = ({ className, value, onchange }: any) => (
@@ -21,7 +21,7 @@ const DEFAULT_PREDICTION = { home: '', away: '' };
 
 const Game = ({ updatePrediction, gameID }: { updatePrediction: Function; gameID: number }) => {
 	const data = useContext(FixturesContext);
-	const userInfo = useContext(UserIDContext);
+	const userInfo = useContext(UserContext);
 
 	if (!data || !userInfo) return <></>;
 

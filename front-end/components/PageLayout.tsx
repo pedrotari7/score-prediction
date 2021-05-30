@@ -15,7 +15,7 @@ const PageLayout = ({ title, children }: { title: string; children: JSX.Element 
 
 			{user && <Navbar />}
 
-			<main className="flex flex-col">{children}</main>
+			<main className="flex flex-col bg-dark min-h-screen">{children}</main>
 		</div>
 	);
 };

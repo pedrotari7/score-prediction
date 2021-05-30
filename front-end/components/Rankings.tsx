@@ -1,4 +1,19 @@
-import { User } from '../pages/ranking';
+export interface User {
+	admin: boolean;
+	displayName: string;
+	email: string;
+	photoURL: string;
+	score: UserResult;
+	uid: string;
+}
+
+export interface UserResult {
+	exact: number;
+	onescore: number;
+	points: number;
+	result: number;
+	groups: number;
+}
 
 const Rankings = ({ users }: { users: User[] }) => {
 	return (

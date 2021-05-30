@@ -1,4 +1,4 @@
-import { Fixtures } from '..';
+import { Fixtures } from '../../components/Fixtures';
 import fetcher from '../../lib/fetcher';
 import { backendUrl } from '../../lib/utils/envHelper';
 

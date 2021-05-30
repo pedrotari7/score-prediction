@@ -1,28 +1,34 @@
-import { Fragment } from 'react';
+import { Fragment, useContext } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import { classNames } from '../lib/utils/reactHelper';
 import { firebaseClient } from '../lib/firebaseClient';
 import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth';
+import RouteContext, { Route } from '../context/RouteContext';
 
 interface NavItem {
 	name: string;
-	href: string;
+	page: Route;
 }
 
 const navigation: NavItem[] = [
-	{ name: 'MyPredictions', href: '/' },
-	{ name: 'Fixtures', href: '/fixtures' },
-	{ name: 'Standings', href: '/standings' },
-	{ name: 'Ranking', href: '/ranking' },
+	{ name: 'MyPredictions', page: Route.Home },
+	{ name: 'Standings', page: Route.Standings },
+	{ name: 'Ranking', page: Route.Ranking },
 ];
 
 export default function Navbar() {
 	const router = useRouter();
 	const { user } = useAuth();
 
-	const isCurrent = (item: NavItem) => item.href === router.asPath;
+	const routeInfo = useContext(RouteContext);
+
+	if (!routeInfo) return <></>;
+
+	const { route, setRoute } = routeInfo;
+
+	const isCurrent = (item: NavItem) => item.page === route;
 
 	return (
 		<Disclosure as="nav" className="bg-blue sticky top-0 w-full">
@@ -48,18 +54,18 @@ export default function Navbar() {
 								<div className="hidden sm:block sm:ml-6">
 									<div className="flex space-x-4">
 										{navigation.map(item => (
-											<a
+											<div
 												key={item.name}
-												href={item.href}
+												onClick={() => setRoute(item.page)}
 												className={classNames(
 													isCurrent(item)
 														? 'bg-gray-900 text-light'
 														: 'text-gray-300 hover:bg-gray-700 hover:text-light',
-													'px-3 py-2 rounded-md text-sm font-medium'
+													'px-3 py-2 rounded-md text-sm font-medium cursor-pointer'
 												)}
 												aria-current={isCurrent(item) ? 'page' : undefined}>
 												{item.name}
-											</a>
+											</div>
 										))}
 									</div>
 								</div>
@@ -94,15 +100,14 @@ export default function Navbar() {
 													{user?.admin && (
 														<Menu.Item>
 															{({ active }) => (
-																<a
-																	href="/settings"
-																	onClick={async () => {}}
+																<div
+																	onClick={() => setRoute(Route.Settings)}
 																	className={classNames(
 																		active ? 'bg-gray-100' : '',
-																		'block px-4 py-2 text-sm text-gray-700'
+																		'cursor-pointer block px-4 py-2 text-sm text-gray-700'
 																	)}>
 																	Settings
-																</a>
+																</div>
 															)}
 														</Menu.Item>
 													)}
@@ -138,9 +143,9 @@ export default function Navbar() {
 					<Disclosure.Panel className="sm:hidden">
 						<div className="px-2 pt-2 pb-3 space-y-1">
 							{navigation.map(item => (
-								<a
+								<div
 									key={item.name}
-									href={item.href}
+									onClick={() => setRoute(item.page)}
 									className={classNames(
 										isCurrent(item)
 											? 'bg-gray-900 text-light'
@@ -149,7 +154,7 @@ export default function Navbar() {
 									)}
 									aria-current={isCurrent(item) ? 'page' : undefined}>
 									{item.name}
-								</a>
+								</div>
 							))}
 						</div>
 					</Disclosure.Panel>

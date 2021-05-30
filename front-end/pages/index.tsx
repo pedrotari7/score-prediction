@@ -3,59 +3,34 @@ import { GetServerSidePropsContext } from 'next';
 
 import nookies from 'nookies';
 
-import Game from '../components/Game';
 import { firebaseAdmin } from '../lib/firebaseAdmin';
 import PageLayout from '../components/PageLayout';
-import { fetchFixtures, updateFixtures } from './api';
+import Settings from '../components/Settings';
+import Rankings from '../components/Rankings';
+import Standings from '../components/Standings';
+
+import { fetchFixtures, fetchStandings, fetchUsers, updateFixtures } from './api';
 import FixturesContext from '../context/FixturesContext';
-import UserContext from '../context/UserIDContext';
+import UserContext from '../context/UserContext';
+import RouteContext, { Route } from '../context/RouteContext';
+import FixturesPage, { Fixtures, Prediction } from '../components/Fixtures';
+import { User } from '../components/Rankings';
 
-export interface Prediction {
-	home: string;
-	away: string;
-}
-export interface Predictions {
-	[key: string]: Prediction;
-}
-
-export interface Team {
-	id: number;
-	name: string;
-	logo: string;
-	winner: null;
-}
-export interface Teams {
-	away: Team;
-	home: Team;
-}
-
-export interface Venue {
-	city: string;
-	id: number;
-	name: string;
-}
-
-export interface FixtureData {
-	id: number;
-	date: string;
-	periods: Object;
-	referee: Object;
-	status: Object;
-	timestamp: number;
-	timezone: string;
-	venue: Venue;
-}
-export interface Fixture {
-	predictions: Predictions;
-	fixture: FixtureData;
-	teams: Teams;
-}
-export interface Fixtures {
-	[key: string]: Fixture;
-}
-
-const Home = ({ fixtures: InitialFixtures, uid, token }: { fixtures: Fixtures; uid: string; token: string }) => {
+const Home = ({
+	fixtures: InitialFixtures,
+	standings,
+	users,
+	uid,
+	token,
+}: {
+	fixtures: Fixtures;
+	standings: [string, any][];
+	users: User[];
+	uid: string;
+	token: string;
+}) => {
 	const [fixtures, setFixtures] = useState(InitialFixtures);
+	const [route, setRoute] = useState(Route.Home);
 
 	const updatePrediction = (prediction: Prediction, gameId: number) => {
 		fixtures[gameId].predictions[uid] = prediction;
@@ -63,41 +38,50 @@ const Home = ({ fixtures: InitialFixtures, uid, token }: { fixtures: Fixtures; u
 		updateFixtures(token, fixtures);
 	};
 
+	const MainComponent = () => {
+		switch (route) {
+			case Route.Home:
+				return <FixturesPage fixtures={fixtures} updatePrediction={updatePrediction} />;
+			case Route.Ranking:
+				return <Rankings users={users} />;
+			case Route.Standings:
+				return <Standings standings={standings} />;
+			case Route.Settings:
+				return <Settings />;
+			default:
+				return <></>;
+		}
+	};
+
 	return (
-		<UserContext.Provider value={{ uid, token }}>
-			<FixturesContext.Provider value={{ fixtures, setFixtures }}>
-				<PageLayout title={'Score Prediction'}>
-					<div className="bg-dark min-h-screen ">
-						<main className="flex flex-col justify-center select-none text-light m-6">
-							{Object.values(fixtures).map(game => (
-								<Game
-									gameID={game.fixture.id}
-									updatePrediction={(update: Prediction) => updatePrediction(update, game.fixture.id)}
-									key={game.fixture.id}
-								/>
-							))}
-						</main>
-					</div>
-				</PageLayout>
-			</FixturesContext.Provider>
-		</UserContext.Provider>
+		<RouteContext.Provider value={{ route, setRoute }}>
+			<UserContext.Provider value={{ uid, token }}>
+				<FixturesContext.Provider value={{ fixtures, setFixtures }}>
+					<PageLayout title={'Score Prediction'}>
+						<MainComponent />
+					</PageLayout>
+				</FixturesContext.Provider>
+			</UserContext.Provider>
+		</RouteContext.Provider>
 	);
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	try {
-		const cookies = nookies.get(ctx);
+		const { token } = nookies.get(ctx);
 
-		const { uid } = await firebaseAdmin.auth().verifyIdToken(cookies.token);
+		const { uid } = await firebaseAdmin.auth().verifyIdToken(token);
 
-		const fixtures = await fetchFixtures(cookies.token);
+		const fixtures = await fetchFixtures(token);
+
+		const standings = await fetchStandings(token);
+
+		const { users } = await fetchUsers(token);
+
+		const sorted = Object.entries(standings).sort();
 
 		return {
-			props: {
-				fixtures,
-				uid,
-				token: cookies.token,
-			},
+			props: { fixtures, standings: sorted, users, uid, token },
 		};
 	} catch (err) {
 		return {
