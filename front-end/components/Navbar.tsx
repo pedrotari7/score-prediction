@@ -15,6 +15,7 @@ const navigation: NavItem[] = [
 	{ name: 'MyPredictions', href: '/' },
 	{ name: 'Fixtures', href: '/fixtures' },
 	{ name: 'Standings', href: '/standings' },
+	{ name: 'Ranking', href: '/ranking' },
 ];
 
 export default function Navbar() {

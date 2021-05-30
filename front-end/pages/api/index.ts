@@ -13,3 +13,5 @@ export const resetStandings = async (token: string): Promise<Fixtures> =>
 
 export const updateFixtures = async (token: string, fixtures: Fixtures): Promise<Fixtures> =>
 	await fetcher(`${backendUrl}/update-fixtures`, token, { body: JSON.stringify(fixtures), method: 'POST' });
+
+export const fetchUsers = async (token: string) => await fetcher(`${backendUrl}/users`, token);

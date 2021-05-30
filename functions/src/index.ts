@@ -141,6 +141,19 @@ app.post('/update-fixtures', async (req, res) => {
   return res.json({ ...fixtures });
 });
 
+app.get('/users', async (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(401).json({ error: 'No credentials sent!' });
+  }
+  const decodedToken = await decodeToken(req.headers.authorization);
+
+  if (!decodedToken) return res.status(401).json({ error: 'Invalid Token' });
+
+  const snapshot = await admin.firestore().collection('users').get();
+
+  return res.json({ users: snapshot.docs.map(doc => doc.data()) });
+});
+
 exports.api = europe.https.onRequest(app);
 
 export const addUser = europe.auth.user().onCreate(async user => {
@@ -150,13 +163,13 @@ export const addUser = europe.auth.user().onCreate(async user => {
     await admin.auth().setCustomUserClaims(user.uid, { admin: isAdmin });
   }
 
-  const { uid, displayName, email, photoURL } = user;
+  const { uid, displayName, photoURL } = user;
 
-  const score = { points: 0, exact: 0, result: 0, onescore: 0 };
+  const score = { points: 0, exact: 0, result: 0, onescore: 0, groups: 0 };
 
   return await admin
     .firestore()
     .collection('users')
     .doc(user.uid)
-    .set({ uid, displayName, email, photoURL, admin: isAdmin, score });
+    .set({ uid, displayName, photoURL, admin: isAdmin, score });
 });
