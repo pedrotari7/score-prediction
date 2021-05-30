@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
 import cors from 'cors';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import axios from 'axios';
 
 const app = express();
@@ -50,16 +50,27 @@ const decodeToken = async (token: string) => {
   }
 };
 
-app.get('/fetch-standings', async (req, res) => {
+const success = () => ({ success: true, result: undefined });
+
+const fail = (result: any) => ({ success: false, result });
+
+const authenticate = async (req: Request, res: Response, needsAdmin = false) => {
   if (!req.headers.authorization) {
-    return res.status(401).json({ error: 'No credentials sent!' });
+    return fail(res.status(401).json({ error: 'No credentials sent!' }));
   }
 
   const decodedToken = await decodeToken(req.headers.authorization);
 
-  if (!decodedToken) return res.status(401).json({ error: 'Invalid Token' });
+  if (!decodedToken) return fail(res.status(401).json({ error: 'Invalid Token' }));
 
-  if (!decodedToken.admin) res.status(403).json({ error: 'Forbidden' });
+  if (needsAdmin && !decodedToken.admin) return fail(res.status(403).json({ error: 'Forbidden' }));
+
+  return success();
+};
+
+app.get('/fetch-standings', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
 
   const response = await getStandings();
 
@@ -76,15 +87,8 @@ app.get('/fetch-standings', async (req, res) => {
 });
 
 app.get('/fetch-fixtures', async (req, res) => {
-  if (!req.headers.authorization) {
-    return res.status(401).json({ error: 'No credentials sent!' });
-  }
-
-  const decodedToken = await decodeToken(req.headers.authorization);
-
-  if (!decodedToken) return res.status(401).json({ error: 'Invalid Token' });
-
-  if (!decodedToken.admin) return res.status(403).json({ error: 'Forbidden' });
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
 
   const previousFixtures = await admin.firestore().collection('euro2020').doc('fixtures').get();
 
@@ -101,38 +105,24 @@ app.get('/fetch-fixtures', async (req, res) => {
 });
 
 app.get('/standings', async (req, res) => {
-  if (!req.headers.authorization) {
-    return res.status(401).json({ error: 'No credentials sent!' });
-  }
-  const decodedToken = await decodeToken(req.headers.authorization);
-
-  if (!decodedToken) return res.status(401).json({ error: 'Invalid Token' });
+  const authResult = await authenticate(req, res);
+  if (!authResult.success) return authResult.result;
 
   const document = await admin.firestore().collection('euro2020').doc('standings').get();
   return res.json({ ...document.data() });
 });
 
 app.get('/fixtures', async (req, res) => {
-  if (!req.headers.authorization) {
-    return res.status(401).json({ error: 'No credentials sent!' });
-  }
-
-  const decodedToken = await decodeToken(req.headers.authorization);
-
-  if (!decodedToken) return res.status(401).json({ error: 'Invalid Token' });
+  const authResult = await authenticate(req, res);
+  if (!authResult.success) return authResult.result;
 
   const document = await admin.firestore().collection('euro2020').doc('fixtures').get();
   return res.json({ ...document.data() });
 });
 
 app.post('/update-fixtures', async (req, res) => {
-  if (!req.headers.authorization) {
-    return res.status(401).json({ error: 'No credentials sent!' });
-  }
-
-  const decodedToken = await decodeToken(req.headers.authorization);
-
-  if (!decodedToken) return res.status(401).json({ error: 'Invalid Token' });
+  const authResult = await authenticate(req, res);
+  if (!authResult.success) return authResult.result;
 
   const fixtures = JSON.parse(req.body);
 
@@ -142,12 +132,8 @@ app.post('/update-fixtures', async (req, res) => {
 });
 
 app.get('/users', async (req, res) => {
-  if (!req.headers.authorization) {
-    return res.status(401).json({ error: 'No credentials sent!' });
-  }
-  const decodedToken = await decodeToken(req.headers.authorization);
-
-  if (!decodedToken) return res.status(401).json({ error: 'Invalid Token' });
+  const authResult = await authenticate(req, res);
+  if (!authResult.success) return authResult.result;
 
   const snapshot = await admin.firestore().collection('users').get();
 
