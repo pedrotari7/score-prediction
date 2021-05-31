@@ -1,4 +1,4 @@
-import { Fixtures } from '../../components/Fixtures';
+import { Fixtures, Prediction } from '../../components/Fixtures';
 import fetcher from '../../lib/fetcher';
 import { backendUrl } from '../../lib/utils/envHelper';
 
@@ -11,7 +11,15 @@ export const resetFixtures = async (token: string) => await fetcher(`${backendUr
 export const resetStandings = async (token: string): Promise<Fixtures> =>
 	await fetcher(`${backendUrl}/fetch-standings`, token);
 
-export const updateFixtures = async (token: string, fixtures: Fixtures): Promise<Fixtures> =>
-	await fetcher(`${backendUrl}/update-fixtures`, token, { body: JSON.stringify(fixtures), method: 'POST' });
+export const updateFixture = async (
+	token: string,
+	uid: string,
+	gameId: number,
+	prediction: Prediction
+): Promise<void> =>
+	await fetcher(`${backendUrl}/update-fixtures`, token, {
+		body: JSON.stringify({ uid, gameId, prediction }),
+		method: 'POST',
+	});
 
 export const fetchUsers = async (token: string) => await fetcher(`${backendUrl}/users`, token);

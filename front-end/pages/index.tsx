@@ -9,7 +9,7 @@ import Settings from '../components/Settings';
 import Rankings from '../components/Rankings';
 import Standings from '../components/Standings';
 
-import { fetchFixtures, fetchStandings, fetchUsers, updateFixtures } from './api';
+import { fetchFixtures, fetchStandings, fetchUsers, updateFixture } from './api';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import RouteContext, { Route } from '../context/RouteContext';
@@ -35,7 +35,7 @@ const Home = ({
 	const updatePrediction = (prediction: Prediction, gameId: number) => {
 		fixtures[gameId].predictions[uid] = prediction;
 		setFixtures({ ...fixtures });
-		updateFixtures(token, fixtures);
+		updateFixture(token, uid, gameId, prediction);
 	};
 
 	const MainComponent = () => {

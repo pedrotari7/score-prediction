@@ -66,9 +66,9 @@ const FixturesPage = ({ fixtures, updatePrediction }: { fixtures: Fixtures; upda
 			<p className="text-4xl mb-2">Predictions</p>
 			{Object.values(fixtures).map(game => (
 				<Game
-					gameID={game.fixture.id}
-					updatePrediction={(update: Prediction) => updatePrediction(update, game.fixture.id)}
-					key={game.fixture.id}
+					gameID={game.fixture?.id}
+					updatePrediction={(update: Prediction) => updatePrediction(update, game.fixture?.id)}
+					key={game.fixture?.id}
 				/>
 			))}
 		</main>

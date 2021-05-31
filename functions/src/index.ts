@@ -68,6 +68,12 @@ const authenticate = async (req: Request, res: Response, needsAdmin = false) => 
   return success();
 };
 
+const getCurrentTime = () => {
+  return new Date();
+  // Mocked date
+  // return new Date('2021-06-11T19:00:00+0000');
+};
+
 app.get('/fetch-standings', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
@@ -95,7 +101,7 @@ app.get('/fetch-fixtures', async (req, res) => {
   const fixtures = await getFixtures({ from: '2021-06-09', to: '2021-07-15' });
 
   const fixtureMap = fixtures.data.response.reduce((acc: any, game: any) => {
-    acc[game.fixture.id] = { ...game, predictions: previousFixtures.data()?.[game.fixture.id].predictions || {} };
+    acc[game.fixture.id] = { ...game, predictions: previousFixtures.data()?.[game.fixture.id]?.predictions ?? {} };
     return acc;
   }, {});
 
@@ -124,11 +130,27 @@ app.post('/update-fixtures', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;
 
-  const fixtures = JSON.parse(req.body);
+  const { uid, gameId, prediction } = JSON.parse(req.body);
 
-  await admin.firestore().collection('euro2020').doc('fixtures').set(fixtures);
+  const previousFixtures = (await admin.firestore().collection('euro2020').doc('fixtures').get()).data();
 
-  return res.json({ ...fixtures });
+  const gameDate = new Date(previousFixtures?.[gameId].fixture.date);
+
+  const isInPast = gameDate && getCurrentTime() < gameDate;
+
+  if (isInPast) {
+    const result = await admin
+      .firestore()
+      .collection('euro2020')
+      .doc('fixtures')
+      .update({
+        [`${gameId}.predictions.${uid}`]: prediction,
+      });
+
+    return res.json(result);
+  }
+
+  return res.status(403).json({ error: 'Forbidden' });
 });
 
 app.get('/users', async (req, res) => {
