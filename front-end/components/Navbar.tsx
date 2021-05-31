@@ -56,7 +56,10 @@ export default function Navbar() {
 										{navigation.map(item => (
 											<div
 												key={item.name}
-												onClick={() => setRoute(item.page)}
+												onClick={() => {
+													setRoute(item.page);
+													open = false;
+												}}
 												className={classNames(
 													isCurrent(item)
 														? 'bg-gray-900 text-light'
@@ -116,12 +119,8 @@ export default function Navbar() {
 															<a
 																href="#"
 																onClick={async () => {
-																	await firebaseClient
-																		.auth()
-																		.signOut()
-																		.then(() => {
-																			router.push('/');
-																		});
+																	await firebaseClient.auth().signOut();
+																	router.push('/');
 																}}
 																className={classNames(
 																	active ? 'bg-gray-100' : '',
@@ -141,20 +140,24 @@ export default function Navbar() {
 					</div>
 
 					<Disclosure.Panel className="sm:hidden">
-						<div className="px-2 pt-2 pb-3 space-y-1">
+						<div className="px-2 pt-2 pb-3 space-y-1 flex flex-col">
 							{navigation.map(item => (
-								<div
-									key={item.name}
-									onClick={() => setRoute(item.page)}
-									className={classNames(
-										isCurrent(item)
-											? 'bg-gray-900 text-light'
-											: 'text-gray-300 hover:bg-gray-700 hover:text-light',
-										'block px-3 py-2 rounded-md text-base font-medium'
-									)}
-									aria-current={isCurrent(item) ? 'page' : undefined}>
-									{item.name}
-								</div>
+								<Disclosure.Button key={item.name}>
+									<div
+										onClick={() => {
+											setRoute(item.page);
+											open = false;
+										}}
+										className={classNames(
+											isCurrent(item)
+												? 'bg-gray-900 text-light'
+												: 'text-gray-300 hover:bg-gray-700 hover:text-light',
+											'block px-3 py-2 rounded-md text-base font-medium cursor-pointer'
+										)}
+										aria-current={isCurrent(item) ? 'page' : undefined}>
+										{item.name}
+									</div>
+								</Disclosure.Button>
 							))}
 						</div>
 					</Disclosure.Panel>

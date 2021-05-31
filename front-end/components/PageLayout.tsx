@@ -6,7 +6,7 @@ const PageLayout = ({ title, children }: { title: string; children: JSX.Element 
 	const { user } = useAuth();
 
 	return (
-		<div className="flex flex-col h-screen">
+		<div className="flex flex-col">
 			<Head>
 				<title>{title}</title>
 				<link rel="icon" href="/favicon.ico" />
