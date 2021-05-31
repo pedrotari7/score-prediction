@@ -7,6 +7,9 @@ export interface User {
 	uid: string;
 }
 
+export interface Users {
+	[key: string]: User;
+}
 export interface UserResult {
 	exact: number;
 	onescore: number;
@@ -15,7 +18,7 @@ export interface UserResult {
 	groups: number;
 }
 
-const Rankings = ({ users }: { users: User[] }) => {
+const Rankings = ({ users }: { users: Users }) => {
 	return (
 		<div className="flex justify-center m-6 p-6 shadow-pop rounded-md">
 			<table className="text-light text-center">
@@ -31,7 +34,7 @@ const Rankings = ({ users }: { users: User[] }) => {
 				</thead>
 
 				<tbody>
-					{users.map(user => {
+					{Object.values(users).map(user => {
 						return (
 							<tr key={user.uid}>
 								<td className="flex flex-row items-center mr-4">

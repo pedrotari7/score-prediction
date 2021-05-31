@@ -159,7 +159,9 @@ app.get('/users', async (req, res) => {
 
   const snapshot = await admin.firestore().collection('users').get();
 
-  return res.json({ users: snapshot.docs.map(doc => doc.data()) });
+  const usersObj = snapshot.docs.map(doc => doc.data()).reduce((users, user) => ({ ...users, [user.uid]: user }), {});
+
+  return res.json(usersObj);
 });
 
 exports.api = europe.https.onRequest(app);

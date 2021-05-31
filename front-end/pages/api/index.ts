@@ -1,4 +1,5 @@
 import { Fixtures, Prediction } from '../../components/Fixtures';
+import { Users } from '../../components/Rankings';
 import fetcher from '../../lib/fetcher';
 import { backendUrl } from '../../lib/utils/envHelper';
 
@@ -22,4 +23,4 @@ export const updateFixture = async (
 		method: 'POST',
 	});
 
-export const fetchUsers = async (token: string) => await fetcher(`${backendUrl}/users`, token);
+export const fetchUsers = async (token: string): Promise<Users> => await fetcher(`${backendUrl}/users`, token);

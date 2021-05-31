@@ -6,7 +6,7 @@ import nookies from 'nookies';
 import { firebaseAdmin } from '../lib/firebaseAdmin';
 import PageLayout from '../components/PageLayout';
 import Settings from '../components/Settings';
-import Rankings from '../components/Rankings';
+import Rankings, { Users } from '../components/Rankings';
 import Standings from '../components/Standings';
 
 import { fetchFixtures, fetchStandings, fetchUsers, updateFixture } from './api';
@@ -14,7 +14,7 @@ import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import FixturesPage, { Fixtures, Prediction } from '../components/Fixtures';
-import { User } from '../components/Rankings';
+import CurrentMatch from '../components/CurrentMatch';
 
 const Home = ({
 	fixtures: InitialFixtures,
@@ -25,7 +25,7 @@ const Home = ({
 }: {
 	fixtures: Fixtures;
 	standings: [string, any][];
-	users: User[];
+	users: Users;
 	uid: string;
 	token: string;
 }) => {
@@ -41,7 +41,7 @@ const Home = ({
 	const MainComponent = () => {
 		switch (route) {
 			case Route.Home:
-				return <div>Home</div>;
+				return <CurrentMatch fixtures={fixtures} updatePrediction={updatePrediction} users={users} />;
 			case Route.MyPredictions:
 				return <FixturesPage fixtures={fixtures} updatePrediction={updatePrediction} />;
 			case Route.Ranking:
@@ -78,7 +78,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 		const standings = await fetchStandings(token);
 
-		const { users } = await fetchUsers(token);
+		const users = await fetchUsers(token);
 
 		const sorted = Object.entries(standings).sort();
 
