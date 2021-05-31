@@ -2,16 +2,20 @@ import { DateTime } from 'luxon';
 import { ChangeEvent, useContext } from 'react';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
 
-const ScoreInput = ({ className, value, onchange }: any) => (
+const ScoreInput = ({ className, value, onchange, disabled }: any) => (
 	<input
 		value={value}
 		onChange={onchange}
+		disabled={disabled}
 		className={classNames(
 			className,
-			'block w-14 h-7 bg-gray-300 text-gray-700 border border-gray-200 text-center',
-			'rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
+			'block w-14 h-7  text-gray-700 text-center',
+			'rounded py-3 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500',
+			disabled
+				? 'bg-transparent text-light border-none outline-none select-none font-bold'
+				: 'border bg-gray-300 border-gray-200'
 		)}
 		type="text"
 	/>
@@ -31,6 +35,10 @@ const Game = ({ updatePrediction, gameID }: { updatePrediction: Function; gameID
 
 	const group = game?.league.round.match(/Group (.) -/)?.[1];
 
+	const gameDate = DateTime.fromISO(game?.fixture.date);
+
+	const isInPast = getCurrentDate() < gameDate;
+
 	return (
 		<div className="text-light flex flex-row items-center justify-evenly my-2 rounded p-2 bg-gray-900 shadow-panel">
 			<span className="text-xs text-left w-1/12 flex ">
@@ -46,6 +54,7 @@ const Game = ({ updatePrediction, gameID }: { updatePrediction: Function; gameID
 				<ScoreInput
 					value={prediction.home}
 					className="mx-2"
+					disabled={!isInPast}
 					onchange={(e: ChangeEvent<HTMLInputElement>) =>
 						updatePrediction({ ...prediction, home: e.target.value })
 					}
@@ -56,6 +65,7 @@ const Game = ({ updatePrediction, gameID }: { updatePrediction: Function; gameID
 				<ScoreInput
 					value={prediction.away}
 					className="mx-2"
+					disabled={!isInPast}
 					onchange={(e: ChangeEvent<HTMLInputElement>) =>
 						updatePrediction({ ...prediction, away: e.target.value })
 					}
