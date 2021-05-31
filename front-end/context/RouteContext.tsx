@@ -3,6 +3,7 @@ import { createContext } from 'react';
 export enum Route {
 	Home = 'home',
 	Fixtures = 'fixtures',
+	MyPredictions = 'predictions',
 	Standings = 'standings',
 	Ranking = 'ranking',
 	Settings = 'settings',

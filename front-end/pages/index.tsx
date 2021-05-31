@@ -41,6 +41,8 @@ const Home = ({
 	const MainComponent = () => {
 		switch (route) {
 			case Route.Home:
+				return <div>Home</div>;
+			case Route.MyPredictions:
 				return <FixturesPage fixtures={fixtures} updatePrediction={updatePrediction} />;
 			case Route.Ranking:
 				return <Rankings users={users} />;

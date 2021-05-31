@@ -13,7 +13,7 @@ interface NavItem {
 }
 
 const navigation: NavItem[] = [
-	{ name: 'MyPredictions', page: Route.Home },
+	{ name: 'MyPredictions', page: Route.MyPredictions },
 	{ name: 'Standings', page: Route.Standings },
 	{ name: 'Ranking', page: Route.Ranking },
 ];
@@ -47,8 +47,8 @@ export default function Navbar() {
 									)}
 								</Disclosure.Button>
 							</div>
-							<div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-								<div className="flex-shrink-0 flex items-center">
+							<div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start cursor-pointer">
+								<div className="flex-shrink-0 flex items-center" onClick={() => setRoute(Route.Home)}>
 									<img className="block h-8 w-auto" src="/logo.svg" alt="logo" />
 								</div>
 								<div className="hidden sm:block sm:ml-6">
@@ -56,15 +56,12 @@ export default function Navbar() {
 										{navigation.map(item => (
 											<div
 												key={item.name}
-												onClick={() => {
-													setRoute(item.page);
-													open = false;
-												}}
+												onClick={() => setRoute(item.page)}
 												className={classNames(
 													isCurrent(item)
 														? 'bg-gray-900 text-light'
 														: 'text-gray-300 hover:bg-gray-700 hover:text-light',
-													'px-3 py-2 rounded-md text-sm font-medium cursor-pointer'
+													'px-3 py-2 rounded-md text-sm font-medium cursor-pointer select-none'
 												)}
 												aria-current={isCurrent(item) ? 'page' : undefined}>
 												{item.name}
