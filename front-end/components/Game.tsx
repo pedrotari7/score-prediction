@@ -29,9 +29,16 @@ const Game = ({ updatePrediction, gameID }: { updatePrediction: Function; gameID
 
 	const prediction = game?.predictions[userInfo.uid] || DEFAULT_PREDICTION;
 
+	const group = game?.league.round.match(/Group (.) -/)?.[1];
+
 	return (
 		<div className="text-light flex flex-row items-center justify-evenly my-2 rounded p-2 bg-gray-900 shadow-panel">
-			<span className="text-xs w-2/12">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm')}</span>
+			<span className="text-xs text-left w-1/12 flex ">
+				<div className="w-5 h-5 flex items-center">
+					<span>{group}</span>
+				</div>
+			</span>
+			<span className="text-xs w-1/12">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm')}</span>
 
 			<div className="flex flex-row items-center justify-end w-4/12">
 				<span className="invisible sm:visible mr-2">{game?.teams.home.name}</span>

@@ -28,6 +28,16 @@ export interface Venue {
 	name: string;
 }
 
+export interface League {
+	country: string;
+	flag: string;
+	id: number;
+	logo: string;
+	name: string;
+	round: string;
+	season: number;
+}
+
 export interface FixtureData {
 	id: number;
 	date: string;
@@ -43,6 +53,7 @@ export interface Fixture {
 	predictions: Predictions;
 	fixture: FixtureData;
 	teams: Teams;
+	league: League;
 }
 
 export interface Fixtures {
