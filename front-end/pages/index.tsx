@@ -47,7 +47,7 @@ const Home = ({
 			case Route.Ranking:
 				return <Rankings users={users} />;
 			case Route.Standings:
-				return <Standings standings={standings} />;
+				return <Standings standings={standings} fixtures={fixtures} />;
 			case Route.Settings:
 				return <Settings />;
 			default:

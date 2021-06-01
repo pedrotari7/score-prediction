@@ -1,7 +1,40 @@
-const Standings = ({ standings }: { standings: [string, any][] }) => {
+import { DateTime } from 'luxon';
+import React from 'react';
+import { Fixture, Fixtures } from './Fixtures';
+
+const Match = ({ game }: { game: Fixture }) => {
+	return (
+		<div className="text-light flex flex-row items-center justify-evenly rounded p-2">
+			<div className="flex flex-row items-center justify-end w-4/12">
+				<span className="invisible sm:visible mr-2">{game?.teams.home.name}</span>
+				<div className="w-5 h-5 flex items-center justify-center">
+					<img className="object-cover w-full" src={game?.teams.home.logo} />
+				</div>
+			</div>
+
+			<span className="text-xs w-4/12">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm')}</span>
+
+			<div className="flex flex-row items-center justify-start w-4/12">
+				<div className="w-5 h-5 flex items-center justify-center">
+					<img className="object-cover w-full" src={game?.teams.away.logo} />
+				</div>
+				<span className="invisible sm:visible ml-2">{game?.teams.away.name}</span>
+			</div>
+		</div>
+	);
+};
+
+const Standings = ({ standings, fixtures }: { standings: [string, any][]; fixtures: Fixtures }) => {
 	return (
 		<div className="flex flex-row flex-wrap justify-center">
 			{standings.map(([title, standing]) => {
+				const group = title.split(' ').pop();
+				console.log(`group`, group);
+
+				const games = Object.values(fixtures).filter(f => f.league.round.startsWith(`Group ${group}`));
+
+				console.log(`games`, games);
+
 				return (
 					<div key={title} className="m-8 p-10 shadow-pop rounded-md text-center flex flex-col">
 						<h2 className="text-4xl text-light mb-4 text-left">{title}</h2>
@@ -47,6 +80,11 @@ const Standings = ({ standings }: { standings: [string, any][] }) => {
 								})}
 							</tbody>
 						</table>
+						<div className="mt-4">
+							{games.map(game => (
+								<Match game={game} />
+							))}
+						</div>
 					</div>
 				);
 			})}
