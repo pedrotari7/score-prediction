@@ -40,7 +40,7 @@ const Game = ({ updatePrediction, gameID }: { updatePrediction: Function; gameID
 	const isInPast = getCurrentDate() < gameDate;
 
 	return (
-		<div className="text-light flex flex-row items-center justify-evenly my-2 rounded p-2 bg-gray-900 shadow-panel">
+		<div className="text-light flex flex-row items-center justify-evenly my-2 rounded p-2 bg-gark shadow-pop">
 			<span className="text-xs text-left w-1/12 flex ">
 				<div className="w-5 h-5 flex items-center">
 					<span>{group}</span>

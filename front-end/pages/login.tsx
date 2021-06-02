@@ -11,7 +11,7 @@ const uiConfig = {
 const Login = (_props: any) => {
 	return (
 		<PageLayout title={'Login'}>
-			<div className="flex items-center justify-center h-screen bg-dark">
+			<div className="flex items-center justify-center h-screen">
 				<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebaseClient.auth()} />
 			</div>
 		</PageLayout>

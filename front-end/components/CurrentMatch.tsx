@@ -38,7 +38,7 @@ const CurrentMatch = ({
 	const game = Object.values(fixtures)[0];
 
 	return (
-		<main className="flex flex-col justify-center select-none text-light m-8 p-8 shadow-pop rounded-md">
+		<main className="flex flex-col justify-center select-none text-light m-8 p-8 shadow-pop rounded-md bg-dark">
 			<p className="text-3xl mb-2">Next Game</p>
 			<Game
 				gameID={game.fixture?.id}

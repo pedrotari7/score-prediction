@@ -20,7 +20,7 @@ export interface UserResult {
 
 const Rankings = ({ users }: { users: Users }) => {
 	return (
-		<div className="flex justify-center m-6 p-6 shadow-pop rounded-md">
+		<div className="flex justify-center m-6 p-6 shadow-pop rounded-md bg-dark">
 			<table className="text-light text-center">
 				<thead>
 					<tr className="text-left">

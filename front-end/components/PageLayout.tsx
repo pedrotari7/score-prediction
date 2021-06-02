@@ -15,7 +15,9 @@ const PageLayout = ({ title, children }: { title: string; children: JSX.Element 
 
 			{user && <Navbar />}
 
-			<main className="flex flex-col bg-dark min-h-screen">{children}</main>
+			<main className="flex flex-col min-h-screen bg-cover" style={{ backgroundImage: 'url(/logo.webp)' }}>
+				{children}
+			</main>
 		</div>
 	);
 };

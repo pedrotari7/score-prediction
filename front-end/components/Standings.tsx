@@ -36,7 +36,7 @@ const Standings = ({ standings, fixtures }: { standings: [string, any][]; fixtur
 				console.log(`games`, games);
 
 				return (
-					<div key={title} className="m-8 p-10 shadow-pop rounded-md text-center flex flex-col">
+					<div key={title} className="m-8 p-10 shadow-pop rounded-md text-center flex flex-col bg-dark">
 						<h2 className="text-4xl text-light mb-4 text-left">{title}</h2>
 						<table className="text-light">
 							<thead>
