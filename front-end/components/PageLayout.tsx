@@ -15,10 +15,12 @@ const PageLayout = ({ title, children }: { title: string; children: JSX.Element 
 
 			{user && <Navbar />}
 
-			<main className="flex flex-col min-h-screen">{children}</main>
-			<footer>
-				<img src="/footer.png" alt="" />
-			</footer>
+			<main className="flex flex-col min-h-screen">
+				{children}
+				<div>
+					<img src="/footer.png" alt="" className="w-full" />
+				</div>
+			</main>
 		</div>
 	);
 };

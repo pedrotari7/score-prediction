@@ -16,6 +16,8 @@ module.exports = {
 				light: '#e1eded',
 				pink: '#e89ba0',
 				red: '#9b0808',
+				ok: '#bbf3bb',
+				warn: '#ffffbb',
 			},
 			boxShadow: {
 				pop: '0px 2px 40px rgba(0, 0, 0, 0.33)',

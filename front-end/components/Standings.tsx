@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import React from 'react';
+import { classNames } from '../lib/utils/reactHelper';
 import { Fixture, Fixtures } from './Fixtures';
 
 const Match = ({ game }: { game: Fixture }) => {
@@ -41,21 +42,25 @@ const Standings = ({ standings, fixtures }: { standings: [string, any][]; fixtur
 									<th></th>
 									<th></th>
 
-									<th>Pld</th>
+									<th>G</th>
 									<th>W</th>
 									<th>D</th>
 									<th>L</th>
 									<th>GF</th>
 									<th>GA</th>
 									<th>GD</th>
-									<th>Pts</th>
+									<th>P</th>
+									<th></th>
 								</tr>
 							</thead>
 
 							<tbody>
 								{standing.map((place: any) => {
+									const promotion = place.description?.includes('Promotion');
+									const bestThird = place.description?.includes('third');
+
 									return (
-										<tr key={place.rank} className="">
+										<tr key={place.rank}>
 											<td className="mr">
 												<img className="object-cover h-3 w-5 mr-2" src={place.team.logo} />
 											</td>
@@ -72,6 +77,15 @@ const Standings = ({ standings, fixtures }: { standings: [string, any][]; fixtur
 											<td className="w-6">{place.all.goals.against}</td>
 											<td className="w-6">{place.all.goals.for - place.all.goals.against}</td>
 											<td className="w-6">{place.points}</td>
+											<td>
+												<div
+													className={classNames(
+														promotion ? 'bg-ok' : '',
+														bestThird ? 'bg-warn' : '',
+
+														'w-3 h-3 rounded-full ml-2'
+													)}></div>
+											</td>
 										</tr>
 									);
 								})}
