@@ -1,4 +1,5 @@
 import Game from './Game';
+import PredictedGroups from './PredictedGroups';
 
 export interface Prediction {
 	home: string;
@@ -59,17 +60,30 @@ export interface Fixtures {
 	[key: string]: Fixture;
 }
 
-const FixturesPage = ({ fixtures, updatePrediction }: { fixtures: Fixtures; updatePrediction: Function }) => {
+const FixturesPage = ({
+	fixtures,
+	updatePrediction,
+	standings,
+}: {
+	fixtures: Fixtures;
+	updatePrediction: Function;
+	standings: [string, any][];
+}) => {
 	return (
 		<main className="flex flex-col justify-center select-none text-light m-8 p-8 shadow-pop rounded-md bg-dark">
 			<p className="text-4xl mb-2">Predictions</p>
-			{Object.values(fixtures).map(game => (
-				<Game
-					gameID={game.fixture?.id}
-					updatePrediction={(update: Prediction) => updatePrediction(update, game.fixture?.id)}
-					key={game.fixture?.id}
-				/>
-			))}
+
+			<div className="flex flex-col-reverse md:flex-col">
+				<PredictedGroups fixtures={fixtures} standings={standings} />
+
+				{Object.values(fixtures).map(game => (
+					<Game
+						gameID={game.fixture?.id}
+						updatePrediction={(update: Prediction) => updatePrediction(update, game.fixture?.id)}
+						key={game.fixture?.id}
+					/>
+				))}
+			</div>
 		</main>
 	);
 };

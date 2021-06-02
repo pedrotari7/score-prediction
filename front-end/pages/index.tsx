@@ -43,7 +43,7 @@ const Home = ({
 			case Route.Home:
 				return <CurrentMatch fixtures={fixtures} updatePrediction={updatePrediction} users={users} />;
 			case Route.MyPredictions:
-				return <FixturesPage fixtures={fixtures} updatePrediction={updatePrediction} />;
+				return <FixturesPage fixtures={fixtures} updatePrediction={updatePrediction} standings={standings} />;
 			case Route.Ranking:
 				return <Rankings users={users} />;
 			case Route.Standings:
