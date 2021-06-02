@@ -6,7 +6,7 @@ const PageLayout = ({ title, children }: { title: string; children: JSX.Element 
 	const { user } = useAuth();
 
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col bg-cover" style={{ backgroundImage: 'url(/logo.webp)' }}>
 			<Head>
 				<title>{title}</title>
 				<link rel="icon" href="/favicon.ico" />
@@ -15,9 +15,10 @@ const PageLayout = ({ title, children }: { title: string; children: JSX.Element 
 
 			{user && <Navbar />}
 
-			<main className="flex flex-col min-h-screen bg-cover" style={{ backgroundImage: 'url(/logo.webp)' }}>
-				{children}
-			</main>
+			<main className="flex flex-col min-h-screen">{children}</main>
+			<footer>
+				<img src="/footer.png" alt="" />
+			</footer>
 		</div>
 	);
 };
