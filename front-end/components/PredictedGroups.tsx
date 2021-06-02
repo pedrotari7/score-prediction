@@ -10,7 +10,7 @@ const PredictedGroups = ({ standings, fixtures }: { standings: [string, any][]; 
 				if (group?.length !== 1) return null;
 
 				return (
-					<div key={title} className="m-8 p-10 shadow-pop rounded-md text-center flex flex-col bg-dark ">
+					<div key={title} className="m-2 p-4 shadow-pop rounded-md text-center flex flex-col bg-dark ">
 						<h2 className="text-2xl text-light mb-4 text-left">{title}</h2>
 						<table className="text-light">
 							<thead>
@@ -18,7 +18,7 @@ const PredictedGroups = ({ standings, fixtures }: { standings: [string, any][]; 
 									<th></th>
 									{/* <th></th> */}
 
-									<th>G</th>
+									{/* <th>G</th> */}
 									<th>W</th>
 									<th>D</th>
 									<th>L</th>
@@ -39,7 +39,7 @@ const PredictedGroups = ({ standings, fixtures }: { standings: [string, any][]; 
 												<span className="hidden md:flex">{place.team.name}</span>
 											</td> */}
 
-											<td className="w-6">{place.all.played}</td>
+											{/* <td className="w-6">{place.all.played}</td> */}
 											<td className="w-6">{place.all.win}</td>
 											<td className="w-6">{place.all.draw}</td>
 											<td className="w-6">{place.all.lose}</td>
