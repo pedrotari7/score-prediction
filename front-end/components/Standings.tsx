@@ -29,11 +29,8 @@ const Standings = ({ standings, fixtures }: { standings: [string, any][]; fixtur
 		<div className="flex flex-row flex-wrap justify-center">
 			{standings.map(([title, standing]) => {
 				const group = title.split(' ').pop();
-				console.log(`group`, group);
 
 				const games = Object.values(fixtures).filter(f => f.league.round.startsWith(`Group ${group}`));
-
-				console.log(`games`, games);
 
 				return (
 					<div key={title} className="m-8 p-10 shadow-pop rounded-md text-center flex flex-col bg-dark">
@@ -82,7 +79,7 @@ const Standings = ({ standings, fixtures }: { standings: [string, any][]; fixtur
 						</table>
 						<div className="mt-4">
 							{games.map(game => (
-								<Match game={game} />
+								<Match game={game} key={game.fixture.id} />
 							))}
 						</div>
 					</div>
