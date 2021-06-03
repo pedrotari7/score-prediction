@@ -2,25 +2,8 @@ import { DateTime } from 'luxon';
 import { ChangeEvent, useContext } from 'react';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
-import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
-
-const ScoreInput = ({ className, value, onchange, disabled }: any) => (
-	<input
-		value={value}
-		onChange={onchange}
-		disabled={disabled}
-		className={classNames(
-			className,
-			'block w-14 h-7  text-gray-700 text-center',
-			'rounded py-3 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500',
-			disabled
-				? 'bg-transparent text-light border-none outline-none select-none font-bold'
-				: 'border  border-gray-200',
-			value ? 'bg-gray-300' : 'bg-error border-none'
-		)}
-		type="text"
-	/>
-);
+import { getCurrentDate } from '../lib/utils/reactHelper';
+import ScoreInput from './ScoreInput';
 
 const DEFAULT_PREDICTION = { home: '', away: '' };
 
