@@ -59,7 +59,7 @@ export default function Navbar() {
 												onClick={() => setRoute(item.page)}
 												className={classNames(
 													isCurrent(item)
-														? 'bg-gray-900 text-light'
+														? 'bg-dark text-light'
 														: 'text-gray-300 hover:bg-gray-700 hover:text-light',
 													'px-3 py-2 rounded-md text-sm font-medium cursor-pointer select-none'
 												)}
@@ -147,7 +147,7 @@ export default function Navbar() {
 										}}
 										className={classNames(
 											isCurrent(item)
-												? 'bg-gray-900 text-light'
+												? 'bg-dark text-light'
 												: 'text-gray-300 hover:bg-gray-700 hover:text-light',
 											'block px-3 py-2 rounded-md text-base font-medium cursor-pointer'
 										)}

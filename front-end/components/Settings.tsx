@@ -11,12 +11,12 @@ const Settings = () => {
 		<div className="min-h-screen flex flex-row items-center justify-center ">
 			<button
 				onClick={() => resetStandings(userInfo.token)}
-				className="bg-blue text-white font-bold py-2 px-4 rounded mr-5">
+				className="bg-dark text-white font-bold py-2 px-4 rounded mr-5">
 				Fetch Rankings
 			</button>
 			<button
 				onClick={() => resetFixtures(userInfo.token)}
-				className="bg-blue text-white font-bold py-2 px-4 rounded mr-5">
+				className="bg-dark text-white font-bold py-2 px-4 rounded mr-5">
 				Fetch Fixtures
 			</button>
 		</div>

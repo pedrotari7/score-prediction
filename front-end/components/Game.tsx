@@ -55,9 +55,10 @@ const Game = ({ updatePrediction, gameID }: { updatePrediction: Function; gameID
 					value={prediction.home}
 					className="mx-2"
 					disabled={!isInPast}
-					onchange={(e: ChangeEvent<HTMLInputElement>) =>
-						updatePrediction({ ...prediction, home: e.target.value })
-					}
+					onchange={(e: ChangeEvent<HTMLInputElement>) => {
+						e.preventDefault();
+						updatePrediction({ ...prediction, home: e.target.value });
+					}}
 				/>
 			</div>
 
@@ -66,9 +67,10 @@ const Game = ({ updatePrediction, gameID }: { updatePrediction: Function; gameID
 					value={prediction.away}
 					className="mx-2"
 					disabled={!isInPast}
-					onchange={(e: ChangeEvent<HTMLInputElement>) =>
-						updatePrediction({ ...prediction, away: e.target.value })
-					}
+					onchange={(e: ChangeEvent<HTMLInputElement>) => {
+						e.preventDefault();
+						updatePrediction({ ...prediction, away: e.target.value });
+					}}
 				/>
 				<img className="object-cover h-3 w-5 ml-2" src={game?.teams.away.logo} />
 				<span className="invisible sm:visible ml-2">{game?.teams.away.name}</span>
