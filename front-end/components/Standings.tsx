@@ -64,7 +64,7 @@ const Standings = ({ standings, fixtures }: { standings: [string, any][]; fixtur
 											<td className="mr">
 												<img className="object-cover h-3 w-5 mr-2" src={place.team.logo} />
 											</td>
-											<td className="">
+											<td className="md:w-52">
 												<span className="hidden md:flex">{place.team.name}</span>
 											</td>
 

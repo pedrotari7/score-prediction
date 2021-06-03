@@ -18,6 +18,7 @@ module.exports = {
 				red: '#9b0808',
 				ok: '#bbf3bb',
 				warn: '#ffffbb',
+				error: '#ffbbbb',
 			},
 			boxShadow: {
 				pop: '0px 2px 40px rgba(0, 0, 0, 0.33)',

@@ -15,7 +15,8 @@ const ScoreInput = ({ className, value, onchange, disabled }: any) => (
 			'rounded py-3 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500',
 			disabled
 				? 'bg-transparent text-light border-none outline-none select-none font-bold'
-				: 'border bg-gray-300 border-gray-200'
+				: 'border  border-gray-200',
+			value ? 'bg-gray-300' : 'bg-error border-none'
 		)}
 		type="text"
 	/>
