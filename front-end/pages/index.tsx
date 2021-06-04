@@ -66,6 +66,16 @@ const Home = ({
 				return <Standings standings={standings} fixtures={fixtures} />;
 			case Route.Settings:
 				return <Settings />;
+			case Route.Match:
+				return (
+					<CurrentMatch
+						fixtures={fixtures}
+						predictions={predictions}
+						updatePrediction={updatePrediction}
+						users={users}
+						gameID={route.data}
+					/>
+				);
 			default:
 				return <></>;
 		}

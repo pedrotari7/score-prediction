@@ -4,6 +4,7 @@ const ScoreInput = ({ className, value, onchange = () => {}, disabled = false }:
 	<input
 		value={value}
 		onChange={onchange}
+		onClick={e => e.stopPropagation()}
 		disabled={disabled}
 		className={classNames(
 			className,

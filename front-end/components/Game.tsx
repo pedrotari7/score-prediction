@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon';
 import { ChangeEvent, useContext } from 'react';
 import FixturesContext from '../context/FixturesContext';
+import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
-import { getCurrentDate } from '../lib/utils/reactHelper';
+import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
 import { Predictions } from './Fixtures';
 import ScoreInput from './ScoreInput';
 
@@ -19,8 +20,11 @@ const Game = ({
 }) => {
 	const data = useContext(FixturesContext);
 	const userInfo = useContext(UserContext);
+	const routeInfo = useContext(RouteContext);
 
-	if (!data || !userInfo) return <></>;
+	if (!data || !userInfo || !routeInfo) return <></>;
+
+	const { setRoute } = routeInfo;
 
 	const game = data[gameID];
 
@@ -32,8 +36,19 @@ const Game = ({
 
 	const isInPast = getCurrentDate() < gameDate;
 
+	const onPredictionChange = (e: ChangeEvent<HTMLInputElement>, team: string) => {
+		e.preventDefault();
+		e.stopPropagation();
+		updatePrediction({ ...prediction, [team]: e.target.value });
+	};
+
 	return (
-		<div className="text-light flex flex-row items-center justify-evenly my-2 rounded p-2 bg-gark shadow-pop">
+		<div
+			className={classNames(
+				'text-light flex flex-row items-center justify-evenly my-2 rounded p-2 bg-gark shadow-pop',
+				'cursor-pointer hover:bg-blue'
+			)}
+			onClick={() => setRoute({ page: Route.Match, data: gameID })}>
 			<span className="text-xs text-left w-1/12 flex ">
 				<div className="w-5 h-5 flex items-center">
 					<span>{group}</span>
@@ -48,10 +63,7 @@ const Game = ({
 					value={prediction.home}
 					className="mx-2"
 					disabled={!isInPast}
-					onchange={(e: ChangeEvent<HTMLInputElement>) => {
-						e.preventDefault();
-						updatePrediction({ ...prediction, home: e.target.value });
-					}}
+					onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'home')}
 				/>
 			</div>
 
@@ -60,10 +72,7 @@ const Game = ({
 					value={prediction.away}
 					className="mx-2"
 					disabled={!isInPast}
-					onchange={(e: ChangeEvent<HTMLInputElement>) => {
-						e.preventDefault();
-						updatePrediction({ ...prediction, away: e.target.value });
-					}}
+					onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'away')}
 				/>
 				<img className="object-cover h-3 w-5 ml-2" src={game?.teams.away.logo} />
 				<span className="invisible sm:visible ml-2">{game?.teams.away.name}</span>

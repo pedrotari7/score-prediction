@@ -32,21 +32,25 @@ const CurrentMatch = ({
 	predictions,
 	updatePrediction,
 	users,
+	gameID = undefined,
 }: {
 	fixtures: Fixtures;
 	predictions: Predictions;
 	updatePrediction: Function;
 	users: Users;
+	gameID: number | undefined;
 }) => {
 	const userInfo = useContext(UserContext);
 
-	const game = Object.values(fixtures)[0];
+	const game = gameID ? fixtures[gameID] : Object.values(fixtures)[0];
 
 	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
 
 	return (
 		<main className="flex flex-col justify-center select-none text-light m-8 mx-24 p-8 shadow-pop rounded-md bg-dark relative">
-			<p className="text-3xl mb-2">Next Game</p>
+			{!gameID && <p className="text-3xl mb-2">Next Game</p>}
+			{gameID && <p className="text-3xl mb-2">{game.league?.round}</p>}
+
 			<LiveGame
 				predictions={predictions}
 				gameID={game.fixture?.id}
@@ -65,7 +69,7 @@ const CurrentMatch = ({
 				</div>
 			</div>
 
-			<div className="mt-6">
+			<div className="mt-6 z-10">
 				<div className="text-xl mb-4">Predictions</div>
 				<div className="flex flex-row flex-wrap">
 					{Object.entries(gamePredictions)
@@ -77,7 +81,7 @@ const CurrentMatch = ({
 			</div>
 
 			<img
-				className="object-cover absolute bottom-0 right-6 opacity-50"
+				className="object-cover absolute bottom-0 right-6 opacity-50 z-0"
 				src={stadiumImageURL(game?.fixture.venue)}
 			/>
 		</main>
