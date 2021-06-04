@@ -58,6 +58,7 @@ const Game = ({
 				<span className="invisible sm:visible mr-2">{game?.teams.home.name}</span>
 				<img className="object-cover h-3 w-5 mr-2" src={game?.teams.home.logo} />
 				<ScoreInput
+					id={`${gameID}-home`}
 					value={prediction.home}
 					className="mx-2"
 					disabled={!isInPast}
@@ -67,6 +68,7 @@ const Game = ({
 
 			<div className="flex flex-row items-center justify-start w-4/12">
 				<ScoreInput
+					id={`${gameID}-away`}
 					value={prediction.away}
 					className="mx-2"
 					disabled={!isInPast}

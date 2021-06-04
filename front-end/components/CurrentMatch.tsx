@@ -47,7 +47,7 @@ const CurrentMatch = ({
 	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
 
 	return (
-		<main className="flex flex-col justify-center select-none text-light m-8 mx-24 p-8 shadow-pop rounded-md bg-dark relative">
+		<main className="flex flex-col justify-center select-none text-light m-8 md:mx-24 p-8 shadow-pop rounded-md bg-dark relative">
 			{!gameID && <p className="text-3xl mb-2">Next Game</p>}
 			{gameID && <p className="text-3xl mb-2">{game.league?.round}</p>}
 
@@ -81,7 +81,7 @@ const CurrentMatch = ({
 			</div>
 
 			<img
-				className="object-cover absolute bottom-0 right-6 opacity-50 z-0"
+				className="object-cover absolute bottom-0 right-6 opacity-50 z-0 w-48"
 				src={stadiumImageURL(game?.fixture.venue)}
 			/>
 		</main>

@@ -33,7 +33,7 @@ export default function Navbar() {
 	const isCurrent = (item: NavItem) => item.page === route.page;
 
 	return (
-		<Disclosure as="nav" className="bg-blue sticky top-0 w-full z-10">
+		<Disclosure as="nav" className="bg-blue fixed h-16 top-0 w-full z-20">
 			{({ open }) => (
 				<>
 					<div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -140,7 +140,7 @@ export default function Navbar() {
 						</div>
 					</div>
 
-					<Disclosure.Panel className="sm:hidden">
+					<Disclosure.Panel className="sm:hidden bg-blue">
 						<div className="px-2 pt-2 pb-3 space-y-1 flex flex-col">
 							{navigation.map(item => (
 								<Disclosure.Button key={item.name}>

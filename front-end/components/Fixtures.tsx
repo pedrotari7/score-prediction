@@ -78,12 +78,12 @@ const FixturesPage = ({
 				<PredictedGroups predictions={predictions} fixtures={fixtures} standings={standings} />
 
 				<div className="flex flex-col">
-					{Object.values(fixtures).map(game => (
+					{Object.values(fixtures).map((game, index) => (
 						<Game
 							predictions={predictions}
 							gameID={game.fixture?.id}
 							updatePrediction={(update: Prediction) => updatePrediction(update, game.fixture?.id)}
-							key={game.fixture?.id}
+							key={index}
 						/>
 					))}
 				</div>

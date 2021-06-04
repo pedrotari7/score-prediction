@@ -1,6 +1,6 @@
 import { classNames } from '../lib/utils/reactHelper';
 
-const ScoreInput = ({ className, value, onchange = () => {}, disabled = false }: any) => (
+const ScoreInput = ({ className, value, onchange = () => {}, disabled = false, id }: any) => (
 	<input
 		value={value}
 		onChange={e => {
@@ -19,6 +19,8 @@ const ScoreInput = ({ className, value, onchange = () => {}, disabled = false }:
 				: 'border  border-gray-200',
 			value ? 'bg-gray-300' : 'bg-error border-none'
 		)}
+		id={id}
+		name={id}
 		type="number"
 	/>
 );
