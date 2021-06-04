@@ -138,14 +138,21 @@ app.get('/predictions', async (req, res) => {
 
   if (isAdmin) return res.json(predictions);
 
-  const censoredPredictions = Object.entries(predictions).reduce((acc, [gameID, gamePredictions]) => {
-    for (const uid in gamePredictions) {
-      if (uid !== callerUID) {
-        gamePredictions[uid].home = 'X';
-        gamePredictions[uid].away = 'X';
+  const fixtures = (await admin.firestore().collection('euro2020').doc('fixtures').get()).data() as Fixtures;
+
+  const censoredPredictions = Object.entries(predictions).reduce((acc, [gameId, gamePredictions]) => {
+    const gameDate = new Date(fixtures?.[gameId].fixture.date);
+    const isInPast = gameDate && getCurrentTime() < gameDate;
+
+    if (isInPast) {
+      for (const uid in gamePredictions) {
+        if (uid !== callerUID) {
+          gamePredictions[uid].home = 'X';
+          gamePredictions[uid].away = 'X';
+        }
       }
     }
-    acc[gameID] = gamePredictions;
+    acc[gameId] = gamePredictions;
 
     return acc;
   }, {} as Predictions);
