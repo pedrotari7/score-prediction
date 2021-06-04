@@ -2,24 +2,25 @@ import { DateTime } from 'luxon';
 import React from 'react';
 import { Fixture, Fixtures, Standing, Standings } from '../../interfaces/main';
 import { classNames } from '../lib/utils/reactHelper';
+import Flag from './Flag';
 
 const Match = ({ game }: { game: Fixture }) => {
 	return (
 		<div className="text-light flex flex-row items-center justify-evenly rounded p-2">
 			<div className="flex flex-row items-center justify-end w-4/12">
-				<span className="invisible sm:visible mr-2">{game?.teams.home.name}</span>
-				<div className="w-5 h-5 flex items-center justify-center">
-					<img className="object-cover w-full" src={game?.teams.home.logo} />
+				<span className="hidden sm:block mr-2">{game?.teams.home.name}</span>
+				<div className="flex items-center justify-center">
+					<Flag team={game?.teams.home} />
 				</div>
 			</div>
 
 			<span className="text-xs w-4/12">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm')}</span>
 
 			<div className="flex flex-row items-center justify-start w-4/12">
-				<div className="w-5 h-5 flex items-center justify-center">
-					<img className="object-cover w-full" src={game?.teams.away.logo} />
+				<div className="flex items-center justify-center">
+					<Flag team={game?.teams.away} />
 				</div>
-				<span className="invisible sm:visible ml-2">{game?.teams.away.name}</span>
+				<span className="hidden sm:block ml-2">{game?.teams.away.name}</span>
 			</div>
 		</div>
 	);
@@ -62,7 +63,7 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 									return (
 										<tr key={place.rank}>
 											<td className="mr">
-												<img className="object-cover h-3 w-5 mr-2" src={place.team.logo} />
+												<Flag team={place.team} />
 											</td>
 											<td className="md:w-52">
 												<span className="hidden md:flex">{place.team.name}</span>

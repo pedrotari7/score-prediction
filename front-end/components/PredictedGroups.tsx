@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Fixtures, Predictions, Standing, Standings } from '../../interfaces/main';
 import UserContext from '../context/UserContext';
+import Flag from './Flag';
 
 interface Result {
 	points: number;
@@ -103,7 +104,7 @@ const PredictedGroups = ({
 									return (
 										<tr key={place.rank} className="">
 											<td className="mr">
-												<img className="object-cover h-3 w-5 mr-2" src={place.team.logo} />
+												<Flag team={place.team} />
 											</td>
 
 											<td className="w-6">{teamsResults[place.team.id].wins}</td>
@@ -112,10 +113,7 @@ const PredictedGroups = ({
 
 											<td className="w-6">{teamsResults[place.team.id].points}</td>
 											<td className="ml-2">
-												<img
-													className="object-cover h-3 w-5 ml-2"
-													src={standing[index].team.logo}
-												/>
+												<Flag team={standing[index].team} />
 											</td>
 										</tr>
 									);

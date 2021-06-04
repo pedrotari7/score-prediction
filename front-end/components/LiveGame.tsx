@@ -4,6 +4,7 @@ import { Predictions } from '../../interfaces/main';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import { getCurrentDate } from '../lib/utils/reactHelper';
+import Flag from './Flag';
 import ScoreInput from './ScoreInput';
 
 const LiveGame = ({
@@ -33,15 +34,16 @@ const LiveGame = ({
 	return (
 		<div className="text-light flex flex-row items-center justify-evenly my-2 rounded p-2 bg-gark shadow-pop">
 			<span className="text-xs text-left w-1/12 flex ">
-				<div className="w-5 h-5 flex items-center">
+				<div className="w-5 h-5 flex items-center justify-center">
 					<span>{group}</span>
 				</div>
 			</span>
 
 			<div className="w-10/12 flex flex-row justify-center items-center">
-				<div className="flex flex-row items-center justify-end w-4/12">
-					<span className="invisible sm:visible mr-2">{game?.teams.home.name}</span>
-					<img className="object-cover h-3 w-5 mr-2" src={game?.teams.home.logo} />
+				<div className="flex flex-row items-center justify-end sm:w-4/12">
+					<span className="hidden sm:block mr-2">{game?.teams.home.name}</span>
+					<Flag team={game?.teams.home} />
+
 					{!isInPast && (
 						<ScoreInput
 							value={prediction.home}
@@ -55,12 +57,12 @@ const LiveGame = ({
 				</div>
 
 				{isInPast && (
-					<span className="text-md w-4/12 text-center">
+					<span className="text-md sm:w-4/12 text-center mx-2">
 						{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm')}
 					</span>
 				)}
 
-				<div className="flex flex-row items-center justify-start w-4/12">
+				<div className="flex flex-row items-center justify-start sm:w-4/12">
 					{!isInPast && (
 						<ScoreInput
 							value={prediction.away}
@@ -70,8 +72,8 @@ const LiveGame = ({
 							}}
 						/>
 					)}
-					<img className="object-cover h-3 w-5 ml-2" src={game?.teams.away.logo} />
-					<span className="invisible sm:visible ml-2">{game?.teams.away.name}</span>
+					<Flag team={game?.teams.away} />
+					<span className="hidden sm:block ml-2">{game?.teams.away.name}</span>
 				</div>
 			</div>
 

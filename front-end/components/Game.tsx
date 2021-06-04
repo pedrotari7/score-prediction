@@ -5,6 +5,7 @@ import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
 import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
+import Flag from './Flag';
 import ScoreInput from './ScoreInput';
 
 const DEFAULT_PREDICTION = { home: '', away: '' };
@@ -57,7 +58,8 @@ const Game = ({
 			<div className="flex flex-row sm:w-8/12 justify-center items-center">
 				<div className="flex flex-row items-center justify-end sm:w-6/12">
 					<span className="hidden sm:block mr-2">{game?.teams.home.name}</span>
-					<img className="object-cover h-3 w-5 ml-2" src={game?.teams.home.logo} />
+
+					<Flag team={game?.teams.home} />
 
 					<ScoreInput
 						id={`${gameID}-home`}
@@ -76,7 +78,9 @@ const Game = ({
 						disabled={!isInPast}
 						onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'away')}
 					/>
-					<img className="object-cover h-3 w-5 ml-2" src={game?.teams.away.logo} />
+
+					<Flag team={game?.teams.away} />
+
 					<span className="hidden sm:block ml-2">{game?.teams.away.name}</span>
 				</div>
 			</div>
