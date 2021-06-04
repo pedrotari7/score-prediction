@@ -44,6 +44,8 @@ const CurrentMatch = ({
 
 	const game = gameID ? fixtures[gameID] : Object.values(fixtures)[0];
 
+	if (!game) return <></>;
+
 	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
 
 	return (

@@ -43,41 +43,44 @@ const Game = ({
 	return (
 		<div
 			className={classNames(
-				'text-light flex flex-row items-center justify-evenly my-2 rounded p-2 bg-gark shadow-pop',
+				'text-light flex flex-col sm:flex-row items-center justify-evenly my-2 rounded p-2 bg-gark shadow-pop',
 				'cursor-pointer hover:bg-blue'
 			)}
 			onClick={() => setRoute({ page: Route.Match, data: gameID })}>
-			<span className="text-xs text-left w-1/12 flex ">
+			<span className="text-xs text-left w-full sm:w-2/12 flex justify-between items-center ">
 				<div className="w-5 h-5 flex items-center">
 					<span>{group}</span>
 				</div>
+				<span className="text-xs">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm')}</span>
 			</span>
-			<span className="text-xs w-1/12">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm')}</span>
 
-			<div className="flex flex-row items-center justify-end w-4/12">
-				<span className="invisible sm:visible mr-2">{game?.teams.home.name}</span>
-				<img className="object-cover h-3 w-5 mr-2" src={game?.teams.home.logo} />
-				<ScoreInput
-					id={`${gameID}-home`}
-					value={prediction.home}
-					className="mx-2"
-					disabled={!isInPast}
-					onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'home')}
-				/>
+			<div className="flex flex-row sm:w-8/12 justify-center items-center">
+				<div className="flex flex-row items-center justify-end sm:w-6/12">
+					<span className="hidden sm:block mr-2">{game?.teams.home.name}</span>
+					<img className="object-cover h-3 w-5 mr-2" src={game?.teams.home.logo} />
+					<ScoreInput
+						id={`${gameID}-home`}
+						value={prediction.home}
+						className="mx-2"
+						disabled={!isInPast}
+						onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'home')}
+					/>
+				</div>
+
+				<div className="flex flex-row items-center justify-start sm:w-6/12 my-2 sm:my-0">
+					<ScoreInput
+						id={`${gameID}-away`}
+						value={prediction.away}
+						className="mx-2"
+						disabled={!isInPast}
+						onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'away')}
+					/>
+					<img className="object-cover h-3 w-5 ml-2" src={game?.teams.away.logo} />
+					<span className="hidden sm:block ml-2">{game?.teams.away.name}</span>
+				</div>
 			</div>
 
-			<div className="flex flex-row items-center justify-start w-4/12">
-				<ScoreInput
-					id={`${gameID}-away`}
-					value={prediction.away}
-					className="mx-2"
-					disabled={!isInPast}
-					onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'away')}
-				/>
-				<img className="object-cover h-3 w-5 ml-2" src={game?.teams.away.logo} />
-				<span className="invisible sm:visible ml-2">{game?.teams.away.name}</span>
-			</div>
-			<span className="text-xs text-right w-0 md:w-2/12 invisible md:visible">
+			<span className="text-xs text-right sm:w-2/12 my-2 sm:my-0">
 				{game?.fixture.venue.name}, {game?.fixture.venue.city}
 			</span>
 		</div>

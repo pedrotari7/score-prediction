@@ -1,3 +1,4 @@
+import { classNames } from '../lib/utils/reactHelper';
 import Game from './Game';
 import PredictedGroups from './PredictedGroups';
 
@@ -71,7 +72,11 @@ const FixturesPage = ({
 	standings: [string, any][];
 }) => {
 	return (
-		<main className="flex flex-col justify-center select-none text-light m-8 p-8 shadow-pop rounded-md bg-dark">
+		<main
+			className={classNames(
+				'flex flex-col justify-center select-none text-light m-8 p-8 shadow-pop rounded-md bg-dark',
+				'mx-2 md:mx-24 lg:mx-48'
+			)}>
 			<p className="text-4xl mb-2">Predictions</p>
 
 			<div className="flex flex-col-reverse md:flex-col">
