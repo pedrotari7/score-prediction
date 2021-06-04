@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }: any) => {
 			const token = await user.getIdToken();
 			setUser({ ...user, admin: isAdmin });
 			nookies.destroy(null, 'token');
-			nookies.set(null, 'token', token, { path: '/' });
+			nookies.set(null, 'token', token, { path: '/', sameSite: 'Strict' });
 		});
 	}, []);
 
