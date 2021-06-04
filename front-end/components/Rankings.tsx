@@ -1,22 +1,4 @@
-export interface User {
-	admin: boolean;
-	displayName: string;
-	email: string;
-	photoURL: string;
-	score: UserResult;
-	uid: string;
-}
-
-export interface Users {
-	[key: string]: User;
-}
-export interface UserResult {
-	exact: number;
-	onescore: number;
-	points: number;
-	result: number;
-	groups: number;
-}
+import { Users } from '../../interfaces/main';
 
 const Rankings = ({ users }: { users: Users }) => {
 	return (

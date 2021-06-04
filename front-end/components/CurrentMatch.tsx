@@ -1,9 +1,7 @@
 import React, { useContext } from 'react';
 import UserContext from '../context/UserContext';
-import { Fixtures, Venue } from './Fixtures';
 import LiveGame from './LiveGame';
-import { User, Users } from './Rankings';
-import { Prediction, Predictions } from '../../interfaces/main';
+import { Fixtures, Prediction, Predictions, User, Users, Venue } from '../../interfaces/main';
 
 const stadiumImageURL = (venue: Venue) => `/stadiums/${venue.city.toLocaleLowerCase().replace(/\s/g, '')}.webp`;
 

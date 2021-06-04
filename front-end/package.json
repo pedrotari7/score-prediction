@@ -1,6 +1,7 @@
 {
   "name": "score-prediction",
   "version": "0.1.0",
+  "license": "ISC",
   "private": true,
   "scripts": {
     "dev": "NEXT_PUBLIC_APP_ENV=local-dev next dev",

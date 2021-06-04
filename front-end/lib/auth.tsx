@@ -6,7 +6,7 @@ type User = (firebaseClient.User & { admin?: boolean }) | null;
 
 export const AuthContext = createContext<{ user: User }>({ user: null });
 
-export const AuthProvider = ({ children }: any) => {
+export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 	const [user, setUser] = useState<User>(null);
 
 	useEffect(() => {

@@ -6,16 +6,16 @@ import nookies from 'nookies';
 import { firebaseAdmin } from '../lib/firebaseAdmin';
 import PageLayout from '../components/PageLayout';
 import Settings from '../components/Settings';
-import Rankings, { Users } from '../components/Rankings';
-import Standings from '../components/Standings';
+import Rankings from '../components/Rankings';
+import StandingsPage from '../components/Standings';
 
 import { fetchFixtures, fetchPredictions, fetchStandings, fetchUsers, updatePredictions } from './api';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import RouteContext, { Route } from '../context/RouteContext';
-import FixturesPage, { Fixtures } from '../components/Fixtures';
+import FixturesPage from '../components/Fixtures';
 import CurrentMatch from '../components/CurrentMatch';
-import { Prediction, Predictions } from '../../interfaces/main';
+import { Fixtures, Prediction, Predictions, Standings, Users } from '../../interfaces/main';
 
 const Home = ({
 	fixtures,
@@ -26,7 +26,7 @@ const Home = ({
 	token,
 }: {
 	fixtures: Fixtures;
-	standings: [string, any][];
+	standings: Standings;
 	predictions: Predictions;
 	users: Users;
 	uid: string;
@@ -64,7 +64,7 @@ const Home = ({
 			case Route.Ranking:
 				return <Rankings users={users} />;
 			case Route.Standings:
-				return <Standings standings={standings} fixtures={fixtures} />;
+				return <StandingsPage standings={standings} fixtures={fixtures} />;
 			case Route.Settings:
 				return <Settings />;
 			case Route.Match:

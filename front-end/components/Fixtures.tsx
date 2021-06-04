@@ -1,55 +1,7 @@
-import { Prediction, Predictions } from '../../interfaces/main';
+import { Fixtures, Prediction, Predictions, Standings } from '../../interfaces/main';
 import { classNames } from '../lib/utils/reactHelper';
 import Game from './Game';
 import PredictedGroups from './PredictedGroups';
-export interface Team {
-	id: number;
-	name: string;
-	logo: string;
-	winner: null;
-}
-
-export interface Teams {
-	away: Team;
-	home: Team;
-}
-
-export interface Venue {
-	city: string;
-	id: number;
-	name: string;
-}
-
-export interface League {
-	country: string;
-	flag: string;
-	id: number;
-	logo: string;
-	name: string;
-	round: string;
-	season: number;
-}
-
-export interface FixtureData {
-	id: number;
-	date: string;
-	periods: Object;
-	referee: Object;
-	status: Object;
-	timestamp: number;
-	timezone: string;
-	venue: Venue;
-}
-
-export interface Fixture {
-	fixture: FixtureData;
-	teams: Teams;
-	league: League;
-}
-
-export interface Fixtures {
-	[key: string]: Fixture;
-}
 
 const FixturesPage = ({
 	fixtures,
@@ -60,7 +12,7 @@ const FixturesPage = ({
 	fixtures: Fixtures;
 	predictions: Predictions;
 	updatePrediction: Function;
-	standings: [string, any][];
+	standings: Standings;
 }) => {
 	return (
 		<main

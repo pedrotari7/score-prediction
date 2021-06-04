@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import React from 'react';
+import { Fixture, Fixtures, Standing, Standings } from '../../interfaces/main';
 import { classNames } from '../lib/utils/reactHelper';
-import { Fixture, Fixtures } from './Fixtures';
 
 const Match = ({ game }: { game: Fixture }) => {
 	return (
@@ -25,7 +25,7 @@ const Match = ({ game }: { game: Fixture }) => {
 	);
 };
 
-const Standings = ({ standings, fixtures }: { standings: [string, any][]; fixtures: Fixtures }) => {
+const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures: Fixtures }) => {
 	return (
 		<div className="flex flex-row flex-wrap justify-center">
 			{standings.map(([title, standing]) => {
@@ -55,7 +55,7 @@ const Standings = ({ standings, fixtures }: { standings: [string, any][]; fixtur
 							</thead>
 
 							<tbody>
-								{standing.map((place: any) => {
+								{standing.map((place: Standing) => {
 									const promotion = place.description?.includes('Promotion');
 									const bestThird = place.description?.includes('third');
 
@@ -103,4 +103,4 @@ const Standings = ({ standings, fixtures }: { standings: [string, any][]; fixtur
 	);
 };
 
-export default Standings;
+export default StandingsPage;

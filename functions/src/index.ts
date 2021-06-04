@@ -5,7 +5,7 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 
-import { Predictions } from '../../interfaces/main';
+import { Fixture, Fixtures, Predictions, Standing } from '../../interfaces/main';
 
 const app = express();
 
@@ -42,7 +42,7 @@ const get = async (url: string, opts: Record<string, unknown> = {}) => {
 
 const getStandings = async (opts: Record<string, unknown> = {}) => await get('standings', opts);
 
-const getFixtures = async (opts: Record<string, unknown> = {}) => await get('fixtures', opts);
+const getFixtures = async (opts: Record<string, unknown> = {}) => (await get('fixtures', opts)).data.response;
 
 const decodeToken = async (token: string) => {
   try {
@@ -87,7 +87,7 @@ app.get('/fetch-standings', async (req, res) => {
 
   const standings = response.data.response?.[0]?.league.standings;
 
-  const standsObj = standings.reduce((acc: Record<string, unknown>, stand: Array<any>) => {
+  const standsObj = standings.reduce((acc: Record<string, unknown>, stand: Array<Standing>) => {
     acc[stand[0].group.split(':')[1]?.trimStart()] = stand;
     return acc;
   }, {});
@@ -101,12 +101,9 @@ app.get('/fetch-fixtures', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
-  const fixtures = await getFixtures({ from: '2021-06-09', to: '2021-07-15' });
+  const fixtures: Fixture[] = await getFixtures({ from: '2021-06-09', to: '2021-07-15' });
 
-  const fixtureMap = fixtures.data.response.reduce(
-    (acc: Record<string, any>, game: any) => ({ ...acc, [game.fixture.id]: game }),
-    {}
-  );
+  const fixtureMap = fixtures.reduce((acc, game) => ({ ...acc, [game.fixture.id]: game }), {} as Fixtures);
 
   await admin.firestore().collection('euro2020').doc('fixtures').set(fixtureMap);
 
@@ -139,7 +136,7 @@ app.get('/predictions', async (req, res) => {
 
   const predictions = (document.data() ?? {}) as Predictions;
 
-  if (isAdmin) res.json(predictions);
+  if (isAdmin) return res.json(predictions);
 
   const censoredPredictions = Object.entries(predictions).reduce((acc, [gameID, gamePredictions]) => {
     for (const uid in gamePredictions) {
@@ -166,7 +163,7 @@ app.post('/update-predictions', async (req, res) => {
 
   if (uid !== callerUID) return res.status(403).json({ error: 'Forbidden' });
 
-  const fixtures = (await admin.firestore().collection('euro2020').doc('fixtures').get()).data();
+  const fixtures = (await admin.firestore().collection('euro2020').doc('fixtures').get()).data() as Fixtures;
 
   const gameDate = new Date(fixtures?.[gameId].fixture.date);
 

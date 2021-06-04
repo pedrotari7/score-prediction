@@ -57,7 +57,8 @@ const Game = ({
 			<div className="flex flex-row sm:w-8/12 justify-center items-center">
 				<div className="flex flex-row items-center justify-end sm:w-6/12">
 					<span className="hidden sm:block mr-2">{game?.teams.home.name}</span>
-					<img className="object-cover h-3 w-5 mr-2" src={game?.teams.home.logo} />
+					<img className="object-cover h-3 w-5 ml-2" src={game?.teams.home.logo} />
+
 					<ScoreInput
 						id={`${gameID}-home`}
 						value={prediction.home}

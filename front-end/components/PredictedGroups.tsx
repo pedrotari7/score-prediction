@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
-import { Predictions } from '../../interfaces/main';
+import { Fixtures, Predictions, Standing, Standings } from '../../interfaces/main';
 import UserContext from '../context/UserContext';
-import { Fixtures } from './Fixtures';
 
 interface Result {
 	points: number;
@@ -47,8 +46,8 @@ const calculateResults = (fixtures: Fixtures, predictions: Predictions, uid: str
 	}, {} as Record<number, Result>);
 };
 
-const sortGroup = (group: any, teamsResults: Record<number, Result>) => {
-	group.sort((a: any, b: any) => {
+const sortGroup = (group: Standing[], teamsResults: Record<number, Result>) => {
+	group.sort((a: Standing, b: Standing) => {
 		return (
 			teamsResults[b.team.id].points - teamsResults[a.team.id].points ||
 			teamsResults[b.team.id].wins - teamsResults[a.team.id].wins ||
@@ -63,7 +62,7 @@ const PredictedGroups = ({
 	fixtures,
 	predictions,
 }: {
-	standings: [string, any][];
+	standings: Standings;
 	fixtures: Fixtures;
 	predictions: Predictions;
 }) => {
@@ -100,7 +99,7 @@ const PredictedGroups = ({
 							</thead>
 
 							<tbody>
-								{sortedGroup.map((place: any, index: number) => {
+								{sortedGroup.map((place: Standing, index: number) => {
 									return (
 										<tr key={place.rank} className="">
 											<td className="mr">
