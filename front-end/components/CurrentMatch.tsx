@@ -1,15 +1,17 @@
 import React, { useContext } from 'react';
 import UserContext from '../context/UserContext';
-import { Fixtures, Prediction } from './Fixtures';
+import { Fixtures, Prediction, Venue } from './Fixtures';
 import LiveGame from './LiveGame';
 import { User, Users } from './Rankings';
+
+const stadiumImageURL = (venue: Venue) => `/stadiums/${venue.city.toLocaleLowerCase().replace(/\s/g, '')}.webp`;
 
 const UserGuess = ({ user, guess }: { user: User; guess: Prediction }) => {
 	return (
 		<div className="text-light flex flex-row items-center m-2 rounded p-3 bg-blue">
 			<span className="text-xs text-left flex flex-row items-center mr-8">
-				<img className="object-cover h-8 w-8 rounded-full mr-2" src={user.photoURL} />
-				<span>{user.displayName}</span>
+				{user?.photoURL && <img className="object-cover h-8 w-8 rounded-full mr-2" src={user?.photoURL} />}
+				<span>{user?.displayName}</span>
 			</span>
 
 			<div className="flex flex-row items-center justify-end w-4">
@@ -39,7 +41,7 @@ const CurrentMatch = ({
 	const game = Object.values(fixtures)[0];
 
 	return (
-		<main className="flex flex-col justify-center select-none text-light m-8 mx-24 p-8 shadow-pop rounded-md bg-dark">
+		<main className="flex flex-col justify-center select-none text-light m-8 mx-24 p-8 shadow-pop rounded-md bg-dark relative">
 			<p className="text-3xl mb-2">Next Game</p>
 			<LiveGame
 				gameID={game.fixture?.id}
@@ -68,6 +70,11 @@ const CurrentMatch = ({
 						))}
 				</div>
 			</div>
+
+			<img
+				className="object-cover absolute bottom-0 right-6 opacity-50"
+				src={stadiumImageURL(game?.fixture.venue)}
+			/>
 		</main>
 	);
 };
