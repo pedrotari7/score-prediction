@@ -3,19 +3,28 @@ import { ChangeEvent, useContext } from 'react';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import { getCurrentDate } from '../lib/utils/reactHelper';
+import { Predictions } from './Fixtures';
 import ScoreInput from './ScoreInput';
 
 const DEFAULT_PREDICTION = { home: '', away: '' };
 
-const Game = ({ updatePrediction, gameID }: { updatePrediction: Function; gameID: number }) => {
+const Game = ({
+	predictions,
+	updatePrediction,
+	gameID,
+}: {
+	predictions: Predictions;
+	updatePrediction: Function;
+	gameID: number;
+}) => {
 	const data = useContext(FixturesContext);
 	const userInfo = useContext(UserContext);
 
 	if (!data || !userInfo) return <></>;
 
-	const game = data.fixtures[gameID];
+	const game = data[gameID];
 
-	const prediction = game?.predictions[userInfo.uid] || DEFAULT_PREDICTION;
+	const prediction = predictions?.[gameID]?.[userInfo.uid] || DEFAULT_PREDICTION;
 
 	const group = game?.league.round.match(/Group (.) -/)?.[1];
 

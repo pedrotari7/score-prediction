@@ -31,7 +31,7 @@ export default function Navbar() {
 	const isCurrent = (item: NavItem) => item.page === route;
 
 	return (
-		<Disclosure as="nav" className="bg-blue sticky top-0 w-full">
+		<Disclosure as="nav" className="bg-blue sticky top-0 w-full z-10">
 			{({ open }) => (
 				<>
 					<div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">

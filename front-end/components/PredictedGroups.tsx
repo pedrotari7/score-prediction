@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import UserContext from '../context/UserContext';
-import { Fixtures } from './Fixtures';
+import { Fixtures, Predictions } from './Fixtures';
 
 interface Result {
 	points: number;
@@ -18,7 +18,7 @@ const intializeTeam = (): Result => ({
 
 const calculatePoints = ({ wins, draws }: Result) => 3 * wins + draws;
 
-const calculateResults = (fixtures: Fixtures, uid: string) => {
+const calculateResults = (fixtures: Fixtures, predictions: Predictions, uid: string) => {
 	return Object.values(fixtures).reduce((teams, game) => {
 		const homeTeam = game.teams.home.id;
 		const awayTeam = game.teams.away.id;
@@ -26,13 +26,13 @@ const calculateResults = (fixtures: Fixtures, uid: string) => {
 		if (!(homeTeam in teams)) teams[homeTeam] = intializeTeam();
 		if (!(awayTeam in teams)) teams[awayTeam] = intializeTeam();
 
-		const prediction = game.predictions[uid];
+		const prediction = predictions?.[game.fixture.id]?.[uid];
 
 		if (prediction?.home && prediction?.away) {
 			if (prediction.home > prediction.away) {
 				teams[homeTeam].wins += 1;
 				teams[awayTeam].loses += 1;
-			} else if (prediction.home < prediction.away) {
+			} else if (prediction?.home < prediction?.away) {
 				teams[awayTeam].wins += 1;
 				teams[homeTeam].loses += 1;
 			} else {
@@ -57,12 +57,20 @@ const sortGroup = (group: any, teamsResults: Record<number, Result>) => {
 	return group;
 };
 
-const PredictedGroups = ({ standings, fixtures }: { standings: [string, any][]; fixtures: Fixtures }) => {
+const PredictedGroups = ({
+	standings,
+	fixtures,
+	predictions,
+}: {
+	standings: [string, any][];
+	fixtures: Fixtures;
+	predictions: Predictions;
+}) => {
 	const userInfo = useContext(UserContext);
 
 	if (!userInfo) return <></>;
 
-	const teamsResults = calculateResults(fixtures, userInfo.uid);
+	const teamsResults = calculateResults(fixtures, predictions, userInfo.uid);
 
 	return (
 		<div className="flex flex-row flex-wrap justify-center">

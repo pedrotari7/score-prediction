@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import UserContext from '../context/UserContext';
-import { Fixtures, Prediction, Venue } from './Fixtures';
+import { Fixtures, Prediction, Predictions, Venue } from './Fixtures';
 import LiveGame from './LiveGame';
 import { User, Users } from './Rankings';
 
@@ -29,10 +29,12 @@ const UserGuess = ({ user, guess }: { user: User; guess: Prediction }) => {
 
 const CurrentMatch = ({
 	fixtures,
+	predictions,
 	updatePrediction,
 	users,
 }: {
 	fixtures: Fixtures;
+	predictions: Predictions;
 	updatePrediction: Function;
 	users: Users;
 }) => {
@@ -40,10 +42,13 @@ const CurrentMatch = ({
 
 	const game = Object.values(fixtures)[0];
 
+	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
+
 	return (
 		<main className="flex flex-col justify-center select-none text-light m-8 mx-24 p-8 shadow-pop rounded-md bg-dark relative">
 			<p className="text-3xl mb-2">Next Game</p>
 			<LiveGame
+				predictions={predictions}
 				gameID={game.fixture?.id}
 				updatePrediction={(update: Prediction) => updatePrediction(update, game.fixture?.id)}
 				key={game.fixture?.id}
@@ -52,7 +57,7 @@ const CurrentMatch = ({
 			<div className="mt-6">
 				<div className="text-xl mb-4">My Prediction</div>
 				<div className="flex flex-row flex-wrap">
-					{Object.entries(game.predictions)
+					{Object.entries(gamePredictions)
 						.filter(([uid, _]) => uid === userInfo?.uid)
 						.map(([uid, prediction]) => (
 							<UserGuess user={users[uid]} guess={prediction} key={uid} />
@@ -63,7 +68,7 @@ const CurrentMatch = ({
 			<div className="mt-6">
 				<div className="text-xl mb-4">Predictions</div>
 				<div className="flex flex-row flex-wrap">
-					{Object.entries(game.predictions)
+					{Object.entries(gamePredictions)
 						.filter(([uid, _]) => uid !== userInfo?.uid)
 						.map(([uid, prediction]) => (
 							<UserGuess user={users[uid]} guess={prediction} key={uid} />

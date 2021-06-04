@@ -7,7 +7,7 @@ export interface Prediction {
 }
 
 export interface Predictions {
-	[key: string]: Prediction;
+	[key: string]: Record<string, Prediction>;
 }
 
 export interface Team {
@@ -50,7 +50,6 @@ export interface FixtureData {
 }
 
 export interface Fixture {
-	predictions: Predictions;
 	fixture: FixtureData;
 	teams: Teams;
 	league: League;
@@ -62,10 +61,12 @@ export interface Fixtures {
 
 const FixturesPage = ({
 	fixtures,
+	predictions,
 	updatePrediction,
 	standings,
 }: {
 	fixtures: Fixtures;
+	predictions: Predictions;
 	updatePrediction: Function;
 	standings: [string, any][];
 }) => {
@@ -74,11 +75,12 @@ const FixturesPage = ({
 			<p className="text-4xl mb-2">Predictions</p>
 
 			<div className="flex flex-col-reverse md:flex-col">
-				<PredictedGroups fixtures={fixtures} standings={standings} />
+				<PredictedGroups predictions={predictions} fixtures={fixtures} standings={standings} />
 
 				<div className="flex flex-col">
 					{Object.values(fixtures).map(game => (
 						<Game
+							predictions={predictions}
 							gameID={game.fixture?.id}
 							updatePrediction={(update: Prediction) => updatePrediction(update, game.fixture?.id)}
 							key={game.fixture?.id}

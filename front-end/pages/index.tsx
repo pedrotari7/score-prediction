@@ -9,41 +9,57 @@ import Settings from '../components/Settings';
 import Rankings, { Users } from '../components/Rankings';
 import Standings from '../components/Standings';
 
-import { fetchFixtures, fetchStandings, fetchUsers, updateFixture } from './api';
+import { fetchFixtures, fetchPredictions, fetchStandings, fetchUsers, updatePredictions } from './api';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import RouteContext, { Route } from '../context/RouteContext';
-import FixturesPage, { Fixtures, Prediction } from '../components/Fixtures';
+import FixturesPage, { Fixtures, Prediction, Predictions } from '../components/Fixtures';
 import CurrentMatch from '../components/CurrentMatch';
 
 const Home = ({
-	fixtures: InitialFixtures,
+	fixtures,
 	standings,
+	predictions: InitialPredictions,
 	users,
 	uid,
 	token,
 }: {
 	fixtures: Fixtures;
 	standings: [string, any][];
+	predictions: Predictions;
 	users: Users;
 	uid: string;
 	token: string;
 }) => {
-	const [fixtures, setFixtures] = useState(InitialFixtures);
+	const [predictions, setPredictions] = useState(InitialPredictions);
+
 	const [route, setRoute] = useState(Route.Home);
 
 	const updatePrediction = (prediction: Prediction, gameId: number) => {
-		fixtures[gameId].predictions[uid] = prediction;
-		setFixtures({ ...fixtures });
-		updateFixture(token, uid, gameId, prediction);
+		setPredictions({ ...predictions, [gameId]: { ...predictions[gameId], [uid]: prediction } });
+		updatePredictions(token, uid, gameId, prediction);
 	};
 
 	const MainComponent = () => {
 		switch (route) {
 			case Route.Home:
-				return <CurrentMatch fixtures={fixtures} updatePrediction={updatePrediction} users={users} />;
+				return (
+					<CurrentMatch
+						fixtures={fixtures}
+						predictions={predictions}
+						updatePrediction={updatePrediction}
+						users={users}
+					/>
+				);
 			case Route.MyPredictions:
-				return <FixturesPage fixtures={fixtures} updatePrediction={updatePrediction} standings={standings} />;
+				return (
+					<FixturesPage
+						fixtures={fixtures}
+						predictions={predictions}
+						updatePrediction={updatePrediction}
+						standings={standings}
+					/>
+				);
 			case Route.Ranking:
 				return <Rankings users={users} />;
 			case Route.Standings:
@@ -58,7 +74,7 @@ const Home = ({
 	return (
 		<RouteContext.Provider value={{ route, setRoute }}>
 			<UserContext.Provider value={{ uid, token }}>
-				<FixturesContext.Provider value={{ fixtures, setFixtures }}>
+				<FixturesContext.Provider value={fixtures}>
 					<PageLayout title={'Score Prediction'}>
 						<MainComponent />
 					</PageLayout>
@@ -78,12 +94,14 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 		const standings = await fetchStandings(token);
 
+		const predictions = await fetchPredictions(token);
+
 		const users = await fetchUsers(token);
 
 		const sorted = Object.entries(standings).sort();
 
 		return {
-			props: { fixtures, standings: sorted, users, uid, token },
+			props: { fixtures, standings: sorted, predictions, users, uid, token },
 		};
 	} catch (err) {
 		return {
