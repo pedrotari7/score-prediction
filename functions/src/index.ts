@@ -5,6 +5,8 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 
+import { Predictions } from '../../interfaces/main';
+
 const app = express();
 
 app.use(cors({ origin: ['http://localhost:3000', 'https://score-prediction.com'] }));
@@ -116,7 +118,7 @@ app.get('/standings', async (req, res) => {
   if (!authResult.success) return authResult.result;
 
   const document = await admin.firestore().collection('euro2020').doc('standings').get();
-  return res.json({ ...document.data() });
+  return res.json(document.data());
 });
 
 app.get('/fixtures', async (req, res) => {
@@ -124,15 +126,34 @@ app.get('/fixtures', async (req, res) => {
   if (!authResult.success) return authResult.result;
 
   const document = await admin.firestore().collection('euro2020').doc('fixtures').get();
-  return res.json({ ...document.data() });
+  return res.json(document.data());
 });
 
 app.get('/predictions', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;
 
+  const { uid: callerUID, admin: isAdmin } = authResult.result as admin.auth.DecodedIdToken;
+
   const document = await admin.firestore().collection('euro2020').doc('predictions').get();
-  return res.json({ ...document.data() });
+
+  const predictions = (document.data() ?? {}) as Predictions;
+
+  if (isAdmin) res.json(predictions);
+
+  const censoredPredictions = Object.entries(predictions).reduce((acc, [gameID, gamePredictions]) => {
+    for (const uid in gamePredictions) {
+      if (uid !== callerUID) {
+        gamePredictions[uid].home = 'X';
+        gamePredictions[uid].away = 'X';
+      }
+    }
+    acc[gameID] = gamePredictions;
+
+    return acc;
+  }, {} as Predictions);
+
+  return res.json(censoredPredictions);
 });
 
 app.post('/update-predictions', async (req, res) => {

@@ -1,6 +1,7 @@
 {
     "eslint.workingDirectories": [
         "functions",
-        "front-end"
+        "front-end",
+        "interfaces"
     ]
 }

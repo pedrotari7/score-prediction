@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon';
 import { ChangeEvent, useContext } from 'react';
+import { Predictions } from '../../interfaces/main';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
 import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
-import { Predictions } from './Fixtures';
 import ScoreInput from './ScoreInput';
 
 const DEFAULT_PREDICTION = { home: '', away: '' };

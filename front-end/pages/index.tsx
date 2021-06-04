@@ -13,8 +13,9 @@ import { fetchFixtures, fetchPredictions, fetchStandings, fetchUsers, updatePred
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import RouteContext, { Route } from '../context/RouteContext';
-import FixturesPage, { Fixtures, Prediction, Predictions } from '../components/Fixtures';
+import FixturesPage, { Fixtures } from '../components/Fixtures';
 import CurrentMatch from '../components/CurrentMatch';
+import { Prediction, Predictions } from '../../interfaces/main';
 
 const Home = ({
 	fixtures,
@@ -33,7 +34,7 @@ const Home = ({
 }) => {
 	const [predictions, setPredictions] = useState(InitialPredictions);
 
-	const [route, setRoute] = useState({ page: Route.Home });
+	const [route, setRoute] = useState({ page: Route.Home, data: undefined });
 
 	const updatePrediction = (prediction: Prediction, gameId: number) => {
 		setPredictions({ ...predictions, [gameId]: { ...predictions[gameId], [uid]: prediction } });

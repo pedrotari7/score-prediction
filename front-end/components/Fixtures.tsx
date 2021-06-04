@@ -1,16 +1,7 @@
+import { Prediction, Predictions } from '../../interfaces/main';
 import { classNames } from '../lib/utils/reactHelper';
 import Game from './Game';
 import PredictedGroups from './PredictedGroups';
-
-export interface Prediction {
-	home: string;
-	away: string;
-}
-
-export interface Predictions {
-	[key: string]: Record<string, Prediction>;
-}
-
 export interface Team {
 	id: number;
 	name: string;

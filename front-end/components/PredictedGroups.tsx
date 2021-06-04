@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
+import { Predictions } from '../../interfaces/main';
 import UserContext from '../context/UserContext';
-import { Fixtures, Predictions } from './Fixtures';
+import { Fixtures } from './Fixtures';
 
 interface Result {
 	points: number;

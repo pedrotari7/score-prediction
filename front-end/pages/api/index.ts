@@ -1,4 +1,5 @@
-import { Fixtures, Prediction, Predictions } from '../../components/Fixtures';
+import { Prediction, Predictions } from '../../../interfaces/main';
+import { Fixtures } from '../../components/Fixtures';
 import { Users } from '../../components/Rankings';
 import fetcher from '../../lib/fetcher';
 import { backendUrl } from '../../lib/utils/envHelper';

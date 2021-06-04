@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
 import React, { ChangeEvent, useContext } from 'react';
+import { Predictions } from '../../interfaces/main';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import { getCurrentDate } from '../lib/utils/reactHelper';
-import { Predictions } from './Fixtures';
 import ScoreInput from './ScoreInput';
 
 const LiveGame = ({

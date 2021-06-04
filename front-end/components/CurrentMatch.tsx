@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
 import UserContext from '../context/UserContext';
-import { Fixtures, Prediction, Predictions, Venue } from './Fixtures';
+import { Fixtures, Venue } from './Fixtures';
 import LiveGame from './LiveGame';
 import { User, Users } from './Rankings';
+import { Prediction, Predictions } from '../../interfaces/main';
 
 const stadiumImageURL = (venue: Venue) => `/stadiums/${venue.city.toLocaleLowerCase().replace(/\s/g, '')}.webp`;
 
@@ -38,7 +39,7 @@ const CurrentMatch = ({
 	predictions: Predictions;
 	updatePrediction: Function;
 	users: Users;
-	gameID: number | undefined;
+	gameID?: number | undefined;
 }) => {
 	const userInfo = useContext(UserContext);
 
