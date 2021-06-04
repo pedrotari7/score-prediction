@@ -2,12 +2,23 @@ import React, { useContext } from 'react';
 import UserContext from '../context/UserContext';
 import LiveGame from './LiveGame';
 import { Fixtures, Prediction, Predictions, User, Users, Venue } from '../../interfaces/main';
+import RouteContext, { Route } from '../context/RouteContext';
+import { classNames } from '../lib/utils/reactHelper';
 
 const stadiumImageURL = (venue: Venue) => `/stadiums/${venue.city.toLocaleLowerCase().replace(/\s/g, '')}.webp`;
 
 const UserGuess = ({ user, guess }: { user: User; guess: Prediction }) => {
+	const routeInfo = useContext(RouteContext)!;
+
+	const { setRoute } = routeInfo;
+
 	return (
-		<div className="text-light flex flex-row items-center m-2 rounded p-3 bg-blue">
+		<div
+			className={classNames(
+				'text-light flex flex-row items-center m-2 rounded p-3 bg-blue',
+				'cursor-pointer hover:bg-opacity-50'
+			)}
+			onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
 			<span className="text-xs text-left flex flex-row items-center mr-8">
 				{user?.photoURL && <img className="object-cover h-8 w-8 rounded-full mr-2" src={user?.photoURL} />}
 				<span>{user?.displayName}</span>

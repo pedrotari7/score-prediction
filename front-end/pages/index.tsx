@@ -52,13 +52,14 @@ const Home = ({
 						users={users}
 					/>
 				);
-			case Route.MyPredictions:
+			case Route.Predictions:
 				return (
 					<FixturesPage
 						fixtures={fixtures}
 						predictions={predictions}
 						updatePrediction={updatePrediction}
 						standings={standings}
+						user={users[route.data!]}
 					/>
 				);
 			case Route.Ranking:

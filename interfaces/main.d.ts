@@ -3,8 +3,10 @@ export interface Prediction {
 	away: string;
 }
 
+export type GamePredictions = Record<string, Prediction>;
+
 export interface Predictions {
-	[key: string]: Record<string, Prediction>;
+	[key: string]: GamePredictions;
 }
 
 export interface Team {

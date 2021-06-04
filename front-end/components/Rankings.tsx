@@ -1,6 +1,11 @@
+import { useContext } from 'react';
 import { Users } from '../../interfaces/main';
+import RouteContext, { Route } from '../context/RouteContext';
+import { classNames } from '../lib/utils/reactHelper';
 
 const Rankings = ({ users }: { users: Users }) => {
+	const { setRoute } = useContext(RouteContext)!;
+
 	return (
 		<div className="flex justify-center m-6 p-6 shadow-pop rounded-md bg-dark">
 			<table className="text-light text-center">
@@ -18,7 +23,10 @@ const Rankings = ({ users }: { users: Users }) => {
 				<tbody>
 					{Object.values(users).map(user => {
 						return (
-							<tr key={user.uid}>
+							<tr
+								key={user.uid}
+								className={classNames('cursor-pointer hover:bg-blue')}
+								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
 								<td className="flex flex-row items-center mr-4">
 									<img className="object-cover h-8 w-8 rounded-full mr-2" src={user.photoURL} />
 									<span>{user.displayName}</span>

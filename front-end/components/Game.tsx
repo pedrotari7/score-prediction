@@ -3,7 +3,6 @@ import { ChangeEvent, useContext } from 'react';
 import { Predictions } from '../../interfaces/main';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
-import UserContext from '../context/UserContext';
 import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import ScoreInput from './ScoreInput';
@@ -14,22 +13,23 @@ const Game = ({
 	predictions,
 	updatePrediction,
 	gameID,
+	userID,
 }: {
 	predictions: Predictions;
 	updatePrediction: Function;
 	gameID: number;
+	userID: string;
 }) => {
 	const data = useContext(FixturesContext);
-	const userInfo = useContext(UserContext);
 	const routeInfo = useContext(RouteContext);
 
-	if (!data || !userInfo || !routeInfo) return <></>;
+	if (!data || !routeInfo) return <></>;
 
 	const { setRoute } = routeInfo;
 
 	const game = data[gameID];
 
-	const prediction = predictions?.[gameID]?.[userInfo.uid] || DEFAULT_PREDICTION;
+	const prediction = predictions?.[gameID]?.[userID] || DEFAULT_PREDICTION;
 
 	const group = game?.league.round.match(/Group (.) -/)?.[1];
 

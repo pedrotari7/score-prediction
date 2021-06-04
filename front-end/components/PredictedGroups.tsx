@@ -1,6 +1,4 @@
-import React, { useContext } from 'react';
-import { Fixtures, Predictions, Standing, Standings } from '../../interfaces/main';
-import UserContext from '../context/UserContext';
+import { Fixtures, Standing, Standings, GamePredictions, Predictions } from '../../interfaces/main';
 import Flag from './Flag';
 
 interface Result {
@@ -62,16 +60,14 @@ const PredictedGroups = ({
 	standings,
 	fixtures,
 	predictions,
+	userID,
 }: {
 	standings: Standings;
 	fixtures: Fixtures;
 	predictions: Predictions;
+	userID: string;
 }) => {
-	const userInfo = useContext(UserContext);
-
-	if (!userInfo) return <></>;
-
-	const teamsResults = calculateResults(fixtures, predictions, userInfo.uid);
+	const teamsResults = calculateResults(fixtures, predictions, userID);
 
 	return (
 		<div className="flex flex-row flex-wrap justify-center">

@@ -5,22 +5,22 @@ import { classNames } from '../lib/utils/reactHelper';
 import { firebaseClient } from '../lib/firebaseClient';
 import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth';
-import RouteContext, { Route } from '../context/RouteContext';
+import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 
 interface NavItem {
 	name: string;
-	page: Route;
+	info: RouteInfo;
 }
-
-const navigation: NavItem[] = [
-	{ name: 'MyPredictions', page: Route.MyPredictions },
-	{ name: 'Standings', page: Route.Standings },
-	{ name: 'Ranking', page: Route.Ranking },
-];
 
 export default function Navbar() {
 	const router = useRouter();
 	const { user } = useAuth();
+
+	const navigation: NavItem[] = [
+		{ name: 'MyPredictions', info: { page: Route.Predictions, data: user?.uid } },
+		{ name: 'Standings', info: { page: Route.Standings } },
+		{ name: 'Ranking', info: { page: Route.Ranking } },
+	];
 
 	const routeInfo = useContext(RouteContext);
 
@@ -28,9 +28,9 @@ export default function Navbar() {
 
 	const { route, setRoute } = routeInfo;
 
-	const updateRoute = (page: Route) => setRoute({ page });
+	const updateRoute = (info: RouteInfo) => setRoute(info);
 
-	const isCurrent = (item: NavItem) => item.page === route.page;
+	const isCurrent = (item: NavItem) => item.info.page === route.page && route.data === user?.uid!;
 
 	return (
 		<Disclosure as="nav" className="bg-blue fixed h-16 top-0 w-full z-20">
@@ -52,7 +52,7 @@ export default function Navbar() {
 							<div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start cursor-pointer">
 								<div
 									className="flex-shrink-0 flex items-center"
-									onClick={() => updateRoute(Route.Home)}>
+									onClick={() => updateRoute({ page: Route.Home })}>
 									<img className="block h-8 w-auto" src="/logo.svg" alt="logo" />
 								</div>
 								<div className="hidden sm:block sm:ml-6">
@@ -60,7 +60,7 @@ export default function Navbar() {
 										{navigation.map(item => (
 											<div
 												key={item.name}
-												onClick={() => updateRoute(item.page)}
+												onClick={() => updateRoute(item.info)}
 												className={classNames(
 													isCurrent(item)
 														? 'bg-dark text-light'
@@ -105,7 +105,9 @@ export default function Navbar() {
 														<Menu.Item>
 															{({ active }) => (
 																<div
-																	onClick={() => updateRoute(Route.Settings)}
+																	onClick={() =>
+																		updateRoute({ page: Route.Settings })
+																	}
 																	className={classNames(
 																		active ? 'bg-gray-100' : '',
 																		'cursor-pointer block px-4 py-2 text-sm text-gray-700'
@@ -146,7 +148,7 @@ export default function Navbar() {
 								<Disclosure.Button key={item.name}>
 									<div
 										onClick={() => {
-											updateRoute(item.page);
+											updateRoute(item.info);
 											open = false;
 										}}
 										className={classNames(
