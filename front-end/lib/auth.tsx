@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 			if (!user) {
 				setUser(null);
 				nookies.destroy(null, 'token');
-				nookies.set(null, 'token', '', { path: '/' });
+				nookies.set(null, 'token', '', { path: '/', sameSite: 'Strict' });
 				return;
 			}
 
