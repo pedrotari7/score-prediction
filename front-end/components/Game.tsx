@@ -37,8 +37,6 @@ const Game = ({
 	const isInPast = getCurrentDate() < gameDate;
 
 	const onPredictionChange = (e: ChangeEvent<HTMLInputElement>, team: string) => {
-		e.preventDefault();
-		e.stopPropagation();
 		updatePrediction({ ...prediction, [team]: e.target.value });
 	};
 

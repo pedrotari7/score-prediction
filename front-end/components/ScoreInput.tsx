@@ -3,7 +3,11 @@ import { classNames } from '../lib/utils/reactHelper';
 const ScoreInput = ({ className, value, onchange = () => {}, disabled = false }: any) => (
 	<input
 		value={value}
-		onChange={onchange}
+		onChange={e => {
+			e.stopPropagation();
+			e.preventDefault();
+			onchange(e);
+		}}
 		onClick={e => e.stopPropagation()}
 		disabled={disabled}
 		className={classNames(
@@ -15,7 +19,7 @@ const ScoreInput = ({ className, value, onchange = () => {}, disabled = false }:
 				: 'border  border-gray-200',
 			value ? 'bg-gray-300' : 'bg-error border-none'
 		)}
-		type="text"
+		type="number"
 	/>
 );
 
