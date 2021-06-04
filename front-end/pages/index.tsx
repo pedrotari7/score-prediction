@@ -33,7 +33,7 @@ const Home = ({
 }) => {
 	const [predictions, setPredictions] = useState(InitialPredictions);
 
-	const [route, setRoute] = useState(Route.Home);
+	const [route, setRoute] = useState({ page: Route.Home });
 
 	const updatePrediction = (prediction: Prediction, gameId: number) => {
 		setPredictions({ ...predictions, [gameId]: { ...predictions[gameId], [uid]: prediction } });
@@ -41,7 +41,7 @@ const Home = ({
 	};
 
 	const MainComponent = () => {
-		switch (route) {
+		switch (route.page) {
 			case Route.Home:
 				return (
 					<CurrentMatch

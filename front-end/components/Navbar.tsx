@@ -28,7 +28,9 @@ export default function Navbar() {
 
 	const { route, setRoute } = routeInfo;
 
-	const isCurrent = (item: NavItem) => item.page === route;
+	const updateRoute = (page: Route) => setRoute({ page });
+
+	const isCurrent = (item: NavItem) => item.page === route.page;
 
 	return (
 		<Disclosure as="nav" className="bg-blue sticky top-0 w-full z-10">
@@ -48,7 +50,9 @@ export default function Navbar() {
 								</Disclosure.Button>
 							</div>
 							<div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start cursor-pointer">
-								<div className="flex-shrink-0 flex items-center" onClick={() => setRoute(Route.Home)}>
+								<div
+									className="flex-shrink-0 flex items-center"
+									onClick={() => updateRoute(Route.Home)}>
 									<img className="block h-8 w-auto" src="/logo.svg" alt="logo" />
 								</div>
 								<div className="hidden sm:block sm:ml-6">
@@ -56,7 +60,7 @@ export default function Navbar() {
 										{navigation.map(item => (
 											<div
 												key={item.name}
-												onClick={() => setRoute(item.page)}
+												onClick={() => updateRoute(item.page)}
 												className={classNames(
 													isCurrent(item)
 														? 'bg-dark text-light'
@@ -101,7 +105,7 @@ export default function Navbar() {
 														<Menu.Item>
 															{({ active }) => (
 																<div
-																	onClick={() => setRoute(Route.Settings)}
+																	onClick={() => updateRoute(Route.Settings)}
 																	className={classNames(
 																		active ? 'bg-gray-100' : '',
 																		'cursor-pointer block px-4 py-2 text-sm text-gray-700'
@@ -142,7 +146,7 @@ export default function Navbar() {
 								<Disclosure.Button key={item.name}>
 									<div
 										onClick={() => {
-											setRoute(item.page);
+											updateRoute(item.page);
 											open = false;
 										}}
 										className={classNames(

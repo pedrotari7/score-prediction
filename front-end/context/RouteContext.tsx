@@ -7,7 +7,9 @@ export enum Route {
 	Standings = 'standings',
 	Ranking = 'ranking',
 	Settings = 'settings',
+	Match = 'match',
 }
-const RouteContext = createContext<{ route: Route; setRoute: Function } | null>(null);
+const RouteContext =
+	createContext<{ route: { page: Route; data?: string | number | undefined }; setRoute: Function } | null>(null);
 
 export default RouteContext;
