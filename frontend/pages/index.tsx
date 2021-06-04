@@ -12,7 +12,7 @@ import StandingsPage from '../components/Standings';
 import { fetchFixtures, fetchPredictions, fetchStandings, fetchUsers, updatePredictions } from './api';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
-import RouteContext, { Route } from '../context/RouteContext';
+import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import FixturesPage from '../components/Fixtures';
 import CurrentMatch from '../components/CurrentMatch';
 import { Fixtures, Prediction, Predictions, Standings, Users } from '../../interfaces/main';
@@ -34,7 +34,7 @@ const Home = ({
 }) => {
 	const [predictions, setPredictions] = useState(InitialPredictions);
 
-	const [route, setRoute] = useState({ page: Route.Home, data: undefined });
+	const [route, setRoute] = useState<RouteInfo>({ page: Route.Home, data: undefined });
 
 	const updatePrediction = (prediction: Prediction, gameId: number) => {
 		setPredictions({ ...predictions, [gameId]: { ...predictions[gameId], [uid]: prediction } });
@@ -50,6 +50,7 @@ const Home = ({
 						predictions={predictions}
 						updatePrediction={updatePrediction}
 						users={users}
+						gameID={route?.data as number}
 					/>
 				);
 			case Route.Predictions:
@@ -75,7 +76,7 @@ const Home = ({
 						predictions={predictions}
 						updatePrediction={updatePrediction}
 						users={users}
-						gameID={route.data}
+						gameID={route?.data as number}
 					/>
 				);
 			default:
@@ -116,6 +117,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 			props: { fixtures, standings: sorted, predictions, users, uid, token },
 		};
 	} catch (err) {
+		console.log(`error`, err);
 		return {
 			redirect: {
 				permanent: false,

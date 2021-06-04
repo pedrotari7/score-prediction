@@ -42,13 +42,13 @@ const CurrentMatch = ({
 	predictions,
 	updatePrediction,
 	users,
-	gameID = undefined,
+	gameID,
 }: {
 	fixtures: Fixtures;
 	predictions: Predictions;
 	updatePrediction: Function;
 	users: Users;
-	gameID?: number | undefined;
+	gameID: number;
 }) => {
 	const userInfo = useContext(UserContext);
 
