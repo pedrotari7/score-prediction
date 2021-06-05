@@ -27,6 +27,9 @@ module.exports = {
 				pop: '0px 2px 40px rgba(0, 0, 0, 0.33)',
 				panel: '0px 2px 4px rgba(0, 0, 0, 0.33)',
 			},
+			height: {
+				panel: 'calc(100vh - 4rem)',
+			},
 		},
 	},
 	variants: {
