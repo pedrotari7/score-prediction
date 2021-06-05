@@ -68,12 +68,9 @@ const Game = ({
 						disabled={!isInPast}
 						onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'home')}
 					/>
-
-					<ScoreInput value={game.goals.home} disabled={true} className="mx-2" />
 				</div>
 
 				<div className="flex flex-row items-center justify-start lg:w-6/12 my-2 lg:my-0">
-					<ScoreInput value={game.goals.away} disabled={true} className="mx-2" />
 					<ScoreInput
 						id={`${gameID}-away`}
 						value={prediction.away}

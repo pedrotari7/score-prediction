@@ -48,7 +48,6 @@ const Home = ({
 					<CurrentMatch
 						fixtures={fixtures}
 						predictions={predictions}
-						updatePrediction={updatePrediction}
 						users={users}
 						gameID={route?.data as number}
 					/>
@@ -74,7 +73,6 @@ const Home = ({
 					<CurrentMatch
 						fixtures={fixtures}
 						predictions={predictions}
-						updatePrediction={updatePrediction}
 						users={users}
 						gameID={route?.data as number}
 					/>

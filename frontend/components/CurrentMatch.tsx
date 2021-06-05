@@ -24,13 +24,13 @@ const UserGuess = ({ user, guess }: { user: User; guess: Prediction }) => {
 				<span>{user?.displayName}</span>
 			</span>
 
-			<div className="flex flex-row items-center justify-end w-4">
+			<div className="flex flex-row items-center justify-end w-4 font-bold">
 				<span className="mr-2">{guess.home}</span>
 			</div>
 
 			<span className="">-</span>
 
-			<div className="flex flex-row items-center justify-start w-4">
+			<div className="flex flex-row items-center justify-start w-4 font-bold">
 				<span className="ml-2">{guess.away}</span>
 			</div>
 		</div>
@@ -52,7 +52,9 @@ const CurrentMatch = ({
 }) => {
 	const userInfo = useContext(UserContext);
 
-	const game = gameID ? fixtures[gameID] : Object.values(fixtures)[0];
+	const sortedFixtures = Object.values(fixtures).sort((a, b) => a.fixture.timestamp - b.fixture.timestamp);
+
+	const game = gameID ? fixtures[gameID] : sortedFixtures[0];
 
 	if (!game) return <></>;
 
@@ -63,12 +65,7 @@ const CurrentMatch = ({
 			{!gameID && <p className="text-3xl mb-2">Next Game</p>}
 			{gameID && <p className="text-3xl mb-2">{game.league?.round}</p>}
 
-			<LiveGame
-				predictions={predictions}
-				gameID={game.fixture?.id}
-				updatePrediction={(update: Prediction) => updatePrediction(update, game.fixture?.id)}
-				key={game.fixture?.id}
-			/>
+			<LiveGame gameID={game.fixture?.id} key={game.fixture?.id} />
 
 			<div className="mt-6">
 				<div className="text-xl mb-4">My Prediction</div>
