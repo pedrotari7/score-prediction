@@ -2,12 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+	@font-face {
+		font-family: 'PFBeauSansPro';
+		src: url('/fonts/PFBeauSansPro-Regular.woff2') format('woff2');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: 'PFBeauSansPro';
+		src: url('/fonts/PFBeauSansPro-Bold.woff2') format('woff2');
+		font-weight: bold;
+		font-style: normal;
+	}
+}
+
 html,
 body {
 	padding: 0;
 	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
-		Helvetica Neue, sans-serif;
 	background-color: #3292a4;
 }
 

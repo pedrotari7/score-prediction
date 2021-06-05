@@ -8,6 +8,9 @@ module.exports = {
 	},
 	darkMode: false,
 	theme: {
+		fontFamily: {
+			sans: ['PFBeauSansPro'],
+		},
 		extend: {
 			colors: {
 				transparent: 'transparent',
