@@ -19,6 +19,8 @@ const API_SPORTS_URL = 'https://v3.football.api-sports.io';
 
 const ADMIN_USERS = ['pedrotari7@gmail.com'];
 
+const currentCompetition = 2016 as number;
+
 const buildUrl = (url: string, opts: Record<string, unknown>) =>
   url +
   '?' +
@@ -27,7 +29,7 @@ const buildUrl = (url: string, opts: Record<string, unknown>) =>
     .join('&');
 
 const get = async (url: string, opts: Record<string, unknown> = {}) => {
-  const options = { league: 4, season: 2020, ...opts };
+  const options = { league: 4, season: currentCompetition, ...opts };
   try {
     return await axios.get(buildUrl(`${API_SPORTS_URL}/${url}`, options), {
       headers: {
@@ -85,12 +87,22 @@ app.get('/fetch-standings', async (req, res) => {
 
   const response = await getStandings();
 
-  const standings = response.data.response?.[0]?.league.standings;
+  const standings =
+    currentCompetition === 2020
+      ? response.data.response?.[0]?.league.standings
+      : response.data.response?.[0]?.league.standings[1];
 
-  const standsObj = standings.reduce((acc: Record<string, unknown>, stand: Array<Standing>) => {
-    acc[stand[0].group.split(':')[1]?.trimStart()] = stand;
-    return acc;
-  }, {});
+  const standsObj =
+    currentCompetition === 2020
+      ? standings.reduce((acc: Record<string, unknown>, stand: Array<Standing>) => {
+          acc[stand[0].group.split(':')[1]?.trimStart()] = stand;
+          return acc;
+        }, {})
+      : standings.reduce((acc: Record<string, Standing[]>, stand: Standing) => {
+          if (!acc[stand.group]) acc[stand.group] = [];
+          acc[stand.group].push(stand);
+          return acc;
+        }, {});
 
   await admin.firestore().collection('euro2020').doc('standings').set(standsObj);
 
@@ -101,7 +113,8 @@ app.get('/fetch-fixtures', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
-  const fixtures: Fixture[] = await getFixtures({ from: '2021-06-09', to: '2021-07-15' });
+  const fixtures: Fixture[] =
+    currentCompetition === 2020 ? await getFixtures({ from: '2021-06-09', to: '2021-07-15' }) : await getFixtures();
 
   const fixtureMap = fixtures.reduce((acc, game) => ({ ...acc, [game.fixture.id]: game }), {} as Fixtures);
 

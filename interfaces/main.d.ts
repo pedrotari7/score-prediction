@@ -48,10 +48,24 @@ export interface FixtureData {
 	venue: Venue;
 }
 
+export interface Result {
+	home: number;
+	away: number;
+}
+
+export interface Score {
+	extratime: Result;
+	fulltime: Result;
+	halftime: Result;
+	penalty: Result;
+}
+
 export interface Fixture {
 	fixture: FixtureData;
 	teams: Teams;
 	league: League;
+	goals: Result;
+	score: Score;
 }
 
 export interface Fixtures {

@@ -46,7 +46,7 @@ const LiveGame = ({
 
 					{!isInPast && (
 						<ScoreInput
-							value={prediction.home}
+							value={prediction?.home}
 							className="mx-2"
 							onchange={(e: ChangeEvent<HTMLInputElement>) => {
 								e.preventDefault();
@@ -65,7 +65,7 @@ const LiveGame = ({
 				<div className="flex flex-row items-center justify-start sm:w-4/12">
 					{!isInPast && (
 						<ScoreInput
-							value={prediction.away}
+							value={prediction?.away}
 							onchange={(e: ChangeEvent<HTMLInputElement>) => {
 								e.preventDefault();
 								updatePrediction({ ...prediction, away: e.target.value });

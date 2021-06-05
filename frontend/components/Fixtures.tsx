@@ -21,6 +21,8 @@ const FixturesPage = ({
 
 	const uid = currentUser?.uid;
 
+	const sortedFixtures = Object.values(fixtures).sort((a, b) => a.fixture.timestamp - b.fixture.timestamp);
+
 	return (
 		<main
 			className={classNames(
@@ -42,7 +44,7 @@ const FixturesPage = ({
 				/>
 
 				<div className="flex flex-col">
-					{Object.values(fixtures).map((game, index) => (
+					{sortedFixtures.map((game, index) => (
 						<Game
 							predictions={predictions}
 							gameID={game.fixture?.id}

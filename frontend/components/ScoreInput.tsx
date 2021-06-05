@@ -17,7 +17,7 @@ const ScoreInput = ({ className, value, onchange = () => {}, disabled = false, i
 			disabled
 				? 'bg-transparent text-light border-none outline-none select-none font-bold'
 				: 'border  border-gray-200',
-			value ? 'bg-gray-300' : 'bg-error border-none'
+			typeof value !== 'number' ? 'bg-error border-none' : ''
 		)}
 		id={id}
 		name={id}
