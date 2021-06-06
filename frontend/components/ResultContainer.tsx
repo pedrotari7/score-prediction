@@ -18,14 +18,18 @@ const ResultContainer = ({
 	const { home: predH, away: predA } = prediction;
 	const { home: realH, away: realA } = result;
 
+	const isNum = (n: number) => typeof n === 'number';
+
 	const getOutcome = (g: Result) => {
+		if (!isNum(g.home) || !isNum(g.away)) return null;
 		if (g.home > g.away) return 'winH';
 		if (g.home < g.away) return 'winA';
 		if (g.home === g.away) return 'draw';
 	};
 
 	const isExactScore = predH === realH && predA === realA;
-	const isCorrectResult = !isExactScore && getOutcome(prediction) === getOutcome(result);
+	const isCorrectResult =
+		!isExactScore && getOutcome(prediction) !== null && getOutcome(prediction) === getOutcome(result);
 	const isCorrectGoal = !isExactScore && !isCorrectResult && (predH === realH || predA === realA);
 	const isWrong = !isExactScore && !isCorrectResult && !isCorrectGoal;
 	return (
