@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon';
-import { ChangeEvent, useContext } from 'react';
-import { Predictions } from '../../interfaces/main';
+import { ChangeEvent, useContext, ReactChildren, ReactNode } from 'react';
+import { Predictions, Result, Score } from '../../interfaces/main';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
+import UserContext from '../context/UserContext';
 import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import ScoreInput from './ScoreInput';
@@ -20,12 +21,15 @@ const Game = ({
 	gameID: number;
 	userID: string;
 }) => {
-	const data = useContext(FixturesContext);
-	const routeInfo = useContext(RouteContext);
+	const data = useContext(FixturesContext)!;
+	const routeInfo = useContext(RouteContext)!;
+	const { uid } = useContext(UserContext)!;
 
 	if (!data || !routeInfo) return <></>;
 
 	const { setRoute } = routeInfo;
+
+	const isMyPredictions = uid === userID;
 
 	const game = data[gameID];
 
@@ -38,7 +42,36 @@ const Game = ({
 	const isInPast = getCurrentDate() >= gameDate;
 
 	const onPredictionChange = (e: ChangeEvent<HTMLInputElement>, team: string) => {
-		updatePrediction({ ...prediction, [team]: e.target.value });
+		updatePrediction({ ...prediction, [team]: parseInt(e.target.value) });
+	};
+
+	const Result = ({ children, className = '' }: { className?: string; children: ReactNode }) => {
+		const { home: predH, away: predA } = prediction;
+		const { home: realH, away: realA } = game.goals;
+
+		const getOutcome = (g: Result) => {
+			if (g.home > g.away) return 'winH';
+			if (g.home < g.away) return 'winA';
+			if (g.home === g.away) return 'draw';
+		};
+
+		const isExactScore = predH === realH && predA === realA;
+		const isCorrectResult = !isExactScore && getOutcome(prediction) === getOutcome(game.goals);
+		const isCorrectGoal = !isExactScore && !isCorrectResult && (predH === realH || predA === realA);
+		const isWrong = !isExactScore && !isCorrectResult && !isCorrectGoal;
+		return (
+			<div
+				className={classNames(
+					className,
+					'rounded-md px-2 mb-2 w-24 text-center',
+					isExactScore ? 'bg-green-500' : '',
+					isCorrectResult ? 'bg-indigo-600' : '',
+					isCorrectGoal ? 'bg bg-pink-500' : '',
+					isWrong ? 'bg-red-500' : ''
+				)}>
+				{children}
+			</div>
+		);
 	};
 
 	return (
@@ -61,35 +94,48 @@ const Game = ({
 
 					<Flag team={game?.teams.home} />
 				</div>
-				{!isInPast && (
-					<ScoreInput
-						id={`${gameID}-home`}
-						value={prediction.home}
-						className="mx-2"
-						onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'home')}
-					/>
+
+				{!isInPast && isMyPredictions && (
+					<>
+						<ScoreInput
+							id={`${gameID}-home`}
+							value={prediction.home}
+							className="mx-2"
+							onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'home')}
+						/>
+
+						<ScoreInput
+							id={`${gameID}-away`}
+							value={prediction.away}
+							className="mx-2"
+							onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'away')}
+						/>
+					</>
+				)}
+
+				{!isInPast && !isMyPredictions && (
+					<div className="font-bold mx-4">
+						{prediction.home || 'X'} - {prediction.away || 'X'}
+					</div>
 				)}
 
 				{isInPast && (
-					<div className="font-bold mx-4 lg:w-2/12 flex flex-col items-center justify-center">
-						<div className="rounded-md bg-green-500 px-2 mb-2">
-							{game.goals.home} - {game.goals.away}
-						</div>
+					<div className="font-bold mx-4 lg:w-3/12 flex flex-col items-center justify-center">
+						<Result>
+							{(!prediction.home || !prediction.away) && <span>No prediction</span>}
+							{prediction.home && prediction.away && (
+								<span>
+									{prediction.home} - {prediction.away}
+								</span>
+							)}
+						</Result>
 						<div>
-							{prediction.home} - {prediction.away}
+							{game.goals.home} - {game.goals.away}
 							<span className="ml-2">{game.fixture.status.short}</span>
 						</div>
 					</div>
 				)}
 
-				{!isInPast && (
-					<ScoreInput
-						id={`${gameID}-away`}
-						value={prediction.away}
-						className="mx-2"
-						onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'away')}
-					/>
-				)}
 				<div className="flex flex-row items-center justify-start lg:w-5/12 my-2 lg:my-0">
 					<Flag team={game?.teams.away} />
 

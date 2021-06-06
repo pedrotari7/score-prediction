@@ -1,6 +1,6 @@
 export interface Prediction {
-	home: string;
-	away: string;
+	home: number;
+	away: number;
 }
 
 export type GamePredictions = Record<string, Prediction>;

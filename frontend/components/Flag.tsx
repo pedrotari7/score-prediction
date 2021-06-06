@@ -2,7 +2,6 @@ import { Team } from '../../interfaces/main';
 import { classNames } from '../lib/utils/reactHelper';
 
 const Flag = ({ className = '', team }: { team: Team; className?: string }) => {
-	if (!FLAGS[team.id]) console.log(`team`, team);
 	return (
 		<div className={classNames(className, 'flex justify-center items-center')}>
 			<img className="h-5 w-7 mx-2" src={FLAGS[team?.id]} />

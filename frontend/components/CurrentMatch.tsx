@@ -12,6 +12,8 @@ const UserGuess = ({ user, guess }: { user: User; guess: Prediction }) => {
 
 	const { setRoute } = routeInfo;
 
+	const parsedGuess = { home: guess.home > 0 ? guess.home : 'X', away: guess.away > 0 ? guess.away : 'X' };
+
 	return (
 		<div
 			className={classNames(
@@ -25,13 +27,13 @@ const UserGuess = ({ user, guess }: { user: User; guess: Prediction }) => {
 			</span>
 
 			<div className="flex flex-row items-center justify-end w-4 font-bold">
-				<span className="mr-2">{guess.home}</span>
+				<span className="mr-2">{parsedGuess.home}</span>
 			</div>
 
 			<span className="">-</span>
 
 			<div className="flex flex-row items-center justify-start w-4 font-bold">
-				<span className="ml-2">{guess.away}</span>
+				<span className="ml-2">{parsedGuess.away}</span>
 			</div>
 		</div>
 	);
@@ -40,13 +42,11 @@ const UserGuess = ({ user, guess }: { user: User; guess: Prediction }) => {
 const CurrentMatch = ({
 	fixtures,
 	predictions,
-	updatePrediction,
 	users,
 	gameID,
 }: {
 	fixtures: Fixtures;
 	predictions: Predictions;
-	updatePrediction: Function;
 	users: Users;
 	gameID: number;
 }) => {

@@ -184,8 +184,8 @@ app.get('/predictions', async (req, res) => {
     if (isInPast) {
       for (const uid in gamePredictions) {
         if (uid !== callerUID) {
-          gamePredictions[uid].home = 'X';
-          gamePredictions[uid].away = 'X';
+          gamePredictions[uid].home = -1;
+          gamePredictions[uid].away = -1;
         }
       }
     }
