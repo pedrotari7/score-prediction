@@ -53,7 +53,7 @@ const Game = ({
 				'cursor-pointer hover:bg-blue'
 			)}
 			onClick={() => setRoute({ page: Route.Match, data: gameID })}>
-			<span className="text-xs text-left w-full lg:w-2/12 flex justify-between items-center ">
+			<span className="text-xs text-left w-full lg:w-3/12 flex justify-between items-center ">
 				<div className="items-center">
 					<span>{round}</span>
 				</div>
