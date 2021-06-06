@@ -1,11 +1,12 @@
 import { DateTime } from 'luxon';
-import { ChangeEvent, useContext, ReactChildren, ReactNode } from 'react';
-import { Predictions, Result, Score } from '../../interfaces/main';
+import { ChangeEvent, useContext } from 'react';
+import { Predictions } from '../../interfaces/main';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
 import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
 import Flag from './Flag';
+import ResultContainer from './ResultContainer';
 import ScoreInput from './ScoreInput';
 
 const DEFAULT_PREDICTION = { home: '', away: '' };
@@ -43,35 +44,6 @@ const Game = ({
 
 	const onPredictionChange = (e: ChangeEvent<HTMLInputElement>, team: string) => {
 		updatePrediction({ ...prediction, [team]: parseInt(e.target.value) });
-	};
-
-	const Result = ({ children, className = '' }: { className?: string; children: ReactNode }) => {
-		const { home: predH, away: predA } = prediction;
-		const { home: realH, away: realA } = game.goals;
-
-		const getOutcome = (g: Result) => {
-			if (g.home > g.away) return 'winH';
-			if (g.home < g.away) return 'winA';
-			if (g.home === g.away) return 'draw';
-		};
-
-		const isExactScore = predH === realH && predA === realA;
-		const isCorrectResult = !isExactScore && getOutcome(prediction) === getOutcome(game.goals);
-		const isCorrectGoal = !isExactScore && !isCorrectResult && (predH === realH || predA === realA);
-		const isWrong = !isExactScore && !isCorrectResult && !isCorrectGoal;
-		return (
-			<div
-				className={classNames(
-					className,
-					'rounded-md px-2 mb-2 w-24 text-center',
-					isExactScore ? 'bg-green-500' : '',
-					isCorrectResult ? 'bg-indigo-600' : '',
-					isCorrectGoal ? 'bg bg-pink-500' : '',
-					isWrong ? 'bg-red-500' : ''
-				)}>
-				{children}
-			</div>
-		);
 	};
 
 	return (
@@ -121,14 +93,14 @@ const Game = ({
 
 				{isInPast && (
 					<div className="font-bold mx-4 lg:w-3/12 flex flex-col items-center justify-center">
-						<Result>
+						<ResultContainer className="w-24 px-2 mb-2" prediction={prediction} result={game.goals}>
 							{(!prediction.home || !prediction.away) && <span>No prediction</span>}
 							{prediction.home && prediction.away && (
-								<span>
+								<div className=" py flex flex-row items-center justify-center">
 									{prediction.home} - {prediction.away}
-								</span>
+								</div>
 							)}
-						</Result>
+						</ResultContainer>
 						<div>
 							{game.goals.home} - {game.goals.away}
 							<span className="ml-2">{game.fixture.status.short}</span>

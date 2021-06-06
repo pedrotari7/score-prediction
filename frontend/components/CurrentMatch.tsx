@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
 import UserContext from '../context/UserContext';
 import LiveGame from './LiveGame';
-import { Fixtures, Prediction, Predictions, User, Users, Venue } from '../../interfaces/main';
+import { Fixture, Fixtures, Prediction, Predictions, User, Users, Venue } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
 import { classNames } from '../lib/utils/reactHelper';
+import ResultContainer from './ResultContainer';
 
 const stadiumImageURL = (venue: Venue) => `/stadiums/${venue.city.toLocaleLowerCase().replace(/\s/g, '')}.webp`;
 
-const UserGuess = ({ user, guess }: { user: User; guess: Prediction }) => {
+const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game: Fixture }) => {
 	const routeInfo = useContext(RouteContext)!;
 
 	const { setRoute } = routeInfo;
@@ -15,9 +16,11 @@ const UserGuess = ({ user, guess }: { user: User; guess: Prediction }) => {
 	const parsedGuess = { home: guess.home > 0 ? guess.home : 'X', away: guess.away > 0 ? guess.away : 'X' };
 
 	return (
-		<div
+		<ResultContainer
+			prediction={guess}
+			result={game.goals}
 			className={classNames(
-				'text-light flex flex-row items-center m-2 rounded p-3 bg-blue',
+				'text-light flex flex-row items-center m-2 rounded p-4 ',
 				'cursor-pointer hover:bg-opacity-50'
 			)}
 			onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
@@ -26,16 +29,16 @@ const UserGuess = ({ user, guess }: { user: User; guess: Prediction }) => {
 				<span>{user?.displayName}</span>
 			</span>
 
-			<div className="flex flex-row items-center justify-end w-4 font-bold">
+			<div className="flex flex-row items-center justify-end font-bold">
 				<span className="mr-2">{parsedGuess.home}</span>
 			</div>
 
 			<span className="">-</span>
 
-			<div className="flex flex-row items-center justify-start w-4 font-bold">
+			<div className="flex flex-row items-center justify-start font-bold">
 				<span className="ml-2">{parsedGuess.away}</span>
 			</div>
-		</div>
+		</ResultContainer>
 	);
 };
 
@@ -73,7 +76,7 @@ const CurrentMatch = ({
 					{Object.entries(gamePredictions)
 						.filter(([uid, _]) => uid === userInfo?.uid)
 						.map(([uid, prediction]) => (
-							<UserGuess user={users[uid]} guess={prediction} key={uid} />
+							<UserGuess user={users[uid]} guess={prediction} key={uid} game={game} />
 						))}
 				</div>
 			</div>
@@ -84,7 +87,7 @@ const CurrentMatch = ({
 					{Object.entries(gamePredictions)
 						.filter(([uid, _]) => uid !== userInfo?.uid)
 						.map(([uid, prediction]) => (
-							<UserGuess user={users[uid]} guess={prediction} key={uid} />
+							<UserGuess user={users[uid]} guess={prediction} key={uid} game={game} />
 						))}
 				</div>
 			</div>
