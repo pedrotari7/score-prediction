@@ -30,7 +30,9 @@ export default function Navbar() {
 
 	const updateRoute = (info: RouteInfo) => setRoute(info);
 
-	const isCurrent = (item: NavItem) => item.info.page === route.page && route.data === user?.uid!;
+	const isCurrent = ({ info: { page } }: NavItem) => {
+		return page === Route.Predictions ? route.data === user?.uid! : page === route.page;
+	};
 
 	return (
 		<Disclosure as="nav" className="bg-blue fixed h-16 top-0 w-full z-20">

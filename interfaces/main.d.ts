@@ -37,12 +37,17 @@ export interface League {
 	season: number;
 }
 
+export interface FixtureStatus {
+	elapsed: number;
+	long: string;
+	short: string;
+}
 export interface FixtureData {
 	id: number;
 	date: string;
 	periods: Object;
 	referee: Object;
-	status: Object;
+	status: FixtureStatus;
 	timestamp: number;
 	timezone: string;
 	venue: Venue;
