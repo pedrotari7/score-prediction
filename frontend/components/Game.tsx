@@ -4,7 +4,7 @@ import { Predictions } from '../../interfaces/main';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
-import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
+import { classNames, formatScore, getCurrentDate } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import ResultContainer from './ResultContainer';
 import ScoreInput from './ScoreInput';
@@ -87,7 +87,7 @@ const Game = ({
 
 				{!isInPast && !isMyPredictions && (
 					<div className="font-bold mx-4">
-						{prediction.home >= 0 || 'X'} - {prediction.away >= 0 || 'X'}
+						{formatScore(prediction.home)} - {formatScore(prediction.away)}
 					</div>
 				)}
 

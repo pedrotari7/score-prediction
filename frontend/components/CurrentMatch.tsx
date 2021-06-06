@@ -3,7 +3,7 @@ import UserContext from '../context/UserContext';
 import LiveGame from './LiveGame';
 import { Fixture, Fixtures, Prediction, Predictions, User, Users, Venue } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, formatScore } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
 
 const stadiumImageURL = (venue: Venue) => `/stadiums/${venue.city.toLocaleLowerCase().replace(/\s/g, '')}.webp`;
@@ -13,7 +13,7 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 
 	const { setRoute } = routeInfo;
 
-	const parsedGuess = { home: guess.home >= 0 ? guess.home : 'X', away: guess.away >= 0 ? guess.away : 'X' };
+	const parsedGuess = { home: formatScore(guess.home), away: formatScore(guess.away) };
 
 	return (
 		<ResultContainer
