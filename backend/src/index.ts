@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
@@ -5,7 +6,7 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 
-import { Fixture, Fixtures, Predictions, Standing } from '../../interfaces/main';
+import { Competitions, Fixture, Fixtures, Predictions, Standing } from '../../interfaces/main';
 
 const app = express();
 
@@ -19,7 +20,12 @@ const API_SPORTS_URL = 'https://v3.football.api-sports.io';
 
 const ADMIN_USERS = ['pedrotari7@gmail.com'];
 
-const currentCompetition = 2016 as number;
+const Competitions: Competitions = {
+  euro2016: { name: 'euro2016', league: 4, season: 2016 },
+  euro2020: { name: 'euro2020', league: 4, season: 2020 },
+};
+
+const DEFAULT_COMPETITION = Competitions.euro2020;
 
 const buildUrl = (url: string, opts: Record<string, unknown>) =>
   url +
@@ -29,9 +35,8 @@ const buildUrl = (url: string, opts: Record<string, unknown>) =>
     .join('&');
 
 const get = async (url: string, opts: Record<string, unknown> = {}) => {
-  const options = { league: 4, season: currentCompetition, ...opts };
   try {
-    return await axios.get(buildUrl(`${API_SPORTS_URL}/${url}`, options), {
+    return await axios.get(buildUrl(`${API_SPORTS_URL}/${url}`, opts), {
       headers: {
         'x-rapidapi-host': 'v3.football.api-sports.io',
         'x-rapidapi-key': functions.config().apisports.key,
@@ -41,6 +46,8 @@ const get = async (url: string, opts: Record<string, unknown> = {}) => {
     return error;
   }
 };
+
+const parseCompetition = (req: Request) => Competitions[req.query.competition as string] || DEFAULT_COMPETITION;
 
 const getStandings = async (opts: Record<string, unknown> = {}) => await get('standings', opts);
 
@@ -85,15 +92,17 @@ app.get('/fetch-standings', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
-  const response = await getStandings();
+  const competition = parseCompetition(req);
+
+  const response = await getStandings({ league: competition.league, season: competition.season });
 
   const standings =
-    currentCompetition === 2020
+    competition.name === 'euro2020'
       ? response.data.response?.[0]?.league.standings
       : response.data.response?.[0]?.league.standings[1];
 
   const standsObj =
-    currentCompetition === 2020
+    competition.name === 'euro2020'
       ? standings.reduce((acc: Record<string, unknown>, stand: Array<Standing>) => {
           acc[stand[0].group.split(':')[1]?.trimStart()] = stand;
           return acc;
@@ -104,7 +113,7 @@ app.get('/fetch-standings', async (req, res) => {
           return acc;
         }, {});
 
-  await admin.firestore().collection('euro2020').doc('standings').set(standsObj);
+  await admin.firestore().collection(competition.name).doc('standings').set(standsObj);
 
   return res.json(standsObj);
 });
@@ -113,12 +122,21 @@ app.get('/fetch-fixtures', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
+  const competition = parseCompetition(req);
+
   const fixtures: Fixture[] =
-    currentCompetition === 2020 ? await getFixtures({ from: '2021-06-09', to: '2021-07-15' }) : await getFixtures();
+    competition.name === 'euro2020'
+      ? await getFixtures({
+          league: competition.league,
+          season: competition.season,
+          from: '2021-06-09',
+          to: '2021-07-15',
+        })
+      : await getFixtures({ league: competition.league, season: competition.season });
 
   const fixtureMap = fixtures.reduce((acc, game) => ({ ...acc, [game.fixture.id]: game }), {} as Fixtures);
 
-  await admin.firestore().collection('euro2020').doc('fixtures').set(fixtureMap);
+  await admin.firestore().collection(competition.name).doc('fixtures').set(fixtureMap);
 
   return res.json(fixtureMap);
 });
@@ -127,7 +145,9 @@ app.get('/standings', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;
 
-  const document = await admin.firestore().collection('euro2020').doc('standings').get();
+  const competition = parseCompetition(req);
+
+  const document = await admin.firestore().collection(competition.name).doc('standings').get();
   return res.json(document.data());
 });
 
@@ -135,7 +155,9 @@ app.get('/fixtures', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;
 
-  const document = await admin.firestore().collection('euro2020').doc('fixtures').get();
+  const competition = parseCompetition(req);
+
+  const document = await admin.firestore().collection(competition.name).doc('fixtures').get();
   return res.json(document.data());
 });
 
@@ -145,13 +167,15 @@ app.get('/predictions', async (req, res) => {
 
   const { uid: callerUID, admin: isAdmin } = authResult.result as admin.auth.DecodedIdToken;
 
-  const document = await admin.firestore().collection('euro2020').doc('predictions').get();
+  const competition = parseCompetition(req);
+
+  const document = await admin.firestore().collection(competition.name).doc('predictions').get();
 
   const predictions = (document.data() ?? {}) as Predictions;
 
   if (isAdmin) return res.json(predictions);
 
-  const fixtures = (await admin.firestore().collection('euro2020').doc('fixtures').get()).data() as Fixtures;
+  const fixtures = (await admin.firestore().collection(competition.name).doc('fixtures').get()).data() as Fixtures;
 
   const censoredPredictions = Object.entries(predictions).reduce((acc, [gameId, gamePredictions]) => {
     const gameDate = new Date(fixtures?.[gameId].fixture.date);
@@ -183,7 +207,9 @@ app.post('/update-predictions', async (req, res) => {
 
   if (uid !== callerUID) return res.status(403).json({ error: 'Forbidden' });
 
-  const fixtures = (await admin.firestore().collection('euro2020').doc('fixtures').get()).data() as Fixtures;
+  const competition = parseCompetition(req);
+
+  const fixtures = (await admin.firestore().collection(competition.name).doc('fixtures').get()).data() as Fixtures;
 
   const gameDate = new Date(fixtures?.[gameId].fixture.date);
 
@@ -192,7 +218,7 @@ app.post('/update-predictions', async (req, res) => {
   if (isInPast) {
     const result = await admin
       .firestore()
-      .collection('euro2020')
+      .collection(competition.name)
       .doc('predictions')
       .update({
         [`${gameId}.${uid}`]: prediction,

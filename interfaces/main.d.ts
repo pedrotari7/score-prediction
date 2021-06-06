@@ -128,3 +128,11 @@ export interface UserResult {
 	result: number;
 	groups: number;
 }
+
+export interface Competition {
+	name: string;
+	league: number;
+	season: number;
+}
+
+export type Competitions = Record<string, Competition>;
