@@ -30,6 +30,9 @@ module.exports = {
 			height: {
 				panel: 'calc(100vh - 4rem)',
 			},
+			minWidth: {
+				result: '6rem',
+			},
 		},
 	},
 	variants: {

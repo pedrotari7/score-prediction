@@ -13,7 +13,7 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 
 	const { setRoute } = routeInfo;
 
-	const parsedGuess = { home: guess.home > 0 ? guess.home : 'X', away: guess.away > 0 ? guess.away : 'X' };
+	const parsedGuess = { home: guess.home >= 0 ? guess.home : 'X', away: guess.away >= 0 ? guess.away : 'X' };
 
 	return (
 		<ResultContainer

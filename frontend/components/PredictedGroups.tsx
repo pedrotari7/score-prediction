@@ -27,7 +27,7 @@ const calculateResults = (fixtures: Fixtures, predictions: Predictions, uid: str
 
 		const prediction = predictions?.[game.fixture.id]?.[uid];
 
-		if (prediction?.home && prediction?.away) {
+		if (prediction?.home >= 0 && prediction?.away >= 0) {
 			if (prediction.home > prediction.away) {
 				teams[homeTeam].wins += 1;
 				teams[awayTeam].loses += 1;

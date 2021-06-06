@@ -87,13 +87,13 @@ const Game = ({
 
 				{!isInPast && !isMyPredictions && (
 					<div className="font-bold mx-4">
-						{prediction.home || 'X'} - {prediction.away || 'X'}
+						{prediction.home >= 0 || 'X'} - {prediction.away >= 0 || 'X'}
 					</div>
 				)}
 
 				{isInPast && (
 					<div className="font-bold mx-4 lg:w-3/12 flex flex-col items-center justify-center">
-						<ResultContainer className="w-24 px-2 mb-2" prediction={prediction} result={game.goals}>
+						<ResultContainer className="min-w-result px-2 mb-2" prediction={prediction} result={game.goals}>
 							{(!prediction.home || !prediction.away) && <span>No prediction</span>}
 							{prediction.home && prediction.away && (
 								<div className=" py flex flex-row items-center justify-center">
