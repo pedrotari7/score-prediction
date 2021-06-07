@@ -1,6 +1,6 @@
 import { classNames } from '../lib/utils/reactHelper';
 
-const ScoreInput = ({ className, value, onchange = () => {}, id }: any) => (
+const ScoreInput = ({ className, value, onchange = () => {}, id, innerRef }: any) => (
 	<input
 		value={value}
 		onChange={e => {
@@ -18,6 +18,7 @@ const ScoreInput = ({ className, value, onchange = () => {}, id }: any) => (
 		)}
 		id={id}
 		name={id}
+		ref={innerRef}
 		type="number"
 	/>
 );

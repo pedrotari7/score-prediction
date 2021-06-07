@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { ChangeEvent, useContext } from 'react';
+import { ChangeEvent, useContext, useRef } from 'react';
 import { Predictions } from '../../interfaces/main';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
@@ -26,6 +26,9 @@ const Game = ({
 	const routeInfo = useContext(RouteContext)!;
 	const { uid } = useContext(UserContext)!;
 
+	const homeInputRef = useRef<HTMLInputElement>();
+	const awayInputRef = useRef<HTMLInputElement>();
+
 	if (!data || !routeInfo) return <></>;
 
 	const { setRoute } = routeInfo;
@@ -48,13 +51,19 @@ const Game = ({
 
 	const isValidScore = (n: number | null) => isNum(n) && n! >= 0;
 
+	const hasBothPredictions = isValidScore(prediction.home) && isValidScore(prediction.away);
+
 	return (
 		<div
 			className={classNames(
 				'text-light flex flex-col lg:flex-row items-center justify-evenly my-2 rounded p-2 bg-gark shadow-pop',
 				'cursor-pointer hover:bg-blue'
 			)}
-			onClick={() => setRoute({ page: Route.Match, data: gameID })}>
+			onClick={() => {
+				if (hasBothPredictions) return setRoute({ page: Route.Match, data: gameID });
+				if (!isValidScore(prediction.home)) return homeInputRef.current?.focus();
+				return awayInputRef.current?.focus();
+			}}>
 			<span className="text-xs text-left w-full lg:w-3/12 flex justify-between items-center ">
 				<div className="items-center">
 					<span>{round}</span>
@@ -71,6 +80,7 @@ const Game = ({
 				{!isInPast && isMyPredictions && (
 					<>
 						<ScoreInput
+							innerRef={homeInputRef}
 							id={`${gameID}-home`}
 							value={prediction.home}
 							className="mx-2"
@@ -78,6 +88,7 @@ const Game = ({
 						/>
 
 						<ScoreInput
+							innerRef={awayInputRef}
 							id={`${gameID}-away`}
 							value={prediction.away}
 							className="mx-2"
