@@ -8,7 +8,7 @@ const Settings = () => {
 	if (!userInfo) return <></>;
 
 	return (
-		<div className="flex flex-col sm:flex-row items-center justify-center h-96">
+		<div className="flex flex-col sm:flex-row items-center justify-center sm:h-96">
 			<button
 				onClick={() => resetStandings(userInfo.token)}
 				className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
