@@ -97,6 +97,9 @@ const PredictedGroups = ({
 
 							<tbody>
 								{sortedGroup.map((place: Standing, index: number) => {
+									const isCorrectPrediction = standing[index].team.id === place.team.id;
+									const hasGames = standing[index].all.played > 0;
+
 									return (
 										<tr key={place.rank} className="">
 											<td className="mr">
@@ -109,7 +112,16 @@ const PredictedGroups = ({
 
 											<td className="w-6">{teamsResults[place.team.id].points}</td>
 											<td className="ml-2">
-												<Flag team={standing[index].team} />
+												<div className="flex flex-row justify-center items-center">
+													<Flag team={standing[index].team} />
+													{isCorrectPrediction
+														? hasGames && (
+																<img className="h-5 w-5 p-1 mx-1" src="/tick.svg" />
+														  )
+														: hasGames && (
+																<img className="h-5 w-5 p-1 mx-1" src="/close.svg" />
+														  )}
+												</div>
 											</td>
 										</tr>
 									);
