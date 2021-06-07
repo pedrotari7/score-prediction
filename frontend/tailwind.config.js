@@ -4,6 +4,8 @@ module.exports = {
 
 		options: {
 			safelist: [],
+			keyframes: true,
+			fontFace: true,
 		},
 	},
 	darkMode: false,
