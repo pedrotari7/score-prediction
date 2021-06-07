@@ -265,6 +265,7 @@ app.get('/points', async (req, res) => {
 
     for (const user in gamePredictions) {
       if (!(user in users)) users[user] = DEFAULT_USER_RESULT;
+      if (fixtures[gameID]?.fixture.status.short === 'NS') continue;
       users[user] = joinResults(users[user], getResult(gamePredictions[user], game));
     }
     return users;
