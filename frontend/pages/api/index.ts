@@ -2,7 +2,7 @@ import { Fixtures, Prediction, Predictions, Users } from '../../../interfaces/ma
 import fetcher from '../../lib/fetcher';
 import { backendUrl } from '../../lib/utils/envHelper';
 
-const competition = 'euro2016';
+const competition = 'euro2020';
 
 const cFetch = async (url: string, token: string, options: any = {}) => {
 	return await fetcher(url + '?' + new URLSearchParams({ competition }), token, options);
@@ -25,10 +25,13 @@ export const updatePredictions = async (
 	uid: string,
 	gameId: number,
 	prediction: Prediction
-): Promise<void> =>
-	await cFetch(`${backendUrl}/update-predictions`, token, {
+): Promise<void> => {
+	return await cFetch(`${backendUrl}/update-predictions`, token, {
 		body: JSON.stringify({ uid, gameId, prediction }),
 		method: 'POST',
 	});
+};
+
+export const updatePoints = async (token: string): Promise<Users> => await cFetch(`${backendUrl}/points`, token);
 
 export const fetchUsers = async (token: string): Promise<Users> => await cFetch(`${backendUrl}/users`, token);

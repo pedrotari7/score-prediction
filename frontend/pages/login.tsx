@@ -12,7 +12,7 @@ const Login = (_props: any) => {
 	return (
 		<PageLayout title={'Login'}>
 			<div className="flex flex-col items-center justify-evenly absolute w-screen h-panel">
-				<div className="text-light text-4xl md:text-8xl font-bold">Score Predicton</div>
+				<div className="text-light text-4xl md:text-8xl font-bold text-center">SCORE PREDICTION</div>
 				<img src="/euro2020.svg" className="h-44 md:h-56" />
 				<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebaseClient.auth()} />
 			</div>

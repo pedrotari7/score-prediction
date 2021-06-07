@@ -6,7 +6,17 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 
-import { Competitions, Fixture, Fixtures, Predictions, Standing } from '../../interfaces/main';
+import {
+  Competition,
+  Competitions,
+  Fixture,
+  Fixtures,
+  Predictions,
+  Standing,
+  Standings,
+  UserResult,
+} from '../../interfaces/main';
+import { getResult } from './util';
 
 const app = express();
 
@@ -86,7 +96,15 @@ const getCurrentTime = () => {
   return new Date();
   // Mocked date
   // return new Date('2021-06-11T19:00:00+0000');
+  // return new Date('2016-06-09T19:00:00+0000');
 };
+
+const getDbDoc = (comp: Competition, name: string) => admin.firestore().collection(comp.name).doc(name);
+
+const getDBFixtures = (competition: Competition) => getDbDoc(competition, 'fixtures');
+const getDBStandings = (competition: Competition) => getDbDoc(competition, 'standings');
+const getDBPredictions = (competition: Competition) => getDbDoc(competition, 'predictions');
+const getDBScores = (competition: Competition) => getDbDoc(competition, 'scores');
 
 app.get('/fetch-standings', async (req, res) => {
   const authResult = await authenticate(req, res, true);
@@ -113,7 +131,7 @@ app.get('/fetch-standings', async (req, res) => {
           return acc;
         }, {});
 
-  await admin.firestore().collection(competition.name).doc('standings').set(standsObj);
+  await getDBStandings(competition).set(standsObj);
 
   return res.json(standsObj);
 });
@@ -136,7 +154,7 @@ app.get('/fetch-fixtures', async (req, res) => {
 
   const fixtureMap = fixtures.reduce((acc, game) => ({ ...acc, [game.fixture.id]: game }), {} as Fixtures);
 
-  await admin.firestore().collection(competition.name).doc('fixtures').set(fixtureMap);
+  await getDBFixtures(competition).set(fixtureMap);
 
   return res.json(fixtureMap);
 });
@@ -147,7 +165,7 @@ app.get('/standings', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const document = await admin.firestore().collection(competition.name).doc('standings').get();
+  const document = await getDBStandings(competition).get();
   return res.json(document.data());
 });
 
@@ -157,7 +175,7 @@ app.get('/fixtures', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const document = await admin.firestore().collection(competition.name).doc('fixtures').get();
+  const document = await getDBFixtures(competition).get();
   return res.json(document.data());
 });
 
@@ -169,13 +187,13 @@ app.get('/predictions', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const document = await admin.firestore().collection(competition.name).doc('predictions').get();
+  const document = await getDBPredictions(competition).get();
 
   const predictions = (document.data() ?? {}) as Predictions;
 
   if (isAdmin) return res.json(predictions);
 
-  const fixtures = (await admin.firestore().collection(competition.name).doc('fixtures').get()).data() as Fixtures;
+  const fixtures = (await getDBFixtures(competition).get()).data() as Fixtures;
 
   const censoredPredictions = Object.entries(predictions).reduce((acc, [gameId, gamePredictions]) => {
     const gameDate = new Date(fixtures?.[gameId].fixture.date);
@@ -209,34 +227,68 @@ app.post('/update-predictions', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const fixtures = (await admin.firestore().collection(competition.name).doc('fixtures').get()).data() as Fixtures;
+  const fixtures = (await getDBFixtures(competition).get()).data() as Fixtures;
 
   const gameDate = new Date(fixtures?.[gameId].fixture.date);
 
   const isInPast = gameDate && getCurrentTime() < gameDate;
 
-  if (isInPast) {
-    const result = await admin
-      .firestore()
-      .collection(competition.name)
-      .doc('predictions')
-      .update({
-        [`${gameId}.${uid}`]: prediction,
-      });
+  if (!isInPast) return res.status(403).json({ error: 'Forbidden' });
 
-    return res.json(result);
-  }
+  const result = await admin
+    .firestore()
+    .collection(competition.name)
+    .doc('predictions')
+    .update({
+      [`${gameId}.${uid}`]: prediction,
+    });
 
-  return res.status(403).json({ error: 'Forbidden' });
+  return res.json(result);
+});
+
+app.get('/points', async (req, res) => {
+  const authResult = await authenticate(req, res);
+  if (!authResult.success) return authResult.result;
+
+  const competition = parseCompetition(req);
+
+  const standings = (await getDBStandings(competition).get()).data() as Standings;
+
+  const fixtures = (await getDBFixtures(competition).get()).data() as Fixtures;
+
+  const predictions = (await getDBPredictions(competition).get()).data() as Predictions;
+
+  const updatedUsers = Object.entries(predictions).reduce((users, [gameID, gamePredictions]) => {
+    const game = fixtures[gameID]?.goals;
+
+    if (!game) return users;
+
+    for (const user in gamePredictions) {
+      if (!(user in users)) users[user] = { points: 0, exact: 0, result: 0, onescore: 0, groups: 0 };
+      users[user].points += getResult(gamePredictions[user], game);
+    }
+    return users;
+  }, {} as Record<string, UserResult>);
+
+  await getDBScores(competition).set(updatedUsers);
+
+  standings;
+  return res.json({});
 });
 
 app.get('/users', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;
 
+  const competition = parseCompetition(req);
+
+  const scores = (await getDBScores(competition).get()).data() as Record<string, UserResult>;
+
   const snapshot = await admin.firestore().collection('users').get();
 
-  const usersObj = snapshot.docs.map(doc => doc.data()).reduce((users, user) => ({ ...users, [user.uid]: user }), {});
+  const usersObj = snapshot.docs
+    .map(doc => doc.data())
+    .reduce((users, user) => ({ ...users, [user.uid]: { ...user, score: scores[user.uid] } }), {});
 
   return res.json(usersObj);
 });
@@ -252,11 +304,5 @@ export const addUser = europe.auth.user().onCreate(async user => {
 
   const { uid, displayName, photoURL } = user;
 
-  const score = { points: 0, exact: 0, result: 0, onescore: 0, groups: 0 };
-
-  return await admin
-    .firestore()
-    .collection('users')
-    .doc(user.uid)
-    .set({ uid, displayName, photoURL, admin: isAdmin, score });
+  return await admin.firestore().collection('users').doc(user.uid).set({ uid, displayName, photoURL, admin: isAdmin });
 });

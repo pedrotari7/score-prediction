@@ -22,6 +22,7 @@ const Rankings = ({ users }: { users: Users }) => {
 
 				<tbody>
 					{Object.values(users).map(user => {
+						if (!user.score) return <tr key={user.uid}></tr>;
 						return (
 							<tr
 								key={user.uid}

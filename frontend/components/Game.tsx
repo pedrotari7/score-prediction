@@ -4,7 +4,7 @@ import { Predictions } from '../../interfaces/main';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
-import { classNames, formatScore, getCurrentDate } from '../lib/utils/reactHelper';
+import { classNames, formatScore, getCurrentDate, isNum } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import ResultContainer from './ResultContainer';
 import ScoreInput from './ScoreInput';
@@ -45,6 +45,8 @@ const Game = ({
 	const onPredictionChange = (e: ChangeEvent<HTMLInputElement>, team: string) => {
 		updatePrediction({ ...prediction, [team]: parseInt(e.target.value) });
 	};
+
+	const isValidScore = (n: number | null) => isNum(n) && n! >= 0;
 
 	return (
 		<div
@@ -93,8 +95,10 @@ const Game = ({
 				{isInPast && (
 					<div className="font-bold mx-4 lg:w-3/12 flex flex-col items-center justify-center">
 						<ResultContainer className="min-w-result px-2 mb-2" prediction={prediction} result={game.goals}>
-							{(!prediction.home || !prediction.away) && <span>No prediction</span>}
-							{prediction.home && prediction.away && (
+							{(!isValidScore(prediction.home) || !isValidScore(prediction.away)) && (
+								<span>No prediction</span>
+							)}
+							{isValidScore(prediction.home) && isValidScore(prediction.away) && (
 								<div className=" py flex flex-row items-center justify-center">
 									{prediction.home} - {prediction.away}
 								</div>

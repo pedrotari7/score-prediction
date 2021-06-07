@@ -1,6 +1,6 @@
 import { ReactNode, MouseEventHandler } from 'react';
 import { Prediction, Result } from '../../interfaces/main';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, isNum } from '../lib/utils/reactHelper';
 
 const ResultContainer = ({
 	children,
@@ -17,8 +17,6 @@ const ResultContainer = ({
 }) => {
 	const { home: predH, away: predA } = prediction;
 	const { home: realH, away: realA } = result;
-
-	const isNum = (n: number) => typeof n === 'number';
 
 	const getOutcome = (g: Result) => {
 		if (!isNum(g.home) || !isNum(g.away)) return null;
