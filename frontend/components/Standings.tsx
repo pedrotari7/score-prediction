@@ -14,7 +14,7 @@ const Match = ({ game }: { game: Fixture }) => {
 				</div>
 			</div>
 
-			<span className="text-xs w-4/12">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm')}</span>
+			<span className="text-xs w-4/12">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm ccc')}</span>
 
 			<div className="flex flex-row items-center justify-start w-4/12">
 				<div className="flex items-center justify-center">

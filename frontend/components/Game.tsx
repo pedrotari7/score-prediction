@@ -59,7 +59,7 @@ const Game = ({
 				<div className="items-center">
 					<span>{round}</span>
 				</div>
-				<span className="text-xs">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm')}</span>
+				<span className="text-xs">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm ccc')}</span>
 			</span>
 
 			<div className="flex flex-row lg:w-8/12 justify-center items-center">
