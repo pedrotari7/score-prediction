@@ -18,8 +18,8 @@ export default function Navbar() {
 
 	const navigation: NavItem[] = [
 		{ name: 'MyPredictions', info: { page: Route.Predictions, data: user?.uid } },
-		{ name: 'Standings', info: { page: Route.Standings } },
 		{ name: 'Ranking', info: { page: Route.Ranking } },
+		{ name: 'Standings', info: { page: Route.Standings } },
 	];
 
 	const routeInfo = useContext(RouteContext);
@@ -64,6 +64,7 @@ export default function Navbar() {
 												key={item.name}
 												onClick={() => updateRoute(item.info)}
 												className={classNames(
+													'font-bold',
 													isCurrent(item)
 														? 'bg-dark text-light'
 														: 'text-gray-300 hover:bg-gray-700 hover:text-light',
@@ -154,6 +155,7 @@ export default function Navbar() {
 											open = false;
 										}}
 										className={classNames(
+											'font-bold',
 											isCurrent(item)
 												? 'bg-dark text-light'
 												: 'text-gray-300 hover:bg-gray-700 hover:text-light',

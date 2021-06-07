@@ -109,7 +109,7 @@ export interface Standing {
 
 export type Standings = [string, any][];
 
-export interface User {
+export interface User extends Record<string, any> {
 	admin: boolean;
 	displayName: string;
 	email: string;
@@ -121,11 +121,12 @@ export interface User {
 export interface Users {
 	[key: string]: User;
 }
-export interface UserResult {
+export interface UserResult extends Record<string, number> {
 	exact: number;
 	onescore: number;
 	points: number;
 	result: number;
+	fail: number;
 	groups: number;
 }
 

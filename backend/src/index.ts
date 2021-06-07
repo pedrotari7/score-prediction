@@ -16,7 +16,7 @@ import {
   Standings,
   UserResult,
 } from '../../interfaces/main';
-import { getResult } from './util';
+import { DEFAULT_USER_RESULT, getResult, joinResults } from './util';
 
 const app = express();
 
@@ -264,8 +264,8 @@ app.get('/points', async (req, res) => {
     if (!game) return users;
 
     for (const user in gamePredictions) {
-      if (!(user in users)) users[user] = { points: 0, exact: 0, result: 0, onescore: 0, groups: 0 };
-      users[user].points += getResult(gamePredictions[user], game);
+      if (!(user in users)) users[user] = DEFAULT_USER_RESULT;
+      users[user] = joinResults(users[user], getResult(gamePredictions[user], game));
     }
     return users;
   }, {} as Record<string, UserResult>);
