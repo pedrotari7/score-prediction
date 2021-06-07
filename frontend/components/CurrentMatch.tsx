@@ -20,8 +20,9 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 			prediction={guess}
 			result={game.goals}
 			className={classNames(
-				'text-light flex flex-row items-center m-2 rounded p-4 ',
-				'cursor-pointer hover:bg-opacity-50'
+				'text-light flex flex-row items-center justify-between  my-2 sm:m-2 rounded p-4 w-full sm:w-max',
+				'cursor-pointer hover:bg-opacity-50',
+				game.fixture.status.short === 'NS' ? 'bg-blue' : ''
 			)}
 			onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
 			<span className="text-xs text-left flex flex-row items-center mr-8">

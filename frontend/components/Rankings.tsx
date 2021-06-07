@@ -93,13 +93,17 @@ const Rankings = ({ users }: { users: Users }) => {
 								'rounded-md bg-blue m-4 p-3 max-w-xl'
 							)}
 							onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
-							<div className="sm:flex flex-row items-center w-8 h-8 p-2 m-2 ">{index + 1}</div>
-							<div className="flex flex-row flex-wrap items-center justify-center sm:mr-4 mb-4 sm:mb-0">
-								<img
-									className="object-cover h-8 w-8 sm:h-12 sm:w-12 rounded-full mr-2"
-									src={user.photoURL}
-								/>
-								<span className="text-center sm:text-2xl">{user.displayName}</span>
+							<div className="flex flex-row flex-wrap items-center justify-start sm:mr-4 mb-4 sm:mb-0 w-full sm:w-max">
+								<div className="flex flex-row items-center justify-center w-8 h-8 m-2 ">
+									{index + 1}
+								</div>
+								<div className="flex flex-row flex-wrap items-center justify-center">
+									<img
+										className="object-cover h-8 w-8 sm:h-12 sm:w-12 rounded-full mr-2"
+										src={user.photoURL}
+									/>
+									<span className="text-center sm:text-2xl">{user.displayName}</span>
+								</div>
 							</div>
 							<div className="flex flex-row justify-center flex-wrap">
 								<Circle className="bg-green-500">{user.score.exact}</Circle>
