@@ -30,14 +30,16 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 				<span>{user?.displayName}</span>
 			</span>
 
-			<div className="flex flex-row items-center justify-end font-bold">
-				<span className="mr-2">{parsedGuess.home}</span>
-			</div>
+			<div className="flex flex-row">
+				<div className="flex flex-row items-center justify-end font-bold">
+					<span className="mr-2">{parsedGuess.home}</span>
+				</div>
 
-			<span className="">-</span>
+				<span className="">-</span>
 
-			<div className="flex flex-row items-center justify-start font-bold">
-				<span className="ml-2">{parsedGuess.away}</span>
+				<div className="flex flex-row items-center justify-start font-bold">
+					<span className="ml-2">{parsedGuess.away}</span>
+				</div>
 			</div>
 		</ResultContainer>
 	);

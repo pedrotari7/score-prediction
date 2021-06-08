@@ -16,6 +16,7 @@ import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import FixturesPage from '../components/Fixtures';
 import CurrentMatch from '../components/CurrentMatch';
 import { Fixtures, Prediction, Predictions, Standings, Users } from '../../interfaces/main';
+import Rules from '../components/Rules';
 
 const Home = ({
 	fixtures,
@@ -77,6 +78,8 @@ const Home = ({
 						gameID={route?.data as number}
 					/>
 				);
+			case Route.Rules:
+				return <Rules />;
 			default:
 				return <></>;
 		}

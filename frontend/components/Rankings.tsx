@@ -72,6 +72,8 @@ const Rankings = ({ users }: { users: Users }) => {
 
 	return (
 		<div className="m-6 p-6 shadow-pop rounded-md bg-dark text-light">
+			<div className="font-bold text-2xl mb-4">Ranking</div>
+
 			<div className="font-bold flex flex-row flex-wrap items-center justify-center sm:justify-center mb-6">
 				{Object.values(SortOptions).map(option => (
 					<FilterOption

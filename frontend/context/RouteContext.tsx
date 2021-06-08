@@ -13,6 +13,7 @@ export enum Route {
 	Ranking = 'ranking',
 	Settings = 'settings',
 	Match = 'match',
+	Rules = 'rules',
 }
 const RouteContext = createContext<{ route: RouteInfo; setRoute: (r: RouteInfo) => void } | null>(null);
 

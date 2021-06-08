@@ -20,6 +20,7 @@ export default function Navbar() {
 		{ name: 'MyPredictions', info: { page: Route.Predictions, data: user?.uid } },
 		{ name: 'Ranking', info: { page: Route.Ranking } },
 		{ name: 'Standings', info: { page: Route.Standings } },
+		{ name: 'Rules', info: { page: Route.Rules } },
 	];
 
 	const routeInfo = useContext(RouteContext);
