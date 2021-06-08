@@ -115,6 +115,7 @@ export interface User extends Record<string, any> {
 	photoURL: string;
 	score: UserResult;
 	uid: string;
+	isNewUser: boolean;
 }
 
 export interface Users {

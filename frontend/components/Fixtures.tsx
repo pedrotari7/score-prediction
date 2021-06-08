@@ -30,7 +30,7 @@ const FixturesPage = ({
 				'mx-2 md:mx-24 lg:mx-48'
 			)}>
 			<div className="text-3xl mb-6 flex flex-row items-center">
-				<img className="object-cover h-8 w-8 rounded-full mr-2" src={user.photoURL} />
+				<img className="object-cover h-8 w-8 rounded-full mr-2" src={user?.photoURL} />
 				{uid !== user.uid && <p>{user.displayName}</p>}
 				{uid === user.uid && <p>My Predictions</p>}
 			</div>

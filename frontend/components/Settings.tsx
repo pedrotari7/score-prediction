@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import UserContext from '../context/UserContext';
-import { resetFixtures, resetStandings, updatePoints } from '../pages/api';
+import { resetFixtures, resetStandings, updatePoints, cleanup } from '../pages/api';
 
 const Settings = () => {
 	const userInfo = useContext(UserContext);
@@ -24,6 +24,12 @@ const Settings = () => {
 				onClick={() => updatePoints(userInfo.token)}
 				className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
 				Update Points
+			</button>
+
+			<button
+				onClick={() => cleanup(userInfo.token)}
+				className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
+				Cleanup
 			</button>
 		</div>
 	);

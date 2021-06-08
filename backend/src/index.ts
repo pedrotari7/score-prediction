@@ -6,16 +6,7 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 
-import {
-  Competition,
-  Competitions,
-  Fixture,
-  Fixtures,
-  Predictions,
-  Standing,
-  Standings,
-  UserResult,
-} from '../../interfaces/main';
+import { Competition, Competitions, Fixture, Fixtures, Predictions, Standing, UserResult } from '../../interfaces/main';
 import { DEFAULT_USER_RESULT, getResult, joinResults } from './util';
 
 const app = express();
@@ -252,13 +243,13 @@ app.get('/points', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const standings = (await getDBStandings(competition).get()).data() as Standings;
+  // const standings = (await getDBStandings(competition).get()).data() as Standings;
 
   const fixtures = (await getDBFixtures(competition).get()).data() as Fixtures;
 
   const predictions = (await getDBPredictions(competition).get()).data() as Predictions;
 
-  const updatedUsers = Object.entries(predictions).reduce((users, [gameID, gamePredictions]) => {
+  const updatedScores = Object.entries(predictions).reduce((users, [gameID, gamePredictions]) => {
     const game = fixtures[gameID]?.goals;
 
     if (!game) return users;
@@ -271,9 +262,8 @@ app.get('/points', async (req, res) => {
     return users;
   }, {} as Record<string, UserResult>);
 
-  await getDBScores(competition).set(updatedUsers);
+  await getDBScores(competition).set(updatedScores);
 
-  standings;
   return res.json({});
 });
 
@@ -285,13 +275,38 @@ app.get('/users', async (req, res) => {
 
   const scores = (await getDBScores(competition).get()).data() as Record<string, UserResult>;
 
-  const snapshot = await admin.firestore().collection('users').get();
+  const allUsers = (await admin.auth().listUsers()).users.reduce(
+    (users, { uid, displayName, photoURL, customClaims, metadata }) => {
+      const isNewUser = metadata.creationTime === metadata.lastSignInTime;
+      const score = scores[uid];
+      const admin = customClaims?.admin;
+      return { ...users, [uid]: { uid, displayName, photoURL, admin, score, isNewUser } };
+    },
+    {}
+  );
 
-  const usersObj = snapshot.docs
-    .map(doc => doc.data())
-    .reduce((users, user) => ({ ...users, [user.uid]: { ...user, score: scores[user.uid] } }), {});
+  return res.json(allUsers);
+});
 
-  return res.json(usersObj);
+app.get('/cleanup', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
+
+  const allUsers = (await admin.auth().listUsers()).users.map(({ uid }) => uid);
+
+  const competition = parseCompetition(req);
+
+  const predictions = (await getDBPredictions(competition).get()).data() as Predictions;
+
+  const cleanedPredictions = Object.fromEntries(
+    Object.entries(predictions).map(([gameID, gamePredictions]) => {
+      return [gameID, Object.fromEntries(Object.entries(gamePredictions).filter(([uid]) => allUsers.includes(uid)))];
+    })
+  );
+
+  await getDBPredictions(competition).set(cleanedPredictions);
+
+  return res.json();
 });
 
 exports.api = europe.https.onRequest(app);
@@ -302,8 +317,4 @@ export const addUser = europe.auth.user().onCreate(async user => {
   if (user.emailVerified) {
     await admin.auth().setCustomUserClaims(user.uid, { admin: isAdmin });
   }
-
-  const { uid, displayName, photoURL } = user;
-
-  return await admin.firestore().collection('users').doc(user.uid).set({ uid, displayName, photoURL, admin: isAdmin });
 });

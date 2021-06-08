@@ -104,7 +104,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	try {
 		const { token } = nookies.get(ctx);
 
-		const { name, picture, uid } = await firebaseAdmin.auth().verifyIdToken(token);
+		const { uid } = await firebaseAdmin.auth().verifyIdToken(token);
 
 		const fixtures = await fetchFixtures(token);
 
@@ -114,18 +114,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 		const users = await fetchUsers(token);
 
-		let route = Route.Home;
-
-		if (!(uid in users)) {
-			users[uid] = {
-				uid,
-				displayName: name,
-				photoURL: picture!,
-				admin: false,
-				score: { points: 0, exact: 0, result: 0, onescore: 0, fail: 0, groups: 0 },
-			};
-			route = Route.Rules;
-		}
+		const route = uid in users && users[uid].isNewUser ? Route.Rules : Route.Home;
 
 		const sorted = Object.entries(standings).sort();
 
