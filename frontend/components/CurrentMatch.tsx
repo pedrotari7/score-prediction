@@ -84,7 +84,7 @@ const CurrentMatch = ({
 				</div>
 			</div>
 
-			<div className="mt-6 z-10">
+			<div className="mt-6 mb-20 z-10">
 				<div className="text-xl mb-4">Predictions</div>
 				<div className="flex flex-row flex-wrap">
 					{Object.entries(gamePredictions)
