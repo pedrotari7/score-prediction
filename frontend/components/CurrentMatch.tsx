@@ -60,7 +60,9 @@ const CurrentMatch = ({
 
 	const sortedFixtures = Object.values(fixtures).sort((a, b) => a.fixture.timestamp - b.fixture.timestamp);
 
-	const game = gameID ? fixtures[gameID] : sortedFixtures[0];
+	const nextGame = sortedFixtures.findIndex(game => game.fixture.status.short !== 'FT');
+
+	const game = gameID ? fixtures[gameID] : sortedFixtures[nextGame];
 
 	if (!game) return <></>;
 
