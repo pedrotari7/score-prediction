@@ -112,7 +112,6 @@ export type Standings = [string, any][];
 export interface User extends Record<string, any> {
 	admin: boolean;
 	displayName: string;
-	email: string;
 	photoURL: string;
 	score: UserResult;
 	uid: string;

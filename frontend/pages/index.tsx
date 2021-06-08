@@ -24,6 +24,7 @@ const Home = ({
 	predictions: InitialPredictions,
 	users,
 	uid,
+	route: InitialRoute,
 	token,
 }: {
 	fixtures: Fixtures;
@@ -31,11 +32,12 @@ const Home = ({
 	predictions: Predictions;
 	users: Users;
 	uid: string;
+	route: Route;
 	token: string;
 }) => {
 	const [predictions, setPredictions] = useState(InitialPredictions);
 
-	const [route, setRoute] = useState<RouteInfo>({ page: Route.Home, data: undefined });
+	const [route, setRoute] = useState<RouteInfo>({ page: InitialRoute, data: undefined });
 
 	const updatePrediction = (prediction: Prediction, gameId: number) => {
 		setPredictions({ ...predictions, [gameId]: { ...predictions[gameId], [uid]: prediction } });
@@ -102,7 +104,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	try {
 		const { token } = nookies.get(ctx);
 
-		const { uid } = await firebaseAdmin.auth().verifyIdToken(token);
+		const { name, picture, uid } = await firebaseAdmin.auth().verifyIdToken(token);
 
 		const fixtures = await fetchFixtures(token);
 
@@ -112,13 +114,25 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 		const users = await fetchUsers(token);
 
+		let route = Route.Home;
+
+		if (!(uid in users)) {
+			users[uid] = {
+				uid,
+				displayName: name,
+				photoURL: picture!,
+				admin: false,
+				score: { points: 0, exact: 0, result: 0, onescore: 0, fail: 0, groups: 0 },
+			};
+			route = Route.Rules;
+		}
+
 		const sorted = Object.entries(standings).sort();
 
 		return {
-			props: { fixtures, standings: sorted, predictions, users, uid, token },
+			props: { fixtures, standings: sorted, predictions, users, uid, token, route },
 		};
 	} catch (err) {
-		console.log(`error`, err);
 		return {
 			redirect: {
 				permanent: false,
