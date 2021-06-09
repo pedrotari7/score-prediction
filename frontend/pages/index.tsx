@@ -9,7 +9,7 @@ import Settings from '../components/Settings';
 import Rankings from '../components/Rankings';
 import StandingsPage from '../components/Standings';
 
-import { fetchFixtures, fetchPredictions, fetchStandings, fetchUsers, updatePredictions } from './api';
+import { updatePredictions, fetchTournament } from './api';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
@@ -106,13 +106,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 		const { uid } = await firebaseAdmin.auth().verifyIdToken(token);
 
-		const fixtures = await fetchFixtures(token);
-
-		const standings = await fetchStandings(token);
-
-		const predictions = await fetchPredictions(token);
-
-		const users = await fetchUsers(token);
+		const { fixtures, standings, predictions, users } = await fetchTournament(token);
 
 		const route = uid in users && users[uid].isNewUser ? Route.Rules : Route.Home;
 

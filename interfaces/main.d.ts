@@ -137,3 +137,10 @@ export interface Competition {
 }
 
 export type Competitions = Record<string, Competition>;
+
+export interface Tournament {
+	fixtures: Fixtures;
+	standings: Standings;
+	predictions: Predictions;
+	users: Users;
+}

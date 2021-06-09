@@ -1,4 +1,4 @@
-import { Fixtures, Prediction, Predictions, Users } from '../../../interfaces/main';
+import { Fixtures, Prediction, Tournament, Users } from '../../../interfaces/main';
 import fetcher from '../../lib/fetcher';
 import { backendUrl } from '../../lib/utils/envHelper';
 
@@ -8,12 +8,8 @@ const cFetch = async (url: string, token: string, options: any = {}) => {
 	return await fetcher(url + '?' + new URLSearchParams({ competition }), token, options);
 };
 
-export const fetchFixtures = async (token: string): Promise<Fixtures> => await cFetch(`${backendUrl}/fixtures`, token);
-
-export const fetchStandings = async (token: string): Promise<any> => await cFetch(`${backendUrl}/standings`, token);
-
-export const fetchPredictions = async (token: string): Promise<Predictions> =>
-	await cFetch(`${backendUrl}/predictions`, token);
+export const fetchTournament = async (token: string): Promise<Tournament> =>
+	await cFetch(`${backendUrl}/tournament`, token);
 
 export const resetFixtures = async (token: string) => await cFetch(`${backendUrl}/fetch-fixtures`, token);
 
@@ -33,7 +29,5 @@ export const updatePredictions = async (
 };
 
 export const updatePoints = async (token: string): Promise<Users> => await cFetch(`${backendUrl}/points`, token);
-
-export const fetchUsers = async (token: string): Promise<Users> => await cFetch(`${backendUrl}/users`, token);
 
 export const cleanup = async (token: string): Promise<void> => await cFetch(`${backendUrl}/cleanup`, token);
