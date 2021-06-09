@@ -46,7 +46,8 @@ const Game = ({
 	const isInPast = getCurrentDate() >= gameDate;
 
 	const onPredictionChange = (e: ChangeEvent<HTMLInputElement>, team: string) => {
-		updatePrediction({ ...prediction, [team]: parseInt(e.target.value) });
+		const value = parseInt(e.target.value);
+		updatePrediction({ ...prediction, [team]: isNaN(value) ? null : value });
 	};
 
 	const isValidScore = (n: number | null) => isNum(n) && n! >= 0;
