@@ -7,20 +7,22 @@ import Flag from './Flag';
 const Match = ({ game }: { game: Fixture }) => {
 	return (
 		<div className="text-light flex flex-row items-center justify-evenly rounded p-2 select-none">
-			<div className="flex flex-row items-center justify-end w-4/12">
-				<span className="hidden sm:block mr-2">{game?.teams.home.name}</span>
-				<div className="flex items-center justify-center">
+			<div className="flex flex-row items-center justify-end w-2/12 sm:w-5/12">
+				<span className="hidden sm:block mr-2 text-right">{game?.teams.home.name}</span>
+				<div className="flex items-center justify-centerx">
 					<Flag team={game?.teams.home} />
 				</div>
 			</div>
 
-			<span className="text-xs w-4/12">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm ccc')}</span>
+			<span className="text-xs w-5/12 sm:w-3/12">
+				{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm ccc')}
+			</span>
 
-			<div className="flex flex-row items-center justify-start w-4/12">
+			<div className="flex flex-row items-center justify-start w-2/12 sm:w-5/12">
 				<div className="flex items-center justify-center">
 					<Flag team={game?.teams.away} />
 				</div>
-				<span className="hidden sm:block ml-2">{game?.teams.away.name}</span>
+				<span className="hidden sm:block ml-2 text-left">{game?.teams.away.name}</span>
 			</div>
 		</div>
 	);
@@ -35,7 +37,7 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 				const games = Object.values(fixtures).filter(f => f.league.round.startsWith(`Group ${group}`));
 
 				return (
-					<div key={title} className="m-8 p-10 shadow-pop rounded-md text-center flex flex-col bg-dark">
+					<div key={title} className="m-8 mx-4 p-8 shadow-pop rounded-md text-center flex flex-col bg-dark">
 						<h2 className="text-4xl text-light mb-4 text-left">{title}</h2>
 						<table className="text-light">
 							<thead>
