@@ -13,7 +13,7 @@ const ScoreInput = ({ className, value, onchange = () => {}, id, innerRef }: any
 			className,
 			'block w-14 h-7 text-dark text-center font-bold hover:bg-gray-100',
 			'rounded py-3 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500',
-			value === null ? 'bg-error border-none' : 'bg-gray-300',
+			value === null ? ' bg-red-100 border-none' : typeof value === 'number' ? 'bg-green-100' : 'bg-gray-300',
 			'border border-gray-200'
 		)}
 		id={id}
