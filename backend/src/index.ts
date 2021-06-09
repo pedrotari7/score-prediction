@@ -17,6 +17,8 @@ const europe = functions.region('europe-west1');
 
 admin.initializeApp();
 
+const FieldValue = admin.firestore.FieldValue;
+
 const API_SPORTS_URL = 'https://v3.football.api-sports.io';
 
 const ADMIN_USERS = ['pedrotari7@gmail.com'];
@@ -113,8 +115,7 @@ app.get('/fetch-standings', async (req, res) => {
   const standsObj =
     competition.name === 'euro2020'
       ? standings.reduce((acc: Record<string, unknown>, stand: Array<Standing>) => {
-          acc[stand[0].group.split(':')[1]?.trimStart()] = stand;
-          return acc;
+          return { ...acc, [stand[0].group]: stand };
         }, {})
       : standings.reduce((acc: Record<string, Standing[]>, stand: Standing) => {
           if (!acc[stand.group]) acc[stand.group] = [];
@@ -122,7 +123,7 @@ app.get('/fetch-standings', async (req, res) => {
           return acc;
         }, {});
 
-  await getDBStandings(competition).set(standsObj);
+  await getDBStandings(competition).set({ data: standsObj, timestamp: FieldValue.serverTimestamp() });
 
   return res.json(standsObj);
 });
@@ -145,7 +146,7 @@ app.get('/fetch-fixtures', async (req, res) => {
 
   const fixtureMap = fixtures.reduce((acc, game) => ({ ...acc, [game.fixture.id]: game }), {} as Fixtures);
 
-  await getDBFixtures(competition).set(fixtureMap);
+  await getDBFixtures(competition).set({ data: fixtureMap, timestamp: FieldValue.serverTimestamp() });
 
   return res.json(fixtureMap);
 });
@@ -156,8 +157,15 @@ app.get('/standings', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const document = await getDBStandings(competition).get();
-  return res.json(document.data());
+  const { data, timestamp: lastUpdateTime } = (await getDBStandings(competition).get()).data()!;
+
+  const timeDiffSeconds = (getCurrentTime().getTime() - lastUpdateTime.toMillis()) / 1000;
+
+  if (timeDiffSeconds > 60) {
+    console.log('one minute passed');
+  }
+
+  return res.json(data);
 });
 
 app.get('/fixtures', async (req, res) => {
@@ -167,7 +175,16 @@ app.get('/fixtures', async (req, res) => {
   const competition = parseCompetition(req);
 
   const document = await getDBFixtures(competition).get();
-  return res.json(document.data());
+
+  const { data, timestamp: lastUpdateTime } = document.data()!;
+
+  const timeDiffSeconds = (getCurrentTime().getTime() - lastUpdateTime.toMillis()) / 1000;
+
+  if (timeDiffSeconds > 60) {
+    console.log('one minute passed');
+  }
+
+  return res.json(data);
 });
 
 app.get('/predictions', async (req, res) => {
@@ -184,7 +201,9 @@ app.get('/predictions', async (req, res) => {
 
   if (isAdmin) return res.json(predictions);
 
-  const fixtures = (await getDBFixtures(competition).get()).data() as Fixtures;
+  const fixtures = (await getDBFixtures(competition).get()).data()?.data as Fixtures;
+
+  console.log('fixtures', fixtures);
 
   const censoredPredictions = Object.entries(predictions).reduce((acc, [gameId, gamePredictions]) => {
     const gameDate = new Date(fixtures?.[gameId].fixture.date);
@@ -218,7 +237,7 @@ app.post('/update-predictions', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const fixtures = (await getDBFixtures(competition).get()).data() as Fixtures;
+  const fixtures = (await getDBFixtures(competition).get()).data()?.data as Fixtures;
 
   const gameDate = new Date(fixtures?.[gameId].fixture.date);
 
@@ -245,7 +264,7 @@ app.get('/points', async (req, res) => {
 
   // const standings = (await getDBStandings(competition).get()).data() as Standings;
 
-  const fixtures = (await getDBFixtures(competition).get()).data() as Fixtures;
+  const fixtures = (await getDBFixtures(competition).get()).data()?.data as Fixtures;
 
   const predictions = (await getDBPredictions(competition).get()).data() as Predictions;
 
