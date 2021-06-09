@@ -28,8 +28,10 @@ const ResultContainer = ({
 	const isExactScore = predH === realH && predA === realA;
 	const isCorrectResult =
 		!isExactScore && getOutcome(prediction) !== null && getOutcome(prediction) === getOutcome(result);
-	const isCorrectGoal = !isExactScore && !isCorrectResult && (predH === realH || predA === realA);
+	const isCorrectGoal =
+		!isExactScore && !isCorrectResult && getOutcome(prediction) !== null && (predH === realH || predA === realA);
 	const isWrong = !isExactScore && !isCorrectResult && !isCorrectGoal;
+
 	return (
 		<div
 			onClick={onClick}
