@@ -99,12 +99,7 @@ const getDBStandings = (competition: Competition) => getDbDoc(competition, 'stan
 const getDBPredictions = (competition: Competition) => getDbDoc(competition, 'predictions');
 const getDBScores = (competition: Competition) => getDbDoc(competition, 'scores');
 
-app.get('/fetch-standings', async (req, res) => {
-  const authResult = await authenticate(req, res, true);
-  if (!authResult.success) return authResult.result;
-
-  const competition = parseCompetition(req);
-
+const updateStandings = async (competition: Competition) => {
   const response = await getStandings({ league: competition.league, season: competition.season });
 
   const standings =
@@ -124,16 +119,21 @@ app.get('/fetch-standings', async (req, res) => {
         }, {});
 
   await getDBStandings(competition).set({ data: standsObj, timestamp: FieldValue.serverTimestamp() });
+  return standsObj;
+};
 
-  return res.json(standsObj);
-});
-
-app.get('/fetch-fixtures', async (req, res) => {
+app.get('/fetch-standings', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
   const competition = parseCompetition(req);
 
+  const data = await updateStandings(competition);
+
+  return res.json(data);
+});
+
+const updateFixtures = async (competition: Competition) => {
   const fixtures: Fixture[] =
     competition.name === 'euro2020'
       ? await getFixtures({
@@ -147,8 +147,18 @@ app.get('/fetch-fixtures', async (req, res) => {
   const fixtureMap = fixtures.reduce((acc, game) => ({ ...acc, [game.fixture.id]: game }), {} as Fixtures);
 
   await getDBFixtures(competition).set({ data: fixtureMap, timestamp: FieldValue.serverTimestamp() });
+  return fixtureMap;
+};
 
-  return res.json(fixtureMap);
+app.get('/fetch-fixtures', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
+
+  const competition = parseCompetition(req);
+
+  const data = await updateFixtures(competition);
+
+  return res.json(data);
 });
 
 app.get('/standings', async (req, res) => {
@@ -161,8 +171,8 @@ app.get('/standings', async (req, res) => {
 
   const timeDiffSeconds = (getCurrentTime().getTime() - lastUpdateTime.toMillis()) / 1000;
 
-  if (timeDiffSeconds > 60) {
-    console.log('one minute passed');
+  if (timeDiffSeconds > 60 * 60 * 4) {
+    return res.json(updateStandings(competition));
   }
 
   return res.json(data);
@@ -180,8 +190,8 @@ app.get('/fixtures', async (req, res) => {
 
   const timeDiffSeconds = (getCurrentTime().getTime() - lastUpdateTime.toMillis()) / 1000;
 
-  if (timeDiffSeconds > 60) {
-    console.log('one minute passed');
+  if (timeDiffSeconds > 60 * 60 * 4) {
+    return res.json(updateFixtures(competition));
   }
 
   return res.json(data);
@@ -202,8 +212,6 @@ app.get('/predictions', async (req, res) => {
   if (isAdmin) return res.json(predictions);
 
   const fixtures = (await getDBFixtures(competition).get()).data()?.data as Fixtures;
-
-  console.log('fixtures', fixtures);
 
   const censoredPredictions = Object.entries(predictions).reduce((acc, [gameId, gamePredictions]) => {
     const gameDate = new Date(fixtures?.[gameId].fixture.date);
