@@ -28,7 +28,7 @@ const Match = ({ game }: { game: Fixture }) => {
 
 const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures: Fixtures }) => {
 	return (
-		<div className="flex flex-row flex-wrap justify-cente select-noner">
+		<div className="flex flex-row flex-wrap justify-center select-none">
 			{standings.map(([title, standing]) => {
 				const group = title.split(' ').pop();
 

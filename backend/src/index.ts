@@ -201,7 +201,7 @@ const getUsers = async (competition: Competition) => {
   const allUsers = (await admin.auth().listUsers()).users.reduce(
     (users, { uid, displayName, photoURL, customClaims, metadata }) => {
       const isNewUser = metadata.creationTime === metadata.lastSignInTime;
-      const score = scores[uid];
+      const score = scores[uid] ?? DEFAULT_USER_RESULT;
       const admin = customClaims?.admin;
       return { ...users, [uid]: { uid, displayName, photoURL, admin, score, isNewUser } };
     },
