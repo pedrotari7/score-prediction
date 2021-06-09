@@ -9,7 +9,7 @@ const Match = ({ game }: { game: Fixture }) => {
 		<div className="text-light flex flex-row items-center justify-evenly rounded p-2 select-none">
 			<div className="flex flex-row items-center justify-end w-2/12 sm:w-5/12">
 				<span className="hidden sm:block mr-2 text-right">{game?.teams.home.name}</span>
-				<div className="flex items-center justify-centerx">
+				<div className="flex items-center justify-center">
 					<Flag team={game?.teams.home} />
 				</div>
 			</div>
