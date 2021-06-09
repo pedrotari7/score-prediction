@@ -333,7 +333,7 @@ app.get('/cleanup', async (req, res) => {
 
   await getDBPredictions(competition).set(cleanedPredictions);
 
-  return res.json();
+  return res.json({});
 });
 
 exports.api = europe.https.onRequest(app);
