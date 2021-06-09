@@ -6,7 +6,7 @@ import Flag from './Flag';
 
 const Match = ({ game }: { game: Fixture }) => {
 	return (
-		<div className="text-light flex flex-row items-center justify-evenly rounded p-2">
+		<div className="text-light flex flex-row items-center justify-evenly rounded p-2 select-none">
 			<div className="flex flex-row items-center justify-end w-4/12">
 				<span className="hidden sm:block mr-2">{game?.teams.home.name}</span>
 				<div className="flex items-center justify-center">
@@ -28,7 +28,7 @@ const Match = ({ game }: { game: Fixture }) => {
 
 const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures: Fixtures }) => {
 	return (
-		<div className="flex flex-row flex-wrap justify-center">
+		<div className="flex flex-row flex-wrap justify-cente select-noner">
 			{standings.map(([title, standing]) => {
 				const group = title.split(' ').pop();
 

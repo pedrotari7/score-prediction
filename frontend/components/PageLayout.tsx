@@ -19,7 +19,7 @@ const PageLayout = ({ title, children }: { title: string; children: JSX.Element 
 
 			<main className="flex flex-col relative top-16 z-10 w-screen pb-16">{children}</main>
 
-			<div className="fixed bottom-0 w-full">
+			<div className="fixed bottom-0 w-full select-none">
 				<img src="/footer.png" alt="" className="w-full opacity-70" />
 			</div>
 		</div>
