@@ -19,6 +19,8 @@ admin.initializeApp();
 
 const FieldValue = admin.firestore.FieldValue;
 
+const STALE_TIME = 60;
+
 const API_SPORTS_URL = 'https://v3.football.api-sports.io';
 
 const ADMIN_USERS = ['pedrotari7@gmail.com'];
@@ -171,8 +173,8 @@ app.get('/standings', async (req, res) => {
 
   const timeDiffSeconds = (getCurrentTime().getTime() - lastUpdateTime.toMillis()) / 1000;
 
-  if (timeDiffSeconds > 60 * 60 * 4) {
-    return res.json(updateStandings(competition));
+  if (timeDiffSeconds > STALE_TIME) {
+    return res.json(await updateStandings(competition));
   }
 
   return res.json(data);
@@ -190,10 +192,9 @@ app.get('/fixtures', async (req, res) => {
 
   const timeDiffSeconds = (getCurrentTime().getTime() - lastUpdateTime.toMillis()) / 1000;
 
-  if (timeDiffSeconds > 60 * 60 * 4) {
-    return res.json(updateFixtures(competition));
+  if (timeDiffSeconds > STALE_TIME) {
+    return res.json(await updateFixtures(competition));
   }
-
   return res.json(data);
 });
 
