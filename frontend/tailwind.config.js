@@ -3,7 +3,7 @@ module.exports = {
 		content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
 
 		options: {
-			safelist: [],
+			safelist: ['bg-green-100', 'bg-red-100', 'bg-gray-300'],
 			keyframes: true,
 			fontFace: true,
 		},
