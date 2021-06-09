@@ -60,7 +60,9 @@ const Game = ({
 				'cursor-pointer hover:bg-blue'
 			)}
 			onClick={() => {
-				if (hasBothPredictions || isInPast) return setRoute({ page: Route.Match, data: gameID });
+				if (hasBothPredictions || isInPast || !isMyPredictions) {
+					return setRoute({ page: Route.Match, data: gameID });
+				}
 				if (!isValidScore(prediction.home)) return homeInputRef.current?.focus();
 				return awayInputRef.current?.focus();
 			}}>
