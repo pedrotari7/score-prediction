@@ -167,13 +167,13 @@ const getPredictions = async (
   competition: Competition,
   fixtures: Fixtures
 ) => {
-  const { uid: callerUID, admin: isAdmin } = decodedToken;
+  const { uid: callerUID } = decodedToken;
 
   const document = await getDBPredictions(competition).get();
 
   const predictions = (document.data() ?? {}) as Predictions;
 
-  if (isAdmin) return predictions;
+  // if (isAdmin) return predictions;
 
   const censoredPredictions = Object.entries(predictions).reduce((acc, [gameId, gamePredictions]) => {
     const gameDate = new Date(fixtures?.[gameId].fixture.date);

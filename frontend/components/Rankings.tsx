@@ -95,8 +95,8 @@ const Rankings = ({ users }: { users: Users }) => {
 								'rounded-md bg-blue m-4 p-3 w-max'
 							)}
 							onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
-							<div className="flex flex-row flex-wrap items-center justify-evenly sm:justify-start sm:mr-4 mb-4 sm:mb-0 w-full sm:w-max">
-								<div className="flex flex-row items-center justify-center w-8 h-8 m-2 ">
+							<div className="flex flex-col sm:flex-row flex-wrap items-center justify-evenly sm:justify-start sm:mr-4 mb-4 sm:mb-0 w-full sm:w-max">
+								<div className="flex flex-row items-center justify-center w-8 h-8 m-2 font-bold text-xl">
 									{index + 1}
 								</div>
 								<div className="flex flex-row flex-wrap items-center justify-center">
