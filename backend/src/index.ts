@@ -20,7 +20,7 @@ admin.initializeApp();
 const FieldValue = admin.firestore.FieldValue;
 
 const STALE_TIME = 60 * 60 * 4;
-const GAME_TIME = 60 * 3;
+const GAME_TIME = 60 * 1;
 
 const API_SPORTS_URL = 'https://v3.football.api-sports.io';
 
