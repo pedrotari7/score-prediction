@@ -26,7 +26,7 @@ const Rankings = ({ users }: { users: Users }) => {
 		return (
 			<div
 				className={classNames(
-					'w-8 h-8 p-2 mx-1 text-center flex flex-row items-center justify-center rounded-full select-none',
+					'w-6 h-6 p-4 mx-1 text-center flex flex-row items-center justify-center rounded-full select-none',
 					className
 				)}>
 				{children}
@@ -107,14 +107,13 @@ const Rankings = ({ users }: { users: Users }) => {
 									<span className="text-center sm:text-2xl">{user.displayName}</span>
 								</div>
 							</div>
-							<div className="flex flex-row justify-center flex-wrap">
+							<div className="flex flex-row justify-center items-center flex-wrap">
 								<Circle className="bg-green-500">{user.score.exact}</Circle>
 								<Circle className="bg-yellow-500">{user.score.result}</Circle>
 								<Circle className="bg-pink-500">{user.score.onescore}</Circle>
 								<Circle className="bg-red-500">{user.score.fail}</Circle>
-
 								<Circle className="bg-purple-700">{user.score.groups}</Circle>
-								<Circle className="bg-gray-700">{user.score.points}</Circle>
+								<Circle className="bg-gray-700 w-10 h-10 p-6">{user.score.points}</Circle>
 							</div>
 						</div>
 					);
