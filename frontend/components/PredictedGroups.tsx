@@ -1,4 +1,4 @@
-import { Fixtures, Standing, Standings, GamePredictions, Predictions } from '../../interfaces/main';
+import { Fixtures, Standing, Standings, Predictions } from '../../interfaces/main';
 import Flag from './Flag';
 
 interface Result {
@@ -112,7 +112,7 @@ const PredictedGroups = ({
 
 											<td className="w-6">{teamsResults[place.team.id].points}</td>
 											<td className="ml-2">
-												<div className="flex flex-row justify-center items-center">
+												<div className="flex flex-row justify-start items-center">
 													<Flag team={standing[index].team} />
 													{isCorrectPrediction
 														? hasGames && (
