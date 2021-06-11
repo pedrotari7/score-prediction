@@ -67,7 +67,8 @@ const Rankings = ({ users }: { users: Users }) => {
 				b.score.points - a.score.points ||
 				b.score.result - a.score.result ||
 				b.score.onescore - a.score.onescore ||
-				b.score.groups - a.score.groups
+				b.score.groups - a.score.groups ||
+				b.score.fail - a.score.fail
 		);
 
 	return (
