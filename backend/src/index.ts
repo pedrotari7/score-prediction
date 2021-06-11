@@ -262,7 +262,8 @@ app.get('/tournament', async (req, res) => {
     f => (currentDate - new Date(f?.fixture?.date).getTime()) / 1000
   );
 
-  const OneAndHalfHour = 1.5 * 60 * 60;
+  const OneAndHalfHour = 2 * 60 * 60;
+
   const hasGameInRange = gameDates.some(d => d >= 0 && d < OneAndHalfHour);
 
   const timeGuard = hasGameInRange ? GAME_TIME : STALE_TIME;
