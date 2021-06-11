@@ -281,7 +281,7 @@ app.get('/tournament', async (req, res) => {
 
   if (fixturesTimeDiffSeconds > timeGuard) {
     console.log('update points');
-    await updatePoints(competition, predictions, fixtures);
+    await updatePoints(competition, predictions, fixtures.data);
   }
 
   const users = await getUsers(competition);
