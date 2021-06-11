@@ -5,6 +5,7 @@ import Countdown, { zeroPad } from 'react-countdown';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import { getCurrentDate } from '../lib/utils/reactHelper';
+import ClientOnly from './ClientOnly';
 import Flag from './Flag';
 
 const LiveGame = ({ gameID }: { gameID: number }) => {
@@ -42,15 +43,17 @@ const LiveGame = ({ gameID }: { gameID: number }) => {
 
 				{isInPast && isCountdown && (
 					<span className="text-3xl sm:w-4/12 text-center mx-2">
-						<Countdown
-							date={gameDate.toMillis()}
-							onComplete={() => router.push('/')}
-							renderer={({ hours, minutes, seconds }) => (
-								<span>
-									{zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}
-								</span>
-							)}
-						/>
+						<ClientOnly>
+							<Countdown
+								date={gameDate.toMillis()}
+								onComplete={() => router.push('/')}
+								renderer={({ hours, minutes, seconds }) => (
+									<span>
+										{zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}
+									</span>
+								)}
+							/>
+						</ClientOnly>
 					</span>
 				)}
 
