@@ -35,7 +35,7 @@ const LiveGame = ({ gameID }: { gameID: number }) => {
 				</div>
 			</span>
 
-			<div className="w-10/12 flex flex-row justify-center items-center my-4">
+			<div className="w-10/12 flex flex-row justify-evenly sm:justify-center items-center my-4">
 				<div className="flex flex-row items-center justify-end sm:w-4/12">
 					<span className="text-xl hidden sm:block mr-2">{game?.teams.home.name}</span>
 					<Flag team={game?.teams.home} />
@@ -65,9 +65,15 @@ const LiveGame = ({ gameID }: { gameID: number }) => {
 
 				{!isInPast && (
 					<span className="text-3xl sm:w-4/12 text-center mx-2">
-						<span>{game.goals.home}</span>
-						<span className="mx-2">-</span>
-						<span>{game.goals.away}</span>
+						<div>
+							<span>{game.goals.home}</span>
+							<span className="mx-2">-</span>
+							<span>{game.goals.away}</span>
+						</div>
+						<div className="mt-2">
+							<span className="text-xs mm-1">{game.fixture.status.long}</span>
+							<span className="text-base mx-1">{game.fixture.status.elapsed}'</span>
+						</div>
 					</span>
 				)}
 
