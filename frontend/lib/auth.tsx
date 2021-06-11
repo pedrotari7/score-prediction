@@ -34,8 +34,15 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 	useEffect(() => {
 		const handle = setInterval(async () => {
 			const user = firebaseClient.auth().currentUser;
-			if (user) await user.getIdToken(true);
-		}, 1000 * 60 * 1000);
+			if (user) {
+				await user.getIdToken(true);
+				const token = await user.getIdToken();
+				const isAdmin = (await user.getIdTokenResult()).claims.admin;
+				setUser({ ...user, admin: isAdmin });
+				nookies.destroy(null, 'token');
+				nookies.set(null, 'token', token, { path: '/', sameSite: 'Strict' });
+			}
+		}, 1000 * 60 * 10);
 		return () => clearInterval(handle);
 	}, []);
 
