@@ -9,11 +9,22 @@ export interface Predictions {
 	[key: string]: GamePredictions;
 }
 
+export interface PlayerColors {
+	primary: string;
+	number: string;
+	border: string;
+}
+export interface TeamColors {
+	player: PlayerColors;
+	goalkeeper: PlayerColors;
+}
+
 export interface Team {
 	id: number;
 	name: string;
 	logo: string;
 	winner: null;
+	colors: TeamColors;
 }
 
 export interface Teams {
@@ -42,11 +53,55 @@ export interface FixtureStatus {
 	long: string;
 	short: string;
 }
+
+export interface Player {
+	id: number;
+	name: string;
+}
+
+export interface Event {
+	time: { elapsed: number; extra: null };
+	team: Team;
+	player: Player;
+	assist: Player;
+	type: 'goal' | 'card' | 'subst' | 'var';
+	datail: string;
+	comments: string;
+}
+
+export interface LineupPlayer {
+	id: number;
+	name: string;
+	number: number;
+	pos: string;
+	grid: string;
+}
+
+export interface Coach {
+	id: number;
+	name: string;
+	photo: string;
+}
+export interface Lineup {
+	team: Team;
+	formation: string;
+	startXI: LineupPlayer[];
+	substitutes: LineupPlayer[];
+	coach: Coach;
+}
+
+export interface Statistic {
+	team: Team;
+	statistics: {
+		type: string;
+		value: number | null;
+	}[];
+}
 export interface FixtureData {
 	id: number;
 	date: string;
-	periods: Object;
-	referee: Object;
+	periods: { first: number; second: number };
+	referee: string;
 	status: FixtureStatus;
 	timestamp: number;
 	timezone: string;
@@ -71,10 +126,14 @@ export interface Fixture {
 	league: League;
 	goals: Result;
 	score: Score;
+	events: Event[];
+	lineups: Lineup[];
+	statistics: Statistic[];
+	players?: Object[];
 }
 
 export interface Fixtures {
-	[key: string]: Fixture;
+	[key: number]: Fixture;
 }
 
 export interface Goals {

@@ -59,6 +59,10 @@ const getStandings = async (opts: Record<string, unknown> = {}) => await get('st
 
 const getFixtures = async (opts: Record<string, unknown> = {}) => (await get('fixtures', opts)).data.response;
 
+const getFullFixture = async (eventID: number, opts: Record<string, unknown> = {}): Promise<Fixture> => {
+  return (await get('fixtures', { id: eventID, ...opts })).data.response.pop();
+};
+
 const decodeToken = async (token: string) => {
   try {
     return await admin.auth().verifyIdToken(token);
@@ -129,32 +133,47 @@ const updateStandings = async (competition: Competition) => {
   return standsObj;
 };
 
-const updateFixtures = async (competition: Competition) => {
-  const fixtures: Fixture[] =
-    competition.name === 'euro2020'
-      ? await getFixtures({
-          league: competition.league,
-          season: competition.season,
-          from: '2021-06-09',
-          to: '2021-07-15',
-        })
-      : await getFixtures({ league: competition.league, season: competition.season });
+const updateFixtures = async (competition: Competition, gamesToUpdate: number[], oldFixtures: Fixtures = {}) => {
+  if (gamesToUpdate.length === 0) {
+    const fixtures: Fixture[] =
+      competition.name === 'euro2020'
+        ? await getFixtures({
+            league: competition.league,
+            season: competition.season,
+            from: '2021-06-09',
+            to: '2021-07-15',
+          })
+        : await getFixtures({ league: competition.league, season: competition.season });
 
-  const fixtureMap = fixtures.reduce((acc, game) => ({ ...acc, [game.fixture.id]: game }), {} as Fixtures);
+    const fixtureMap = fixtures.reduce((acc, game) => ({ ...acc, [game.fixture.id]: game }), {} as Fixtures);
 
-  await getDBFixtures(competition).set({ data: fixtureMap, timestamp: FieldValue.serverTimestamp() });
-  return fixtureMap;
+    await getDBFixtures(competition).set({ data: fixtureMap, timestamp: FieldValue.serverTimestamp() });
+    return fixtureMap;
+  } else {
+    const fixtures = {
+      ...oldFixtures,
+      ...(await gamesToUpdate.reduce(async (acc, gameID) => {
+        const fixture = await getFullFixture(gameID);
+        delete fixture.players;
+        return { ...acc, [gameID]: fixture };
+      }, {})),
+    };
+
+    await getDBFixtures(competition).set({ data: fixtures, timestamp: FieldValue.serverTimestamp() });
+
+    return fixtures;
+  }
 };
 
 const updatePoints = async (competition: Competition, predictions: Predictions, fixtures: Fixtures) => {
   const updatedScores = Object.entries(predictions).reduce((users, [gameID, gamePredictions]) => {
-    const game = fixtures[gameID]?.goals;
+    const game = fixtures[parseInt(gameID)]?.goals;
 
     if (!game) return users;
 
     for (const user in gamePredictions) {
       if (!(user in users)) users[user] = DEFAULT_USER_RESULT;
-      if (fixtures[gameID]?.fixture.status.short === 'NS') continue;
+      if (fixtures[parseInt(gameID)]?.fixture.status.short === 'NS') continue;
       users[user] = joinResults(users[user], getResult(gamePredictions[user], game));
     }
     return users;
@@ -177,7 +196,7 @@ const getPredictions = async (
   // if (isAdmin) return predictions;
 
   const censoredPredictions = Object.entries(predictions).reduce((acc, [gameId, gamePredictions]) => {
-    const gameDate = new Date(fixtures?.[gameId].fixture.date);
+    const gameDate = new Date(fixtures?.[parseInt(gameId)].fixture.date);
     const isInPast = gameDate && getCurrentTime() < gameDate;
 
     if (isInPast) {
@@ -229,7 +248,7 @@ app.get('/fetch-fixtures', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const data = await updateFixtures(competition);
+  const data = await updateFixtures(competition, []);
 
   return res.json(data);
 });
@@ -258,13 +277,13 @@ app.get('/tournament', async (req, res) => {
 
   const currentDate = getCurrentTime().getTime();
 
-  const gameDates = Object.values(fixtures.data as Fixtures).map(
-    f => (currentDate - new Date(f?.fixture?.date).getTime()) / 1000
-  );
+  const gameTimeDiff = (f: Fixture) => (currentDate - new Date(f?.fixture?.date).getTime()) / 1000;
 
-  const OneAndHalfHour = 2 * 60 * 60;
+  const gameDates = Object.values(fixtures.data as Fixtures).map(gameTimeDiff);
 
-  const hasGameInRange = gameDates.some(d => d >= 0 && d < OneAndHalfHour);
+  const GameTimeRange = 2 * 60 * 60;
+
+  const hasGameInRange = gameDates.some(d => d >= 0 && d < GameTimeRange);
 
   const timeGuard = hasGameInRange ? GAME_TIME : STALE_TIME;
 
@@ -275,7 +294,17 @@ app.get('/tournament', async (req, res) => {
 
   if (fixturesTimeDiffSeconds > timeGuard) {
     console.log('fixtures needs update');
-    fixtures.data = await updateFixtures(competition);
+
+    const gamesToUpdate = hasGameInRange
+      ? Object.values(fixtures.data as Fixtures)
+          .filter(f => {
+            const d = gameTimeDiff(f);
+            return d >= 0 && d < GameTimeRange;
+          })
+          .map(f => f.fixture.id)
+      : [];
+
+    fixtures.data = { ...fixtures.data, ...(await updateFixtures(competition, gamesToUpdate, fixtures.data)) };
   }
 
   const predictions = await getPredictions(decodedToken, competition, fixtures.data);
