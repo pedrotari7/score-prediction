@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { Prediction, Result, UserResult } from '../../../interfaces/main';
+import { Fixture, Prediction, Result, UserResult } from '../../../interfaces/main';
 
 export const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');
 
@@ -45,3 +45,5 @@ export const getResult = (prediction: Prediction, result: Result): Partial<UserR
 
 	return { points: 0, fail: 1 };
 };
+
+export const isGameFinished = (game: Fixture) => ['FT', 'AET', 'PEN'].includes(game.fixture.status.short);

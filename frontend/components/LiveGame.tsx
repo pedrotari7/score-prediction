@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import Countdown, { zeroPad } from 'react-countdown';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
-import { getCurrentDate } from '../lib/utils/reactHelper';
+import { getCurrentDate, isGameFinished } from '../lib/utils/reactHelper';
 import ClientOnly from './ClientOnly';
 import Flag from './Flag';
 
@@ -72,7 +72,9 @@ const LiveGame = ({ gameID }: { gameID: number }) => {
 						</div>
 						<div className="mt-2">
 							<span className="text-xs mm-1">{game.fixture.status.long}</span>
-							<span className="text-base mx-1">{game.fixture.status.elapsed}'</span>
+							{!isGameFinished(game) && (
+								<span className="text-base mx-1">{game.fixture.status.elapsed}'</span>
+							)}
 						</div>
 					</span>
 				)}

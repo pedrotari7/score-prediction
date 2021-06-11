@@ -3,7 +3,7 @@ import UserContext from '../context/UserContext';
 import LiveGame from './LiveGame';
 import { Fixture, Fixtures, Prediction, Predictions, User, Users, Venue } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
-import { classNames, formatScore, getResult } from '../lib/utils/reactHelper';
+import { classNames, formatScore, getResult, isGameFinished } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
 
 const stadiumImageURL = (venue: Venue) => `/stadiums/${venue.city.toLocaleLowerCase().replace(/\s/g, '')}.webp`;
@@ -60,7 +60,7 @@ const CurrentMatch = ({
 
 	const sortedFixtures = Object.values(fixtures).sort((a, b) => a.fixture.timestamp - b.fixture.timestamp);
 
-	const nextGame = sortedFixtures.findIndex(game => !['FT', 'AET', 'PEN'].includes(game.fixture.status.short));
+	const nextGame = sortedFixtures.findIndex(game => !isGameFinished(game));
 
 	const game = gameID ? fixtures[gameID] : sortedFixtures[nextGame === -1 ? sortedFixtures.length - 1 : nextGame];
 
