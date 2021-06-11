@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { Prediction, Result, UserResult } from '../../../interfaces/main';
 
 export const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');
 
@@ -16,3 +17,31 @@ export const formatScore = (goal: number | null) => {
 };
 
 export const isNum = (n: number | null) => typeof n === 'number';
+
+export const getOutcome = (g: Result): string | null => {
+	if (!isNum(g.home) || !isNum(g.away)) return null;
+	if (g.home > g.away) return 'winH';
+	if (g.home < g.away) return 'winA';
+	if (g.home === g.away) return 'draw';
+	return null;
+};
+
+export const getResult = (prediction: Prediction, result: Result): Partial<UserResult> => {
+	const { home: predH, away: predA } = prediction;
+	const { home: realH, away: realA } = result;
+
+	const isExactScore = predH === realH && predA === realA;
+
+	if (isExactScore) return { points: 5, exact: 1 };
+
+	const isCorrectResult =
+		!isExactScore && getOutcome(prediction) !== null && getOutcome(prediction) === getOutcome(result);
+
+	if (isCorrectResult) return { points: 3, result: 1 };
+
+	const isCorrectGoal = !isExactScore && !isCorrectResult && (predH === realH || predA === realA);
+
+	if (isCorrectGoal) return { points: 1, onescore: 1 };
+
+	return { points: 0, fail: 1 };
+};

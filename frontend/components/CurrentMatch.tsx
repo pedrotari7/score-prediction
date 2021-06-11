@@ -3,7 +3,7 @@ import UserContext from '../context/UserContext';
 import LiveGame from './LiveGame';
 import { Fixture, Fixtures, Prediction, Predictions, User, Users, Venue } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
-import { classNames, formatScore } from '../lib/utils/reactHelper';
+import { classNames, formatScore, getResult } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
 
 const stadiumImageURL = (venue: Venue) => `/stadiums/${venue.city.toLocaleLowerCase().replace(/\s/g, '')}.webp`;
@@ -68,6 +68,15 @@ const CurrentMatch = ({
 
 	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
 
+	const gamePredictionsAndResults = Object.entries(gamePredictions)
+		.filter(([uid]) => uid !== userInfo?.uid)
+		.map(([uid, prediction]) => ({
+			uid,
+			prediction,
+			result: getResult(prediction, game.goals),
+		}))
+		.sort((a, b) => (b.result.points ?? 0) - (a.result.points ?? 0));
+
 	return (
 		<main className="flex flex-col justify-center select-none text-light m-8 md:mx-24 p-8 shadow-pop rounded-md bg-dark relative">
 			{!gameID && <p className="text-3xl mb-2">Next Game</p>}
@@ -89,11 +98,9 @@ const CurrentMatch = ({
 			<div className="mt-6 mb-20 z-10">
 				<div className="text-xl mb-4">Predictions</div>
 				<div className="flex flex-row flex-wrap">
-					{Object.entries(gamePredictions)
-						.filter(([uid, _]) => uid !== userInfo?.uid)
-						.map(([uid, prediction]) => (
-							<UserGuess user={users[uid]} guess={prediction} key={uid} game={game} />
-						))}
+					{gamePredictionsAndResults.map(({ uid, prediction }) => (
+						<UserGuess user={users[uid]} guess={prediction} key={uid} game={game} />
+					))}
 				</div>
 			</div>
 
