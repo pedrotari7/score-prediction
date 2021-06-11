@@ -20,6 +20,7 @@ admin.initializeApp();
 const FieldValue = admin.firestore.FieldValue;
 
 const STALE_TIME = 60 * 60 * 4;
+const GAME_TIME = 60 * 3;
 
 const API_SPORTS_URL = 'https://v3.football.api-sports.io';
 
@@ -255,19 +256,30 @@ app.get('/tournament', async (req, res) => {
 
   const standingsTimeDiffSeconds = getTimeDiff(standings.timestamp);
 
-  if (standingsTimeDiffSeconds > STALE_TIME) {
+  const currentDate = getCurrentTime().getTime();
+
+  const gameDates = Object.values(fixtures.data as Fixtures).map(
+    f => (currentDate - new Date(f?.fixture?.date).getTime()) / 1000
+  );
+
+  const OneAndHalfHour = 1.5 * 60 * 60;
+  const hasGameInRange = gameDates.some(d => d >= 0 && d < OneAndHalfHour);
+
+  const timeGuard = hasGameInRange ? GAME_TIME : STALE_TIME;
+
+  if (standingsTimeDiffSeconds > timeGuard) {
     console.log('standings needs update');
     standings.data = await updateStandings(competition);
   }
 
-  if (fixturesTimeDiffSeconds > STALE_TIME) {
+  if (fixturesTimeDiffSeconds > timeGuard) {
     console.log('fixtures needs update');
     fixtures.data = await updateFixtures(competition);
   }
 
   const predictions = await getPredictions(decodedToken, competition, fixtures.data);
 
-  if (fixturesTimeDiffSeconds > STALE_TIME) {
+  if (fixturesTimeDiffSeconds > timeGuard) {
     console.log('update points');
     await updatePoints(competition, predictions, fixtures);
   }
