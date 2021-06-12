@@ -46,4 +46,4 @@ export const getResult = (prediction: Prediction, result: Result): Partial<UserR
 	return { points: 0, fail: 1 };
 };
 
-export const isGameFinished = (game: Fixture) => ['FT', 'AET', 'PEN'].includes(game.fixture.status.short);
+export const isGameFinished = (game: Fixture) => ['FT', 'AET', 'PEN', 'INT', 'PST'].includes(game.fixture.status.short);
