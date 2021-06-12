@@ -114,7 +114,7 @@ const Rankings = ({ users }: { users: Users }) => {
 								<Circle className="bg-pink-500">{user.score.onescore}</Circle>
 								<Circle className="bg-red-500">{user.score.fail}</Circle>
 								<Circle className="bg-purple-700">{user.score.groups}</Circle>
-								<Circle className="bg-gray-700 w-10 h-10 p-6">{user.score.points}</Circle>
+								<Circle className="bg-gray-700 w-10 h-10 p-6 my-4">{user.score.points}</Circle>
 							</div>
 						</div>
 					);
