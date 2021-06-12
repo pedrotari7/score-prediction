@@ -128,7 +128,7 @@ export interface Fixture {
 	score: Score;
 	events: Event[];
 	lineups: Lineup[];
-	statistics: Statistic[];
+	statistics?: Statistic[];
 	players?: Object[];
 }
 

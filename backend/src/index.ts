@@ -156,6 +156,7 @@ const updateFixtures = async (competition: Competition, gamesToUpdate: number[],
     for (const gameID of gamesToUpdate) {
       const fixture = await getFullFixture(gameID);
       delete fixture.players;
+      delete fixture.statistics;
       oldFixtures[gameID] = fixture;
     }
 

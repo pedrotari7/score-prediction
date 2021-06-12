@@ -7,6 +7,7 @@ import UserContext from '../context/UserContext';
 import { getCurrentDate, isGameFinished } from '../lib/utils/reactHelper';
 import ClientOnly from './ClientOnly';
 import Flag from './Flag';
+import GameExtraInfo from './GameExtraInfo';
 import ShowMore from './ShowMore';
 
 const LiveGame = ({ gameID }: { gameID: number }) => {
@@ -28,10 +29,10 @@ const LiveGame = ({ gameID }: { gameID: number }) => {
 
 	const isCountdown = timeDiff <= 1;
 
-	const extraInfo = <pre>{JSON.stringify(game, null, 2)}</pre>;
-
 	return (
-		<ShowMore more={extraInfo} className="text-light flex flex-col  my-2 rounded p-2 bg-gark shadow-pop">
+		<ShowMore
+			more={<GameExtraInfo game={game} />}
+			className="text-light flex flex-col  my-2 rounded p-2 bg-gark shadow-pop">
 			<div className="flex flex-col sm:flex-row items-center sm:justify-evenly">
 				<span className="text-sm text-left sm:w-2/12 flex ">
 					<div className="flex items-center justify-center">
