@@ -14,14 +14,13 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 	const options = [GamePanel.Facts, GamePanel.Lineup];
 
 	const NavOption = ({ option, active }: { option: GamePanel; active: boolean }) => {
-		console.log(`active`, active);
 		return (
 			<div
 				onClick={() => setPanelMode(option)}
 				className={classNames(
 					' m-4 py-2 px-4 rounded-md',
 					'hover:bg-opacity-50 cursor-pointer',
-					active ? 'bg-blue' : 'bg-gray-700'
+					active ? 'bg-blue' : ''
 				)}>
 				{option}
 			</div>
