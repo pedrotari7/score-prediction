@@ -3,7 +3,7 @@ import { ReactChild } from 'react';
 import { classNames } from '../lib/utils/reactHelper';
 import { DotsHorizontalIcon, ChevronUpIcon } from '@heroicons/react/outline';
 
-const ShowMore = ({ children, className }: { children: ReactChild; className: string }) => {
+const ShowMore = ({ children, className, more }: { children: ReactChild; className: string; more: JSX.Element }) => {
 	return (
 		<Disclosure as="div" className={classNames(className)}>
 			{({ open }) => (
@@ -21,7 +21,7 @@ const ShowMore = ({ children, className }: { children: ReactChild; className: st
 						leave="transition duration-75 ease-out"
 						leaveFrom="transform scale-100 opacity-100"
 						leaveTo="transform scale-95 opacity-0">
-						{open && <div>More information</div>}
+						{open && <div>{more}</div>}
 					</Transition>
 				</>
 			)}

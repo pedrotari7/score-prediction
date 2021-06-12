@@ -28,8 +28,10 @@ const LiveGame = ({ gameID }: { gameID: number }) => {
 
 	const isCountdown = timeDiff <= 1;
 
+	const extraInfo = <pre>{JSON.stringify(game, null, 2)}</pre>;
+
 	return (
-		<ShowMore className="text-light flex flex-col  my-2 rounded p-2 bg-gark shadow-pop">
+		<ShowMore more={extraInfo} className="text-light flex flex-col  my-2 rounded p-2 bg-gark shadow-pop">
 			<div className="flex flex-col sm:flex-row items-center sm:justify-evenly">
 				<span className="text-sm text-left sm:w-2/12 flex ">
 					<div className="flex items-center justify-center">
