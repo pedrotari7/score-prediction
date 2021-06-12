@@ -145,23 +145,23 @@ const updateFixtures = async (competition: Competition, gamesToUpdate: number[],
           })
         : await getFixtures({ league: competition.league, season: competition.season });
 
-    const fixtureMap = fixtures.reduce((acc, game) => ({ ...acc, [game.fixture.id]: game }), {} as Fixtures);
+    const fixtureMap = fixtures.reduce(
+      (acc, game) => ({ ...acc, [game.fixture.id]: { ...oldFixtures[game.fixture.id], ...game } }),
+      {} as Fixtures
+    );
 
     await getDBFixtures(competition).set({ data: fixtureMap, timestamp: FieldValue.serverTimestamp() });
     return fixtureMap;
   } else {
-    const fixtures = {
-      ...oldFixtures,
-      ...(await gamesToUpdate.reduce(async (acc, gameID) => {
-        const fixture = await getFullFixture(gameID);
-        delete fixture.players;
-        return { ...acc, [gameID]: fixture };
-      }, {})),
-    };
+    for (const gameID of gamesToUpdate) {
+      const fixture = await getFullFixture(gameID);
+      delete fixture.players;
+      oldFixtures[gameID] = fixture;
+    }
 
-    await getDBFixtures(competition).set({ data: fixtures, timestamp: FieldValue.serverTimestamp() });
+    await getDBFixtures(competition).set({ data: oldFixtures, timestamp: FieldValue.serverTimestamp() });
 
-    return fixtures;
+    return oldFixtures;
   }
 };
 
@@ -248,7 +248,9 @@ app.get('/fetch-fixtures', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const data = await updateFixtures(competition, []);
+  const fixtures = (await getDBFixtures(competition).get()).data()?.data as Fixtures;
+
+  const data = await updateFixtures(competition, [], fixtures);
 
   return res.json(data);
 });
