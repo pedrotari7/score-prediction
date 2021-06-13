@@ -1,8 +1,9 @@
 import Head from 'next/head';
+import { ReactNode } from 'react';
 import { useAuth } from '../lib/auth';
 import Navbar from './Navbar';
 
-const PageLayout = ({ title, children }: { title: string; children: JSX.Element }) => {
+const PageLayout = ({ title, children }: { title: string; children: ReactNode }) => {
 	const { user } = useAuth();
 
 	return (

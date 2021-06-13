@@ -1,28 +1,40 @@
+import { ReactNode } from 'react';
 import { Event, Fixture } from '../../interfaces/main';
 import { classNames } from '../lib/utils/reactHelper';
 
 enum EventType {
 	Goal = 'Goal',
 	Subst = 'subst',
-	Card = 'card',
+	Card = 'Card',
 	Var = 'var',
 }
 
 const GameFacts = ({ game }: { game: Fixture }) => {
 	const Event = ({ event }: { event: Event }) => {
 		const isAwayTeam = event.team.id === game.teams.away.id;
-		const EventContainer = ({ children }: { children: JSX.Element[] }) => {
+		const EventContainer = ({ children }: { children: ReactNode }) => {
 			return (
-				<div className={classNames('flex items-center my-4', isAwayTeam ? 'flex-row-reverse' : 'flex-row')}>
+				<div
+					className={classNames(
+						'flex items-center my-4 xl:w-1/3',
+						isAwayTeam ? 'flex-row-reverse' : 'flex-row'
+					)}>
 					{children}
 				</div>
 			);
 		};
+
 		if (event.type === EventType.Goal) {
+			const isNormalGoal = event.detail === 'Normal Goal';
+			const isOwnGoal = event.detail === 'Own Goal';
+			const isMissedPenalty = event.detail === 'Missed Penalty';
 			return (
 				<EventContainer>
 					<span className="mx-2 font-bold">{event.time.elapsed}'</span>
-					<img className="mx-2 h-5 w-5" src="/events/goal.svg" />
+					{isNormalGoal && <img className="mx-2 h-5 w-5" src="/events/goal.svg" />}
+					{isOwnGoal && <img className="mx-2 h-5 w-5" src="/events/own_goal.svg" />}
+					{isMissedPenalty && <img className="mx-2 h-5 w-5" src="/events/missed_penalty.svg" />}
+
 					<div className={classNames('mx-2 flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
 						<span>{event.player.name}</span>
 						{event.assist.name && <span className="text-sm">assist by {event.assist.name}</span>}
@@ -43,15 +55,28 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 					</div>
 				</EventContainer>
 			);
+		} else if (event.type === EventType.Card) {
+			const isYellowCard = event.detail === 'Yellow Card';
+			const isSecondYellowCard = event.detail === 'Seccond yellow card';
+			const isRedCard = event.detail === 'Red card ';
+
+			return (
+				<EventContainer>
+					<span className="mx-2 font-bold">{event.time.elapsed}'</span>
+					{isYellowCard && <img className="mx-3 h-5 w-3" src="/events/yellow_card.svg" />}
+					{isSecondYellowCard && <img className="mx-3 h-5 w-3" src="/events/yellow_card.svg" />}
+					{isRedCard && <img className="mx-3 h-5 w-3" src="/events/red_card.svg" />}
+
+					<span>{event.player.name}</span>
+				</EventContainer>
+			);
 		}
 		return <></>;
 	};
 	return (
-		<div className="bg-gray-700 rounded-md p-2">
+		<div className="bg-gray-700 rounded-md p-2 flex flex-col xl:items-center justify-center">
 			{game?.events?.map((event, idx) => (
-				<>
-					<Event key={idx} event={event} />
-				</>
+				<Event key={idx} event={event} />
 			))}
 		</div>
 	);

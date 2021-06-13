@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, createContext } from 'react';
+import { useState, useEffect, useContext, createContext, ReactNode } from 'react';
 import nookies from 'nookies';
 import { firebaseClient } from './firebaseClient';
 
@@ -6,7 +6,7 @@ type User = (firebaseClient.User & { admin?: boolean }) | null;
 
 export const AuthContext = createContext<{ user: User }>({ user: null });
 
-export const AuthProvider = ({ children }: { children: JSX.Element }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User>(null);
 
 	useEffect(() => {

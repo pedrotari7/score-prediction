@@ -1,9 +1,9 @@
 import { Disclosure, Transition } from '@headlessui/react';
-import { ReactChild } from 'react';
+import { ReactNode } from 'react';
 import { classNames } from '../lib/utils/reactHelper';
 import { DotsHorizontalIcon, ChevronUpIcon } from '@heroicons/react/outline';
 
-const ShowMore = ({ children, className, more }: { children: ReactChild; className: string; more: JSX.Element }) => {
+const ShowMore = ({ children, className, more }: { children: ReactNode; className: string; more: JSX.Element }) => {
 	return (
 		<Disclosure as="div" className={classNames(className)}>
 			{({ open }) => (

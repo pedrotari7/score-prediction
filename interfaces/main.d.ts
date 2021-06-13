@@ -64,8 +64,8 @@ export interface Event {
 	team: Team;
 	player: Player;
 	assist: Player;
-	type: 'Goal' | 'card' | 'subst' | 'var';
-	datail: string;
+	type: 'Goal' | 'Card' | 'subst' | 'var';
+	detail: string;
 	comments: string;
 }
 

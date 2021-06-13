@@ -1,4 +1,4 @@
-import { MouseEventHandler, useContext, useState } from 'react';
+import { MouseEventHandler, ReactNode, useContext, useState } from 'react';
 import { Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
 import { classNames } from '../lib/utils/reactHelper';
@@ -22,7 +22,7 @@ const Rankings = ({ users }: { users: Users }) => {
 	const { setRoute } = useContext(RouteContext)!;
 	const [sortOption, setSortOption] = useState(SortOptions.points);
 
-	const Circle = ({ children, className }: { children: number; className: string }) => {
+	const Circle = ({ children, className }: { children: ReactNode; className: string }) => {
 		return (
 			<div
 				className={classNames(
@@ -40,7 +40,7 @@ const Rankings = ({ users }: { users: Users }) => {
 		active,
 		onClick,
 	}: {
-		children: string;
+		children: ReactNode;
 		className: string;
 		active: boolean;
 		onClick: MouseEventHandler<HTMLDivElement>;
