@@ -111,7 +111,7 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 	let addedHTScore = false;
 
 	return (
-		<div className="bg-gray-700 rounded-md p-2 flex flex-col xl:items-center justify-center">
+		<div className="bg-gray-700 rounded-md p-2 flex flex-col text-sm sm:text-base xl:items-center justify-center">
 			{isGameFinished(game) ? events : events.reverse()}
 			<Referee />
 		</div>

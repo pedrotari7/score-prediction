@@ -43,7 +43,7 @@ const GameLineup = ({ lineups }: { lineups: Lineup[] }) => {
 	};
 
 	return (
-		<div className="bg-gray-700 rounded-md p-2 flex flex-col sm:flex-row justify-evenly">
+		<div className="bg-gray-700 rounded-md p-2 flex flex-col text-sm sm:text-base sm:flex-row justify-evenly">
 			<Lineup lineup={homeLineup} />
 			<Lineup lineup={awayLineup} />
 		</div>
