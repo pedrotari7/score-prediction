@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { classNames } from '../lib/utils/reactHelper';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/outline';
 
-const ShowMore = ({ children, className, more }: { children: ReactNode; className: string; more: JSX.Element }) => {
+const ShowMore = ({ children, className, more }: { children: ReactNode; className: string; more: ReactNode }) => {
 	return (
 		<Disclosure as="div" className={classNames(className)}>
 			{({ open }) => (
@@ -19,10 +19,12 @@ const ShowMore = ({ children, className, more }: { children: ReactNode; classNam
 						leaveTo="transform scale-95 opacity-0">
 						{open && <div>{more}</div>}
 					</Transition>
-					<Disclosure.Button className="focus:outline-none flex justify-center mt-4">
-						{!open && <ChevronDownIcon className="block h-6 w-6" aria-hidden="true" />}
-						{open && <ChevronUpIcon className="block h-6 w-6" aria-hidden="true" />}
-					</Disclosure.Button>
+					{more && (
+						<Disclosure.Button className="focus:outline-none flex justify-center mt-4">
+							{!open && <ChevronDownIcon className="block h-6 w-6" aria-hidden="true" />}
+							{open && <ChevronUpIcon className="block h-6 w-6" aria-hidden="true" />}
+						</Disclosure.Button>
+					)}
 				</>
 			)}
 		</Disclosure>
