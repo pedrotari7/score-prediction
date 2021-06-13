@@ -30,7 +30,7 @@ const GameStats = ({ stats }: { stats: Statistic[] | undefined }) => {
 	};
 
 	return (
-		<div className="bg-gray-700 rounded-md p-5 flex justify-center">
+		<div className="bg-gray-700 rounded-md p-6 flex justify-center">
 			<div className="flex flex-row justify-evenly text-sm sm:text-base w-full xl:w-1/3">
 				<Statistic statistic={homeStatistic} />
 				<StatisticLabel statistic={homeStatistic} />
