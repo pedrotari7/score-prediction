@@ -24,11 +24,7 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 
 		const EventContainer = ({ children }: { children: ReactNode }) => {
 			return (
-				<div
-					className={classNames(
-						'flex items-center my-2 xl:w-1/3',
-						isAwayTeam ? 'flex-row-reverse' : 'flex-row'
-					)}>
+				<div className={classNames('flex items-center  my-2', isAwayTeam ? 'flex-row-reverse' : 'flex-row')}>
 					{children}
 				</div>
 			);
@@ -104,10 +100,10 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 		const shouldAddHTScore = !addedHTScore && event.time.elapsed >= 45;
 		if (shouldAddHTScore) addedHTScore = shouldAddHTScore;
 		return (
-			<>
+			<div key={idx} className="w-full xl:w-1/3">
 				{shouldAddHTScore && <HalfTimeScore />}
-				<Event key={idx} event={event} />
-			</>
+				<Event event={event} />
+			</div>
 		);
 	});
 
