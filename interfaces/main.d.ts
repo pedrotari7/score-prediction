@@ -90,12 +90,14 @@ export interface Lineup {
 	coach: Coach;
 }
 
+export interface Stat {
+	type: string;
+	value: number | null;
+}
+
 export interface Statistic {
 	team: Team;
-	statistics: {
-		type: string;
-		value: number | null;
-	}[];
+	statistics: Stat[];
 }
 export interface FixtureData {
 	id: number;
