@@ -6,9 +6,11 @@ const GameLineup = ({ lineups }: { lineups: Lineup[] }) => {
 
 	const Player = ({ player }: { player: LineupPlayer }) => {
 		return (
-			<div className="flex flex-row">
-				<div className="mx-2 w-4 text-center">{player.number}</div>
-				<div className="mx-2">{player.pos}</div>
+			<div className="flex flex-row justify-between">
+				<div className="flex flex-row">
+					<div className="mx-2 w-4 text-center">{player.number}</div>
+					<div className="mx-2">{player.pos}</div>
+				</div>
 				<div className="mx-2">{player.name}</div>
 			</div>
 		);
