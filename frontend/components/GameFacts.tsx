@@ -16,7 +16,7 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 			return (
 				<div
 					className={classNames(
-						'flex items-center my-4 xl:w-1/3',
+						'flex items-center my-2 xl:w-1/3',
 						isAwayTeam ? 'flex-row-reverse' : 'flex-row'
 					)}>
 					{children}
@@ -67,7 +67,7 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 					{isSecondYellowCard && <img className="mx-3 h-5 w-3" src="/events/yellow_card.svg" />}
 					{isRedCard && <img className="mx-3 h-5 w-3" src="/events/red_card.svg" />}
 
-					<span>{event.player.name}</span>
+					<span className="mx-2">{event.player.name}</span>
 				</EventContainer>
 			);
 		}

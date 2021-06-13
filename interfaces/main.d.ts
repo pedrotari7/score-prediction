@@ -85,8 +85,8 @@ export interface Coach {
 export interface Lineup {
 	team: Team;
 	formation: string;
-	startXI: LineupPlayer[];
-	substitutes: LineupPlayer[];
+	startXI: { player: LineupPlayer }[];
+	substitutes: { player: LineupPlayer }[];
 	coach: Coach;
 }
 
