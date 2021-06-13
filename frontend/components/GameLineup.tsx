@@ -22,7 +22,7 @@ const GameLineup = ({ lineups }: { lineups: Lineup[] }) => {
 				</div>
 				<div className="shadow-panel p-3 rounded-md">
 					{lineup.startXI.map(({ player }: { player: LineupPlayer }) => (
-						<Player player={player} />
+						<Player key={player.id} player={player} />
 					))}
 				</div>
 

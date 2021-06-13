@@ -41,8 +41,8 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 	return (
 		<>
 			<div className="flex flex-row items-center justify-center">
-				{options.map(option => (
-					<NavOption active={panelMode === option} option={option} />
+				{options.map((option, idx) => (
+					<NavOption key={idx} active={panelMode === option} option={option} />
 				))}
 			</div>
 			<PanelComponent />

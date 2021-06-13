@@ -10,6 +10,13 @@ enum EventType {
 }
 
 const GameFacts = ({ game }: { game: Fixture }) => {
+	const Referee = () => (
+		<div className="flex flex-row justify-center items-center my-6">
+			<img className="mx-3 h-8 w-8" src="whistle.svg" />
+			<div className="text-sm text-center">{game.fixture.referee}</div>
+		</div>
+	);
+
 	const Event = ({ event }: { event: Event }) => {
 		const isAwayTeam = event.team.id === game.teams.away.id;
 
@@ -109,6 +116,7 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 	return (
 		<div className="bg-gray-700 rounded-md p-2 flex flex-col xl:items-center justify-center">
 			{isGameFinished(game) ? events : events.reverse()}
+			<Referee />
 		</div>
 	);
 };
