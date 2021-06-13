@@ -29,12 +29,15 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 			const isNormalGoal = event.detail === 'Normal Goal';
 			const isOwnGoal = event.detail === 'Own Goal';
 			const isMissedPenalty = event.detail === 'Missed Penalty';
+			const isPenalty = event.detail === 'Penalty';
+
 			return (
 				<EventContainer>
 					<span className="mx-2 font-bold">{event.time.elapsed}'</span>
 					{isNormalGoal && <img className="mx-2 h-5 w-5" src="/events/goal.svg" />}
 					{isOwnGoal && <img className="mx-2 h-5 w-5" src="/events/own_goal.svg" />}
 					{isMissedPenalty && <img className="mx-2 h-5 w-5" src="/events/missed_penalty.svg" />}
+					{isPenalty && <img className="mx-2 h-5 w-5" src="/events/penalty.svg" />}
 
 					<div className={classNames('mx-2 flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
 						<span>{event.player.name}</span>
