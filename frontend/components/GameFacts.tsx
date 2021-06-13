@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Event, Fixture } from '../../interfaces/main';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, isGameFinished } from '../lib/utils/reactHelper';
 
 enum EventType {
 	Goal = 'Goal',
@@ -12,6 +12,7 @@ enum EventType {
 const GameFacts = ({ game }: { game: Fixture }) => {
 	const Event = ({ event }: { event: Event }) => {
 		const isAwayTeam = event.team.id === game.teams.away.id;
+
 		const EventContainer = ({ children }: { children: ReactNode }) => {
 			return (
 				<div
@@ -73,9 +74,12 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 		}
 		return <></>;
 	};
+
+	const events = isGameFinished(game) ? game?.events?.reverse() : game?.events;
+
 	return (
 		<div className="bg-gray-700 rounded-md p-2 flex flex-col xl:items-center justify-center">
-			{game?.events?.map((event, idx) => (
+			{events?.map((event, idx) => (
 				<Event key={idx} event={event} />
 			))}
 		</div>
