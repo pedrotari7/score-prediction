@@ -255,6 +255,17 @@ app.get('/fetch-fixtures', async (req, res) => {
   return res.json(data);
 });
 
+app.get('/fetch-predictions', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
+
+  const competition = parseCompetition(req);
+
+  const predictions = (await getDBPredictions(competition).get()).data();
+
+  return res.json(predictions);
+});
+
 app.get('/tournament', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;

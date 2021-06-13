@@ -28,6 +28,8 @@ export const updatePredictions = async (
 	});
 };
 
+export const fetchPredictions = async (token: string) => await cFetch(`${backendUrl}/fetch-predictions`, token);
+
 export const updatePoints = async (token: string): Promise<Users> => await cFetch(`${backendUrl}/points`, token);
 
 export const cleanup = async (token: string): Promise<void> => await cFetch(`${backendUrl}/cleanup`, token);
