@@ -101,8 +101,9 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 		if (shouldAddHTScore) addedHTScore = shouldAddHTScore;
 		return (
 			<div key={idx} className="w-full xl:w-1/3">
-				{shouldAddHTScore && <HalfTimeScore />}
+				{shouldAddHTScore && isGameFinished(game) && <HalfTimeScore />}
 				<Event event={event} />
+				{shouldAddHTScore && !isGameFinished(game) && <HalfTimeScore />}
 			</div>
 		);
 	});
