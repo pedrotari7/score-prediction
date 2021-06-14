@@ -67,7 +67,7 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 		} else if (event.type === EventType.Card) {
 			const isYellowCard = event.detail === 'Yellow Card';
 			const isSecondYellowCard = event.detail === 'Seccond yellow card';
-			const isRedCard = event.detail === 'Red card ';
+			const isRedCard = event.detail === 'Red Card';
 
 			return (
 				<EventContainer>
