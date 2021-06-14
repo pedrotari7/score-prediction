@@ -82,11 +82,14 @@ export interface Coach {
 	name: string;
 	photo: string;
 }
+
+export type LineupPlayers = { player: LineupPlayer }[];
+
 export interface Lineup {
 	team: Team;
 	formation: string;
-	startXI: { player: LineupPlayer }[];
-	substitutes: { player: LineupPlayer }[];
+	startXI: LineupPlayers;
+	substitutes: LineupPlayers;
 	coach: Coach;
 }
 

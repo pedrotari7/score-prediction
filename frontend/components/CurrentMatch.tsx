@@ -78,7 +78,7 @@ const CurrentMatch = ({
 		.sort((a, b) => (b.result.points ?? 0) - (a.result.points ?? 0));
 
 	return (
-		<main className="flex flex-col justify-center select-none text-light m-8 md:mx-24 p-8 shadow-pop rounded-md bg-dark relative">
+		<main className="flex flex-col justify-center select-none text-light m-4 sm:m-8 md:mx-24 p-4 sm:p-8 shadow-pop rounded-md bg-dark relative">
 			{!gameID && <p className="text-3xl mb-2">Next Game</p>}
 			{gameID && <p className="text-3xl mb-2">{game.league?.round}</p>}
 

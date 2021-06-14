@@ -17,6 +17,7 @@ module.exports = {
 				'h-0.5',
 				'opacity-80',
 				'my-6',
+				'm-10',
 			],
 			keyframes: true,
 			fontFace: true,
