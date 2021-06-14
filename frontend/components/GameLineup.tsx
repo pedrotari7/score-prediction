@@ -1,7 +1,7 @@
 import { Lineup, LineupPlayer, LineupPlayers, Player, PlayersInfo } from '../../interfaces/main';
 import { classNames } from '../lib/utils/reactHelper';
 
-const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersInfo[] }) => {
+const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersInfo[] | undefined }) => {
 	const [homeLineup, awayLineup] = lineups;
 	const [homePlayers, awayPlayers] = players?.map(p =>
 		p.players.reduce((acc, { player }) => ({ ...acc, [player.id]: player }), {})
@@ -64,7 +64,7 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersI
 		const homeSections = createSections(homeXI);
 		const awaySections = createSections(awayXI);
 
-		const PlayerPosition = ({ player, playerInfo }: { player: LineupPlayer; playerInfo: Player }) => {
+		const PlayerPosition = ({ player, playerInfo }: { player: LineupPlayer; playerInfo: Player | undefined }) => {
 			const lastNames = player.name.split(' ').slice(1).join(' ');
 			const shortName = lastNames ? lastNames : player.name;
 			const url = playerInfo?.photo
@@ -75,7 +75,7 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersI
 					<div className="flex flex-col items-center">
 						<div className="relative">
 							<img
-								className="object-cover h-6 w-6 sm:h-8 sm:w-8 lg:h-12 lg:w-12 xl:h-20 xl:w-20 rounded-full my-1"
+								className="object-cover h-6 w-6 sm:h-8 sm:w-8 lg:h-12 lg:w-12 xl:h-16 xl:w-16 rounded-full my-1"
 								src={url}
 							/>
 							<div className="absolute w-3 text-center top-1/2 -left-4 lg:-left-6 text-xs lg:text-base text-gray-400">
@@ -84,7 +84,7 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersI
 							<div className="absolute left-1/2 transform -translate-x-1/2">
 								<div className="flex flex-row">
 									<div className="xl:hidden">{shortName}</div>
-									<div className="hidden xl:block">{player.name}</div>
+									<div className="hidden xl:block w-max">{player.name}</div>
 								</div>
 							</div>
 						</div>
@@ -93,7 +93,11 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersI
 			);
 		};
 
-		const sectionXI = (section: [number, LineupPlayer][], idx: number, playersInfo: Record<number, Player>) => (
+		const sectionXI = (
+			section: [number, LineupPlayer][],
+			idx: number,
+			playersInfo: Record<number, Player> | undefined
+		) => (
 			<div key={idx} className="flex flex-row sm:flex-col flex-grow items-center justify-evenly mx-1">
 				{section.map(([_, player]: [number, LineupPlayer]) => (
 					<PlayerPosition key={player.id} player={player} playerInfo={playersInfo?.[player.id]} />
