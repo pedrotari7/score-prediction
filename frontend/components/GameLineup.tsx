@@ -75,13 +75,15 @@ const GameLineup = ({ lineups }: { lineups: Lineup[] }) => {
 								className="object-cover h-6 w-6 sm:h-8 sm:w-8 lg:h-12 lg:w-12 xl:h-16 xl:w-16 rounded-full my-1"
 								src={url}
 							/>
-							<div className="absolute top-1/2 -left-4 lg:-left-6 text-xs lg:text-base text-gray-400">
+							<div className="absolute w-3 text-center top-1/2 -left-4 lg:-left-6 text-xs lg:text-base text-gray-400">
 								{player.number}
 							</div>
-						</div>
-						<div className="flex flex-row">
-							<div className="xl:hidden">{shortName}</div>
-							<div className="hidden xl:block">{player.name}</div>
+							<div className="absolute left-1/2 transform -translate-x-1/2">
+								<div className="flex flex-row">
+									<div className="xl:hidden">{shortName}</div>
+									<div className="hidden xl:block">{player.name}</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
