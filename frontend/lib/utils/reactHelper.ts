@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { Fixture, Prediction, Result, UserResult } from '../../../interfaces/main';
+import { Fixture, Prediction, Result, UserResult, Venue } from '../../../interfaces/main';
 
 export const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');
 
@@ -47,3 +47,22 @@ export const getResult = (prediction: Prediction, result: Result): Partial<UserR
 };
 
 export const isGameFinished = (game: Fixture) => ['FT', 'AET', 'PEN', 'INT', 'PST'].includes(game.fixture.status.short);
+
+const STADIUMS: Record<string, string> = {
+	amsterdam: '/stadiums/amsterdam.webp',
+	baku: '/stadiums/baku.webp',
+	bucureşti: '/stadiums/bucureşti.webp',
+	budapest: '/stadiums/budapest.webp',
+	copenhagen: '/stadiums/copenhagen.webp',
+	københavn: '/stadiums/copenhagen.webp',
+	glasgow: '/stadiums/glasgow.webp',
+	london: '/stadiums/london.webp',
+	münchen: '/stadiums/münchen.webp',
+	roma: '/stadiums/roma.webp',
+	saintpetersburg: '/stadiums/saintpetersburg.webp',
+	'st.petersburg': '/stadiums/saintpetersburg.webp',
+	sevilla: '/stadiums/seville.webp',
+	seville: '/stadiums/seville.webp',
+};
+
+export const getStadiumImageURL = (venue: Venue) => `${STADIUMS[venue.city.toLocaleLowerCase().replace(/\s/g, '')]}`;

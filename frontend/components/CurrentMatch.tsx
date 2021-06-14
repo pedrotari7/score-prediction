@@ -1,12 +1,10 @@
 import React, { useContext } from 'react';
 import UserContext from '../context/UserContext';
 import LiveGame from './LiveGame';
-import { Fixture, Fixtures, Prediction, Predictions, User, Users, Venue } from '../../interfaces/main';
+import { Fixture, Fixtures, Prediction, Predictions, User, Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
-import { classNames, formatScore, getResult, isGameFinished } from '../lib/utils/reactHelper';
+import { classNames, formatScore, getResult, getStadiumImageURL, isGameFinished } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
-
-const stadiumImageURL = (venue: Venue) => `/stadiums/${venue.city.toLocaleLowerCase().replace(/\s/g, '')}.webp`;
 
 const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game: Fixture }) => {
 	const routeInfo = useContext(RouteContext)!;
@@ -106,7 +104,7 @@ const CurrentMatch = ({
 
 			<img
 				className="object-cover absolute bottom-0 right-6 opacity-50 z-0 w-48"
-				src={stadiumImageURL(game?.fixture.venue)}
+				src={getStadiumImageURL(game?.fixture.venue)}
 			/>
 		</main>
 	);
