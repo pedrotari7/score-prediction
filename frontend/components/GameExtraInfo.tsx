@@ -35,7 +35,7 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 			case GamePanel.Facts:
 				return <GameFacts game={game} />;
 			case GamePanel.Lineup:
-				return <GameLineup lineups={game.lineups} />;
+				return <GameLineup lineups={game.lineups} players={game?.players} />;
 			case GamePanel.Stats:
 				return <GameStats stats={game.statistics} />;
 			default:

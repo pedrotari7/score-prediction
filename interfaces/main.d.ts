@@ -57,6 +57,7 @@ export interface FixtureStatus {
 export interface Player {
 	id: number;
 	name: string;
+	photo: string;
 }
 
 export interface Event {
@@ -125,6 +126,15 @@ export interface Score {
 	penalty: Result;
 }
 
+export interface PlayerInfo {
+	player: Player;
+	statistics: Array<Object>;
+}
+export interface PlayersInfo {
+	team: Team;
+	players: PlayerInfo[];
+}
+
 export interface Fixture {
 	fixture: FixtureData;
 	teams: Teams;
@@ -134,7 +144,7 @@ export interface Fixture {
 	events: Event[];
 	lineups: Lineup[];
 	statistics?: Statistic[];
-	players?: Object[];
+	players?: PlayersInfo[];
 }
 
 export interface Fixtures {
