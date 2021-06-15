@@ -135,6 +135,8 @@ export interface PlayersInfo {
 	players: PlayerInfo[];
 }
 
+export type PlayersMap = Record<number, Record<number, Player>>;
+
 export interface Fixture {
 	fixture: FixtureData;
 	teams: Teams;

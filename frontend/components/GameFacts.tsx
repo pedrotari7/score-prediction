@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import { Event, Fixture } from '../../interfaces/main';
-import { classNames, isGameFinished } from '../lib/utils/reactHelper';
+import { Event, Fixture, Player, PlayersMap } from '../../interfaces/main';
+import { classNames, DEFAULT_IMAGE, isGameFinished } from '../lib/utils/reactHelper';
 
 enum EventType {
 	Goal = 'Goal',
@@ -9,7 +9,7 @@ enum EventType {
 	Var = 'var',
 }
 
-const GameFacts = ({ game }: { game: Fixture }) => {
+const GameFacts = ({ game, players }: { game: Fixture; players: PlayersMap | undefined }) => {
 	const Referee = () => (
 		<div className="flex flex-row justify-center items-center my-6">
 			<img className="mx-3 h-8 w-8" src="whistle.svg" />
@@ -18,6 +18,8 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 	);
 
 	const Event = ({ event }: { event: Event }) => {
+		const getPhoto = (player: Player) => players?.[event.team.id]?.[player.id]?.photo;
+
 		const isAwayTeam = event.team.id === game.teams.away.id;
 
 		const TimeElapsed = () => <span className="mx-2 font-bold w-5 text-center">{event.time.elapsed}'</span>;
@@ -26,6 +28,17 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 			return (
 				<div className={classNames('flex items-center  my-2', isAwayTeam ? 'flex-row-reverse' : 'flex-row')}>
 					{children}
+				</div>
+			);
+		};
+
+		const PlayerWithPhoto = ({ color = 'text-light', player }: { color?: string; player: Player }) => {
+			const playerPhoto = getPhoto(player);
+			const photo = playerPhoto ? playerPhoto : DEFAULT_IMAGE;
+			return (
+				<div className={classNames('flex items-center', isAwayTeam ? 'flex-row-reverse' : 'flex-row')}>
+					<img className="object-cover h-6 w-6 sm:h-8 sm:w-8 rounded-full m-2" src={photo} />
+					<span className={classNames(color)}>{player.name}</span>
 				</div>
 			);
 		};
@@ -45,8 +58,8 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 					{isPenalty && <img className="mx-2 h-5 w-5" src="/events/penalty.svg" />}
 
 					<div className={classNames('mx-2 flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
-						<span>{event.player.name}</span>
-						{event.assist.name && <span className="text-sm">assist by {event.assist.name}</span>}
+						<PlayerWithPhoto player={event.player} />
+						{event.assist.name && <span className="text-sm mx-2">assist by {event.assist.name}</span>}
 					</div>
 				</EventContainer>
 			);
@@ -59,8 +72,8 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 						src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAATlBMVEVHcEzkXVoAl17kXVkAl1/kXVoAl1zkWlrkXlrlXVkAl18An18AmV8Al17kXFrlXVvkXFoAl14Al14Al17kXVoAmF3kXVoAmF7lXlsAmF/fU5yDAAAAGHRSTlMA76DgQPBgMH+AIBBQwGBwwO/wr7+Q37C91jpQAAAAk0lEQVQ4y+XU2Q4CIQyF4cKAuI+OW/v+L+qF0YSlyX9r5lx/obQ0iPx/0pG5g9mGHWhQJoMyGZQfOJD729VG6eTJnLTS3NATH+0dX8vQRdh1hOOJcI4RvkzlyvPubU/tgirZxxLUg9I5pU6p022d4rku5wZOjtNAYW5LZ1j6J3dV5jJoO7PxfKVQKVSyz6hMF1lR3lY7HudLRmFoAAAAAElFTkSuQmCC"
 					/>
 					<div className={classNames('mx-2 flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
-						<span className="text-green-500">{event.player.name}</span>
-						<span className="text-red-500">{event.assist.name}</span>
+						<PlayerWithPhoto color="text-green-500" player={event.player} />
+						<PlayerWithPhoto color="text-red-500" player={event.assist} />
 					</div>
 				</EventContainer>
 			);
@@ -75,8 +88,7 @@ const GameFacts = ({ game }: { game: Fixture }) => {
 					{isYellowCard && <img className="mx-3 h-5 w-3" src="/events/yellow_card.svg" />}
 					{isSecondYellowCard && <img className="mx-3 h-5 w-3" src="/events/yellow_card.svg" />}
 					{isRedCard && <img className="mx-3 h-5 w-3" src="/events/red_card.svg" />}
-
-					<span className="mx-2">{event.player.name}</span>
+					<PlayerWithPhoto player={event.player} />
 				</EventContainer>
 			);
 		}

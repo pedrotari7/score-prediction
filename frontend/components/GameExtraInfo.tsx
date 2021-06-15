@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Fixture } from '../../interfaces/main';
+import { Fixture, Player, PlayerInfo, PlayersMap } from '../../interfaces/main';
 import { classNames } from '../lib/utils/reactHelper';
 import GameFacts from './GameFacts';
 import GameLineup from './GameLineup';
@@ -14,6 +14,14 @@ enum GamePanel {
 const GameExtraInfo = ({ game }: { game: Fixture }) => {
 	const [panelMode, setPanelMode] = useState(GamePanel.Facts);
 	const options = [GamePanel.Facts, GamePanel.Lineup, GamePanel.Stats];
+
+	const players = game.players?.reduce(
+		(acc, { team, players }) => ({
+			...acc,
+			[team.id]: players.reduce((pls, { player }) => ({ ...pls, [player.id]: player }), {}),
+		}),
+		{} as PlayersMap
+	);
 
 	const NavOption = ({ option, active }: { option: GamePanel; active: boolean }) => {
 		return (
@@ -35,7 +43,7 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 			case GamePanel.Facts:
 				return <GameFacts game={game} />;
 			case GamePanel.Lineup:
-				return <GameLineup lineups={game.lineups} players={game?.players} />;
+				return <GameLineup lineups={game.lineups} players={players} />;
 			case GamePanel.Stats:
 				return <GameStats stats={game.statistics} />;
 			default:
