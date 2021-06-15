@@ -21,6 +21,8 @@ module.exports = {
 				'left-1/2',
 				'transform',
 				'-translate-x-1/2',
+				'rounded-r-md',
+				'rounded-l-md',
 			],
 			keyframes: true,
 			fontFace: true,
