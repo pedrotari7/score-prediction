@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Fixture, Player, PlayerInfo, PlayersMap } from '../../interfaces/main';
+import { Fixture, PlayersMap } from '../../interfaces/main';
 import { classNames } from '../lib/utils/reactHelper';
 import GameFacts from './GameFacts';
 import GameLineup from './GameLineup';
@@ -23,6 +23,8 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 		{} as PlayersMap
 	);
 
+	const colors = game?.lineups.map(l => l.team.colors.player.primary);
+
 	const NavOption = ({ option, active }: { option: GamePanel; active: boolean }) => {
 		return (
 			<div
@@ -41,11 +43,11 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 	const PanelComponent = () => {
 		switch (panelMode) {
 			case GamePanel.Facts:
-				return <GameFacts game={game} />;
+				return <GameFacts game={game} players={players} />;
 			case GamePanel.Lineup:
 				return <GameLineup lineups={game.lineups} players={players} />;
 			case GamePanel.Stats:
-				return <GameStats stats={game.statistics} />;
+				return <GameStats stats={game.statistics} colors={colors} />;
 			default:
 				return <></>;
 		}

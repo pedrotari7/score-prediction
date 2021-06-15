@@ -123,13 +123,13 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 					<div className="flex flex-col sm:flex-row w-full h-full justify-center items-center">
 						<div className="sm:w-1/2 w-full h-1/2 sm:h-full flex flex-col sm:flex-row">
 							{Object.values(homeSections).map((s, idx) =>
-								sectionXI(s, idx, players[homeLineup.team.id])
+								sectionXI(s, idx, players?.[homeLineup.team.id])
 							)}
 						</div>
 						<div className="sm:w-1/2 w-full h-1/2 sm:h-full flex flex-col sm:flex-row">
 							{Object.values(awaySections)
 								.reverse()
-								.map((s, idx) => sectionXI(s, idx, players[awayLineup.team.id]))}
+								.map((s, idx) => sectionXI(s, idx, players?.[awayLineup.team.id]))}
 						</div>
 					</div>
 				</div>

@@ -96,7 +96,7 @@ export interface Lineup {
 
 export interface Stat {
 	type: string;
-	value: number | null;
+	value: number | string | null;
 }
 
 export interface Statistic {
