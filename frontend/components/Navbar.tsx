@@ -132,7 +132,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 																href="#"
 																onClick={async () => {
 																	await firebaseClient.auth().signOut();
-																	router.push('/login');
+																	router.replace('/login');
 																}}
 																className={classNames(
 																	active ? 'bg-gray-100' : '',
