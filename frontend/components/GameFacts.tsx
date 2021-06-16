@@ -57,7 +57,7 @@ const GameFacts = ({ game, players }: { game: Fixture; players: PlayersMap | und
 					{isMissedPenalty && <img className="mx-2 h-5 w-5" src="/events/missed_penalty.svg" />}
 					{isPenalty && <img className="mx-2 h-5 w-5" src="/events/penalty.svg" />}
 
-					<div className={classNames(' flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
+					<div className={classNames('flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
 						<PlayerWithPhoto player={event.player} />
 						{event.assist.name && <span className="text-sm mx-2">assist by {event.assist.name}</span>}
 					</div>
@@ -96,7 +96,7 @@ const GameFacts = ({ game, players }: { game: Fixture; players: PlayersMap | und
 	};
 
 	const HalfTimeScore = () => {
-		if (game.score.halftime.home === null || game.score.halftime.away) return <></>;
+		if (game.score.halftime.home === null || game.score.halftime.away == null) return <></>;
 		return (
 			<div className="text-sm flex flex-row items-center">
 				<div className="flex flex-grow bg-gray-500 h-0.5 opacity-80 "></div>
