@@ -266,6 +266,20 @@ app.get('/fetch-predictions', async (req, res) => {
   return res.json(predictions);
 });
 
+app.get('/fetch-users', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
+
+  const allUsers = (await admin.auth().listUsers()).users
+    .map(({ displayName, metadata }) => ({
+      displayName,
+      ...metadata,
+    }))
+    .sort((a, b) => new Date(b.lastSignInTime).getTime() - new Date(a.lastSignInTime).getTime());
+
+  return res.json(allUsers);
+});
+
 app.get('/tournament', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;

@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import UserContext from '../context/UserContext';
 import fileDownload from 'js-file-download';
-import { resetFixtures, resetStandings, updatePoints, cleanup, fetchPredictions } from '../pages/api';
+import { resetFixtures, resetStandings, updatePoints, cleanup, fetchPredictions, fetchUsers } from '../pages/api';
 
 const Settings = () => {
 	const userInfo = useContext(UserContext);
@@ -29,6 +29,12 @@ const Settings = () => {
 					onClick={async () => setResponse(await fetchPredictions(userInfo.token))}
 					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
 					Fetch Predictions
+				</button>
+
+				<button
+					onClick={async () => setResponse(await fetchUsers(userInfo.token))}
+					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
+					Fetch Users
 				</button>
 
 				<button
