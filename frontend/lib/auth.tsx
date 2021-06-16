@@ -17,16 +17,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			if (!user) {
 				setUser(null);
 				nookies.destroy(null, 'token');
-				nookies.set(null, 'token', '', { path: '/', sameSite: 'Strict' });
+				nookies.set(null, 'token', '', { path: '/', sameSite: 'Lax' });
 				return;
 			}
 
 			const isAdmin = (await user.getIdTokenResult()).claims.admin;
 
 			const token = await user.getIdToken();
+
 			setUser({ ...user, admin: isAdmin });
 			nookies.destroy(null, 'token');
-			nookies.set(null, 'token', token, { path: '/', sameSite: 'Strict' });
+			nookies.set(null, 'token', token, { path: '/', sameSite: 'Lax' });
 		});
 	}, []);
 
@@ -40,7 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				const isAdmin = (await user.getIdTokenResult()).claims.admin;
 				setUser({ ...user, admin: isAdmin });
 				nookies.destroy(null, 'token');
-				nookies.set(null, 'token', token, { path: '/', sameSite: 'Strict' });
+				nookies.set(null, 'token', token, { path: '/', sameSite: 'Lax' });
 			}
 		}, 1000 * 60 * 10);
 		return () => clearInterval(handle);

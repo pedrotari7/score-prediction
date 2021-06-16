@@ -1,4 +1,4 @@
-import { Fixtures, Prediction, Tournament, Users } from '../../../interfaces/main';
+import { Fixtures, Prediction, Tournament, Users, VerificationResult } from '../../../interfaces/main';
 import fetcher from '../../lib/fetcher';
 import { backendUrl } from '../../lib/utils/envHelper';
 
@@ -35,3 +35,6 @@ export const fetchUsers = async (token: string) => await cFetch(`${backendUrl}/f
 export const updatePoints = async (token: string): Promise<Users> => await cFetch(`${backendUrl}/points`, token);
 
 export const cleanup = async (token: string): Promise<void> => await cFetch(`${backendUrl}/cleanup`, token);
+
+export const validateToken = async (token: string): Promise<VerificationResult> =>
+	await fetcher(`${backendUrl}/validate-token`, token);

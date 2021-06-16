@@ -220,3 +220,8 @@ export interface Tournament {
 	predictions: Predictions;
 	users: Users;
 }
+
+export interface VerificationResult {
+	success: boolean;
+	uid: string;
+}

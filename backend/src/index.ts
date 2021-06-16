@@ -63,7 +63,8 @@ const getFullFixture = async (eventID: number, opts: Record<string, unknown> = {
   return (await get('fixtures', { id: eventID, ...opts })).data.response.pop();
 };
 
-const decodeToken = async (token: string) => {
+const decodeToken = async (token: string | undefined) => {
+  if (!token) return;
   try {
     return await admin.auth().verifyIdToken(token);
   } catch (error) {
@@ -411,6 +412,16 @@ app.get('/cleanup', async (req, res) => {
   await getDBPredictions(competition).set(cleanedPredictions);
 
   return res.json({});
+});
+
+app.get('/validate-token', async (req, res) => {
+  const decodedToken = await decodeToken(req.headers.authorization);
+
+  if (!decodedToken) return res.json({ success: false, uid: '' });
+
+  const { uid } = decodedToken as admin.auth.DecodedIdToken;
+
+  return res.json({ success: true, uid });
 });
 
 exports.api = europe.https.onRequest(app);
