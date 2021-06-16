@@ -53,7 +53,7 @@ const Home = () => {
 
 				setRoute({ page: uid in users && users[uid].isNewUser ? Route.Rules : Route.Home, data: undefined });
 			} else {
-				router.push('/login');
+				router.replace('/login');
 			}
 		};
 
