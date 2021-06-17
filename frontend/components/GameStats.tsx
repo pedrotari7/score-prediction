@@ -6,7 +6,7 @@ const GameStats = ({ stats, colors }: { stats: Statistic[] | undefined; colors: 
 
 	const [homeStatistic, awayStatistic] = stats;
 
-	if (!homeStatistic.statistics || !awayStatistic.statistics) return <></>;
+	if (!homeStatistic?.statistics || !awayStatistic?.statistics) return <></>;
 
 	const [homeColor, awayColor] = colors;
 
