@@ -16,6 +16,7 @@ import CurrentMatch from '../components/CurrentMatch';
 import { Fixtures, Prediction, Predictions, Standings, Users } from '../../interfaces/main';
 import Rules from '../components/Rules';
 import { useRouter } from 'next/router';
+import Loading from '../components/Loading';
 
 const Home = () => {
 	const [loading, setLoading] = useState(true);
@@ -109,12 +110,6 @@ const Home = () => {
 				return <></>;
 		}
 	};
-
-	const Loading = () => (
-		<div className="w-full h-full flex items-center justify-center">
-			<img className="" src="loader.svg" />
-		</div>
-	);
 
 	return (
 		<RouteContext.Provider value={{ route, setRoute }}>

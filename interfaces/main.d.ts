@@ -143,10 +143,21 @@ export interface Fixture {
 	league: League;
 	goals: Result;
 	score: Score;
-	events: Event[];
-	lineups: Lineup[];
+	events?: Event[];
+	lineups?: Lineup[];
 	statistics?: Statistic[];
 	players?: PlayersInfo[];
+}
+
+export interface FixtureExtraInfo {
+	events?: Event[];
+	lineups?: Lineup[];
+	statistics?: Statistic[];
+	players?: PlayersInfo[];
+}
+
+export interface FixturesExtraInfo {
+	[key: number]: FixtureExtraInfo;
 }
 
 export interface Fixtures {

@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Event, Fixture, Player, PlayersMap } from '../../interfaces/main';
+import { Event, Fixture, FixtureExtraInfo, Player, PlayersMap } from '../../interfaces/main';
 import { classNames, DEFAULT_IMAGE, isGameFinished } from '../lib/utils/reactHelper';
 
 enum EventType {
@@ -9,7 +9,15 @@ enum EventType {
 	Var = 'var',
 }
 
-const GameFacts = ({ game, players }: { game: Fixture; players: PlayersMap | undefined }) => {
+const GameFacts = ({
+	game,
+	players,
+	extraInfo,
+}: {
+	game: Fixture;
+	players: PlayersMap | undefined;
+	extraInfo: FixtureExtraInfo;
+}) => {
 	const Referee = () => (
 		<div className="flex flex-row justify-center items-center my-6">
 			<img className="mx-3 h-8 w-8" src="whistle.svg" />
@@ -108,7 +116,7 @@ const GameFacts = ({ game, players }: { game: Fixture; players: PlayersMap | und
 		);
 	};
 
-	const events = game?.events?.map((event, idx) => {
+	const events = extraInfo.events?.map((event, idx) => {
 		const shouldAddHTScore = !addedHTScore && event.time.elapsed >= 45;
 		if (shouldAddHTScore) addedHTScore = shouldAddHTScore;
 		return (
@@ -118,7 +126,7 @@ const GameFacts = ({ game, players }: { game: Fixture; players: PlayersMap | und
 				{shouldAddHTScore && !isGameFinished(game) && <HalfTimeScore />}
 			</div>
 		);
-	});
+	})!;
 
 	let addedHTScore = false;
 

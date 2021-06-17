@@ -4,8 +4,8 @@ import { backendUrl } from '../../lib/utils/envHelper';
 
 const competition = 'euro2020';
 
-const cFetch = async (url: string, token: string, options: any = {}) => {
-	return await fetcher(url + '?' + new URLSearchParams({ competition }), token, options);
+const cFetch = async (url: string, token: string, query: any = {}, options: any = {}) => {
+	return await fetcher(url + '?' + new URLSearchParams({ competition, ...query }), token, options);
 };
 
 export const fetchTournament = async (token: string): Promise<Tournament> =>
@@ -22,15 +22,23 @@ export const updatePredictions = async (
 	gameId: number,
 	prediction: Prediction
 ): Promise<void> => {
-	return await cFetch(`${backendUrl}/update-predictions`, token, {
-		body: JSON.stringify({ uid, gameId, prediction }),
-		method: 'POST',
-	});
+	return await cFetch(
+		`${backendUrl}/update-predictions`,
+		token,
+		{},
+		{
+			body: JSON.stringify({ uid, gameId, prediction }),
+			method: 'POST',
+		}
+	);
 };
 
 export const fetchPredictions = async (token: string) => await cFetch(`${backendUrl}/fetch-predictions`, token);
 
 export const fetchUsers = async (token: string) => await cFetch(`${backendUrl}/fetch-users`, token);
+
+export const fetchFixtureExtraInfo = async (gameID: number, token: string) =>
+	await cFetch(`${backendUrl}/fixture-extra`, token, { gameID });
 
 export const updatePoints = async (token: string): Promise<Users> => await cFetch(`${backendUrl}/points`, token);
 
