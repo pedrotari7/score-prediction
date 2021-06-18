@@ -74,7 +74,7 @@ const Rankings = ({ users }: { users: Users }) => {
 		);
 
 	return (
-		<div className="m-6 p-6 shadow-pop rounded-md bg-dark text-light select-none">
+		<div className="m-3 sm:m-6 p-3 sm:p-6 shadow-pop rounded-md bg-dark text-light select-none">
 			<div className="font-bold text-2xl mb-4">Ranking</div>
 
 			<div className="font-bold flex flex-row flex-wrap items-center justify-center sm:justify-center mb-6">
@@ -88,10 +88,10 @@ const Rankings = ({ users }: { users: Users }) => {
 					</FilterOption>
 				))}
 			</div>
-			<div className="flex flex-row item-center flex-wrap justify-evenly ">
+			<div className="flex flex-row item-center flex-wrap justify-evenly w-full">
 				{sortedUsers.map((user, index) => {
 					return (
-						<div key={user.uid} className="relative">
+						<div key={user.uid} className="relative w-full sm:w-max">
 							<div
 								className={classNames(
 									'cursor-pointer hover:bg-opacity-50 flex flex-col sm:flex-row justify-center items-center',

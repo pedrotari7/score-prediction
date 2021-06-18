@@ -26,6 +26,7 @@ module.exports = {
 				'top-0',
 				'-left-2',
 				'left-0',
+				'm-3',
 			],
 			keyframes: true,
 			fontFace: true,
