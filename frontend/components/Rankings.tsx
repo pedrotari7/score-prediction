@@ -107,7 +107,7 @@ const Rankings = ({ users }: { users: Users }) => {
 										</div>
 									</DesktopOnly>
 									<MobileOnly>
-										<div className="absolute top-0 -left-2 bg-light rounded-md w-12 text-dark font-bold text-center">
+										<div className="absolute top-0 -left-0 bg-light rounded-md w-12 text-dark font-bold text-center">
 											<span className="p-3">{index + 1}</span>
 										</div>
 									</MobileOnly>
