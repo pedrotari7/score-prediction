@@ -2,6 +2,8 @@ import { MouseEventHandler, ReactNode, useContext, useState } from 'react';
 import { Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
 import { classNames } from '../lib/utils/reactHelper';
+import DesktopOnly from './DesktopOnly';
+import MobileOnly from './MobileOnly';
 
 interface SortOption {
 	key: string;
@@ -89,32 +91,42 @@ const Rankings = ({ users }: { users: Users }) => {
 			<div className="flex flex-row item-center flex-wrap justify-evenly ">
 				{sortedUsers.map((user, index) => {
 					return (
-						<div
-							key={user.uid}
-							className={classNames(
-								'cursor-pointer hover:bg-opacity-50 flex flex-col sm:flex-row justify-center items-center',
-								'rounded-md bg-blue m-4 p-3 w-max'
-							)}
-							onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
-							<div className="flex flex-col sm:flex-row flex-wrap items-center justify-evenly sm:justify-start sm:mr-4 mb-4 sm:mb-0 w-full sm:w-max">
-								<div className="flex flex-row items-center justify-center w-8 h-8 m-2 font-bold text-xl">
-									{index + 1}
+						<div key={user.uid} className="relative">
+							<div
+								className={classNames(
+									'cursor-pointer hover:bg-opacity-50 flex flex-col sm:flex-row justify-center items-center',
+									'rounded-md bg-blue my-4 mx-0 sm:mx-4 p-3'
+								)}
+								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
+								<div className="flex flex-col sm:flex-row flex-wrap items-center justify-evenly mb-0 sm:justify-start sm:mr-4">
+									<DesktopOnly>
+										<div className="flex flex-row items-center justify-center w-8 h-8 m-2 font-bold text-xl">
+											<span className="bg-light text-dark rounded-full w-full h-full flex items-center justify-center p-2mr-1">
+												{index + 1}
+											</span>
+										</div>
+									</DesktopOnly>
+									<MobileOnly>
+										<div className="absolute top-0 -left-2 bg-light rounded-md w-12 text-dark font-bold text-center">
+											<span className="p-3">{index + 1}</span>
+										</div>
+									</MobileOnly>
+									<div className="flex flex-row flex-wrap items-center justify-center mb-2 sm:mb-0">
+										<img
+											className="object-cover h-8 w-8 sm:h-12 sm:w-12 rounded-full mr-2"
+											src={user.photoURL}
+										/>
+										<span className="text-center sm:text-2xl">{user.displayName}</span>
+									</div>
 								</div>
-								<div className="flex flex-row flex-wrap items-center justify-center">
-									<img
-										className="object-cover h-8 w-8 sm:h-12 sm:w-12 rounded-full mr-2"
-										src={user.photoURL}
-									/>
-									<span className="text-center sm:text-2xl">{user.displayName}</span>
+								<div className="flex flex-row justify-center items-center flex-wrap">
+									<Circle className="bg-green-500">{user.score.exact}</Circle>
+									<Circle className="bg-yellow-500">{user.score.result}</Circle>
+									<Circle className="bg-pink-500">{user.score.onescore}</Circle>
+									<Circle className="bg-red-500">{user.score.fail}</Circle>
+									<Circle className="bg-purple-700">{user.score.groups}</Circle>
+									<Circle className="bg-gray-700 w-10 h-10 p-4 my-2">{user.score.points}</Circle>
 								</div>
-							</div>
-							<div className="flex flex-row justify-center items-center flex-wrap">
-								<Circle className="bg-green-500">{user.score.exact}</Circle>
-								<Circle className="bg-yellow-500">{user.score.result}</Circle>
-								<Circle className="bg-pink-500">{user.score.onescore}</Circle>
-								<Circle className="bg-red-500">{user.score.fail}</Circle>
-								<Circle className="bg-purple-700">{user.score.groups}</Circle>
-								<Circle className="bg-gray-700 w-10 h-10 p-6 my-4">{user.score.points}</Circle>
 							</div>
 						</div>
 					);
