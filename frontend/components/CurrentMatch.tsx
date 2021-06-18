@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import UserContext from '../context/UserContext';
 import LiveGame from './LiveGame';
 import { Fixture, Fixtures, Prediction, Predictions, User, Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
 import { classNames, formatScore, getResult, getStadiumImageURL, isGameFinished } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline';
 
 const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game: Fixture }) => {
 	const routeInfo = useContext(RouteContext)!;
@@ -56,11 +57,13 @@ const CurrentMatch = ({
 }) => {
 	const userInfo = useContext(UserContext);
 
+	const [id, setGameID] = useState(gameID);
+
 	const sortedFixtures = Object.values(fixtures).sort((a, b) => a.fixture.timestamp - b.fixture.timestamp);
 
 	const nextGame = sortedFixtures.findIndex(game => !isGameFinished(game));
 
-	const game = gameID ? fixtures[gameID] : sortedFixtures[nextGame === -1 ? sortedFixtures.length - 1 : nextGame];
+	const game = id ? fixtures[id] : sortedFixtures[nextGame === -1 ? sortedFixtures.length - 1 : nextGame];
 
 	if (!game) return <></>;
 
@@ -75,12 +78,36 @@ const CurrentMatch = ({
 		}))
 		.sort((a, b) => (b.result.points ?? 0) - (a.result.points ?? 0));
 
+	const findGame = (dir: -1 | 1) => {
+		const prevGameIdx = sortedFixtures.findIndex(g => g.fixture.id === game.fixture.id) + dir;
+		return sortedFixtures[prevGameIdx] ? sortedFixtures[prevGameIdx].fixture.id : null;
+	};
+
+	const prevGameId = findGame(-1);
+	const nextGameId = findGame(1);
+
 	return (
 		<main className="flex flex-col justify-center select-none text-light m-4 sm:m-8 md:mx-24 p-4 sm:p-8 shadow-pop rounded-md bg-dark relative">
-			{!gameID && <p className="text-3xl mb-2">Next Game</p>}
-			{gameID && <p className="text-3xl mb-2">{game.league?.round}</p>}
+			{!id && <p className="text-3xl mb-2">Next Game</p>}
+			{id && <p className="text-3xl mb-2">{game.league?.round}</p>}
 
-			<LiveGame gameID={game.fixture?.id} key={game.fixture?.id} />
+			<div className="relative">
+				{prevGameId !== null && (
+					<div
+						className="cursor-pointer w-max text-blue hover:text-light rounded-md absolute left-0 top-1/2 transform -translate-y-1/2 sm:-translate-x-full"
+						onClick={() => setGameID(prevGameId)}>
+						<ChevronLeftIcon className="h-8 w-8" />
+					</div>
+				)}
+				<LiveGame gameID={game.fixture?.id} key={game.fixture?.id} />
+				{nextGameId !== null && (
+					<div
+						className="cursor-pointer w-max text-blue hover:text-light rounded-md absolute right-0 top-1/2 transform -translate-y-1/2 sm:translate-x-full"
+						onClick={() => setGameID(nextGameId)}>
+						<ChevronRightIcon className="h-8 w-8" />
+					</div>
+				)}
+			</div>
 
 			<div className="mt-6">
 				<div className="text-xl mb-4">My Prediction</div>

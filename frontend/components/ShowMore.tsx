@@ -27,8 +27,8 @@ const ShowMore = ({ children, className, more }: { children: ReactNode; classNam
 						{more && (
 							<div onClick={executeScroll} className="flex justify-center mt-4 ">
 								<Disclosure.Button className="focus:outline-none p-2 flex justify-center w-full rounded-md hover:bg-blue">
-									{!open && <ChevronDownIcon className="block h-6 w-6" aria-hidden="true" />}
-									{open && <ChevronUpIcon className="block h-6 w-6" aria-hidden="true" />}
+									{!open && <ChevronDownIcon className="block h-8 w-8" aria-hidden="true" />}
+									{open && <ChevronUpIcon className="block h-8 w-8" aria-hidden="true" />}
 								</Disclosure.Button>
 							</div>
 						)}
