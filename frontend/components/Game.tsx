@@ -9,7 +9,7 @@ import Flag from './Flag';
 import ResultContainer from './ResultContainer';
 import ScoreInput from './ScoreInput';
 
-const DEFAULT_PREDICTION = { home: '', away: '' };
+const DEFAULT_PREDICTION = { home: null, away: null };
 
 const Game = ({
 	predictions,
@@ -45,9 +45,13 @@ const Game = ({
 
 	const isInPast = getCurrentDate() >= gameDate;
 
-	const onPredictionChange = (e: ChangeEvent<HTMLInputElement>, team: string) => {
+	const onPredictionChange = async (e: ChangeEvent<HTMLInputElement>, team: string) => {
 		const value = parseInt(e.target.value);
-		updatePrediction({ ...prediction, [team]: isNaN(value) ? null : value });
+		console.log(`{ ...prediction, [team]: isNaN(value) ? null : value }`, {
+			...prediction,
+			[team]: isNaN(value) ? null : value,
+		});
+		await updatePrediction({ ...prediction, [team]: isNaN(value) ? null : value });
 	};
 
 	const isValidScore = (n: number | null) => isNum(n) && n! >= 0;
@@ -87,7 +91,7 @@ const Game = ({
 							id={`${gameID}-home`}
 							value={prediction.home}
 							className="mx-2"
-							onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'home')}
+							onchange={async (e: ChangeEvent<HTMLInputElement>) => await onPredictionChange(e, 'home')}
 						/>
 
 						<ScoreInput
@@ -95,7 +99,7 @@ const Game = ({
 							id={`${gameID}-away`}
 							value={prediction.away}
 							className="mx-2"
-							onchange={(e: ChangeEvent<HTMLInputElement>) => onPredictionChange(e, 'away')}
+							onchange={async (e: ChangeEvent<HTMLInputElement>) => await onPredictionChange(e, 'away')}
 						/>
 					</>
 				)}

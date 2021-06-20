@@ -48,7 +48,9 @@ const FixturesPage = ({
 						<Game
 							predictions={predictions}
 							gameID={game.fixture?.id}
-							updatePrediction={(update: Prediction) => updatePrediction(update, game.fixture?.id)}
+							updatePrediction={async (update: Prediction) =>
+								await updatePrediction(update, game.fixture?.id)
+							}
 							key={index}
 							userID={user.uid}
 						/>

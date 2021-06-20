@@ -3,10 +3,10 @@ import { classNames } from '../lib/utils/reactHelper';
 const ScoreInput = ({ className, value, onchange = () => {}, id, innerRef }: any) => (
 	<input
 		value={value ?? ''}
-		onChange={e => {
+		onChange={async e => {
 			e.stopPropagation();
 			e.preventDefault();
-			onchange(e);
+			await onchange(e);
 		}}
 		onClick={e => e.stopPropagation()}
 		className={classNames(

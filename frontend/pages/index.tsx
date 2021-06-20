@@ -63,9 +63,9 @@ const Home = () => {
 		return () => {};
 	}, []);
 
-	const updatePrediction = (prediction: Prediction, gameId: number) => {
+	const updatePrediction = async (prediction: Prediction, gameId: number) => {
 		setPredictions({ ...predictions, [gameId]: { ...predictions?.[gameId], [uid]: prediction } });
-		updatePredictions(token, uid, gameId, prediction);
+		await updatePredictions(token, uid, gameId, prediction);
 	};
 
 	const MainComponent = () => {
