@@ -389,13 +389,17 @@ app.post('/update-predictions', async (req, res) => {
 
   if (!isInPast) return res.status(403).json({ error: 'Forbidden' });
 
-  const result = await admin
-    .firestore()
-    .collection(competition.name)
-    .doc('predictions')
-    .update({
-      [`${gameId}.${uid}`]: prediction,
-    });
+  let change = {};
+
+  if (prediction.home !== null) {
+    change = { [`${gameId}.${uid}.home`]: prediction.home };
+  }
+
+  if (prediction.away !== null) {
+    change = { ...change, [`${gameId}.${uid}.away`]: prediction.away };
+  }
+
+  const result = await admin.firestore().collection(competition.name).doc('predictions').update(change);
 
   return res.json(result);
 });
