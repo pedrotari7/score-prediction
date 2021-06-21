@@ -47,10 +47,6 @@ const Game = ({
 
 	const onPredictionChange = async (e: ChangeEvent<HTMLInputElement>, team: string) => {
 		const value = parseInt(e.target.value);
-		console.log(`{ ...prediction, [team]: isNaN(value) ? null : value }`, {
-			...prediction,
-			[team]: isNaN(value) ? null : value,
-		});
 		await updatePrediction({ ...prediction, [team]: isNaN(value) ? null : value });
 	};
 
