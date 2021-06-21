@@ -220,8 +220,13 @@ const getPredictions = async (
     if (isInPast) {
       for (const uid in gamePredictions) {
         if (uid !== callerUID) {
-          gamePredictions[uid].home = -1;
-          gamePredictions[uid].away = -1;
+          if (typeof gamePredictions[uid].home === 'number') {
+            gamePredictions[uid].home = -1;
+          }
+
+          if (typeof gamePredictions[uid].away === 'number') {
+            gamePredictions[uid].away = -1;
+          }
         }
       }
     }
