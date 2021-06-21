@@ -1,12 +1,25 @@
 import { Disclosure, Transition } from '@headlessui/react';
-import { ReactNode, useRef } from 'react';
+import { Dispatch, ReactNode, SetStateAction, useRef } from 'react';
 import { classNames } from '../lib/utils/reactHelper';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/outline';
 
-const ShowMore = ({ children, className, more }: { children: ReactNode; className: string; more: ReactNode }) => {
+const ShowMore = ({
+	children,
+	className,
+	more,
+	setIsOpen,
+}: {
+	children: ReactNode;
+	className: string;
+	more: ReactNode;
+	setIsOpen: Dispatch<SetStateAction<boolean>>;
+}) => {
 	const disclosureRef = useRef<HTMLDivElement>(null);
 
-	const executeScroll = () => disclosureRef.current?.scrollIntoView({ block: 'start', inline: 'nearest' });
+	const executeScroll = (open: boolean) => {
+		disclosureRef.current?.scrollIntoView({ block: 'start', inline: 'nearest' });
+		setIsOpen(!open);
+	};
 
 	return (
 		<div ref={disclosureRef}>
@@ -25,7 +38,7 @@ const ShowMore = ({ children, className, more }: { children: ReactNode; classNam
 							{open && <div>{more}</div>}
 						</Transition>
 						{more && (
-							<div onClick={executeScroll} className="flex justify-center mt-4 ">
+							<div onClick={() => executeScroll(open)} className="flex justify-center mt-4 ">
 								<Disclosure.Button className="focus:outline-none p-2 flex justify-center w-full rounded-md hover:bg-blue">
 									{!open && <ChevronDownIcon className="block h-8 w-8" aria-hidden="true" />}
 									{open && <ChevronUpIcon className="block h-8 w-8" aria-hidden="true" />}

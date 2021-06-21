@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
+import { Dispatch, SetStateAction, useContext } from 'react';
 import Countdown, { zeroPad } from 'react-countdown';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
@@ -10,7 +10,13 @@ import Flag from './Flag';
 import GameExtraInfo from './GameExtraInfo';
 import ShowMore from './ShowMore';
 
-const LiveGame = ({ gameID }: { gameID: number }) => {
+const LiveGame = ({
+	gameID,
+	setIsExtraInfoOpen,
+}: {
+	gameID: number;
+	setIsExtraInfoOpen: Dispatch<SetStateAction<boolean>>;
+}) => {
 	const router = useRouter();
 	const data = useContext(FixturesContext);
 	const userInfo = useContext(UserContext);
@@ -31,6 +37,7 @@ const LiveGame = ({ gameID }: { gameID: number }) => {
 
 	return (
 		<ShowMore
+			setIsOpen={setIsExtraInfoOpen}
 			more={game.fixture.status.short !== 'NS' && <GameExtraInfo game={game} />}
 			className="text-light flex flex-col  my-2 rounded p-2 bg-gark shadow-pop">
 			<div className="flex flex-col sm:flex-row items-center sm:justify-evenly">

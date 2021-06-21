@@ -65,6 +65,8 @@ const CurrentMatch = ({
 
 	const game = id ? fixtures[id] : sortedFixtures[nextGame === -1 ? sortedFixtures.length - 1 : nextGame];
 
+	const [isExtraInfoOpen, setIsExtraInfoOpen] = useState(false);
+
 	if (!game) return <></>;
 
 	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
@@ -92,15 +94,15 @@ const CurrentMatch = ({
 			{id && <p className="text-3xl mb-2">{game.league?.round}</p>}
 
 			<div className="relative">
-				{prevGameId !== null && (
+				{!isExtraInfoOpen && prevGameId !== null && (
 					<div
 						className="cursor-pointer w-max text-blue hover:text-light rounded-md absolute left-0 top-1/2 transform -translate-y-1/2 sm:-translate-x-full"
 						onClick={() => setGameID(prevGameId)}>
 						<ChevronLeftIcon className="h-8 w-8" />
 					</div>
 				)}
-				<LiveGame gameID={game.fixture?.id} key={game.fixture?.id} />
-				{nextGameId !== null && (
+				<LiveGame gameID={game.fixture?.id} key={game.fixture?.id} setIsExtraInfoOpen={setIsExtraInfoOpen} />
+				{!isExtraInfoOpen && nextGameId !== null && (
 					<div
 						className="cursor-pointer w-max text-blue hover:text-light rounded-md absolute right-0 top-1/2 transform -translate-y-1/2 sm:translate-x-full"
 						onClick={() => setGameID(nextGameId)}>
