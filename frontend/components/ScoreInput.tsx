@@ -9,6 +9,7 @@ const ScoreInput = ({ className, value, onchange = () => {}, id, innerRef }: any
 			await onchange(e);
 		}}
 		onClick={e => e.stopPropagation()}
+		onFocus={e => e.target.select()}
 		className={classNames(
 			className,
 			'block w-14 h-7 text-dark text-center font-bold hover:bg-gray-100',
