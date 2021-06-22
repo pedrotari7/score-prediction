@@ -1,4 +1,4 @@
-import { Fixtures, Standing, Standings, Predictions } from '../../interfaces/main';
+import { Fixtures, Standing, Standings, Predictions, Fixture } from '../../interfaces/main';
 import Flag from './Flag';
 
 interface Result {
@@ -18,31 +18,35 @@ const intializeTeam = (): Result => ({
 const calculatePoints = ({ wins, draws }: Result) => 3 * wins + draws;
 
 const calculateResults = (fixtures: Fixtures, predictions: Predictions, uid: string) => {
-	return Object.values(fixtures).reduce((teams, game) => {
-		const homeTeam = game.teams.home.id;
-		const awayTeam = game.teams.away.id;
+	const isGroupStage = (f: Fixture) => f.league.round.includes('Group');
 
-		if (!(homeTeam in teams)) teams[homeTeam] = intializeTeam();
-		if (!(awayTeam in teams)) teams[awayTeam] = intializeTeam();
+	return Object.values(fixtures)
+		.filter(isGroupStage)
+		.reduce((teams, game) => {
+			const homeTeam = game.teams.home.id;
+			const awayTeam = game.teams.away.id;
 
-		const prediction = predictions?.[game.fixture.id]?.[uid];
+			if (!(homeTeam in teams)) teams[homeTeam] = intializeTeam();
+			if (!(awayTeam in teams)) teams[awayTeam] = intializeTeam();
 
-		if (prediction?.home >= 0 && prediction?.away >= 0) {
-			if (prediction.home > prediction.away) {
-				teams[homeTeam].wins += 1;
-				teams[awayTeam].loses += 1;
-			} else if (prediction?.home < prediction?.away) {
-				teams[awayTeam].wins += 1;
-				teams[homeTeam].loses += 1;
-			} else {
-				teams[homeTeam].draws += 1;
-				teams[awayTeam].draws += 1;
+			const prediction = predictions?.[game.fixture.id]?.[uid];
+
+			if (prediction?.home >= 0 && prediction?.away >= 0) {
+				if (prediction.home > prediction.away) {
+					teams[homeTeam].wins += 1;
+					teams[awayTeam].loses += 1;
+				} else if (prediction?.home < prediction?.away) {
+					teams[awayTeam].wins += 1;
+					teams[homeTeam].loses += 1;
+				} else {
+					teams[homeTeam].draws += 1;
+					teams[awayTeam].draws += 1;
+				}
+				teams[homeTeam].points = calculatePoints(teams[homeTeam]);
+				teams[awayTeam].points = calculatePoints(teams[awayTeam]);
 			}
-			teams[homeTeam].points = calculatePoints(teams[homeTeam]);
-			teams[awayTeam].points = calculatePoints(teams[awayTeam]);
-		}
-		return teams;
-	}, {} as Record<number, Result>);
+			return teams;
+		}, {} as Record<number, Result>);
 };
 
 const sortGroup = (group: Standing[], teamsResults: Record<number, Result>) => {
@@ -85,11 +89,9 @@ const PredictedGroups = ({
 							<thead>
 								<tr className="text-center">
 									<th></th>
-
 									<th>W</th>
 									<th>D</th>
 									<th>L</th>
-
 									<th>P</th>
 									<th>Real</th>
 								</tr>
@@ -100,17 +102,18 @@ const PredictedGroups = ({
 									const isCorrectPrediction = standing[index].team.id === place.team.id;
 									const hasGames = standing[index].all.played > 0;
 
+									const { wins, draws, loses, points } = teamsResults[place.team.id];
 									return (
 										<tr key={place.rank} className="">
 											<td className="mr">
 												<Flag team={place.team} />
 											</td>
 
-											<td className="w-6">{teamsResults[place.team.id].wins}</td>
-											<td className="w-6">{teamsResults[place.team.id].draws}</td>
-											<td className="w-6">{teamsResults[place.team.id].loses}</td>
+											<td className="w-6">{wins}</td>
+											<td className="w-6">{draws}</td>
+											<td className="w-6">{loses}</td>
 
-											<td className="w-6">{teamsResults[place.team.id].points}</td>
+											<td className="w-6">{points}</td>
 											<td className="ml-2">
 												<div className="flex flex-row justify-start items-center">
 													<Flag team={standing[index].team} />
