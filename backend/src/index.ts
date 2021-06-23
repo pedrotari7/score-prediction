@@ -12,7 +12,6 @@ import {
   Fixture,
   FixtureExtraInfo,
   Fixtures,
-  FixturesExtraInfo,
   Predictions,
   Standing,
   UserResult,
@@ -165,18 +164,18 @@ const updateFixtures = async (competition: Competition, gamesToUpdate: number[],
     await getDBFixtures(competition).set({ data: fixtureMap, timestamp: FieldValue.serverTimestamp() });
     return fixtureMap;
   } else {
-    const extraInfo: Record<number, FixtureExtraInfo> = {};
     for (const gameID of gamesToUpdate) {
       const { fixture, teams, league, goals, score, events, lineups, statistics, players } = await getFullFixture(
         gameID
       );
 
-      extraInfo[gameID] = { events, lineups, statistics, players };
+      const extraInfo = { events, lineups, statistics, players };
 
       oldFixtures[gameID] = { fixture, teams, league, goals, score };
+
+      await getDBFixturesExtraInfo(competition).collection(`${gameID}`).doc('extra').set(extraInfo, { merge: true });
     }
 
-    await getDBFixturesExtraInfo(competition).update(extraInfo);
     await getDBFixtures(competition).set({ data: oldFixtures, timestamp: FieldValue.serverTimestamp() });
 
     return oldFixtures;
@@ -427,11 +426,11 @@ app.get('/fixture-extra', async (req, res) => {
 
   const gameID = parseInt((req.query.gameID as string) ?? 0);
 
-  const fixturesExtraInfo = (await getDBFixturesExtraInfo(competition).get()).data() as FixturesExtraInfo;
+  const fixturesExtraInfo = (
+    await getDBFixturesExtraInfo(competition).collection(`${gameID}`).doc('extra').get()
+  ).data() as FixtureExtraInfo;
 
-  const gameExtraInfo = fixturesExtraInfo?.[gameID];
-
-  return res.json(gameExtraInfo);
+  return res.json(fixturesExtraInfo);
 });
 
 app.get('/cleanup', async (req, res) => {
