@@ -30,7 +30,14 @@ const GameFacts = ({
 
 		const isAwayTeam = event.team.id === game.teams.away.id;
 
-		const TimeElapsed = () => <span className="mx-2 font-bold w-5 text-center">{event.time.elapsed}'</span>;
+		const TimeElapsed = () => (
+			<div className="flex flex-col items-center justify-center mx-2 w-5">
+				<span className="font-bold">{event.time.elapsed}'</span>
+				{event.time.extra !== null && (
+					<span className="font-bold text-xs text-gray-400">+{event.time.extra}</span>
+				)}
+			</div>
+		);
 
 		const EventContainer = ({ children }: { children: ReactNode }) => {
 			return (
@@ -117,7 +124,7 @@ const GameFacts = ({
 	};
 
 	const events = extraInfo.events?.map((event, idx) => {
-		const shouldAddHTScore = !addedHTScore && event.time.elapsed >= 45;
+		const shouldAddHTScore = !addedHTScore && event.time.elapsed >= 45 && event.time.extra === null;
 		if (shouldAddHTScore) addedHTScore = shouldAddHTScore;
 		return (
 			<div key={idx} className="w-full xl:w-1/3">
