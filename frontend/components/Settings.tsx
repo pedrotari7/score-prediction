@@ -1,7 +1,15 @@
 import { useContext, useState } from 'react';
 import UserContext from '../context/UserContext';
 import fileDownload from 'js-file-download';
-import { resetFixtures, resetStandings, updatePoints, cleanup, fetchPredictions, fetchUsers } from '../pages/api';
+import {
+	resetFixtures,
+	resetStandings,
+	updatePoints,
+	cleanup,
+	fetchPredictions,
+	fetchUsers,
+	updateGroups,
+} from '../pages/api';
 
 const Settings = () => {
 	const userInfo = useContext(UserContext);
@@ -13,7 +21,7 @@ const Settings = () => {
 
 	return (
 		<div className="text-light">
-			<div className="flex flex-col sm:flex-row items-center justify-center">
+			<div className="flex flex-col sm:flex-row flex-wrap items-center justify-center">
 				<button
 					onClick={async () => setResponse(await resetStandings(userInfo.token))}
 					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
@@ -41,6 +49,12 @@ const Settings = () => {
 					onClick={async () => setResponse(await updatePoints(userInfo.token))}
 					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
 					Update Points
+				</button>
+
+				<button
+					onClick={async () => setResponse(await updateGroups(userInfo.token))}
+					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
+					Update Groups
 				</button>
 
 				<button

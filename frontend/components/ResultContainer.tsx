@@ -1,6 +1,7 @@
 import { ReactNode, MouseEventHandler } from 'react';
 import { Prediction, Result } from '../../interfaces/main';
-import { classNames, isNum } from '../lib/utils/reactHelper';
+import { getOutcome } from '../../shared/utils';
+import { classNames } from '../lib/utils/reactHelper';
 
 const ResultContainer = ({
 	children,
@@ -17,13 +18,6 @@ const ResultContainer = ({
 }) => {
 	const { home: predH, away: predA } = prediction;
 	const { home: realH, away: realA } = result;
-
-	const getOutcome = (g: Result) => {
-		if (!isNum(g.home) || !isNum(g.away)) return null;
-		if (g.home > g.away) return 'winH';
-		if (g.home < g.away) return 'winA';
-		if (g.home === g.away) return 'draw';
-	};
 
 	const isExactScore = predH === realH && predA === realA;
 	const isCorrectResult =

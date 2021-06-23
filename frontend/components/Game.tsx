@@ -1,10 +1,11 @@
 import { DateTime } from 'luxon';
 import { ChangeEvent, useContext, useRef } from 'react';
 import { Predictions } from '../../interfaces/main';
+import { isNum } from '../../shared/utils';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
-import { classNames, formatScore, getCurrentDate, isNum } from '../lib/utils/reactHelper';
+import { classNames, formatScore, getCurrentDate } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import ResultContainer from './ResultContainer';
 import ScoreInput from './ScoreInput';

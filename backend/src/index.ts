@@ -12,11 +12,13 @@ import {
   Fixture,
   FixtureExtraInfo,
   Fixtures,
+  GroupPoints,
   Predictions,
   Standing,
   UserResult,
 } from '../../interfaces/main';
-import { DEFAULT_USER_RESULT, getResult, joinResults } from './util';
+import { DEFAULT_USER_RESULT, joinResults } from './util';
+import { calculateResults, getResult, isNum, sortGroup } from '../../shared/utils';
 
 const app = express();
 
@@ -120,6 +122,7 @@ const getDBFixturesExtraInfo = (competition: Competition) => getDbDoc(competitio
 const getDBStandings = (competition: Competition) => getDbDoc(competition, 'standings');
 const getDBPredictions = (competition: Competition) => getDbDoc(competition, 'predictions');
 const getDBScores = (competition: Competition) => getDbDoc(competition, 'scores');
+const getDBGroupPoints = (competition: Competition) => getDbDoc(competition, 'groupPoints');
 
 const updateStandings = async (competition: Competition) => {
   const response = await getStandings({ league: competition.league, season: competition.season });
@@ -183,6 +186,8 @@ const updateFixtures = async (competition: Competition, gamesToUpdate: number[],
 };
 
 const updatePoints = async (competition: Competition, predictions: Predictions, fixtures: Fixtures) => {
+  const groupPoints = (await getDBGroupPoints(competition).get()).data() as GroupPoints;
+
   const updatedScores = Object.entries(predictions).reduce((users, [gameID, gamePredictions]) => {
     const game = fixtures[parseInt(gameID)]?.goals;
 
@@ -196,7 +201,40 @@ const updatePoints = async (competition: Competition, predictions: Predictions, 
     return users;
   }, {} as Record<string, UserResult>);
 
+  for (const user in groupPoints) {
+    updatedScores[user].groups = groupPoints[user];
+  }
+
   await getDBScores(competition).set(updatedScores);
+
+  return updatedScores;
+};
+
+const updateGroups = async (
+  competition: Competition,
+  predictions: Predictions,
+  fixtures: Fixtures,
+  standings: Record<string, Standing[]>
+) => {
+  const users = Object.values(predictions).reduce((acc, p) => new Set([...acc, ...Object.keys(p)]), new Set<string>());
+
+  const validUsers = [...users.values()];
+
+  const groupPoints: Record<string, number> = validUsers.reduce((acc, user) => ({ ...acc, [user]: 0 }), {});
+
+  for (const user of validUsers) {
+    const teamsResults = calculateResults(Object.values(fixtures), predictions, user);
+
+    for (const group of Object.values(standings)) {
+      const teamsIDs = group.map(t => t.team.id);
+      const sortedGroup = sortGroup(teamsIDs, teamsResults, fixtures, predictions, user);
+      groupPoints[user] += sortedGroup.reduce((total, teamId, idx) => total + (teamId === teamsIDs[idx] ? 1 : 0), 0);
+    }
+  }
+
+  await getDBGroupPoints(competition).set(groupPoints);
+
+  return groupPoints;
 };
 
 const getPredictions = async (
@@ -219,11 +257,11 @@ const getPredictions = async (
     if (isInPast) {
       for (const uid in gamePredictions) {
         if (uid !== callerUID) {
-          if (typeof gamePredictions[uid].home === 'number') {
+          if (isNum(gamePredictions[uid].home)) {
             gamePredictions[uid].home = -1;
           }
 
-          if (typeof gamePredictions[uid].away === 'number') {
+          if (isNum(gamePredictions[uid].away)) {
             gamePredictions[uid].away = -1;
           }
         }
@@ -413,9 +451,25 @@ app.get('/points', async (req, res) => {
 
   const predictions = (await getDBPredictions(competition).get()).data() as Predictions;
 
-  await updatePoints(competition, predictions, fixtures);
+  const points = await updatePoints(competition, predictions, fixtures);
+  return res.json(points);
+});
 
-  return res.json({});
+app.get('/groups', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
+
+  const competition = parseCompetition(req);
+
+  const fixtures = (await getDBFixtures(competition).get()).data()?.data as Fixtures;
+
+  const standings = (await getDBStandings(competition).get()).data()?.data as Record<string, Standing[]>;
+
+  const predictions = (await getDBPredictions(competition).get()).data() as Predictions;
+
+  const groupPoints = await updateGroups(competition, predictions, fixtures, standings);
+
+  return res.json(groupPoints);
 });
 
 app.get('/fixture-extra', async (req, res) => {

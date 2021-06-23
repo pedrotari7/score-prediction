@@ -119,6 +119,15 @@ export interface Result {
 	away: number;
 }
 
+export interface PredResult {
+	points: number;
+	wins: number;
+	draws: number;
+	loses: number;
+	ga: number;
+	gc: number;
+}
+
 export interface Score {
 	extratime: Result;
 	fulltime: Result;
@@ -194,7 +203,7 @@ export interface Standing {
 	away: Tally;
 }
 
-export type Standings = [string, any][];
+export type Standings = [string, Standing[]][];
 
 export interface User extends Record<string, any> {
 	admin: boolean;
@@ -236,3 +245,5 @@ export interface VerificationResult {
 	success: boolean;
 	uid: string;
 }
+
+export type GroupPoints = Record<string, number>;

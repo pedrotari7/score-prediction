@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'backend/**'
+      - 'shared/**'
       - '.github/**'
 
 jobs:

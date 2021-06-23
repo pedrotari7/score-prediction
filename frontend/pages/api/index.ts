@@ -1,4 +1,11 @@
-import { Fixtures, Prediction, Tournament, Users, VerificationResult } from '../../../interfaces/main';
+import {
+	Fixtures,
+	GroupPoints,
+	Prediction,
+	Tournament,
+	UserResult,
+	VerificationResult,
+} from '../../../interfaces/main';
 import fetcher from '../../lib/fetcher';
 import { backendUrl } from '../../lib/utils/envHelper';
 
@@ -40,9 +47,12 @@ export const fetchUsers = async (token: string) => await cFetch(`${backendUrl}/f
 export const fetchFixtureExtraInfo = async (gameID: number, token: string) =>
 	await cFetch(`${backendUrl}/fixture-extra`, token, { gameID });
 
-export const updatePoints = async (token: string): Promise<Users> => await cFetch(`${backendUrl}/points`, token);
+export const updatePoints = async (token: string): Promise<Record<string, UserResult>> =>
+	await cFetch(`${backendUrl}/points`, token);
 
 export const cleanup = async (token: string): Promise<void> => await cFetch(`${backendUrl}/cleanup`, token);
 
 export const validateToken = async (token: string): Promise<VerificationResult> =>
 	await fetcher(`${backendUrl}/validate-token`, token);
+
+export const updateGroups = async (token: string): Promise<GroupPoints> => await cFetch(`${backendUrl}/groups`, token);

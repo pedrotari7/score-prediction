@@ -3,9 +3,10 @@ import UserContext from '../context/UserContext';
 import LiveGame from './LiveGame';
 import { Fixture, Fixtures, Prediction, Predictions, User, Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
-import { classNames, formatScore, getResult, getStadiumImageURL, isGameFinished } from '../lib/utils/reactHelper';
+import { classNames, formatScore, getStadiumImageURL } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline';
+import { getResult, isGameFinished } from '../../shared/utils';
 
 const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game: Fixture }) => {
 	const routeInfo = useContext(RouteContext)!;

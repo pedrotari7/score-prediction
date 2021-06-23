@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Event, Fixture, FixtureExtraInfo, Player, PlayersMap } from '../../interfaces/main';
-import { classNames, DEFAULT_IMAGE, isGameFinished } from '../lib/utils/reactHelper';
+import { isGameFinished } from '../../shared/utils';
+import { classNames, DEFAULT_IMAGE } from '../lib/utils/reactHelper';
 
 enum EventType {
 	Goal = 'Goal',

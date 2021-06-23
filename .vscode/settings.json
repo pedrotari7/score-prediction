@@ -2,6 +2,7 @@
     "eslint.workingDirectories": [
         "backend",
         "frontend",
-        "interfaces"
+        "interfaces",
+        "shared"
     ]
 }

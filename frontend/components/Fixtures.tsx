@@ -1,6 +1,7 @@
 import { Fixture, Fixtures, Prediction, Predictions, Standings, User } from '../../interfaces/main';
+import { isGameFinished } from '../../shared/utils';
 import { useAuth } from '../lib/auth';
-import { classNames, isGameFinished } from '../lib/utils/reactHelper';
+import { classNames } from '../lib/utils/reactHelper';
 import Game from './Game';
 import PredictedGroups from './PredictedGroups';
 
