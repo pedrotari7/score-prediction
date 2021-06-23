@@ -225,7 +225,11 @@ const updateGroups = async (
   for (const user of validUsers) {
     const teamsResults = calculateResults(Object.values(fixtures), predictions, user);
 
-    for (const group of Object.values(standings)) {
+    const validGroups = Object.entries(standings)
+      .filter(([name]) => name.includes('Group'))
+      .map(([_, g]) => g);
+
+    for (const group of validGroups) {
       const teamsIDs = group.map(t => t.team.id);
       const sortedGroup = sortGroup(teamsIDs, teamsResults, fixtures, predictions, user);
       groupPoints[user] += sortedGroup.reduce((total, teamId, idx) => total + (teamId === teamsIDs[idx] ? 1 : 0), 0);
