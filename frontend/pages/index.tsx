@@ -43,7 +43,7 @@ const Home = () => {
 
 			if (success) {
 				const { fixtures, standings, predictions, users } = await fetchTournament(token);
-				const sorted = Object.entries(standings).sort();
+				const sorted = Object.entries(standings).sort() as unknown as Standings;
 
 				setFixtures(fixtures);
 				setPredictions(predictions);
