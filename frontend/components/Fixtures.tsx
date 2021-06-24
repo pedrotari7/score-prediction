@@ -42,7 +42,7 @@ const FixturesPage = ({
 		if (isGameFinished(a) && isGameFinished(b)) return b.fixture.timestamp - a.fixture.timestamp;
 		if (isGameFinished(a) && !isGameFinished(b)) return 1;
 		if (!isGameFinished(a) && isGameFinished(b)) return -1;
-		return a.fixture.timestamp - a.fixture.timestamp;
+		return a.fixture.timestamp - b.fixture.timestamp;
 	};
 
 	const sortedGroupStageFixtures = groupStageFixtures.sort(sortWithFinishedLast);
