@@ -440,6 +440,10 @@ app.post('/update-predictions', async (req, res) => {
     change = { ...change, [`${gameId}.${uid}.away`]: prediction.away };
   }
 
+  if (prediction.home === null && prediction.away === null) {
+    change = { [`${gameId}.${uid}`]: { home: null, away: null } };
+  }
+
   const result = await admin.firestore().collection(competition.name).doc('predictions').update(change);
 
   return res.json(result);
