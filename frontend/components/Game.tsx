@@ -109,7 +109,7 @@ const Game = ({
 
 				{isInPast && (
 					<div className="font-bold mx-4 lg:w-3/12 flex flex-col items-center justify-center">
-						<ResultContainer className="min-w-result px-2 mb-2" prediction={prediction} result={game.goals}>
+						<ResultContainer className="min-w-result px-2 mb-2" prediction={prediction} game={game}>
 							{(!isValidScore(prediction.home) || !isValidScore(prediction.away)) && (
 								<span>No prediction</span>
 							)}

@@ -30,6 +30,8 @@ module.exports = {
 				'top-1/2',
 				'-translate-y-1/2',
 				'sm:-translate-x-full',
+				'-top-1',
+				'-right-3',
 			],
 			keyframes: true,
 			fontFace: true,

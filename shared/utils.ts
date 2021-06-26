@@ -10,7 +10,19 @@ export const getOutcome = (g: Result): string | null => {
 	return null;
 };
 
-export const getResult = (prediction: Prediction, result: Result): Partial<UserResult> => {
+export const getResult = (prediction: Prediction, game: Fixture): Partial<UserResult> => {
+	let result = game.goals;
+
+	switch (game.fixture?.status.short) {
+		case 'PEN':
+		case 'AET':
+			result = game.score.fulltime;
+			break;
+		default:
+			result = game.goals;
+			break;
+	}
+
 	const { home: predH, away: predA } = prediction;
 	const { home: realH, away: realA } = result;
 
@@ -27,10 +39,19 @@ export const getResult = (prediction: Prediction, result: Result): Partial<UserR
 
 	if (isCorrectGoal) return { points: 1, onescore: 1 };
 
+	const isPenaltyWinner =
+		isPenaltyShootout(game) &&
+		getOutcome(prediction) !== null &&
+		getOutcome(prediction) === getOutcome(game.score.penalty);
+
+	if (isPenaltyWinner) return { points: 1, penalty: 1 };
+
 	return { points: 0, fail: 1 };
 };
 
 export const isGameFinished = (game: Fixture) => ['FT', 'AET', 'PEN', 'INT', 'PST'].includes(game.fixture.status.short);
+
+export const isPenaltyShootout = (game: Fixture) => game.fixture.status.short === 'PEN';
 
 export const isGameStarted = (game: Fixture) => game.fixture.status.short !== 'NS';
 

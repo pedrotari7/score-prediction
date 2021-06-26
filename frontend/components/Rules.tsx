@@ -39,10 +39,12 @@ const Rules = () => {
 			<div className="mb-4">
 				<div className="font-bold text-2xl mb-4">Final Stages</div>
 				In the final stages of the tournament each game is similar to the group stage games, but in this case
-				your prediction will be compared with the result at the end of the 90 or 120 minutes. Nonetheless, in
-				case of penalty shootout if you guessed correctly the team that ends up going through to the next stage,
-				you will be awarded 1 extra point that adds to the ones that you might have acheived during the regular
-				time.
+				your prediction will be compared with the result at the end of the 90 or 120 minutes.
+				<div className="bg- bg-gray-500 rounded-md p-2 my-4 ">
+					Nonetheless, in case of penalty shootout if you guessed correctly the team that ends up going
+					through to the next stage, you will be awarded 1 extra point that adds to the ones that you might
+					have acheived during the regular time.
+				</div>
 			</div>
 			<div className="">
 				<div className="font-bold text-2xl mb-4">Deadlines</div>

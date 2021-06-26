@@ -16,6 +16,7 @@ const SortOptions: Record<string, SortOption> = {
 	exact: { key: 'exact', text: 'Exact', color: 'bg-green-500' },
 	result: { key: 'result', text: 'Correct Result', color: 'bg-yellow-500' },
 	onescore: { key: 'onescore', text: 'Team Score', color: 'bg-pink-500' },
+	penalty: { key: 'penalty', text: 'Penalties', color: 'bg-gray-500' },
 	fail: { key: 'fail', text: 'Fail', color: 'bg-red-500' },
 	groups: { key: 'groups', text: 'Groups', color: 'bg-purple-700' },
 };
@@ -70,6 +71,7 @@ const Rankings = ({ users }: { users: Users }) => {
 				b.score.result - a.score.result ||
 				b.score.onescore - a.score.onescore ||
 				b.score.groups - a.score.groups ||
+				b.score.penalty - a.score.penalty ||
 				b.score.fail - a.score.fail
 		);
 
@@ -125,6 +127,7 @@ const Rankings = ({ users }: { users: Users }) => {
 									<Circle className="bg-pink-500">{user.score.onescore}</Circle>
 									<Circle className="bg-red-500">{user.score.fail}</Circle>
 									<Circle className="bg-purple-700">{user.score.groups}</Circle>
+									<Circle className="bg-gray-500">{user.score.penalty}</Circle>
 									<Circle className="bg-gray-700 w-10 h-10 p-4 my-2">{user.score.points}</Circle>
 								</div>
 							</div>

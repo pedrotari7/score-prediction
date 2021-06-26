@@ -18,7 +18,7 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 	return (
 		<ResultContainer
 			prediction={guess}
-			result={game.goals}
+			game={game}
 			className={classNames(
 				'text-light flex flex-row items-center justify-between  my-2 sm:m-2 rounded p-4 w-full sm:w-max',
 				'cursor-pointer hover:bg-opacity-50 select-none',
@@ -77,7 +77,7 @@ const CurrentMatch = ({
 		.map(([uid, prediction]) => ({
 			uid,
 			prediction,
-			result: getResult(prediction, game.goals),
+			result: getResult(prediction, game),
 		}))
 		.sort((a, b) => (b.result.points ?? 0) - (a.result.points ?? 0));
 

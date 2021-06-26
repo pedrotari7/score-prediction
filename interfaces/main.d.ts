@@ -222,6 +222,7 @@ export interface UserResult extends Record<string, number> {
 	onescore: number;
 	points: number;
 	result: number;
+	penalty: number;
 	fail: number;
 	groups: number;
 }

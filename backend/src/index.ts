@@ -189,13 +189,13 @@ const updatePoints = async (competition: Competition, predictions: Predictions, 
   const groupPoints = (await getDBGroupPoints(competition).get()).data() as GroupPoints;
 
   const updatedScores = Object.entries(predictions).reduce((users, [gameID, gamePredictions]) => {
-    const game = fixtures[parseInt(gameID)]?.goals;
+    const game = fixtures[parseInt(gameID)];
 
     if (!game) return users;
 
     for (const user in gamePredictions) {
       if (!(user in users)) users[user] = DEFAULT_USER_RESULT;
-      if (fixtures[parseInt(gameID)]?.fixture.status.short === 'NS') continue;
+      if (game?.fixture.status.short === 'NS') continue;
       users[user] = joinResults(users[user], getResult(gamePredictions[user], game));
     }
     return users;
