@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Event, Fixture, FixtureExtraInfo, Player, PlayersMap } from '../../interfaces/main';
+import { Event, Fixture, FixtureExtraInfo, Player, PlayersMap, Result, Score } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import { classNames, DEFAULT_IMAGE } from '../lib/utils/reactHelper';
 
@@ -111,32 +111,43 @@ const GameFacts = ({
 		return <></>;
 	};
 
-	const HalfTimeScore = () => {
-		if (game.score.halftime.home === null || game.score.halftime.away == null) return <></>;
+	const Score = ({ score, label }: { score: Result; label: string }) => {
+		if (score.home === null || score.away == null) return <></>;
 		return (
 			<div className="text-sm flex flex-row items-center">
 				<div className="flex flex-grow bg-gray-500 h-0.5 opacity-80 "></div>
 				<div className="w-max mx-8">
-					HT {game.score.halftime.home} - {game.score.halftime.away}
+					{label} {score.home} - {score.away}
 				</div>
 				<div className="flex flex-grow bg-gray-500 h-0.5 opacity-80 "></div>
 			</div>
 		);
 	};
 
+	const HalfTimeScore = () => <Score score={game.score.halftime} label="HT" />;
+	const FullTimeScore = () => <Score score={game.score.fulltime} label="FT" />;
+
 	const events = extraInfo.events?.map((event, idx) => {
 		const shouldAddHTScore = !addedHTScore && event.time.elapsed >= 45 && event.time.extra === null;
+		const shouldAddFTScore = !addedFTScore && event.time.elapsed > 90 && event.time.extra === null;
+
 		if (shouldAddHTScore) addedHTScore = shouldAddHTScore;
+		if (shouldAddFTScore) addedFTScore = shouldAddFTScore;
+
 		return (
 			<div key={idx} className="w-full xl:w-1/3">
 				{shouldAddHTScore && isGameFinished(game) && <HalfTimeScore />}
+				{shouldAddFTScore && isGameFinished(game) && <FullTimeScore />}
+
 				<Event event={event} />
 				{shouldAddHTScore && !isGameFinished(game) && <HalfTimeScore />}
+				{shouldAddFTScore && !isGameFinished(game) && <FullTimeScore />}
 			</div>
 		);
 	})!;
 
 	let addedHTScore = false;
+	let addedFTScore = false;
 
 	return (
 		<div className="bg-gray-700 rounded-md p-2 flex flex-col text-sm sm:text-base xl:items-center justify-center">

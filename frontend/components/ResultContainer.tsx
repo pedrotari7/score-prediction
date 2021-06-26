@@ -16,16 +16,10 @@ const ResultContainer = ({
 	game: Fixture;
 	onClick?: MouseEventHandler<HTMLDivElement>;
 }) => {
-	let result;
+	let result = game.goals;
 
-	switch (game.fixture.status.short) {
-		case 'PEN':
-		case 'AET':
-			result = game.score.fulltime;
-			break;
-		default:
-			result = game.goals;
-			break;
+	if (['PEN', 'AET'].includes(game.fixture.status.short)) {
+		result = game.score.fulltime;
 	}
 
 	const { home: predH, away: predA } = prediction;
