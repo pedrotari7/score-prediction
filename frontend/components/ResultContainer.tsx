@@ -19,7 +19,7 @@ const ResultContainer = ({
 	let result = game.goals;
 
 	if (['PEN', 'AET'].includes(game.fixture.status.short)) {
-		result = game.score.fulltime;
+		result = game.score.extratime;
 	}
 
 	const { home: predH, away: predA } = prediction;

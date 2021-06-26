@@ -13,14 +13,8 @@ export const getOutcome = (g: Result): string | null => {
 export const getResult = (prediction: Prediction, game: Fixture): Partial<UserResult> => {
 	let result = game.goals;
 
-	switch (game.fixture?.status.short) {
-		case 'PEN':
-		case 'AET':
-			result = game.score.fulltime;
-			break;
-		default:
-			result = game.goals;
-			break;
+	if (['PEN', 'AET'].includes(game.fixture.status.short)) {
+		result = game.score.extratime;
 	}
 
 	const { home: predH, away: predA } = prediction;
