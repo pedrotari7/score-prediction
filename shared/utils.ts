@@ -32,6 +32,10 @@ export const getResult = (prediction: Prediction, result: Result): Partial<UserR
 
 export const isGameFinished = (game: Fixture) => ['FT', 'AET', 'PEN', 'INT', 'PST'].includes(game.fixture.status.short);
 
+export const isGameStarted = (game: Fixture) => game.fixture.status.short !== 'NS';
+
+export const isGameOnGoing = (game: Fixture) => !isGameFinished(game) && isGameStarted(game);
+
 export const intializeTeamResult = (): PredResult => ({
 	points: 0,
 	wins: 0,

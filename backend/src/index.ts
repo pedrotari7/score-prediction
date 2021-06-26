@@ -18,7 +18,7 @@ import {
   UserResult,
 } from '../../interfaces/main';
 import { DEFAULT_USER_RESULT, joinResults } from './util';
-import { calculateResults, getResult, isNum, sortGroup } from '../../shared/utils';
+import { calculateResults, getResult, isGameOnGoing, isNum, sortGroup } from '../../shared/utils';
 
 const app = express();
 
@@ -366,17 +366,9 @@ app.get('/tournament', async (req, res) => {
 
   const standingsTimeDiffSeconds = getTimeDiff(standings.timestamp);
 
-  const currentDate = getCurrentTime().getTime();
+  const hasGamesOngoing = Object.values<Fixture>(fixtures.data).some(g => isGameOnGoing(g));
 
-  const gameTimeDiff = (f: Fixture) => (currentDate - new Date(f?.fixture?.date).getTime()) / 1000;
-
-  const gameDates = Object.values(fixtures.data as Fixtures).map(gameTimeDiff);
-
-  const GameTimeRange = 2 * 60 * 60;
-
-  const hasGameInRange = gameDates.some(d => d >= 0 && d < GameTimeRange);
-
-  const timeGuard = hasGameInRange ? GAME_TIME : STALE_TIME;
+  const timeGuard = hasGamesOngoing ? GAME_TIME : STALE_TIME;
 
   if (standingsTimeDiffSeconds > timeGuard) {
     console.log('standings needs update');
@@ -386,12 +378,9 @@ app.get('/tournament', async (req, res) => {
   if (fixturesTimeDiffSeconds > timeGuard) {
     console.log('fixtures needs update');
 
-    const gamesToUpdate = hasGameInRange
+    const gamesToUpdate = hasGamesOngoing
       ? Object.values(fixtures.data as Fixtures)
-          .filter(f => {
-            const d = gameTimeDiff(f);
-            return d >= 0 && d < GameTimeRange;
-          })
+          .filter(f => isGameOnGoing(f))
           .map(f => f.fixture.id)
       : [];
 
