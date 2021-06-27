@@ -18,7 +18,7 @@ import {
   UserResult,
 } from '../../interfaces/main';
 import { DEFAULT_USER_RESULT, joinResults } from './util';
-import { calculateResults, getResult, isGameOnGoing, isNum, sortGroup } from '../../shared/utils';
+import { calculateResults, getResult, isGameOnGoing, isGameStarted, isNum, sortGroup } from '../../shared/utils';
 
 const app = express();
 
@@ -368,7 +368,13 @@ app.get('/tournament', async (req, res) => {
 
   const hasGamesOngoing = Object.values<Fixture>(fixtures.data).some(g => isGameOnGoing(g));
 
-  const timeGuard = hasGamesOngoing ? GAME_TIME : STALE_TIME;
+  const currentDate = getCurrentTime().getTime();
+
+  const hasNonStartedGames = Object.values<Fixture>(fixtures.data)
+    .filter(g => !isGameStarted(g))
+    .some(g => (currentDate - new Date(g?.fixture?.date).getTime()) / 1000 > 0);
+
+  const timeGuard = hasGamesOngoing || hasNonStartedGames ? GAME_TIME : STALE_TIME;
 
   if (standingsTimeDiffSeconds > timeGuard) {
     console.log('standings needs update');
