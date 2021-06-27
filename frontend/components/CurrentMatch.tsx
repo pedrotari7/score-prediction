@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import UserContext from '../context/UserContext';
+import { useSwipeable, LEFT, RIGHT } from 'react-swipeable';
 import LiveGame from './LiveGame';
 import { Fixture, Fixtures, Prediction, Predictions, User, Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
@@ -89,8 +90,17 @@ const CurrentMatch = ({
 	const prevGameId = findGame(-1);
 	const nextGameId = findGame(1);
 
+	const handlers = useSwipeable({
+		onSwiped: ({ dir }) => {
+			if (dir === LEFT) setGameID(nextGameId);
+			if (dir === RIGHT) setGameID(prevGameId);
+		},
+	});
+
 	return (
-		<main className="flex flex-col justify-center select-none text-light m-4 sm:m-8 md:mx-24 p-4 sm:p-8 shadow-pop rounded-md bg-dark relative">
+		<main
+			{...handlers}
+			className="flex flex-col justify-center select-none text-light m-4 sm:m-8 md:mx-24 p-4 sm:p-8 shadow-pop rounded-md bg-dark relative">
 			{!id && <p className="text-3xl mb-2">Next Game</p>}
 			{id && <p className="text-3xl mb-2">{game.league?.round}</p>}
 
