@@ -69,15 +69,17 @@ const FixturesPage = ({
 				{uid === user.uid && <p>My Predictions</p>}
 			</div>
 
-			{Object.entries(otherStageFixtures).map(([round, games]) => {
-				games.sort(sortWithFinishedLast);
-				return (
-					<div key={round} className="mb-6">
-						<div className="text-3xl mb-6">{round}</div>
-						{games.map(GameFilled)}
-					</div>
-				);
-			})}
+			{Object.entries(otherStageFixtures)
+				.sort(([_, gA], [__, gB]) => gB?.[0]?.fixture.timestamp - gA?.[0]?.fixture.timestamp)
+				.map(([round, games]) => {
+					games.sort(sortWithFinishedLast);
+					return (
+						<div key={round} className="mb-6">
+							<div className="text-3xl mb-6">{round}</div>
+							{games.map(GameFilled)}
+						</div>
+					);
+				})}
 
 			<div className="flex flex-col">
 				<div className="text-3xl mb-6">Group Stage</div>
