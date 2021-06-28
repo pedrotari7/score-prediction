@@ -119,8 +119,17 @@ const Game = ({
 								</div>
 							)}
 						</ResultContainer>
-						<div>
+						<div className="flex flex-row items-center flex-wrap justify-center">
 							{game.goals.home} - {game.goals.away}
+							{game.score.penalty.home && (
+								<div className="text-sm ml-2">
+									<span>(</span>
+									<span>{game.score.penalty.home}</span>
+									<span className="mx-2">-</span>
+									<span>{game.score.penalty.away}</span>
+									<span>)</span>
+								</div>
+							)}
 							<span className="ml-2">{game.fixture.status.short}</span>
 						</div>
 					</div>
