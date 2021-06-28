@@ -83,6 +83,15 @@ const LiveGame = ({
 								<span className="mx-2">-</span>
 								<span>{game.goals.away}</span>
 							</div>
+							{game.score.penalty.home && (
+								<div className="text-sm">
+									<span>(</span>
+									<span>{game.score.penalty.home}</span>
+									<span className="mx-2">-</span>
+									<span>{game.score.penalty.away}</span>
+									<span> PEN)</span>
+								</div>
+							)}
 							<div className="mt-2">
 								<span className="text-xs mm-1">{game.fixture.status.long}</span>
 								{!isGameFinished(game) && game.fixture.status.elapsed && (
