@@ -10,12 +10,15 @@ export const getOutcome = (g: Result): string | null => {
 	return null;
 };
 
-export const getResult = (prediction: Prediction, game: Fixture): Partial<UserResult> => {
-	let result = game.goals;
-
-	if (['PEN', 'AET'].includes(game.fixture.status.short)) {
-		result = game.score.extratime;
+export const getExtraTimeResult = ({ score: { fulltime, extratime }, fixture, goals }: Fixture) => {
+	if (['PEN', 'AET'].includes(fixture.status.short)) {
+		return { home: fulltime.home + extratime.home, away: fulltime.away + extratime.away };
 	}
+	return goals;
+};
+
+export const getResult = (prediction: Prediction, game: Fixture): Partial<UserResult> => {
+	const result = getExtraTimeResult(game);
 
 	const { home: predH, away: predA } = prediction;
 	const { home: realH, away: realA } = result;

@@ -1,6 +1,6 @@
 import { ReactNode, MouseEventHandler } from 'react';
 import { Fixture, Prediction } from '../../interfaces/main';
-import { getOutcome, isNum, isPenaltyShootout } from '../../shared/utils';
+import { getExtraTimeResult, getOutcome, isNum, isPenaltyShootout } from '../../shared/utils';
 import { classNames } from '../lib/utils/reactHelper';
 
 const ResultContainer = ({
@@ -16,11 +16,7 @@ const ResultContainer = ({
 	game: Fixture;
 	onClick?: MouseEventHandler<HTMLDivElement>;
 }) => {
-	let result = game.goals;
-
-	if (['PEN', 'AET'].includes(game.fixture.status.short)) {
-		result = game.score.extratime;
-	}
+	const result = getExtraTimeResult(game);
 
 	const { home: predH, away: predA } = prediction;
 	const { home: realH, away: realA } = result;
