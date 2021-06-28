@@ -16,7 +16,7 @@ const GameFacts = ({
 	extraInfo,
 }: {
 	game: Fixture;
-	players: PlayersMap | undefined;
+	players: PlayersMap;
 	extraInfo: FixtureExtraInfo;
 }) => {
 	const Referee = () => (
@@ -27,7 +27,7 @@ const GameFacts = ({
 	);
 
 	const Event = ({ event }: { event: Event }) => {
-		const getPhoto = (player: Player) => players?.[event.team.id]?.[player.id]?.photo;
+		const getPhoto = (player: Player) => players[player.id]?.photo;
 
 		const isAwayTeam = event.team.id === game.teams.away.id;
 

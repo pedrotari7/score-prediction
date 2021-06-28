@@ -1,7 +1,7 @@
 import { Lineup, LineupPlayer, LineupPlayers, Player, PlayersMap } from '../../interfaces/main';
 import { classNames, DEFAULT_IMAGE } from '../lib/utils/reactHelper';
 
-const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersMap | undefined }) => {
+const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersMap }) => {
 	const [homeLineup, awayLineup] = lineups;
 
 	const Player = ({
@@ -26,7 +26,6 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 	};
 
 	const Lineup = ({ lineup, isHomeTeam = false }: { lineup: Lineup; isHomeTeam?: boolean }) => {
-		const playersInfo = isHomeTeam ? players?.[homeLineup.team.id] : players?.[awayLineup.team.id];
 		return (
 			<div className="mt-2">
 				<div className="text-center mb-2 font-bold text-lg">
@@ -42,12 +41,7 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 				<div className="p-3 rounded-md">
 					<div className="text-center mb-2 font-bold">Bench</div>
 					{lineup.substitutes.map(({ player }: { player: LineupPlayer }) => (
-						<Player
-							key={player.id}
-							player={player}
-							playerInfo={playersInfo?.[player.id]}
-							reverse={isHomeTeam}
-						/>
+						<Player key={player.id} player={player} playerInfo={players[player.id]} reverse={isHomeTeam} />
 					))}
 				</div>
 			</div>
@@ -103,14 +97,10 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 			);
 		};
 
-		const sectionXI = (
-			section: [number, LineupPlayer][],
-			idx: number,
-			playersInfo: Record<number, Player> | undefined
-		) => (
+		const sectionXI = (section: [number, LineupPlayer][], idx: number) => (
 			<div key={idx} className="flex flex-row sm:flex-col flex-grow items-center justify-evenly mx-1">
 				{section.map(([_, player]: [number, LineupPlayer]) => (
-					<PlayerPosition key={player.id} player={player} playerInfo={playersInfo?.[player.id]} />
+					<PlayerPosition key={player.id} player={player} playerInfo={players?.[player.id]} />
 				))}
 			</div>
 		);
@@ -122,14 +112,12 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 				<div className="absolute w-full h-full">
 					<div className="flex flex-col sm:flex-row w-full h-full justify-center items-center">
 						<div className="sm:w-1/2 w-full h-1/2 sm:h-full flex flex-col sm:flex-row">
-							{Object.values(homeSections).map((s, idx) =>
-								sectionXI(s, idx, players?.[homeLineup.team.id])
-							)}
+							{Object.values(homeSections).map((s, idx) => sectionXI(s, idx))}
 						</div>
 						<div className="sm:w-1/2 w-full h-1/2 sm:h-full flex flex-col sm:flex-row">
 							{Object.values(awaySections)
 								.reverse()
-								.map((s, idx) => sectionXI(s, idx, players?.[awayLineup.team.id]))}
+								.map((s, idx) => sectionXI(s, idx))}
 						</div>
 					</div>
 				</div>

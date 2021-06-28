@@ -33,13 +33,14 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 
 	if (!extraInfo) return <Loading />;
 
-	const players = extraInfo?.players?.reduce(
-		(acc, { team, players }) => ({
-			...acc,
-			[team.id]: players.reduce((pls, { player }) => ({ ...pls, [player.id]: player }), {}),
-		}),
-		{} as PlayersMap
-	);
+	const players =
+		extraInfo?.players?.reduce(
+			(acc, { players }) => ({
+				...acc,
+				...players.reduce((pls, { player }) => ({ ...pls, [player.id]: player }), {}),
+			}),
+			{} as PlayersMap
+		) ?? {};
 
 	const colors = extraInfo?.lineups?.map(l => l.team.colors.player.primary) ?? [];
 
