@@ -70,7 +70,7 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 				secs[i].push([j, player]);
 				secs[i].sort();
 				return secs;
-			}, {} as Record<number, any>);
+			}, {} as Record<number, [number, LineupPlayer][]>);
 		};
 
 		const homeSections = createSections(homeXI);
@@ -78,7 +78,7 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 
 		const PlayerPosition = ({ player, playerInfo }: { player: LineupPlayer; playerInfo: Player | undefined }) => {
 			const lastNames = player.name.split(' ').slice(1).join(' ');
-			const shortName = lastNames ? lastNames : player.name;
+			const shortName = lastNames || player.name;
 			const url = playerInfo?.photo ? playerInfo.photo : DEFAULT_IMAGE;
 			return (
 				<div className={classNames('rounded-md text-xs')}>

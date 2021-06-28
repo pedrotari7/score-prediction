@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import UserContext from '../context/UserContext';
-import { useSwipeable, LEFT, RIGHT } from 'react-swipeable';
+import { useSwipeable } from 'react-swipeable';
 import LiveGame from './LiveGame';
 import { Fixture, Fixtures, Prediction, Predictions, User, Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
@@ -69,6 +69,12 @@ const CurrentMatch = ({
 
 	const [isExtraInfoOpen, setIsExtraInfoOpen] = useState(false);
 
+	const handlers = useSwipeable({
+		onSwipedLeft: () => nextGameId !== null && setGameID(nextGameId),
+		onSwipedRight: () => prevGameId !== null && setGameID(prevGameId),
+		preventDefaultTouchmoveEvent: true,
+	});
+
 	if (!game) return <></>;
 
 	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
@@ -89,12 +95,6 @@ const CurrentMatch = ({
 
 	const prevGameId = findGame(-1);
 	const nextGameId = findGame(1);
-
-	const handlers = useSwipeable({
-		onSwipedLeft: () => nextGameId !== null && setGameID(nextGameId),
-		onSwipedRight: () => prevGameId !== null && setGameID(prevGameId),
-		preventDefaultTouchmoveEvent: true,
-	});
 
 	return (
 		<main

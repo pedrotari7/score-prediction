@@ -1,6 +1,19 @@
+import { ChangeEvent, MutableRefObject } from 'react';
 import { classNames } from '../lib/utils/reactHelper';
 
-const ScoreInput = ({ className, value, onchange = () => {}, id, innerRef }: any) => (
+const ScoreInput = ({
+	className,
+	value,
+	onchange = () => {},
+	id,
+	innerRef,
+}: {
+	className: string;
+	value: number | null;
+	onchange: (e: ChangeEvent<HTMLInputElement>) => void;
+	id: string;
+	innerRef: MutableRefObject<HTMLInputElement | null>;
+}) => (
 	<input
 		value={value ?? ''}
 		onChange={async e => {

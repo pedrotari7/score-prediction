@@ -29,7 +29,7 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 		};
 
 		doAsync();
-	}, []);
+	}, [game.fixture.id, token]);
 
 	if (!extraInfo) return <Loading />;
 

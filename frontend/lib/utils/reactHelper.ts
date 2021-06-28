@@ -40,11 +40,11 @@ export const DEFAULT_IMAGE =
 
 export const getContrastYIQ = (hexcolor: string) => {
 	hexcolor = hexcolor.startsWith('#') ? hexcolor.replace('#', '') : hexcolor;
-	var r = parseInt(hexcolor.substr(0, 2), 16);
-	var g = parseInt(hexcolor.substr(2, 2), 16);
-	var b = parseInt(hexcolor.substr(4, 2), 16);
-	var yiq = (r * 299 + g * 587 + b * 114) / 1000;
+	const r = parseInt(hexcolor.substr(0, 2), 16);
+	const g = parseInt(hexcolor.substr(2, 2), 16);
+	const b = parseInt(hexcolor.substr(4, 2), 16);
+	const yiq = (r * 299 + g * 587 + b * 114) / 1000;
 	return yiq >= 128 ? 'black' : 'white';
 };
 
-export const zip = (a: any[], b: any[]) => a.map((k, i) => [k, b[i]]);
+export const zip = <T>(a: T[], b: T[]) => a.map((k, i) => [k, b[i]]);

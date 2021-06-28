@@ -248,3 +248,5 @@ export interface VerificationResult {
 }
 
 export type GroupPoints = Record<string, number>;
+
+export type UpdatePrediction = (prediction: Prediction, gameId: number) => Promise<void>;

@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
+			/* eslint-disable @typescript-eslint/no-explicit-any */
 			(window as any).nookies = nookies;
 		}
 		return firebaseClient.auth().onIdTokenChanged(async (user: User) => {

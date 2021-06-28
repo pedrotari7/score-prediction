@@ -1,4 +1,4 @@
-export default async function fetcher(url: string, token: string, options: any = {}) {
+export default async function fetcher(url: string, token: string, options: Record<string, unknown> = {}) {
 	try {
 		const response = await fetch(url, {
 			headers: {

@@ -11,7 +11,12 @@ import { backendUrl } from '../../lib/utils/envHelper';
 
 const competition = 'euro2020';
 
-const cFetch = async (url: string, token: string, query: any = {}, options: any = {}) => {
+const cFetch = async (
+	url: string,
+	token: string,
+	query: Record<string, unknown> = {},
+	options: Record<string, unknown> = {}
+) => {
 	return await fetcher(url + '?' + new URLSearchParams({ competition, ...query }), token, options);
 };
 

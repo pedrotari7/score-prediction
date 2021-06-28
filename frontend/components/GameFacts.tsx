@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Event, Fixture, FixtureExtraInfo, Player, PlayersMap, Result, Score } from '../../interfaces/main';
+import { Event, Fixture, FixtureExtraInfo, Player, PlayersMap, Result } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import { classNames, DEFAULT_IMAGE } from '../lib/utils/reactHelper';
 
@@ -33,7 +33,7 @@ const GameFacts = ({
 
 		const TimeElapsed = () => (
 			<div className="flex flex-col items-center justify-center mx-2 w-5">
-				<span className="font-bold">{event.time.elapsed}'</span>
+				<span className="font-bold">{event.time.elapsed}&apos;</span>
 				{event.time.extra !== null && (
 					<span className="font-bold text-xs text-gray-400">+{event.time.extra}</span>
 				)}
@@ -50,7 +50,7 @@ const GameFacts = ({
 
 		const PlayerWithPhoto = ({ color = 'text-light', player }: { color?: string; player: Player }) => {
 			const playerPhoto = getPhoto(player);
-			const photo = playerPhoto ? playerPhoto : DEFAULT_IMAGE;
+			const photo = playerPhoto ?? DEFAULT_IMAGE;
 			return (
 				<div className={classNames('flex items-center', isAwayTeam ? 'flex-row-reverse' : 'flex-row')}>
 					<img className="object-cover h-6 w-6 sm:h-8 sm:w-8 rounded-full m-2" src={photo} />
@@ -144,14 +144,14 @@ const GameFacts = ({
 				{shouldAddFTScore && !isGameFinished(game) && <FullTimeScore />}
 			</div>
 		);
-	})!;
+	});
 
 	let addedHTScore = false;
 	let addedFTScore = false;
 
 	return (
 		<div className="bg-gray-700 rounded-md p-2 flex flex-col text-sm sm:text-base xl:items-center justify-center">
-			{isGameFinished(game) ? events : events.reverse()}
+			{isGameFinished(game) ? events : events?.reverse()}
 			<Referee />
 		</div>
 	);

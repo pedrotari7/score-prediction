@@ -32,7 +32,8 @@ const Rules = () => {
 			<div>
 				<div className="font-bold text-2xl mb-4">Groups</div>
 				<div className="bg-purple-700 rounded-md p-2 mb-4 flex flex-row flex-wrap text-lg">
-					You will be awarded 1 point per each succesful guess on a team's final position in the group stage.
+					You will be awarded 1 point per each succesful guess on a team&apos;s final position in the group
+					stage.
 					<span className="font-bold text-2xl mt-2 w-full">+1 Point</span>
 				</div>
 			</div>

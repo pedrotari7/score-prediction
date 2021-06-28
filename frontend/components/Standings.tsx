@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-import React from 'react';
 import { Fixture, Fixtures, Standing, Standings } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import { classNames } from '../lib/utils/reactHelper';

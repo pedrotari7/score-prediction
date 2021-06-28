@@ -521,7 +521,8 @@ app.get('/validate-token', async (req, res) => {
   return res.json({ success: true, uid });
 });
 
-exports.api = europe.https.onRequest(app);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+exports.api = europe.https.onRequest(<any>app);
 
 export const addUser = europe.auth.user().onCreate(async user => {
   const isAdmin = ADMIN_USERS.includes(user.email ?? '');

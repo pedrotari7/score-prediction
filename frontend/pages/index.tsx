@@ -61,7 +61,7 @@ const Home = () => {
 		doAsync();
 
 		return () => {};
-	}, []);
+	}, [router]);
 
 	const updatePrediction = async (prediction: Prediction, gameId: number) => {
 		setPredictions({ ...predictions, [gameId]: { ...predictions?.[gameId], [uid]: prediction } });

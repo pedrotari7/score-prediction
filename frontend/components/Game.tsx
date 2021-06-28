@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { ChangeEvent, useContext, useRef } from 'react';
-import { Predictions } from '../../interfaces/main';
+import { Prediction, Predictions } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
@@ -19,7 +19,7 @@ const Game = ({
 	userID,
 }: {
 	predictions: Predictions;
-	updatePrediction: Function;
+	updatePrediction: (prediction: Prediction) => Promise<void>;
 	gameID: number;
 	userID: string;
 }) => {
@@ -27,8 +27,8 @@ const Game = ({
 	const routeInfo = useContext(RouteContext)!;
 	const { uid } = useContext(UserContext)!;
 
-	const homeInputRef = useRef<HTMLInputElement>();
-	const awayInputRef = useRef<HTMLInputElement>();
+	const homeInputRef = useRef<HTMLInputElement>(null);
+	const awayInputRef = useRef<HTMLInputElement>(null);
 
 	if (!data || !routeInfo) return <></>;
 

@@ -15,6 +15,9 @@ const PredictedGroups = ({
 }) => {
 	const teamsResults = calculateResults(Object.values(fixtures), predictions, userID);
 
+	const TickIcon = () => <img className="h-5 w-5 p-1 mx-1" src="/tick.svg" />;
+	const CloseIcon = () => <img className="h-5 w-5 p-1 mx-1" src="/close.svg" />;
+
 	return (
 		<div className="flex flex-row flex-wrap justify-center">
 			{standings.map(([title, standing]) => {
@@ -71,12 +74,8 @@ const PredictedGroups = ({
 												<div className="flex flex-row justify-start items-center">
 													<Flag team={standing[index].team} />
 													{isCorrectPrediction
-														? hasGames && (
-																<img className="h-5 w-5 p-1 mx-1" src="/tick.svg" />
-														  )
-														: hasGames && (
-																<img className="h-5 w-5 p-1 mx-1" src="/close.svg" />
-														  )}
+														? hasGames && <TickIcon />
+														: hasGames && <CloseIcon />}
 												</div>
 											</td>
 										</tr>

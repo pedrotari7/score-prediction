@@ -2,7 +2,7 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { firebaseClient } from '../lib/firebaseClient';
 import PageLayout from '../components/PageLayout';
 
-const Login = (_props: any) => {
+const Login = () => {
 	const uiConfig = {
 		signInFlow: 'redirect',
 		signInSuccessUrl: '/',

@@ -1,6 +1,6 @@
 import { ReactNode, MouseEventHandler } from 'react';
 import { Fixture, Prediction } from '../../interfaces/main';
-import { getOutcome, isPenaltyShootout } from '../../shared/utils';
+import { getOutcome, isNum, isPenaltyShootout } from '../../shared/utils';
 import { classNames } from '../lib/utils/reactHelper';
 
 const ResultContainer = ({
@@ -25,6 +25,8 @@ const ResultContainer = ({
 	const { home: predH, away: predA } = prediction;
 	const { home: realH, away: realA } = result;
 
+	const isResultValid = isNum(result.home) && isNum(result.away);
+
 	const isExactScore = predH === realH && predA === realA;
 
 	const isCorrectResult =
@@ -38,7 +40,7 @@ const ResultContainer = ({
 		getOutcome(prediction) !== null &&
 		getOutcome(prediction) === getOutcome(game.score.penalty);
 
-	const isWrong = !isExactScore && !isCorrectResult && !isCorrectGoal && !isPenaltyWinner;
+	const isWrong = isResultValid && !isExactScore && !isCorrectResult && !isCorrectGoal && !isPenaltyWinner;
 
 	return (
 		<div

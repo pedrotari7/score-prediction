@@ -6,12 +6,18 @@
 		}
 	},
 	"env": {
-		"es2020": true
+		"es2020": true,
+		"browser": true
 	},
+	"parser": "@typescript-eslint/parser",
+
 	"extends": [
 		"standard",
 		"prettier",
-		"plugin:react/recommended"
+		"next",
+		"plugin:react/recommended",
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended"
 	],
 	"plugins": ["react", "react-hooks"],
 	"rules": {
@@ -22,7 +28,13 @@
 		"react-hooks/rules-of-hooks": "error",
 		"react-hooks/exhaustive-deps": "warn",
 		"react/react-in-jsx-scope": "off",
-		"no-unused-vars": ["error", { "varsIgnorePattern": "_" }]
+		"react/prop-types": "off",
+		"@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "_", "argsIgnorePattern": "_" }],
+		"@typescript-eslint/no-non-null-assertion": "off",
+		"@typescript-eslint/no-empty-function": ["error", { "allow": ["arrowFunctions"] }],
+		"@next/next/no-img-element": "off",
+		"jsx-a11y/alt-text": "off",
+		"@typescript-eslint/explicit-module-boundary-types": "off"
 	},
 	"settings": {
 		"react": {
@@ -31,5 +43,8 @@
 			"fragment": "Fragment",
 			"version": "detect"
 		}
+	},
+	"globals": {
+		"JSX": true
 	}
 }

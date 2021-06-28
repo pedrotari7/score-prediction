@@ -32,7 +32,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 	const updateRoute = (info: RouteInfo) => setRoute(info);
 
 	const isCurrent = ({ info: { page } }: NavItem) => {
-		return page === Route.Predictions ? route.data === user?.uid! : page === route.page;
+		return page === Route.Predictions ? route.data === user?.uid : page === route.page;
 	};
 
 	return (
@@ -42,7 +42,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 					<div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
 						<div className="relative flex items-center justify-between h-16">
 							<div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-								{/* Mobile menu button*/}
+								{/* Mobile menu button */}
 								{!loading && (
 									<Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-light hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
 										<span className="sr-only">Open main menu</span>

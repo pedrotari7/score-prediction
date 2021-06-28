@@ -1,4 +1,4 @@
-import { Fixture, Fixtures, Prediction, Predictions, Standings, User } from '../../interfaces/main';
+import { Fixture, Fixtures, Prediction, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import { useAuth } from '../lib/auth';
 import { classNames } from '../lib/utils/reactHelper';
@@ -14,7 +14,7 @@ const FixturesPage = ({
 }: {
 	fixtures: Fixtures;
 	predictions: Predictions;
-	updatePrediction: Function;
+	updatePrediction: UpdatePrediction;
 	standings: Standings;
 	user: User;
 }) => {

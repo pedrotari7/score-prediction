@@ -10,9 +10,12 @@ const GameStats = ({ stats, colors }: { stats: Statistic[] | undefined; colors: 
 
 	const [homeColor, awayColor] = colors;
 
-	const combStats = zip(Object.values(homeStatistic?.statistics), Object.values(awayStatistic?.statistics)).reduce(
+	const combStats = zip<Stat>(
+		Object.values(homeStatistic?.statistics),
+		Object.values(awayStatistic?.statistics)
+	).reduce(
 		(acc, [s1, s2], idx) => ({ ...acc, [s1.type]: [idx, s1.value, s2.value] }),
-		{} as Record<string, Array<number | string>>
+		{} as Record<string, Array<number | string | null>>
 	);
 
 	const isBigger = (a: string | number | null, b: string | number | null) => {
@@ -35,7 +38,7 @@ const GameStats = ({ stats, colors }: { stats: Statistic[] | undefined; colors: 
 					style={{
 						backgroundColor: `#${homeColor}`,
 						color: getContrastYIQ(homeColor),
-						width: ballPossession[1],
+						width: ballPossession[1] ?? '50%',
 					}}>
 					<span className="h-6 my-2 px-2 w-12">{ballPossession[1]}</span>
 				</div>
@@ -44,7 +47,7 @@ const GameStats = ({ stats, colors }: { stats: Statistic[] | undefined; colors: 
 					style={{
 						backgroundColor: `#${awayColor}`,
 						color: getContrastYIQ(awayColor),
-						width: ballPossession[2],
+						width: ballPossession[2] ?? '50%',
 					}}>
 					<span className="h-6 my-2 px-2 w-12">{ballPossession[2]}</span>
 				</div>
