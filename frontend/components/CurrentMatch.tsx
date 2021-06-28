@@ -91,10 +91,9 @@ const CurrentMatch = ({
 	const nextGameId = findGame(1);
 
 	const handlers = useSwipeable({
-		onSwiped: ({ dir }) => {
-			if (dir === LEFT) setGameID(nextGameId);
-			if (dir === RIGHT) setGameID(prevGameId);
-		},
+		onSwipedLeft: () => nextGameId !== null && setGameID(nextGameId),
+		onSwipedRight: () => prevGameId !== null && setGameID(prevGameId),
+		preventDefaultTouchmoveEvent: true,
 	});
 
 	return (
