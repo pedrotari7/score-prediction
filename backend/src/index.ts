@@ -380,7 +380,7 @@ app.get('/tournament', async (req, res) => {
 
   if (standingsTimeDiffSeconds > timeGuard) {
     console.log('standings needs update');
-    standings.data = await updateStandings(competition);
+    // standings.data = await updateStandings(competition);
   }
 
   if (fixturesTimeDiffSeconds > timeGuard) {
