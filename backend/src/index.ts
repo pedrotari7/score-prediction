@@ -336,8 +336,9 @@ app.get('/fetch-users', async (req, res) => {
   if (!authResult.success) return authResult.result;
 
   const allUsers = (await admin.auth().listUsers()).users
-    .map(({ displayName, metadata }) => ({
+    .map(({ displayName, metadata, uid }) => ({
       displayName,
+      uid,
       ...metadata,
     }))
     .sort((a, b) => new Date(b.lastSignInTime).getTime() - new Date(a.lastSignInTime).getTime());
