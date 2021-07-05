@@ -36,7 +36,7 @@ const ResultContainer = ({
 		getOutcome(prediction) !== null &&
 		getOutcome(prediction) === getOutcome(game.score.penalty);
 
-	const isWrong = isResultValid && !isExactScore && !isCorrectResult && !isCorrectGoal && !isPenaltyWinner;
+	const isWrong = isResultValid && !isExactScore && !isCorrectResult && !isCorrectGoal;
 
 	return (
 		<div
