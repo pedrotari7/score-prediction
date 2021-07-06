@@ -53,7 +53,7 @@ const Rankings = ({ users }: { users: Users }) => {
 				onClick={onClick}
 				className={classNames(
 					'mx-2 my-2 p-2 rounded-md cursor-pointer select-none text-xs sm:text-lg',
-					'hover:bg-opacity-50 hover:border hover:border-gray-400 border-2',
+					'hover:bg-opacity-50 hover:border-2 hover:border-gray-400 border-2',
 					active ? 'border-white' : 'border-transparent',
 					className
 				)}>
