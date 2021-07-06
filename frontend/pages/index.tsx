@@ -17,6 +17,7 @@ import { Fixtures, Prediction, Predictions, Standings, Users } from '../../inter
 import Rules from '../components/Rules';
 import { useRouter } from 'next/router';
 import Loading from '../components/Loading';
+import { isGameFinished } from '../../shared/utils';
 
 const Home = () => {
 	const [loading, setLoading] = useState(true);
@@ -43,16 +44,24 @@ const Home = () => {
 
 			if (success) {
 				const { fixtures, standings, predictions, users } = await fetchTournament(token);
-				const sorted = Object.entries(standings).sort() as unknown as Standings;
+				const sortedStandings = Object.entries(standings).sort() as unknown as Standings;
+
+				const sortedFixtures = Object.values(fixtures).sort(
+					({ fixture: a }, { fixture: b }) => a.timestamp - b.timestamp
+				);
+
+				const nextGame = sortedFixtures.findIndex(game => !isGameFinished(game));
+
+				const defaultRoute = nextGame === -1 ? Route.Ranking : Route.Home;
 
 				setFixtures(fixtures);
 				setPredictions(predictions);
-				setStandings(sorted);
+				setStandings(sortedStandings);
 				setUID(uid);
 				setUsers(users);
 				setLoading(false);
 
-				setRoute({ page: uid in users && users[uid].isNewUser ? Route.Rules : Route.Home, data: undefined });
+				setRoute({ page: uid in users && users[uid].isNewUser ? Route.Rules : defaultRoute, data: undefined });
 			} else {
 				router.replace('/login');
 			}
