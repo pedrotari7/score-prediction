@@ -68,6 +68,7 @@ const Rankings = ({ users }: { users: Users }) => {
 			(a, b) =>
 				b.score[sortOption.key] - a.score[sortOption.key] ||
 				b.score.points - a.score.points ||
+				b.score.exact - a.score.exact ||
 				b.score.result - a.score.result ||
 				b.score.onescore - a.score.onescore ||
 				b.score.groups - a.score.groups ||
