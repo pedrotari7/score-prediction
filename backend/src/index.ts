@@ -358,6 +358,8 @@ app.get('/tournament', async (req, res) => {
 
   const competition = parseCompetition(req);
 
+  const settings = (await getDBSettings(competition).get()).data() as Settings;
+
   const fixturesDocument = await getDBFixtures(competition).get();
 
   const fixtures = fixturesDocument.data()!;
@@ -380,12 +382,12 @@ app.get('/tournament', async (req, res) => {
 
   const timeGuard = hasGamesOngoing || hasNonStartedGames ? GAME_TIME : STALE_TIME;
 
-  if (standingsTimeDiffSeconds > timeGuard) {
+  if (settings.allowUpdateStandings && standingsTimeDiffSeconds > timeGuard) {
     console.log('standings needs update');
-    // standings.data = await updateStandings(competition);
+    standings.data = await updateStandings(competition);
   }
 
-  if (fixturesTimeDiffSeconds > timeGuard) {
+  if (settings.allowUpdateFixtures && fixturesTimeDiffSeconds > timeGuard) {
     console.log('fixtures needs update');
 
     const gamesToUpdate = hasGamesOngoing
