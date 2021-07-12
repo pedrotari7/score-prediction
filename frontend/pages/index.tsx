@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import nookies from 'nookies';
 
 import PageLayout from '../components/PageLayout';
-import Settings from '../components/Settings';
+import SettingsPage from '../components/Settings';
 import Rankings from '../components/Rankings';
 import StandingsPage from '../components/Standings';
 
@@ -103,7 +103,7 @@ const Home = () => {
 			case Route.Standings:
 				return <StandingsPage standings={standings} fixtures={fixtures} />;
 			case Route.Settings:
-				return <Settings />;
+				return <SettingsPage />;
 			case Route.Match:
 				return (
 					<CurrentMatch

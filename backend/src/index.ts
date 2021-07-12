@@ -14,6 +14,7 @@ import {
   Fixtures,
   GroupPoints,
   Predictions,
+  Settings,
   Standing,
   UserResult,
 } from '../../interfaces/main';
@@ -123,6 +124,7 @@ const getDBStandings = (competition: Competition) => getDbDoc(competition, 'stan
 const getDBPredictions = (competition: Competition) => getDbDoc(competition, 'predictions');
 const getDBScores = (competition: Competition) => getDbDoc(competition, 'scores');
 const getDBGroupPoints = (competition: Competition) => getDbDoc(competition, 'groupPoints');
+const getDBSettings = (competition: Competition) => getDbDoc(competition, 'settings');
 
 const updateStandings = async (competition: Competition) => {
   const response = await getStandings({ league: competition.league, season: competition.season });
@@ -441,6 +443,7 @@ app.post('/update-predictions', async (req, res) => {
     change = { [`${gameId}.${uid}`]: { home: null, away: null } };
   }
 
+  // TODO: Update this with the helper function
   const result = await admin.firestore().collection(competition.name).doc('predictions').update(change);
 
   return res.json(result);
@@ -521,6 +524,30 @@ app.get('/validate-token', async (req, res) => {
   const { uid } = decodedToken as admin.auth.DecodedIdToken;
 
   return res.json({ success: true, uid });
+});
+
+app.get('/settings', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
+
+  const competition = parseCompetition(req);
+
+  const settings = (await getDBSettings(competition).get()).data() as Settings;
+
+  return res.json(settings);
+});
+
+app.post('/update-settings', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
+
+  const { settings } = JSON.parse(req.body);
+
+  const competition = parseCompetition(req);
+
+  const result = await getDBSettings(competition).set(settings);
+
+  return res.json(result);
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

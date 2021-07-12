@@ -250,3 +250,9 @@ export interface VerificationResult {
 export type GroupPoints = Record<string, number>;
 
 export type UpdatePrediction = (prediction: Prediction, gameId: number) => Promise<void>;
+
+export interface Settings extends Record<string, boolean> {
+	adminHideScores: boolean;
+	allowUpdateFixtures: boolean;
+	allowUpdateStandings: boolean;
+}

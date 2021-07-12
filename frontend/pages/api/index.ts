@@ -2,6 +2,7 @@ import {
 	Fixtures,
 	GroupPoints,
 	Prediction,
+	Settings,
 	Tournament,
 	UserResult,
 	VerificationResult,
@@ -61,3 +62,17 @@ export const validateToken = async (token: string): Promise<VerificationResult> 
 	await fetcher(`${backendUrl}/validate-token`, token);
 
 export const updateGroups = async (token: string): Promise<GroupPoints> => await cFetch(`${backendUrl}/groups`, token);
+
+export const fetchSettings = async (token: string): Promise<Settings> => await cFetch(`${backendUrl}/settings`, token);
+
+export const updateSettings = async (token: string, settings: Settings): Promise<void> => {
+	return await cFetch(
+		`${backendUrl}/update-settings`,
+		token,
+		{},
+		{
+			body: JSON.stringify({ settings }),
+			method: 'POST',
+		}
+	);
+};
