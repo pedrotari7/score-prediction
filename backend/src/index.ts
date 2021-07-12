@@ -247,15 +247,18 @@ const updateGroups = async (
 const getPredictions = async (
   decodedToken: admin.auth.DecodedIdToken,
   competition: Competition,
-  fixtures: Fixtures
+  fixtures: Fixtures,
+  { adminHideScores }: Settings
 ) => {
-  const { uid: callerUID } = decodedToken;
+  const { uid: callerUID, admin: isAdmin } = decodedToken;
 
   const document = await getDBPredictions(competition).get();
 
   const predictions = (document.data() ?? {}) as Predictions;
 
-  // if (isAdmin) return predictions;
+  console.log('adminHideScores :>> ', adminHideScores);
+
+  if (!adminHideScores && isAdmin) return predictions;
 
   const censoredPredictions = Object.entries(predictions).reduce((acc, [gameId, gamePredictions]) => {
     const gameDate = new Date(fixtures?.[parseInt(gameId)].fixture.date);
@@ -399,7 +402,7 @@ app.get('/tournament', async (req, res) => {
     fixtures.data = { ...fixtures.data, ...(await updateFixtures(competition, gamesToUpdate, fixtures.data)) };
   }
 
-  const predictions = await getPredictions(decodedToken, competition, fixtures.data);
+  const predictions = await getPredictions(decodedToken, competition, fixtures.data, settings);
 
   if (fixturesTimeDiffSeconds > timeGuard) {
     console.log('update points');
