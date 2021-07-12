@@ -256,3 +256,24 @@ export interface Settings extends Record<string, boolean> {
 	allowUpdateFixtures: boolean;
 	allowUpdateStandings: boolean;
 }
+
+export interface Account {
+	firstname: string;
+	lastname: string;
+	email: string;
+}
+export interface Subscription {
+	plan: string;
+	end: string;
+	active: true;
+}
+
+export interface Requests {
+	current: number;
+	limit_day: number;
+}
+export interface Status {
+	account: Account;
+	subscription: Subscription;
+	requests: Requests;
+}

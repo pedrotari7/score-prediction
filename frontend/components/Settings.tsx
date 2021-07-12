@@ -1,6 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
-import UserContext from '../context/UserContext';
 import fileDownload from 'js-file-download';
+import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+
+import UserContext from '../context/UserContext';
 import {
 	resetFixtures,
 	resetStandings,
@@ -11,29 +14,27 @@ import {
 	updateGroups,
 	fetchSettings,
 	updateSettings,
+	fetchStatus,
 } from '../pages/api';
-import { Settings } from '../../interfaces/main';
+import { Settings, Status } from '../../interfaces/main';
 
 const SettingsPage = () => {
 	const userInfo = useContext(UserContext);
 	const [response, setResponse] = useState({});
-	const [settings, setSettings] = useState<Settings>({
-		adminHideScores: false,
-		allowUpdateFixtures: false,
-		allowUpdateStandings: false,
-	});
+	const [settings, setSettings] = useState<Settings>();
+	const [status, setStatus] = useState<Status>();
 
 	useEffect(() => {
 		const doAsync = async () => {
 			if (userInfo) {
-				const sets = await fetchSettings(userInfo?.token);
-				setSettings(sets);
+				setSettings(await fetchSettings(userInfo?.token));
+				setStatus(await fetchStatus(userInfo?.token));
 			}
 		};
 		doAsync();
 	}, [userInfo]);
 
-	if (!userInfo) return <></>;
+	if (!userInfo || !status || !settings) return <></>;
 
 	const formattedResponse = JSON.stringify(response, null, 2);
 
@@ -43,9 +44,41 @@ const SettingsPage = () => {
 		updateSettings(userInfo.token, updatedSettings);
 	};
 
+	const { account, subscription, requests } = status;
+
 	return (
 		<div className="text-light">
-			<div className="m-3 p-3 bg-gray-600 rounded-md">
+			<div className="m-10 p-3 bg-gray-500 rounded-md flex flex-row flex-wrap">
+				<a href="https://dashboard.api-football.com/" target="_blank" rel="noreferrer">
+					<img
+						className="h-12 w-12 mb-4 absolute right-12"
+						src="https://dashboard.api-football.com/public/img/api-sports-small-logo.png"
+					/>
+				</a>
+				<div className="flex flex-col bg-gray-600 p-3 w-max rounded-md m-4">
+					<span className="text-lg font-bold mb-3">Account</span>
+					<span>{`${account.firstname} ${account.lastname}`}</span>
+					<span>{account.email}</span>
+				</div>
+
+				<div className="flex flex-col bg-gray-600 p-3 w-max rounded-md m-4">
+					<span className="text-lg font-bold mb-3">Subscription</span>
+					<span>{subscription.plan}</span>
+					<span>{subscription.end}</span>
+					<span>{subscription.active ? 'Active' : 'Not Active'}</span>
+				</div>
+
+				<div className="flex flex-col bg-gray-600 p-3 w-max rounded-md m-4">
+					<span className="text-lg font-bold mb-3">Requests</span>
+					<CircularProgressbar
+						value={requests.current}
+						maxValue={requests.limit_day}
+						text={`${requests.current}/${requests.limit_day}`}
+						styles={buildStyles({ textSize: '10px' })}
+					/>
+				</div>
+			</div>
+			<div className="myi-3 mx-10 p-3 bg-gray-600 rounded-md">
 				<label className="inline-flex items-center mt-3 mx-4 cursor-pointer select-none">
 					<input
 						type="checkbox"

@@ -6,6 +6,7 @@ import {
 	Tournament,
 	UserResult,
 	VerificationResult,
+	Status,
 } from '../../../interfaces/main';
 import fetcher from '../../lib/fetcher';
 import { backendUrl } from '../../lib/utils/envHelper';
@@ -76,3 +77,5 @@ export const updateSettings = async (token: string, settings: Settings): Promise
 		}
 	);
 };
+
+export const fetchStatus = async (token: string): Promise<Status> => await cFetch(`${backendUrl}/fetch-status`, token);

@@ -16,6 +16,7 @@ import {
   Predictions,
   Settings,
   Standing,
+  Status,
   UserResult,
 } from '../../interfaces/main';
 import { DEFAULT_USER_RESULT, joinResults } from './util';
@@ -70,6 +71,8 @@ const parseCompetition = (req: Request) => Competitions[req.query.competition as
 const getStandings = async (opts: Record<string, unknown> = {}) => await get('standings', opts);
 
 const getFixtures = async (opts: Record<string, unknown> = {}) => (await get('fixtures', opts)).data.response;
+
+const getStatus = async (): Promise<Status> => (await get('status')).data.response;
 
 const getFullFixture = async (eventID: number, opts: Record<string, unknown> = {}): Promise<Fixture> => {
   return (await get('fixtures', { id: eventID, ...opts })).data.response.pop();
@@ -334,6 +337,15 @@ app.get('/fetch-predictions', async (req, res) => {
   const predictions = (await getDBPredictions(competition).get()).data();
 
   return res.json(predictions);
+});
+
+app.get('/fetch-status', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
+
+  const status = await getStatus();
+
+  return res.json(status);
 });
 
 app.get('/fetch-users', async (req, res) => {
