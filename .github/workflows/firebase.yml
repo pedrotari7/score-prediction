@@ -1,33 +1,33 @@
 name: CI - Cloud
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'backend/**'
-      - 'shared/**'
-      - '.github/**'
+    push:
+        branches:
+            - main
+        paths:
+            - 'backend/**'
+            - 'shared/**'
+            - '.github/**'
 
 jobs:
-  deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '12'
-      - name: Checkout Repo
-        uses: actions/checkout@master
-      - name: Install Dependencies
-        run: yarn ci
-        working-directory: ./backend
-      - name: Deploy functions to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_ID: "default"
-          PROJECT_PATH: "."
+    deploy:
+        name: Deploy
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup Node
+              uses: actions/setup-node@v2
+              with:
+                  node-version: '16'
+            - name: Checkout Repo
+              uses: actions/checkout@master
+            - name: Install Dependencies
+              run: yarn ci
+              working-directory: ./backend
+            - name: Deploy functions to Firebase
+              uses: w9jds/firebase-action@master
+              with:
+                  args: deploy --only functions
+              env:
+                  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                  PROJECT_ID: 'default'
+                  PROJECT_PATH: '.'

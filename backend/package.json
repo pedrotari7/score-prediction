@@ -7,12 +7,13 @@
     "shell": "npm run build && yarn firebase functions:shell",
     "start": "npm run shell",
     "deploy": "yarn firebase deploy --only functions",
+    "login": "yarn firebase login",
     "logs": "yarn firebase functions:log",
     "firebase": "firebase",
     "ci": "yarn install --frozen-lockfile"
   },
   "engines": {
-    "node": "12"
+    "node": "16"
   },
   "main": "lib/backend/src/index.js",
   "dependencies": {

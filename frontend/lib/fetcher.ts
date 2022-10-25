@@ -20,6 +20,9 @@ export default async function fetcher(url: string, token: string, options: Recor
 		if (!error.data) {
 			error.data = { message: error.message };
 		}
-		throw error;
+
+		return { uid: null, success: false };
+
+		// throw error;
 	}
 }
