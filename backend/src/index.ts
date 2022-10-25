@@ -24,7 +24,16 @@ import { calculateResults, getResult, isGameOnGoing, isGameStarted, isNum, sortG
 
 const app = express();
 
-app.use(cors({ origin: ['http://localhost:3000', 'https://score-prediction.com'] }));
+app.use(
+  cors({
+    origin: [
+      'http://localhost:3000',
+      'https://score-prediction.com',
+      'https://www.score-prediction.com',
+      'https://score-prediction.vercel.app',
+    ],
+  })
+);
 
 const europe = functions.region('europe-west1');
 
