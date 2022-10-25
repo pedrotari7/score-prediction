@@ -25,7 +25,7 @@ const FLAGS: Record<number, string> = {
 	24: 'https://upload.wikimedia.org/wikipedia/en/1/12/Flag_of_Poland.svg',
 	25: 'https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg',
 	27: 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Portugal.svg',
-	767: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Wales_%281959%E2%80%93present%29.svg',
+	767: 'https://upload.wikimedia.org/wikipedia/commons/d/dc/Flag_of_Wales.svg',
 	768: 'https://upload.wikimedia.org/wikipedia/en/0/03/Flag_of_Italy.svg',
 	769: 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Flag_of_Hungary.svg',
 	770: 'https://upload.wikimedia.org/wikipedia/commons/c/cb/Flag_of_the_Czech_Republic.svg',
