@@ -28,6 +28,6 @@ jobs:
               with:
                   args: deploy --only functions
               env:
-                  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_TOKEN }}
+                  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
                   PROJECT_ID: 'default'
                   PROJECT_PATH: '.'
