@@ -64,13 +64,13 @@ const buildUrl = (url: string, opts: Record<string, unknown>) =>
 
 const get = async (url: string, opts: Record<string, unknown> = {}) => {
   try {
-    return await axios.get(buildUrl(`${API_SPORTS_URL}/${url}`, opts), {
+    return (await axios.get(buildUrl(`${API_SPORTS_URL}/${url}`, opts), {
       headers: {
         'x-rapidapi-host': 'v3.football.api-sports.io',
         'x-rapidapi-key': functions.config().apisports.key,
       },
-    });
-  } catch (error) {
+    })) as any;
+  } catch (error: any) {
     return error;
   }
 };
