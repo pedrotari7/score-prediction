@@ -231,6 +231,8 @@ export interface Competition {
 	name: string;
 	league: number;
 	season: number;
+	start: string;
+	end: string;
 }
 
 export type Competitions = Record<string, Competition>;

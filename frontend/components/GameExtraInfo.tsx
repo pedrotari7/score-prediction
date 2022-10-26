@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Fixture, FixtureExtraInfo, PlayersMap } from '../../interfaces/main';
+import { Competition, Fixture, FixtureExtraInfo, PlayersMap } from '../../interfaces/main';
 import UserContext from '../context/UserContext';
 import { classNames } from '../lib/utils/reactHelper';
 import { fetchFixtureExtraInfo } from '../pages/api';
@@ -14,7 +14,7 @@ enum GamePanel {
 	Stats = 'Stats',
 }
 
-const GameExtraInfo = ({ game }: { game: Fixture }) => {
+const GameExtraInfo = ({ game, competition }: { game: Fixture; competition: Competition }) => {
 	const [panelMode, setPanelMode] = useState(GamePanel.Facts);
 	const [extraInfo, setExtraInfo] = useState<FixtureExtraInfo>();
 
@@ -24,12 +24,12 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 
 	useEffect(() => {
 		const doAsync = async () => {
-			const extra = await fetchFixtureExtraInfo(game.fixture.id, token);
+			const extra = await fetchFixtureExtraInfo(game.fixture.id, token, competition);
 			setExtraInfo(extra);
 		};
 
 		doAsync();
-	}, [game.fixture.id, token]);
+	}, [game.fixture.id, token, competition]);
 
 	if (!extraInfo) return <Loading />;
 

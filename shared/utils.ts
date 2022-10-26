@@ -10,9 +10,9 @@ import {
 } from '../interfaces/main';
 
 export const competitions: Competitions = {
-	euro2016: { name: 'euro2016', league: 4, season: 2016 },
-	euro2020: { name: 'euro2020', league: 4, season: 2020 },
-	wc2022: { name: 'wc2022', league: 1, season: 2022 },
+	euro2016: { name: 'euro2016', league: 4, season: 2016, start: '2016-06-10', end: '2016-07-10' },
+	euro2020: { name: 'euro2020', league: 4, season: 2020, start: '2021-06-09', end: '2021-07-15' },
+	wc2022: { name: 'wc2022', league: 1, season: 2022, start: '2022-11-20', end: '2022-12-18' },
 };
 
 export const isNum = (n: number | null) => typeof n === 'number';

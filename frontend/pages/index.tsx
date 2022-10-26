@@ -72,7 +72,7 @@ const Home = () => {
 		doAsync();
 
 		return () => {};
-	}, [router]);
+	}, [router, competition]);
 
 	const updatePrediction = async (prediction: Prediction, gameId: number) => {
 		setPredictions({ ...predictions, [gameId]: { ...predictions?.[gameId], [uid]: prediction } });
@@ -88,6 +88,7 @@ const Home = () => {
 						predictions={predictions}
 						users={users}
 						gameID={route?.data as number}
+						competition={competition}
 					/>
 				);
 			case Route.Predictions:
@@ -113,6 +114,7 @@ const Home = () => {
 						predictions={predictions}
 						users={users}
 						gameID={route?.data as number}
+						competition={competition}
 					/>
 				);
 			case Route.Rules:
