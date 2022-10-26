@@ -13,7 +13,6 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: ['tsconfig.json', 'tsconfig.dev.json'],
     sourceType: 'module',
   },
   ignorePatterns: [
@@ -28,5 +27,10 @@ module.exports = {
     'max-len': ['error', { code: 120 }],
     'quote-props': ['error', 'as-needed'],
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '_' }],
+  },
+  settings: {
+    'import/resolver': {
+      typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
+    },
   },
 };
