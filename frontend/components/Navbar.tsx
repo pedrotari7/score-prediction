@@ -1,11 +1,12 @@
 import { Fragment, useContext } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
-import { MenuIcon, XIcon } from '@heroicons/react/outline';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { classNames } from '../lib/utils/reactHelper';
-import { firebaseClient } from '../lib/firebaseClient';
+import { getAuth } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth';
 import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
+import { app } from '../lib/firebaseClient';
 
 interface NavItem {
 	name: string;
@@ -47,9 +48,9 @@ export default function Navbar({ loading }: { loading: boolean }) {
 									<Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-light hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
 										<span className="sr-only">Open main menu</span>
 										{open ? (
-											<XIcon className="block h-6 w-6" aria-hidden="true" />
+											<XMarkIcon className="block h-6 w-6" aria-hidden="true" />
 										) : (
-											<MenuIcon className="block h-6 w-6" aria-hidden="true" />
+											<Bars3Icon className="block h-6 w-6" aria-hidden="true" />
 										)}
 									</Disclosure.Button>
 								)}
@@ -131,7 +132,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 															<a
 																href="#"
 																onClick={async () => {
-																	await firebaseClient.auth().signOut();
+																	await getAuth(app).signOut();
 																	router.replace('/login');
 																}}
 																className={classNames(

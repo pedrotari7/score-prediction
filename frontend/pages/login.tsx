@@ -1,12 +1,13 @@
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import { firebaseClient } from '../lib/firebaseClient';
 import PageLayout from '../components/PageLayout';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { app } from '../lib/firebaseClient';
 
 const Login = () => {
 	const uiConfig = {
 		signInFlow: 'redirect',
 		signInSuccessUrl: '/',
-		signInOptions: [firebaseClient.auth.GoogleAuthProvider.PROVIDER_ID],
+		signInOptions: [GoogleAuthProvider.PROVIDER_ID],
 	};
 
 	return (
@@ -14,7 +15,7 @@ const Login = () => {
 			<div className="flex flex-col items-center justify-evenly absolute w-screen h-panel">
 				<div className="text-light text-4xl md:text-8xl font-bold text-center">SCORE PREDICTION</div>
 				<img src="/euro2020.svg" className="h-44 md:h-56" />
-				<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebaseClient.auth()} />
+				<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={getAuth(app)} />
 			</div>
 		</PageLayout>
 	);

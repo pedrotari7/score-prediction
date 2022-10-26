@@ -16,7 +16,7 @@ export default async function fetcher(url: string, token: string, options: Recor
 		// error.response = response;
 		// error.data = data;
 		throw error;
-	} catch (error) {
+	} catch (error: any) {
 		if (!error.data) {
 			error.data = { message: error.message };
 		}

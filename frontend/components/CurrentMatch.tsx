@@ -6,7 +6,7 @@ import { Fixture, Fixtures, Prediction, Predictions, User, Users } from '../../i
 import RouteContext, { Route } from '../context/RouteContext';
 import { classNames, formatScore, getStadiumImageURL } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { getResult, isGameFinished } from '../../shared/utils';
 
 const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game: Fixture }) => {

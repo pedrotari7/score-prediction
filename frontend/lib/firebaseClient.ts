@@ -1,4 +1,4 @@
-import firebaseClient from 'firebase/app';
+import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
 import 'firebase/auth';
 
 const CLIENT_CONFIG = {
@@ -11,8 +11,10 @@ const CLIENT_CONFIG = {
 	measurementId: 'G-C49S2Z4R7Z',
 };
 
-if (!firebaseClient.apps.length) {
-	firebaseClient.initializeApp(CLIENT_CONFIG);
+let app: FirebaseApp;
+
+if (!getApps().length) {
+	app = initializeApp(CLIENT_CONFIG);
 }
 
-export { firebaseClient };
+export { app };

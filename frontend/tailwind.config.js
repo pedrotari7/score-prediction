@@ -1,13 +1,10 @@
+/** @type {import('tailwindcss').Config} */
+
 module.exports = {
 	mode: 'jit',
-	purge: {
-		content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
-		options: {
-			keyframes: true,
-			fontFace: true,
-		},
-	},
-	darkMode: false,
+	content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
+
+	darkMode: 'media',
 	theme: {
 		fontFamily: {
 			sans: ['PFBeauSansPro'],

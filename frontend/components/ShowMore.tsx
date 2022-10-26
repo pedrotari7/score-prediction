@@ -1,7 +1,7 @@
 import { Disclosure, Transition } from '@headlessui/react';
 import { Dispatch, ReactNode, SetStateAction, useRef } from 'react';
 import { classNames } from '../lib/utils/reactHelper';
-import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/outline';
+import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 const ShowMore = ({
 	children,
