@@ -1,4 +1,19 @@
-import { Fixture, Fixtures, Prediction, Predictions, PredResult, Result, UserResult } from '../interfaces/main';
+import {
+	Competitions,
+	Fixture,
+	Fixtures,
+	Prediction,
+	Predictions,
+	PredResult,
+	Result,
+	UserResult,
+} from '../interfaces/main';
+
+export const competitions: Competitions = {
+	euro2016: { name: 'euro2016', league: 4, season: 2016 },
+	euro2020: { name: 'euro2020', league: 4, season: 2020 },
+	wc2022: { name: 'wc2022', league: 1, season: 2022 },
+};
 
 export const isNum = (n: number | null) => typeof n === 'number';
 

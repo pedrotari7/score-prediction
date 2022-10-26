@@ -13,11 +13,11 @@ import UserContext from '../context/UserContext';
 import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import FixturesPage from '../components/Fixtures';
 import CurrentMatch from '../components/CurrentMatch';
-import { Fixtures, Prediction, Predictions, Standings, Users } from '../../interfaces/main';
+import { Competition, Fixtures, Prediction, Predictions, Standings, Users } from '../../interfaces/main';
 import Rules from '../components/Rules';
 import { useRouter } from 'next/router';
 import Loading from '../components/Loading';
-import { isGameFinished } from '../../shared/utils';
+import { competitions, isGameFinished } from '../../shared/utils';
 
 const Home = () => {
 	const [loading, setLoading] = useState(true);
@@ -34,6 +34,8 @@ const Home = () => {
 
 	const router = useRouter();
 
+	const competition: Competition = competitions.euro2020;
+
 	useEffect(() => {
 		const doAsync = async () => {
 			const { token } = nookies.get();
@@ -43,7 +45,7 @@ const Home = () => {
 			const { uid, success } = await validateToken(token);
 
 			if (success) {
-				const { fixtures, standings, predictions, users } = await fetchTournament(token);
+				const { fixtures, standings, predictions, users } = await fetchTournament(token, competition);
 				const sortedStandings = Object.entries(standings).sort() as unknown as Standings;
 
 				const sortedFixtures = Object.values(fixtures).sort(
@@ -74,7 +76,7 @@ const Home = () => {
 
 	const updatePrediction = async (prediction: Prediction, gameId: number) => {
 		setPredictions({ ...predictions, [gameId]: { ...predictions?.[gameId], [uid]: prediction } });
-		await updatePredictions(token, uid, gameId, prediction);
+		await updatePredictions(token, uid, gameId, prediction, competition);
 	};
 
 	const MainComponent = () => {

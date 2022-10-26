@@ -127,6 +127,9 @@ const GameFacts = ({
 	const HalfTimeScore = () => <Score score={game.score.halftime} label="HT" />;
 	const FullTimeScore = () => <Score score={game.score.fulltime} label="FT" />;
 
+	let addedHTScore = false;
+	let addedFTScore = false;
+
 	const events = extraInfo.events?.map((event, idx) => {
 		const shouldAddHTScore = !addedHTScore && event.time.elapsed >= 45 && event.time.extra === null;
 		const shouldAddFTScore = !addedFTScore && event.time.elapsed > 90 && event.time.extra === null;
@@ -145,9 +148,6 @@ const GameFacts = ({
 			</div>
 		);
 	});
-
-	let addedHTScore = false;
-	let addedFTScore = false;
 
 	return (
 		<div className="bg-gray-700 rounded-md p-2 flex flex-col text-sm sm:text-base xl:items-center justify-center">

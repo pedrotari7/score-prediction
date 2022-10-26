@@ -8,7 +8,6 @@ import axios from 'axios';
 
 import {
   Competition,
-  Competitions,
   Fixture,
   FixtureExtraInfo,
   Fixtures,
@@ -20,7 +19,15 @@ import {
   UserResult,
 } from '../../interfaces/main';
 import { DEFAULT_USER_RESULT, joinResults } from './util';
-import { calculateResults, getResult, isGameOnGoing, isGameStarted, isNum, sortGroup } from '../../shared/utils';
+import {
+  calculateResults,
+  competitions,
+  getResult,
+  isGameOnGoing,
+  isGameStarted,
+  isNum,
+  sortGroup,
+} from '../../shared/utils';
 
 const app = express();
 
@@ -48,12 +55,7 @@ const API_SPORTS_URL = 'https://v3.football.api-sports.io';
 
 const ADMIN_USERS = ['pedrotari7@gmail.com'];
 
-const Competitions: Competitions = {
-  euro2016: { name: 'euro2016', league: 4, season: 2016 },
-  euro2020: { name: 'euro2020', league: 4, season: 2020 },
-};
-
-const DEFAULT_COMPETITION = Competitions.euro2020;
+const DEFAULT_COMPETITION = competitions.wc2022;
 
 const buildUrl = (url: string, opts: Record<string, unknown>) =>
   url +
@@ -75,7 +77,7 @@ const get = async (url: string, opts: Record<string, unknown> = {}) => {
   }
 };
 
-const parseCompetition = (req: Request) => Competitions[req.query.competition as string] || DEFAULT_COMPETITION;
+const parseCompetition = (req: Request) => competitions[req.query.competition as string] || DEFAULT_COMPETITION;
 
 const getStandings = async (opts: Record<string, unknown> = {}) => await get('standings', opts);
 
@@ -129,6 +131,7 @@ const getTimeDiff = (timestamp: admin.firestore.Timestamp) => {
 };
 
 const getDbDoc = (comp: Competition, name: string) => admin.firestore().collection(comp.name).doc(name);
+const getDoc = (collection: string, name: string) => admin.firestore().collection(collection).doc(name);
 
 const getDBFixtures = (competition: Competition) => getDbDoc(competition, 'fixtures');
 const getDBFixturesExtraInfo = (competition: Competition) => getDbDoc(competition, 'fixturesExtraInfo');
@@ -136,18 +139,18 @@ const getDBStandings = (competition: Competition) => getDbDoc(competition, 'stan
 const getDBPredictions = (competition: Competition) => getDbDoc(competition, 'predictions');
 const getDBScores = (competition: Competition) => getDbDoc(competition, 'scores');
 const getDBGroupPoints = (competition: Competition) => getDbDoc(competition, 'groupPoints');
-const getDBSettings = (competition: Competition) => getDbDoc(competition, 'settings');
+const getDBSettings = () => getDoc('admin', 'settings');
 
 const updateStandings = async (competition: Competition) => {
   const response = await getStandings({ league: competition.league, season: competition.season });
 
   const standings =
-    competition.name === 'euro2020'
+    competition.name !== competitions.euro2016.name
       ? response.data.response?.[0]?.league.standings
       : response.data.response?.[0]?.league.standings[1];
 
   const standsObj =
-    competition.name === 'euro2020'
+    competition.name !== competitions.euro2016.name
       ? standings.reduce((acc: Record<string, unknown>, stand: Array<Standing>) => {
           return { ...acc, [stand[0].group]: stand };
         }, {})
@@ -164,7 +167,7 @@ const updateStandings = async (competition: Competition) => {
 const updateFixtures = async (competition: Competition, gamesToUpdate: number[], oldFixtures: Fixtures = {}) => {
   if (gamesToUpdate.length === 0) {
     const fixtures: Fixture[] =
-      competition.name === 'euro2020'
+      competition.name === competitions.euro2020.name
         ? await getFixtures({
             league: competition.league,
             season: competition.season,
@@ -382,7 +385,7 @@ app.get('/tournament', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const settings = (await getDBSettings(competition).get()).data() as Settings;
+  const settings = (await getDBSettings().get()).data() as Settings;
 
   const fixturesDocument = await getDBFixtures(competition).get();
 
@@ -556,9 +559,7 @@ app.get('/settings', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
-  const competition = parseCompetition(req);
-
-  const settings = (await getDBSettings(competition).get()).data() as Settings;
+  const settings = (await getDBSettings().get()).data() as Settings;
 
   return res.json(settings);
 });
@@ -569,9 +570,7 @@ app.post('/update-settings', async (req, res) => {
 
   const { settings } = JSON.parse(req.body);
 
-  const competition = parseCompetition(req);
-
-  const result = await getDBSettings(competition).set(settings);
+  const result = await getDBSettings().set(settings);
 
   return res.json(result);
 });

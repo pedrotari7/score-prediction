@@ -16,13 +16,15 @@ import {
 	updateSettings,
 	fetchStatus,
 } from '../pages/api';
-import { Settings, Status } from '../../interfaces/main';
+import { Competition, Settings, Status } from '../../interfaces/main';
+import { competitions } from '../../shared/utils';
 
 const SettingsPage = () => {
 	const userInfo = useContext(UserContext);
 	const [response, setResponse] = useState({});
 	const [settings, setSettings] = useState<Settings>();
 	const [status, setStatus] = useState<Status>();
+	const [competition, setCompetition] = useState<Competition>(competitions.wc2022);
 
 	useEffect(() => {
 		const doAsync = async () => {
@@ -109,42 +111,42 @@ const SettingsPage = () => {
 			</div>
 			<div className="flex flex-col sm:flex-row flex-wrap items-center justify-center">
 				<button
-					onClick={async () => setResponse(await resetStandings(userInfo.token))}
+					onClick={async () => setResponse(await resetStandings(userInfo.token, competition))}
 					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
 					Fetch Rankings
 				</button>
 				<button
-					onClick={async () => setResponse(await resetFixtures(userInfo.token))}
+					onClick={async () => setResponse(await resetFixtures(userInfo.token, competition))}
 					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
 					Fetch Fixtures
 				</button>
 
 				<button
-					onClick={async () => setResponse(await fetchPredictions(userInfo.token))}
+					onClick={async () => setResponse(await fetchPredictions(userInfo.token, competition))}
 					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
 					Fetch Predictions
 				</button>
 
 				<button
-					onClick={async () => setResponse(await fetchUsers(userInfo.token))}
+					onClick={async () => setResponse(await fetchUsers(userInfo.token, competition))}
 					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
 					Fetch Users
 				</button>
 
 				<button
-					onClick={async () => setResponse(await updatePoints(userInfo.token))}
+					onClick={async () => setResponse(await updatePoints(userInfo.token, competition))}
 					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
 					Update Points
 				</button>
 
 				<button
-					onClick={async () => setResponse(await updateGroups(userInfo.token))}
+					onClick={async () => setResponse(await updateGroups(userInfo.token, competition))}
 					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
 					Update Groups
 				</button>
 
 				<button
-					onClick={() => cleanup(userInfo.token)}
+					onClick={() => cleanup(userInfo.token, competition)}
 					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
 					Cleanup
 				</button>

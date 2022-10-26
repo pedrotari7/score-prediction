@@ -7,38 +7,42 @@ import {
 	UserResult,
 	VerificationResult,
 	Status,
+	Competition,
 } from '../../../interfaces/main';
+import { competitions } from '../../../shared/utils';
 import fetcher from '../../lib/fetcher';
 import { backendUrl } from '../../lib/utils/envHelper';
-
-const competition = 'euro2020';
 
 const cFetch = async (
 	url: string,
 	token: string,
+	competition: Competition = competitions.wc2022,
 	query: Record<string, unknown> = {},
 	options: Record<string, unknown> = {}
 ) => {
-	return await fetcher(url + '?' + new URLSearchParams({ competition, ...query }), token, options);
+	return await fetcher(url + '?' + new URLSearchParams({ competition: competition.name, ...query }), token, options);
 };
 
-export const fetchTournament = async (token: string): Promise<Tournament> =>
-	await cFetch(`${backendUrl}/tournament`, token);
+export const fetchTournament = async (token: string, competition: Competition): Promise<Tournament> =>
+	await cFetch(`${backendUrl}/tournament`, token, competition);
 
-export const resetFixtures = async (token: string) => await cFetch(`${backendUrl}/fetch-fixtures`, token);
+export const resetFixtures = async (token: string, competition: Competition) =>
+	await cFetch(`${backendUrl}/fetch-fixtures`, token, competition);
 
-export const resetStandings = async (token: string): Promise<Fixtures> =>
-	await cFetch(`${backendUrl}/fetch-standings`, token);
+export const resetStandings = async (token: string, competition: Competition): Promise<Fixtures> =>
+	await cFetch(`${backendUrl}/fetch-standings`, token, competition);
 
 export const updatePredictions = async (
 	token: string,
 	uid: string,
 	gameId: number,
-	prediction: Prediction
+	prediction: Prediction,
+	competition: Competition
 ): Promise<void> => {
 	return await cFetch(
 		`${backendUrl}/update-predictions`,
 		token,
+		competition,
 		{},
 		{
 			body: JSON.stringify({ uid, gameId, prediction }),
@@ -47,22 +51,26 @@ export const updatePredictions = async (
 	);
 };
 
-export const fetchPredictions = async (token: string) => await cFetch(`${backendUrl}/fetch-predictions`, token);
+export const fetchPredictions = async (token: string, competition: Competition) =>
+	await cFetch(`${backendUrl}/fetch-predictions`, token, competition);
 
-export const fetchUsers = async (token: string) => await cFetch(`${backendUrl}/fetch-users`, token);
+export const fetchUsers = async (token: string, competition: Competition) =>
+	await cFetch(`${backendUrl}/fetch-users`, token, competition);
 
-export const fetchFixtureExtraInfo = async (gameID: number, token: string) =>
-	await cFetch(`${backendUrl}/fixture-extra`, token, { gameID });
+export const fetchFixtureExtraInfo = async (gameID: number, token: string, competition: Competition) =>
+	await cFetch(`${backendUrl}/fixture-extra`, token, competition, { gameID });
 
-export const updatePoints = async (token: string): Promise<Record<string, UserResult>> =>
-	await cFetch(`${backendUrl}/points`, token);
+export const updatePoints = async (token: string, competition: Competition): Promise<Record<string, UserResult>> =>
+	await cFetch(`${backendUrl}/points`, token, competition);
 
-export const cleanup = async (token: string): Promise<void> => await cFetch(`${backendUrl}/cleanup`, token);
+export const cleanup = async (token: string, competition: Competition): Promise<void> =>
+	await cFetch(`${backendUrl}/cleanup`, token, competition);
 
 export const validateToken = async (token: string): Promise<VerificationResult> =>
 	await fetcher(`${backendUrl}/validate-token`, token);
 
-export const updateGroups = async (token: string): Promise<GroupPoints> => await cFetch(`${backendUrl}/groups`, token);
+export const updateGroups = async (token: string, competition: Competition): Promise<GroupPoints> =>
+	await cFetch(`${backendUrl}/groups`, token, competition);
 
 export const fetchSettings = async (token: string): Promise<Settings> => await cFetch(`${backendUrl}/settings`, token);
 
@@ -70,6 +78,7 @@ export const updateSettings = async (token: string, settings: Settings): Promise
 	return await cFetch(
 		`${backendUrl}/update-settings`,
 		token,
+		undefined,
 		{},
 		{
 			body: JSON.stringify({ settings }),
