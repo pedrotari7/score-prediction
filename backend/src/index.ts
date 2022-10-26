@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
+import { initializeApp } from 'firebase-admin/app';
+import { FieldValue, Timestamp, getFirestore } from 'firebase-admin/firestore';
+import { getAuth, DecodedIdToken } from 'firebase-admin/auth';
 
 import cors from 'cors';
 import express, { Request, Response } from 'express';
@@ -44,9 +46,7 @@ app.use(
 
 const europe = functions.region('europe-west1');
 
-admin.initializeApp();
-
-const FieldValue = admin.firestore.FieldValue;
+const firebaseApp = initializeApp();
 
 const STALE_TIME = 60 * 60 * 4;
 const GAME_TIME = 60 * 1;
@@ -92,13 +92,13 @@ const getFullFixture = async (eventID: number, opts: Record<string, unknown> = {
 const decodeToken = async (token: string | undefined) => {
   if (!token) return;
   try {
-    return await admin.auth().verifyIdToken(token);
+    return await getAuth(firebaseApp).verifyIdToken(token);
   } catch (error) {
     return;
   }
 };
 
-const success = (result: admin.auth.DecodedIdToken) => ({ success: true, result });
+const success = (result: DecodedIdToken) => ({ success: true, result });
 
 const fail = (result: Response<{ success: boolean; result: Record<string, Record<string, string>> }>) => ({
   success: false,
@@ -126,12 +126,12 @@ const getCurrentTime = () => {
   // return new Date('2016-06-09T19:00:00+0000');
 };
 
-const getTimeDiff = (timestamp: admin.firestore.Timestamp) => {
+const getTimeDiff = (timestamp: Timestamp) => {
   return (getCurrentTime().getTime() - timestamp.toMillis()) / 1000;
 };
 
-const getDbDoc = (comp: Competition, name: string) => admin.firestore().collection(comp.name).doc(name);
-const getDoc = (collection: string, name: string) => admin.firestore().collection(collection).doc(name);
+const getDbDoc = (comp: Competition, name: string) => getFirestore(firebaseApp).collection(comp.name).doc(name);
+const getDoc = (collection: string, name: string) => getFirestore(firebaseApp).collection(collection).doc(name);
 
 const getDBFixtures = (competition: Competition) => getDbDoc(competition, 'fixtures');
 const getDBFixturesExtraInfo = (competition: Competition) => getDbDoc(competition, 'fixturesExtraInfo');
@@ -166,16 +166,12 @@ const updateStandings = async (competition: Competition) => {
 
 const updateFixtures = async (competition: Competition, gamesToUpdate: number[], oldFixtures: Fixtures = {}) => {
   if (gamesToUpdate.length === 0) {
-    const fixtures: Fixture[] =
-      competition.name === competitions.euro2020.name
-        ? await getFixtures({
-            league: competition.league,
-            season: competition.season,
-            from: '2021-06-09',
-            to: '2021-07-15',
-          })
-        : await getFixtures({ league: competition.league, season: competition.season });
-
+    const fixtures: Fixture[] = await getFixtures({
+      league: competition.league,
+      season: competition.season,
+      from: competition.start,
+      to: competition.end,
+    });
     const fixtureMap = fixtures.reduce(
       (acc, game) => ({ ...acc, [game.fixture.id]: { ...oldFixtures[game.fixture.id], ...game } }),
       {} as Fixtures
@@ -260,7 +256,7 @@ const updateGroups = async (
 };
 
 const getPredictions = async (
-  decodedToken: admin.auth.DecodedIdToken,
+  decodedToken: DecodedIdToken,
   competition: Competition,
   fixtures: Fixtures,
   { adminHideScores }: Settings
@@ -303,11 +299,11 @@ const getPredictions = async (
 const getUsers = async (competition: Competition) => {
   const scores = (await getDBScores(competition).get()).data() as Record<string, UserResult>;
 
-  const allUsers = (await admin.auth().listUsers()).users.reduce(
+  const allUsers = (await getAuth(firebaseApp).listUsers()).users.reduce(
     (users, { uid, displayName, photoURL, customClaims, metadata }) => {
       const isNewUser = metadata.creationTime === metadata.lastSignInTime;
-      const score = scores[uid] ?? DEFAULT_USER_RESULT;
-      const admin = customClaims?.admin;
+      const score = (scores && scores[uid]) ?? DEFAULT_USER_RESULT;
+      const admin = customClaims?.admin as boolean;
       return { ...users, [uid]: { uid, displayName, photoURL, admin, score, isNewUser } };
     },
     {}
@@ -364,7 +360,7 @@ app.get('/fetch-users', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
-  const allUsers = (await admin.auth().listUsers()).users
+  const allUsers = (await getAuth(firebaseApp).listUsers()).users
     .map(({ displayName, metadata, uid }) => ({
       displayName,
       uid,
@@ -381,7 +377,7 @@ app.get('/tournament', async (req, res) => {
 
   if (!authResult.result) return res.json({});
 
-  const decodedToken = authResult.result as admin.auth.DecodedIdToken;
+  const decodedToken = authResult.result as DecodedIdToken;
 
   const competition = parseCompetition(req);
 
@@ -389,21 +385,31 @@ app.get('/tournament', async (req, res) => {
 
   const fixturesDocument = await getDBFixtures(competition).get();
 
-  const fixtures = fixturesDocument.data()!;
+  let fixtures = fixturesDocument.data();
 
-  const fixturesTimeDiffSeconds = getTimeDiff(fixtures.timestamp);
+  if (!fixtures && settings.allowUpdateFixtures) {
+    console.log('There are no current fixtures');
+    fixtures = await updateFixtures(competition, [], {});
+  }
+
+  const fixturesTimeDiffSeconds = getTimeDiff(fixtures?.timestamp);
 
   const standingsDocument = await getDBStandings(competition).get();
 
-  const standings = standingsDocument.data()!;
+  let standings = standingsDocument.data();
 
-  const standingsTimeDiffSeconds = getTimeDiff(standings.timestamp);
+  if (!standings && settings.allowUpdateStandings) {
+    console.log('There are no current standings');
+    standings = await updateStandings(competition);
+  }
 
-  const hasGamesOngoing = Object.values<Fixture>(fixtures.data).some(g => isGameOnGoing(g));
+  const standingsTimeDiffSeconds = getTimeDiff(standings?.timestamp);
+
+  const hasGamesOngoing = Object.values<Fixture>(fixtures?.data).some(g => isGameOnGoing(g));
 
   const currentDate = getCurrentTime().getTime();
 
-  const hasNonStartedGames = Object.values<Fixture>(fixtures.data)
+  const hasNonStartedGames = Object.values<Fixture>(fixtures?.data)
     .filter(g => !isGameStarted(g))
     .some(g => (currentDate - new Date(g?.fixture?.date).getTime()) / 1000 > 0);
 
@@ -411,38 +417,38 @@ app.get('/tournament', async (req, res) => {
 
   if (settings.allowUpdateStandings && standingsTimeDiffSeconds > timeGuard) {
     console.log('standings needs update');
-    standings.data = await updateStandings(competition);
+    standings = await updateStandings(competition);
   }
 
   if (settings.allowUpdateFixtures && fixturesTimeDiffSeconds > timeGuard) {
     console.log('fixtures needs update');
 
     const gamesToUpdate = hasGamesOngoing
-      ? Object.values(fixtures.data as Fixtures)
+      ? Object.values(fixtures?.data as Fixtures)
           .filter(f => isGameOnGoing(f))
           .map(f => f.fixture.id)
       : [];
 
-    fixtures.data = { ...fixtures.data, ...(await updateFixtures(competition, gamesToUpdate, fixtures.data)) };
+    fixtures!.data = { ...fixtures?.data, ...(await updateFixtures(competition, gamesToUpdate, fixtures?.data)) };
   }
 
-  const predictions = await getPredictions(decodedToken, competition, fixtures.data, settings);
+  const predictions = await getPredictions(decodedToken, competition, fixtures?.data, settings);
 
   if (fixturesTimeDiffSeconds > timeGuard) {
     console.log('update points');
-    await updatePoints(competition, predictions, fixtures.data);
+    await updatePoints(competition, predictions, fixtures?.data);
   }
 
   const users = await getUsers(competition);
 
-  return res.json({ fixtures: fixtures.data, standings: standings.data, predictions, users });
+  return res.json({ fixtures: fixtures?.data, standings: standings?.data, predictions, users });
 });
 
 app.post('/update-predictions', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;
 
-  const { uid: callerUID } = authResult.result as admin.auth.DecodedIdToken;
+  const { uid: callerUID } = authResult.result as DecodedIdToken;
 
   const { uid, gameId, prediction } = JSON.parse(req.body);
 
@@ -473,7 +479,7 @@ app.post('/update-predictions', async (req, res) => {
   }
 
   // TODO: Update this with the helper function
-  const result = await admin.firestore().collection(competition.name).doc('predictions').update(change);
+  const result = await getFirestore(firebaseApp).collection(competition.name).doc('predictions').update(change);
 
   return res.json(result);
 });
@@ -528,7 +534,7 @@ app.get('/cleanup', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
-  const allUsers = (await admin.auth().listUsers()).users.map(({ uid }) => uid);
+  const allUsers = (await getAuth(firebaseApp).listUsers()).users.map(({ uid }) => uid);
 
   const competition = parseCompetition(req);
 
@@ -550,7 +556,7 @@ app.get('/validate-token', async (req, res) => {
 
   if (!decodedToken) return res.json({ success: false, uid: '' });
 
-  const { uid } = decodedToken as admin.auth.DecodedIdToken;
+  const { uid } = decodedToken as DecodedIdToken;
 
   return res.json({ success: true, uid });
 });
@@ -582,6 +588,6 @@ export const addUser = europe.auth.user().onCreate(async user => {
   const isAdmin = ADMIN_USERS.includes(user.email ?? '');
 
   if (user.emailVerified) {
-    await admin.auth().setCustomUserClaims(user.uid, { admin: isAdmin });
+    await getAuth(firebaseApp).setCustomUserClaims(user.uid, { admin: isAdmin });
   }
 });
