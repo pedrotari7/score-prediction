@@ -2,7 +2,6 @@ import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useContext } from 'react';
 import Countdown, { zeroPad } from 'react-countdown';
-import { Competition } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
@@ -15,11 +14,9 @@ import ShowMore from './ShowMore';
 const LiveGame = ({
 	gameID,
 	setIsExtraInfoOpen,
-	competition,
 }: {
 	gameID: number;
 	setIsExtraInfoOpen: Dispatch<SetStateAction<boolean>>;
-	competition: Competition;
 }) => {
 	const router = useRouter();
 	const data = useContext(FixturesContext);
@@ -42,7 +39,7 @@ const LiveGame = ({
 	return (
 		<ShowMore
 			setIsOpen={setIsExtraInfoOpen}
-			more={game.fixture.status.short !== 'NS' && <GameExtraInfo game={game} competition={competition} />}
+			more={game.fixture.status.short !== 'NS' && <GameExtraInfo game={game} />}
 			className="text-light flex flex-col  my-2 rounded p-2 bg-gark shadow-pop">
 			<div className="flex flex-col sm:flex-row items-center sm:justify-evenly">
 				<span className="text-sm text-left sm:w-2/12 flex ">

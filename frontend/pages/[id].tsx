@@ -18,6 +18,7 @@ import Rules from '../components/Rules';
 import { useRouter } from 'next/router';
 import Loading from '../components/Loading';
 import { competitions, isGameFinished } from '../../shared/utils';
+import CompetitionContext from '../context/CompetitionContext';
 
 const Home = () => {
 	const [loading, setLoading] = useState(true);
@@ -89,7 +90,6 @@ const Home = () => {
 						predictions={predictions}
 						users={users}
 						gameID={route?.data as number}
-						competition={competition}
 					/>
 				);
 			case Route.Predictions:
@@ -115,7 +115,6 @@ const Home = () => {
 						predictions={predictions}
 						users={users}
 						gameID={route?.data as number}
-						competition={competition}
 					/>
 				);
 			case Route.Rules:
@@ -128,11 +127,13 @@ const Home = () => {
 	return (
 		<RouteContext.Provider value={{ route, setRoute }}>
 			<UserContext.Provider value={{ uid, token }}>
-				<FixturesContext.Provider value={fixtures}>
-					<PageLayout title={'Score Prediction'} loading={loading}>
-						{loading ? <Loading /> : <MainComponent />}
-					</PageLayout>
-				</FixturesContext.Provider>
+				<CompetitionContext.Provider value={competition}>
+					<FixturesContext.Provider value={fixtures}>
+						<PageLayout title={'Score Prediction'} loading={loading}>
+							{loading ? <Loading /> : <MainComponent />}
+						</PageLayout>
+					</FixturesContext.Provider>
+				</CompetitionContext.Provider>
 			</UserContext.Provider>
 		</RouteContext.Provider>
 	);

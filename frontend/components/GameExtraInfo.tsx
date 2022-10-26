@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
-import { Competition, Fixture, FixtureExtraInfo, PlayersMap } from '../../interfaces/main';
+import { Fixture, FixtureExtraInfo, PlayersMap } from '../../interfaces/main';
+import CompetitionContext from '../context/CompetitionContext';
 import UserContext from '../context/UserContext';
 import { classNames } from '../lib/utils/reactHelper';
 import { fetchFixtureExtraInfo } from '../pages/api';
@@ -14,13 +15,14 @@ enum GamePanel {
 	Stats = 'Stats',
 }
 
-const GameExtraInfo = ({ game, competition }: { game: Fixture; competition: Competition }) => {
+const GameExtraInfo = ({ game }: { game: Fixture }) => {
 	const [panelMode, setPanelMode] = useState(GamePanel.Facts);
 	const [extraInfo, setExtraInfo] = useState<FixtureExtraInfo>();
 
 	const options = [GamePanel.Facts, GamePanel.Lineup, GamePanel.Stats];
 
 	const { token } = useContext(UserContext)!;
+	const competition = useContext(CompetitionContext);
 
 	useEffect(() => {
 		const doAsync = async () => {

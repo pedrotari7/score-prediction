@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth';
 import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import { app } from '../lib/firebaseClient';
+import CompetitionContext from '../context/CompetitionContext';
 
 interface NavItem {
 	name: string;
@@ -25,8 +26,9 @@ export default function Navbar({ loading }: { loading: boolean }) {
 	];
 
 	const routeInfo = useContext(RouteContext);
+	const competition = useContext(CompetitionContext);
 
-	if (!routeInfo) return <></>;
+	if (!routeInfo || !competition) return <></>;
 
 	const { route, setRoute } = routeInfo;
 
@@ -59,7 +61,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 								<div
 									className="flex-shrink-0 flex items-center"
 									onClick={() => updateRoute({ page: Route.Home })}>
-									<img className="block h-8 w-auto" src="/logo.svg" alt="logo" />
+									<img className="block h-8 w-auto" src={competition.logo} alt="logo" />
 								</div>
 								<div className="hidden sm:block sm:ml-6">
 									<div className="flex space-x-4">

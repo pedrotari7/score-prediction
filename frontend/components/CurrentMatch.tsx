@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import UserContext from '../context/UserContext';
 import { useSwipeable } from 'react-swipeable';
 import LiveGame from './LiveGame';
-import { Competition, Fixture, Fixtures, Prediction, Predictions, User, Users } from '../../interfaces/main';
+import { Fixture, Fixtures, Prediction, Predictions, User, Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
 import { classNames, formatScore, getStadiumImageURL } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
@@ -51,13 +51,11 @@ const CurrentMatch = ({
 	predictions,
 	users,
 	gameID,
-	competition,
 }: {
 	fixtures: Fixtures;
 	predictions: Predictions;
 	users: Users;
 	gameID: number;
-	competition: Competition;
 }) => {
 	const userInfo = useContext(UserContext);
 
@@ -113,12 +111,7 @@ const CurrentMatch = ({
 						<ChevronLeftIcon className="h-8 w-8" />
 					</div>
 				)}
-				<LiveGame
-					gameID={game.fixture?.id}
-					key={game.fixture?.id}
-					setIsExtraInfoOpen={setIsExtraInfoOpen}
-					competition={competition}
-				/>
+				<LiveGame gameID={game.fixture?.id} key={game.fixture?.id} setIsExtraInfoOpen={setIsExtraInfoOpen} />
 				{!isExtraInfoOpen && nextGameId !== null && (
 					<div
 						className="cursor-pointer w-max text-blue hover:text-light rounded-md absolute right-0 top-1/2 transform -translate-y-1/2 sm:translate-x-full"

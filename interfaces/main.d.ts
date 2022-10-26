@@ -233,6 +233,7 @@ export interface Competition {
 	season: number;
 	start: string;
 	end: string;
+	logo: string;
 }
 
 export type Competitions = Record<string, Competition>;
