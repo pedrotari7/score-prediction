@@ -33,8 +33,9 @@ const Home = () => {
 	const [route, setRoute] = useState<RouteInfo>({ page: Route.Home, data: undefined });
 
 	const router = useRouter();
+	const { id: competitionName } = router.query;
 
-	const competition: Competition = competitions.euro2020;
+	const competition: Competition = competitions[competitionName as string];
 
 	useEffect(() => {
 		const doAsync = async () => {
