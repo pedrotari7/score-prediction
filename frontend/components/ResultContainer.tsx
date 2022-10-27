@@ -22,8 +22,9 @@ const ResultContainer = ({
 	const { home: realH, away: realA } = result;
 
 	const isResultValid = isNum(result.home) && isNum(result.away);
+	const isPredictValid = isNum(prediction.home) && isNum(prediction.away);
 
-	const isExactScore = predH === realH && predA === realA;
+	const isExactScore = isPredictValid && predH === realH && predA === realA;
 
 	const isCorrectResult =
 		!isExactScore && getOutcome(prediction) !== null && getOutcome(prediction) === getOutcome(result);
@@ -43,11 +44,12 @@ const ResultContainer = ({
 			onClick={onClick}
 			className={classNames(
 				className,
-				'rounded-md text-center relative',
+				'rounded-md text-center relative border-2',
 				isExactScore ? 'bg-green-500' : '',
 				isCorrectResult ? 'bg-yellow-500' : '',
 				isCorrectGoal ? 'bg-pink-500' : '',
-				isWrong ? 'bg-red-500' : ''
+				isWrong ? 'bg-red-500' : '',
+				isPredictValid ? 'border-transparent' : 'border-red-600'
 			)}>
 			{isPenaltyWinner && (
 				<div className="absolute rounded-full bg-gray-500 w-7 h-7 -top-1 -right-3">

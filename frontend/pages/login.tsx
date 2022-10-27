@@ -6,7 +6,7 @@ import { app } from '../lib/firebaseClient';
 const Login = () => {
 	const uiConfig = {
 		signInFlow: 'redirect',
-		signInSuccessUrl: '/',
+		signInSuccessUrl: '/wc2022',
 		signInOptions: [GoogleAuthProvider.PROVIDER_ID],
 	};
 
