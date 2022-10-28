@@ -1,5 +1,7 @@
+import { useContext } from 'react';
 import { Fixtures, Standing, Standings, Predictions } from '../../interfaces/main';
 import { calculateResults, sortGroup } from '../../shared/utils';
+import CompetitionContext from '../context/CompetitionContext';
 import Flag from './Flag';
 
 const PredictedGroups = ({
@@ -13,6 +15,8 @@ const PredictedGroups = ({
 	predictions: Predictions;
 	userID: string;
 }) => {
+	const competition = useContext(CompetitionContext);
+
 	const teamsResults = calculateResults(Object.values(fixtures), predictions, userID);
 
 	const TickIcon = () => <img className="h-5 w-5 p-1 mx-1" src="/tick.svg" />;
@@ -32,9 +36,11 @@ const PredictedGroups = ({
 				);
 
 				return (
-					<div key={title} className="m-2 p-4 shadow-pop rounded-md text-center flex flex-col bg-dark ">
-						<h2 className="text-2xl text-light mb-4 text-left">{title}</h2>
-						<table className="text-light">
+					<div
+						key={title}
+						className={`m-2 p-4 shadow-pop rounded-md text-center flex flex-col bg-dark-${competition.name}`}>
+						<h2 className={`text-2xl text-light-${competition.name} mb-4 text-left`}>{title}</h2>
+						<table className={`text-light-${competition.name}`}>
 							<thead>
 								<tr className="text-center">
 									<th></th>

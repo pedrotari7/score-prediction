@@ -1,5 +1,7 @@
+import { useContext } from 'react';
 import { Fixture, Fixtures, Prediction, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
+import CompetitionContext from '../context/CompetitionContext';
 import { useAuth } from '../lib/auth';
 import { classNames } from '../lib/utils/reactHelper';
 import Game from './Game';
@@ -57,10 +59,12 @@ const FixturesPage = ({
 		/>
 	);
 
+	const competition = useContext(CompetitionContext);
+
 	return (
 		<div
 			className={classNames(
-				'flex flex-col justify-center select-none text-light m-8 p-8 shadow-pop rounded-md bg-dark',
+				`flex flex-col justify-center select-none text-light-${competition.name} m-8 p-8 shadow-pop rounded-md bg-dark-${competition.name}`,
 				'mx-2 md:mx-24 lg:mx-48'
 			)}>
 			<div className="text-3xl mb-6 flex flex-row items-center">

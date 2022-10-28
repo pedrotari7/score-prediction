@@ -8,6 +8,7 @@ import { classNames, formatScore, getStadiumImageURL } from '../lib/utils/reactH
 import ResultContainer from './ResultContainer';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { getResult, isGameFinished } from '../../shared/utils';
+import CompetitionContext from '../context/CompetitionContext';
 
 const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game: Fixture }) => {
 	const routeInfo = useContext(RouteContext)!;
@@ -16,14 +17,16 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 
 	const parsedGuess = { home: formatScore(guess.home), away: formatScore(guess.away) };
 
+	const competition = useContext(CompetitionContext);
+
 	return (
 		<ResultContainer
 			prediction={guess}
 			game={game}
 			className={classNames(
-				'text-light flex flex-row items-center justify-between  my-2 sm:m-2 rounded p-4 w-full sm:w-max',
+				`text-light-${competition.name} flex flex-row items-center justify-between  my-2 sm:m-2 rounded p-4 w-full sm:w-max`,
 				'cursor-pointer hover:bg-opacity-50 select-none',
-				game.fixture.status.short === 'NS' ? 'bg-blue' : ''
+				game.fixture.status.short === 'NS' ? `bg-blue-${competition.name}` : ''
 			)}
 			onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
 			<span className="text-xs text-left flex flex-row items-center mr-8">
@@ -58,6 +61,7 @@ const CurrentMatch = ({
 	gameID: number;
 }) => {
 	const userInfo = useContext(UserContext);
+	const competition = useContext(CompetitionContext);
 
 	const [id, setGameID] = useState(gameID);
 
@@ -99,14 +103,14 @@ const CurrentMatch = ({
 	return (
 		<main
 			{...handlers}
-			className="flex flex-col justify-center select-none text-light m-4 sm:m-8 md:mx-24 p-4 sm:p-8 shadow-pop rounded-md bg-dark relative">
+			className={`flex flex-col justify-center select-none text-light-${competition.name} m-4 sm:m-8 md:mx-24 p-4 sm:p-8 shadow-pop rounded-md bg-dark-${competition.name} relative`}>
 			{!id && <p className="text-3xl mb-2">Next Game</p>}
 			{id && <p className="text-3xl mb-2">{game.league?.round}</p>}
 
 			<div className="relative">
 				{!isExtraInfoOpen && prevGameId !== null && (
 					<div
-						className="cursor-pointer w-max text-blue hover:text-light rounded-md absolute left-0 top-1/2 transform -translate-y-1/2 sm:-translate-x-full"
+						className={`cursor-pointer w-max text-blue-${competition.name} hover:text-light-${competition.name} rounded-md absolute left-0 top-1/2 transform -translate-y-1/2 sm:-translate-x-full`}
 						onClick={() => setGameID(prevGameId)}>
 						<ChevronLeftIcon className="h-8 w-8" />
 					</div>
@@ -114,7 +118,7 @@ const CurrentMatch = ({
 				<LiveGame gameID={game.fixture?.id} key={game.fixture?.id} setIsExtraInfoOpen={setIsExtraInfoOpen} />
 				{!isExtraInfoOpen && nextGameId !== null && (
 					<div
-						className="cursor-pointer w-max text-blue hover:text-light rounded-md absolute right-0 top-1/2 transform -translate-y-1/2 sm:translate-x-full"
+						className={`cursor-pointer w-max text-blue-${competition.name} hover:text-light-${competition.name} rounded-md absolute right-0 top-1/2 transform -translate-y-1/2 sm:translate-x-full`}
 						onClick={() => setGameID(nextGameId)}>
 						<ChevronRightIcon className="h-8 w-8" />
 					</div>

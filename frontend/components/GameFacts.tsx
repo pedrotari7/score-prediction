@@ -1,6 +1,7 @@
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 import { Event, Fixture, FixtureExtraInfo, Player, PlayersMap, Result } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
+import CompetitionContext from '../context/CompetitionContext';
 import { classNames, DEFAULT_IMAGE } from '../lib/utils/reactHelper';
 
 enum EventType {
@@ -19,6 +20,8 @@ const GameFacts = ({
 	players: PlayersMap;
 	extraInfo: FixtureExtraInfo;
 }) => {
+	const competition = useContext(CompetitionContext);
+
 	const Referee = () => (
 		<div className="flex flex-row justify-center items-center my-6">
 			<img className="mx-3 h-8 w-8" src="whistle.svg" />
@@ -48,7 +51,13 @@ const GameFacts = ({
 			);
 		};
 
-		const PlayerWithPhoto = ({ color = 'text-light', player }: { color?: string; player: Player }) => {
+		const PlayerWithPhoto = ({
+			color = `text-light-${competition.name}`,
+			player,
+		}: {
+			color?: string;
+			player: Player;
+		}) => {
 			const playerPhoto = getPhoto(player);
 			const photo = playerPhoto ?? DEFAULT_IMAGE;
 			return (

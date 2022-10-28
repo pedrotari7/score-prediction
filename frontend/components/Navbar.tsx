@@ -8,6 +8,7 @@ import { useAuth } from '../lib/auth';
 import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import { app } from '../lib/firebaseClient';
 import CompetitionContext from '../context/CompetitionContext';
+import { competitions } from '../../shared/utils';
 
 interface NavItem {
 	name: string;
@@ -38,8 +39,12 @@ export default function Navbar({ loading }: { loading: boolean }) {
 		return page === Route.Predictions ? route.data === user?.uid : page === route.page;
 	};
 
+	const otherCompetitions = Object.values(competitions)
+		.map(c => c.name)
+		.filter(comp => comp !== competition.name);
+
 	return (
-		<Disclosure as="nav" className="bg-blue fixed h-16 top-0 w-full z-20 select-none">
+		<Disclosure as="nav" className={`bg-blue-${competition.name} fixed h-16 top-0 w-full z-20 select-none`}>
 			{({ open }) => (
 				<>
 					<div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -47,7 +52,8 @@ export default function Navbar({ loading }: { loading: boolean }) {
 							<div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
 								{/* Mobile menu button */}
 								{!loading && (
-									<Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-light hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+									<Disclosure.Button
+										className={`inline-flex items-center justify-center p-2 rounded-md text-light-${competition.name} hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white`}>
 										<span className="sr-only">Open main menu</span>
 										{open ? (
 											<XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -73,8 +79,8 @@ export default function Navbar({ loading }: { loading: boolean }) {
 													className={classNames(
 														'font-bold',
 														isCurrent(item)
-															? 'bg-dark text-light'
-															: 'text-gray-300 hover:bg-gray-700 hover:text-light',
+															? `bg-dark-${competition.name} text-light-${competition.name}`
+															: `text-gray-300 hover:bg-gray-700 hover:text-light-${competition.name}`,
 														'px-3 py-2 rounded-md text-sm font-medium cursor-pointer select-none'
 													)}
 													aria-current={isCurrent(item) ? 'page' : undefined}>
@@ -112,7 +118,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 												leaveTo="transform opacity-0 scale-95">
 												<Menu.Items
 													static
-													className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-light ring-1 ring-black ring-opacity-5 focus:outline-none">
+													className={`origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-light-${competition.name} ring-1 ring-black ring-opacity-5 focus:outline-none`}>
 													{user?.admin && (
 														<Menu.Item>
 															{({ active }) => (
@@ -129,6 +135,23 @@ export default function Navbar({ loading }: { loading: boolean }) {
 															)}
 														</Menu.Item>
 													)}
+
+													{otherCompetitions.map(comp => (
+														<Menu.Item key={comp}>
+															{({ active }) => (
+																<a
+																	href="#"
+																	onClick={async () => router.replace(`/${comp}`)}
+																	className={classNames(
+																		active ? 'bg-gray-100' : '',
+																		'block px-4 py-2 text-sm text-gray-700'
+																	)}>
+																	{comp.toUpperCase()}
+																</a>
+															)}
+														</Menu.Item>
+													))}
+
 													<Menu.Item>
 														{({ active }) => (
 															<a
@@ -154,7 +177,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 						</div>
 					</div>
 
-					<Disclosure.Panel className="sm:hidden bg-blue">
+					<Disclosure.Panel className={`sm:hidden bg-blue-${competition.name}`}>
 						<div className="px-2 pt-2 pb-3 space-y-1 flex flex-col">
 							{!loading &&
 								navigation.map(item => (
@@ -167,8 +190,8 @@ export default function Navbar({ loading }: { loading: boolean }) {
 											className={classNames(
 												'font-bold',
 												isCurrent(item)
-													? 'bg-dark text-light'
-													: 'text-gray-300 hover:bg-gray-700 hover:text-light',
+													? `bg-dark-${competition.name} text-light-${competition.name}`
+													: `text-gray-300 hover:bg-gray-700 hover:text-light-${competition.name}`,
 												'block px-3 py-2 rounded-md text-base font-medium cursor-pointer'
 											)}
 											aria-current={isCurrent(item) ? 'page' : undefined}>

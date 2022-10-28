@@ -1,12 +1,16 @@
 import { DateTime } from 'luxon';
+import { useContext } from 'react';
 import { Fixture, Fixtures, Standing, Standings } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
+import CompetitionContext from '../context/CompetitionContext';
 import { classNames } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 
 const Match = ({ game }: { game: Fixture }) => {
+	const competition = useContext(CompetitionContext);
 	return (
-		<div className="text-light flex flex-row items-center justify-evenly rounded p-2 select-none">
+		<div
+			className={`text-light-${competition.name} flex flex-row items-center justify-evenly rounded p-2 select-none`}>
 			<div className="flex flex-row items-center justify-end w-2/12 sm:w-5/12">
 				<span className="hidden sm:block mr-2 text-right">{game?.teams.home.name}</span>
 				<div className="flex items-center justify-center">
@@ -39,6 +43,7 @@ const Match = ({ game }: { game: Fixture }) => {
 };
 
 const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures: Fixtures }) => {
+	const competition = useContext(CompetitionContext);
 	return (
 		<div className="flex flex-row flex-wrap justify-center select-none">
 			{standings.map(([title, standing]) => {
@@ -47,9 +52,11 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 				const games = Object.values(fixtures).filter(f => f.league.round.startsWith(`Group ${group}`));
 
 				return (
-					<div key={title} className="m-8 mx-4 p-8 shadow-pop rounded-md text-center flex flex-col bg-dark">
-						<h2 className="text-4xl text-light mb-4 text-left">{title}</h2>
-						<table className="text-light">
+					<div
+						key={title}
+						className={`m-8 mx-4 p-8 shadow-pop rounded-md text-center flex flex-col bg-dark-${competition.name}`}>
+						<h2 className={`text-4xl text-light-${competition.name} mb-4 text-left`}>{title}</h2>
+						<table className={`text-light-${competition.name}`}>
 							<thead>
 								<tr className="text-center">
 									<th></th>

@@ -10,6 +10,9 @@ export const AuthContext = createContext<{ user: User }>({ user: null });
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User>(null);
 
+	const setCookie = (token: string) =>
+		nookies.set(null, 'token', token, { path: '/', sameSite: 'Lax', maxAge: 40 * 24 * 60 * 60 });
+
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
 			/* eslint-disable @typescript-eslint/no-explicit-any */
@@ -19,7 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			if (!user) {
 				setUser(null);
 				nookies.destroy(null, 'token');
-				nookies.set(null, 'token', '', { path: '/', sameSite: 'Lax' });
+				// nookies.set(null, 'token', '', { path: '/', sameSite: 'Lax' });
 				return;
 			}
 
@@ -29,25 +32,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 			setUser({ ...user, admin: isAdmin });
 			nookies.destroy(null, 'token');
-			nookies.set(null, 'token', token, { path: '/', sameSite: 'Lax' });
+			setCookie(token);
 		});
 	}, []);
 
 	// force refresh the token every 10 minutes
-	useEffect(() => {
-		const handle = setInterval(async () => {
-			const user = getAuth(app).currentUser;
-			if (user) {
-				await user.getIdToken(true);
-				const token = await user.getIdToken();
-				const isAdmin = (await user.getIdTokenResult()).claims.admin;
-				setUser({ ...user, admin: isAdmin });
-				nookies.destroy(null, 'token');
-				nookies.set(null, 'token', token, { path: '/', sameSite: 'Lax' });
-			}
-		}, 1000 * 60 * 10);
-		return () => clearInterval(handle);
-	}, []);
+	// useEffect(() => {
+	// 	const handle = setInterval(async () => {
+	// 		const user = getAuth(app).currentUser;
+	// 		if (user) {
+	// 			await user.getIdToken(true);
+	// 			const token = await user.getIdToken();
+	// 			const isAdmin = (await user.getIdTokenResult()).claims.admin;
+	// 			setUser({ ...user, admin: isAdmin });
+	// 			nookies.destroy(null, 'token');
+	// 			setCookie(token);
+	// 		}
+	// 	}, 1000 * 60 * 10);
+	// 	return () => clearInterval(handle);
+	// }, []);
 
 	return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
 };

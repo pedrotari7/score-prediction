@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useContext } from 'react';
 import Countdown, { zeroPad } from 'react-countdown';
 import { isGameFinished } from '../../shared/utils';
+import CompetitionContext from '../context/CompetitionContext';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import { getCurrentDate } from '../lib/utils/reactHelper';
@@ -21,6 +22,7 @@ const LiveGame = ({
 	const router = useRouter();
 	const data = useContext(FixturesContext);
 	const userInfo = useContext(UserContext);
+	const competition = useContext(CompetitionContext);
 
 	if (!data || !userInfo) return <></>;
 
@@ -40,7 +42,7 @@ const LiveGame = ({
 		<ShowMore
 			setIsOpen={setIsExtraInfoOpen}
 			more={game.fixture.status.short !== 'NS' && <GameExtraInfo game={game} />}
-			className="text-light flex flex-col  my-2 rounded p-2 bg-gark shadow-pop">
+			className={`text-light-${competition.name} flex flex-col  my-2 rounded p-2 bg-gark shadow-pop`}>
 			<div className="flex flex-col sm:flex-row items-center sm:justify-evenly">
 				<span className="text-sm text-left sm:w-2/12 flex ">
 					<div className="flex items-center justify-center">

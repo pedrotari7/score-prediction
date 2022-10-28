@@ -53,8 +53,8 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 				className={classNames(
 					'my-4 mx-2 sm:mx-4 py-2 px-4 rounded-md',
 					'hover:bg-opacity-50 cursor-pointer',
-					'hover:bg-light',
-					active ? 'bg-blue' : ''
+					`hover:bg-light-${competition.name}`,
+					active ? `bg-blue-${competition.name}` : ''
 				)}>
 				{option}
 			</div>

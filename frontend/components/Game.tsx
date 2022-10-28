@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 import { ChangeEvent, useContext, useRef } from 'react';
 import { Prediction, Predictions } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
+import CompetitionContext from '../context/CompetitionContext';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
@@ -25,6 +26,7 @@ const Game = ({
 }) => {
 	const data = useContext(FixturesContext)!;
 	const routeInfo = useContext(RouteContext)!;
+	const competition = useContext(CompetitionContext);
 	const { uid } = useContext(UserContext)!;
 
 	const homeInputRef = useRef<HTMLInputElement>(null);
@@ -58,8 +60,8 @@ const Game = ({
 	return (
 		<div
 			className={classNames(
-				'text-light flex flex-col lg:flex-row items-center justify-evenly my-2 rounded p-2 bg-gark shadow-pop',
-				'cursor-pointer hover:bg-blue'
+				`text-light-${competition.name} flex flex-col lg:flex-row items-center justify-evenly my-2 rounded p-2 bg-gark shadow-pop`,
+				`cursor-pointer hover:bg-blu-${competition.name}e`
 			)}
 			onClick={() => {
 				if (hasBothPredictions || isInPast || !isMyPredictions) {

@@ -52,7 +52,7 @@ const SettingsPage = () => {
 	const { account, subscription, requests } = status;
 
 	return (
-		<div className="text-light">
+		<div className={`text-light-${competition.name}`}>
 			<div className="m-10 p-3 bg-gray-500 rounded-md flex flex-row flex-wrap">
 				<a href="https://dashboard.api-football.com/" target="_blank" rel="noreferrer">
 					<img
@@ -160,48 +160,48 @@ const SettingsPage = () => {
 			<div className="flex flex-col sm:flex-row flex-wrap items-center justify-center">
 				<button
 					onClick={async () => setResponse(await fetchTournament(userInfo.token, competition))}
-					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
+					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
 					Fetch Tournament
 				</button>
 
 				<button
 					onClick={async () => setResponse(await resetStandings(userInfo.token, competition))}
-					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
+					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
 					Fetch Rankings
 				</button>
 				<button
 					onClick={async () => setResponse(await resetFixtures(userInfo.token, competition))}
-					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
+					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
 					Fetch Fixtures
 				</button>
 
 				<button
 					onClick={async () => setResponse(await fetchPredictions(userInfo.token, competition))}
-					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
+					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
 					Fetch Predictions
 				</button>
 
 				<button
 					onClick={async () => setResponse(await fetchUsers(userInfo.token, competition))}
-					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
+					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
 					Fetch Users
 				</button>
 
 				<button
 					onClick={async () => setResponse(await updatePoints(userInfo.token, competition))}
-					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
+					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
 					Update Points
 				</button>
 
 				<button
 					onClick={async () => setResponse(await updateGroups(userInfo.token, competition))}
-					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
+					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
 					Update Groups
 				</button>
 
 				<button
 					onClick={() => cleanup(userInfo.token, competition)}
-					className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
+					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
 					Cleanup
 				</button>
 			</div>
@@ -211,7 +211,7 @@ const SettingsPage = () => {
 					<div className="text-xl font-bold">Response</div>
 					<button
 						onClick={() => fileDownload(formattedResponse, `backup-${new Date().toISOString()}.json`)}
-						className="bg-dark text-white font-bold py-2 px-4 rounded m-5">
+						className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
 						Export
 					</button>
 				</div>
