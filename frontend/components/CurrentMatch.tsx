@@ -100,6 +100,8 @@ const CurrentMatch = ({
 	const prevGameId = findGame(-1);
 	const nextGameId = findGame(1);
 
+	const stadiumImage = getStadiumImageURL(game?.fixture.venue);
+
 	return (
 		<main
 			{...handlers}
@@ -145,10 +147,9 @@ const CurrentMatch = ({
 				</div>
 			</div>
 
-			<img
-				className="object-cover absolute bottom-0 right-6 opacity-50 z-0 w-48"
-				src={getStadiumImageURL(game?.fixture.venue)}
-			/>
+			{stadiumImage && (
+				<img className="object-cover absolute bottom-0 right-6 opacity-50 z-0 w-48" src={stadiumImage} />
+			)}
 		</main>
 	);
 };
