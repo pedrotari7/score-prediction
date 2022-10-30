@@ -140,8 +140,8 @@ export default function Navbar({ loading }: { loading: boolean }) {
 														<Menu.Item key={comp}>
 															{({ active }) => (
 																<a
-																	href="#"
-																	onClick={async () => router.replace(`/${comp}`)}
+																	href=""
+																	onClick={async () => router.push(`/${comp}`)}
 																	className={classNames(
 																		active ? 'bg-gray-100' : '',
 																		'block px-4 py-2 text-sm text-gray-700'
@@ -155,7 +155,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 													<Menu.Item>
 														{({ active }) => (
 															<a
-																href="#"
+																href=""
 																onClick={async () => {
 																	await getAuth(app).signOut();
 																	router.replace('/login');
