@@ -48,6 +48,9 @@ const Home = () => {
 
 			if (success) {
 				const { fixtures, standings, predictions, users } = await fetchTournament(token, competition);
+
+				if (!standings || !fixtures) return;
+
 				const sortedStandings = Object.entries(standings).sort() as unknown as Standings;
 
 				const sortedFixtures = Object.values(fixtures).sort(
