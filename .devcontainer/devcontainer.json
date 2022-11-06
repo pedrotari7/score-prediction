@@ -6,11 +6,11 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "yarn install",
+	"postCreateCommand": "cd frontend; yarn install",
 
 	// Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "node",
-	"features": {
-		"ghcr.io/devcontainers/features/node:1": {}
-	}
+	"remoteUser": "root"
+	// "features": {
+	// 	"ghcr.io/devcontainers/features/node:1": {}
+	// }
 }
