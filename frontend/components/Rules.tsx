@@ -1,13 +1,17 @@
 import { useContext } from 'react';
 import CompetitionContext from '../context/CompetitionContext';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 
 const Rules = () => {
 	const competition = useContext(CompetitionContext);
+	const gcc = (p: string) => getCompetitionClass(p, competition);
+
 	return (
 		<div
 			className={classNames(
-				`flex flex-col justify-center select-none text-light-${competition.name} m-8 p-8 shadow-pop rounded-md bg-dark-${competition.name}`,
+				gcc('text-light'),
+				gcc('bg-dark'),
+				`flex flex-col justify-center select-none  m-8 p-8 shadow-pop rounded-md`,
 				'mx-8 md:mx-24 lg:mx-48'
 			)}>
 			<div className="font-bold mb-4 text-4xl">Rules</div>

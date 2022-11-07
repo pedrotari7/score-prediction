@@ -3,7 +3,7 @@ import { Fixture, Fixtures, Prediction, Predictions, Standings, User, UpdatePred
 import { isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import { useAuth } from '../lib/auth';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import Game from './Game';
 import PredictedGroups from './PredictedGroups';
 
@@ -61,10 +61,14 @@ const FixturesPage = ({
 
 	const competition = useContext(CompetitionContext);
 
+	const gcc = (p: string) => getCompetitionClass(p, competition);
+
 	return (
 		<div
 			className={classNames(
-				`flex flex-col justify-center select-none text-light-${competition.name} m-8 p-8 shadow-pop rounded-md bg-dark-${competition.name}`,
+				gcc('text-light'),
+				gcc('bg-dark'),
+				'flex flex-col justify-center select-none  m-8 p-8 shadow-pop rounded-md',
 				'mx-2 md:mx-24 lg:mx-48'
 			)}>
 			<div className="text-3xl mb-6 flex flex-row items-center">

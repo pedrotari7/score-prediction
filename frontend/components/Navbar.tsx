@@ -1,7 +1,7 @@
 import { Fragment, useContext } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import { getAuth } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth';
@@ -29,6 +29,8 @@ export default function Navbar({ loading }: { loading: boolean }) {
 	const routeInfo = useContext(RouteContext);
 	const competition = useContext(CompetitionContext);
 
+	const gcc = (p: string) => getCompetitionClass(p, competition);
+
 	if (!routeInfo || !competition) return <></>;
 
 	const { route, setRoute } = routeInfo;
@@ -44,7 +46,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 		.filter(comp => comp !== competition.name);
 
 	return (
-		<Disclosure as="nav" className={`bg-blue-${competition.name} fixed h-16 top-0 w-full z-20 select-none`}>
+		<Disclosure as="nav" className={classNames(gcc('bg-blue'), 'fixed h-16 top-0 w-full z-20 select-none')}>
 			{({ open }) => (
 				<>
 					<div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -53,7 +55,10 @@ export default function Navbar({ loading }: { loading: boolean }) {
 								{/* Mobile menu button */}
 								{!loading && (
 									<Disclosure.Button
-										className={`inline-flex items-center justify-center p-2 rounded-md text-light-${competition.name} hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white`}>
+										className={classNames(
+											gcc('text-light'),
+											'inline-flex items-center justify-center p-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'
+										)}>
 										<span className="sr-only">Open main menu</span>
 										{open ? (
 											<XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -79,8 +84,10 @@ export default function Navbar({ loading }: { loading: boolean }) {
 													className={classNames(
 														'font-bold text-lg',
 														isCurrent(item)
-															? `bg-dark-${competition.name} text-light-${competition.name}`
-															: `text-gray-300 hover:bg-gray-700 hover:text-light-${competition.name}`,
+															? `${gcc('bg-dark')} ${gcc('text-light')}`
+															: `text-gray-300 hover:bg-gray-700 ${gcc(
+																	'hover:text-light'
+															  )}`,
 														'px-3 py-2 rounded-md text-sm cursor-pointer select-none'
 													)}
 													aria-current={isCurrent(item) ? 'page' : undefined}>
@@ -118,7 +125,10 @@ export default function Navbar({ loading }: { loading: boolean }) {
 												leaveTo="transform opacity-0 scale-95">
 												<Menu.Items
 													static
-													className={`origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-light-${competition.name} ring-1 ring-black ring-opacity-5 focus:outline-none`}>
+													className={classNames(
+														gcc('bg-light'),
+														'origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none'
+													)}>
 													{user?.admin && (
 														<Menu.Item>
 															{({ active }) => (
@@ -177,7 +187,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 						</div>
 					</div>
 
-					<Disclosure.Panel className={`sm:hidden bg-blue-${competition.name}`}>
+					<Disclosure.Panel className={classNames('bg-blue', 'sm:hidden')}>
 						<div className="px-2 pt-2 pb-3 space-y-1 flex flex-col">
 							{!loading &&
 								navigation.map(item => (
@@ -190,8 +200,8 @@ export default function Navbar({ loading }: { loading: boolean }) {
 											className={classNames(
 												'font-bold text-lg',
 												isCurrent(item)
-													? `bg-dark-${competition.name} text-light-${competition.name}`
-													: `text-gray-300 hover:bg-gray-700 hover:text-light-${competition.name}`,
+													? `${gcc('bg-dark')}  ${gcc('text-light')}`
+													: `text-gray-300 hover:bg-gray-700 ${gcc('hover:text-light')}`,
 												'block px-3 py-2 rounded-md  cursor-pointer'
 											)}
 											aria-current={isCurrent(item) ? 'page' : undefined}>

@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
-import { Venue } from '../../../interfaces/main';
+import { Competition, Venue } from '../../../interfaces/main';
+import { competitions } from '../../../shared/utils';
 
 export const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');
 
@@ -62,3 +63,8 @@ export const getContrastYIQ = (hexcolor: string) => {
 };
 
 export const zip = <T>(a: T[], b: T[]) => a.map((k, i) => [k, b[i]]);
+
+const VALID_COMPETITIONS: string[] = [competitions.euro2020.name, competitions.wc2022.name];
+
+export const getCompetitionClass = (primitive: string, competition: Competition) =>
+	VALID_COMPETITIONS.some(c => c === competition.name) ? primitive + '-' + competition.name : primitive;

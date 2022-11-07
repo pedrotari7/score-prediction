@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Fixtures, Standing, Standings, Predictions } from '../../interfaces/main';
 import { calculateResults, sortGroup } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
+import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 
 const PredictedGroups = ({
@@ -16,6 +17,7 @@ const PredictedGroups = ({
 	userID: string;
 }) => {
 	const competition = useContext(CompetitionContext);
+	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	const teamsResults = calculateResults(Object.values(fixtures), predictions, userID);
 
@@ -38,9 +40,12 @@ const PredictedGroups = ({
 				return (
 					<div
 						key={title}
-						className={`m-2 p-4 shadow-pop rounded-md text-center flex flex-col bg-dark-${competition.name}`}>
-						<h2 className={`text-2xl text-light-${competition.name} mb-4 text-left`}>{title}</h2>
-						<table className={`text-light-${competition.name}`}>
+						className={classNames(
+							gcc('bg-dark'),
+							`m-2 p-4 shadow-pop rounded-md text-center flex flex-col`
+						)}>
+						<h2 className={classNames(gcc('text-light'), 'text-2xl mb-4 text-left')}>{title}</h2>
+						<table className={classNames(gcc('text-light'))}>
 							<thead>
 								<tr className="text-center">
 									<th></th>

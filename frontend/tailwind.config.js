@@ -13,12 +13,13 @@ module.exports = {
 			colors: {
 				transparent: 'transparent',
 
-				dark: '#015E6C',
-				blue: '#3292a4',
-				light: '#e1eded',
 				ok: '#bbf3bb',
 				warn: '#ffffbb',
 				error: '#ffbbbb',
+
+				dark: '#015E6C',
+				blue: '#3292a4',
+				light: '#e1eded',
 
 				'dark-euro2016': '#015E6C',
 				'blue-euro2016': '#3292a4',

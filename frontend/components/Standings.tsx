@@ -3,14 +3,19 @@ import { useContext } from 'react';
 import { Fixture, Fixtures, Standing, Standings } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 
 const Match = ({ game }: { game: Fixture }) => {
 	const competition = useContext(CompetitionContext);
+	const gcc = (p: string) => getCompetitionClass(p, competition);
+
 	return (
 		<div
-			className={`text-light-${competition.name} flex flex-row items-center justify-evenly rounded p-2 select-none`}>
+			className={classNames(
+				gcc('text-light'),
+				'flex flex-row items-center justify-evenly rounded p-2 select-none'
+			)}>
 			<div className="flex flex-row items-center justify-end w-2/12 sm:w-5/12">
 				<span className="hidden sm:block mr-2 text-right">{game?.teams.home.name}</span>
 				<div className="flex items-center justify-center">
@@ -44,6 +49,8 @@ const Match = ({ game }: { game: Fixture }) => {
 
 const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures: Fixtures }) => {
 	const competition = useContext(CompetitionContext);
+	const gcc = (p: string) => getCompetitionClass(p, competition);
+
 	return (
 		<div className="flex flex-row flex-wrap justify-center select-none">
 			{standings.map(([title, standing]) => {
@@ -54,9 +61,12 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 				return (
 					<div
 						key={title}
-						className={`m-8 mx-4 p-8 shadow-pop rounded-md text-center flex flex-col bg-dark-${competition.name}`}>
-						<h2 className={`text-4xl text-light-${competition.name} mb-4 text-left`}>{title}</h2>
-						<table className={`text-light-${competition.name}`}>
+						className={classNames(
+							gcc('bg-dark'),
+							`m-8 mx-4 p-8 shadow-pop rounded-md text-center flex flex-col`
+						)}>
+						<h2 className={classNames(gcc('text-light'), `text-4xl mb-4 text-left`)}>{title}</h2>
+						<table className={classNames(gcc('text-light'))}>
 							<thead>
 								<tr className="text-center">
 									<th></th>

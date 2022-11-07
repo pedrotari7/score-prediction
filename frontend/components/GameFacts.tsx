@@ -2,7 +2,7 @@ import { ReactNode, useContext } from 'react';
 import { Event, Fixture, FixtureExtraInfo, Player, PlayersMap, Result } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
-import { classNames, DEFAULT_IMAGE } from '../lib/utils/reactHelper';
+import { classNames, DEFAULT_IMAGE, getCompetitionClass } from '../lib/utils/reactHelper';
 
 enum EventType {
 	Goal = 'Goal',
@@ -21,6 +21,8 @@ const GameFacts = ({
 	extraInfo: FixtureExtraInfo;
 }) => {
 	const competition = useContext(CompetitionContext);
+
+	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	const Referee = () => (
 		<div className="flex flex-row justify-center items-center my-6">
@@ -51,13 +53,7 @@ const GameFacts = ({
 			);
 		};
 
-		const PlayerWithPhoto = ({
-			color = `text-light-${competition.name}`,
-			player,
-		}: {
-			color?: string;
-			player: Player;
-		}) => {
+		const PlayerWithPhoto = ({ color = gcc('text-light'), player }: { color?: string; player: Player }) => {
 			const playerPhoto = getPhoto(player);
 			const photo = playerPhoto ?? DEFAULT_IMAGE;
 			return (

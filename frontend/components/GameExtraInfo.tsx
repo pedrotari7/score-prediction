@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Fixture, FixtureExtraInfo, PlayersMap } from '../../interfaces/main';
 import CompetitionContext from '../context/CompetitionContext';
 import UserContext from '../context/UserContext';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import { fetchFixtureExtraInfo } from '../pages/api';
 import GameFacts from './GameFacts';
 import GameLineup from './GameLineup';
@@ -47,14 +47,16 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 	const colors = extraInfo?.lineups?.map(l => l.team.colors.player.primary) ?? [];
 
 	const NavOption = ({ option, active }: { option: GamePanel; active: boolean }) => {
+		const gcc = (p: string) => getCompetitionClass(p, competition);
+
 		return (
 			<div
 				onClick={() => setPanelMode(option)}
 				className={classNames(
+					gcc('hover:bg-light'),
+					active ? gcc('bg-blue') : '',
 					'my-4 mx-2 sm:mx-4 py-2 px-4 rounded-md',
-					'hover:bg-opacity-50 cursor-pointer',
-					`hover:bg-light-${competition.name}`,
-					active ? `bg-blue-${competition.name}` : ''
+					'hover:bg-opacity-50 cursor-pointer'
 				)}>
 				{option}
 			</div>

@@ -6,7 +6,7 @@ import { isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
-import { getCurrentDate } from '../lib/utils/reactHelper';
+import { classNames, getCompetitionClass, getCurrentDate } from '../lib/utils/reactHelper';
 import ClientOnly from './ClientOnly';
 import Flag from './Flag';
 import GameExtraInfo from './GameExtraInfo';
@@ -38,11 +38,13 @@ const LiveGame = ({
 
 	const isCountdown = timeDiff <= 1;
 
+	const gcc = (p: string) => getCompetitionClass(p, competition);
+
 	return (
 		<ShowMore
 			setIsOpen={setIsExtraInfoOpen}
 			more={game.fixture.status.short !== 'NS' && <GameExtraInfo game={game} />}
-			className={`text-light-${competition.name} flex flex-col  my-2 rounded p-2 bg-gark shadow-pop`}>
+			className={classNames(gcc('text-light'), 'flex flex-col  my-2 rounded p-2 bg-gark shadow-pop')}>
 			<div className="flex flex-col sm:flex-row items-center sm:justify-evenly">
 				<span className="text-sm text-left sm:w-2/12 flex ">
 					<div className="flex items-center justify-center">

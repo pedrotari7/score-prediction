@@ -6,7 +6,7 @@ import CompetitionContext from '../context/CompetitionContext';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
-import { classNames, formatScore, getCurrentDate } from '../lib/utils/reactHelper';
+import { classNames, formatScore, getCompetitionClass, getCurrentDate } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import ResultContainer from './ResultContainer';
 import ScoreInput from './ScoreInput';
@@ -57,11 +57,15 @@ const Game = ({
 
 	const hasBothPredictions = isValidScore(prediction.home) && isValidScore(prediction.away);
 
+	const gcc = (p: string) => getCompetitionClass(p, competition);
+
 	return (
 		<div
 			className={classNames(
-				`text-light-${competition.name} flex flex-col lg:flex-row items-center justify-evenly my-2 rounded p-2 bg-gark shadow-pop`,
-				`cursor-pointer hover:bg-blu-${competition.name}e`
+				gcc('text-light'),
+				gcc('hover:bg-blue'),
+				`flex flex-col lg:flex-row items-center justify-evenly my-2 rounded p-2 bg-gark shadow-pop`,
+				`cursor-pointer`
 			)}
 			onClick={() => {
 				if (hasBothPredictions || isInPast || !isMyPredictions) {

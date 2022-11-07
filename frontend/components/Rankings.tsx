@@ -2,7 +2,7 @@ import { MouseEventHandler, ReactNode, useContext, useState } from 'react';
 import { Users } from '../../interfaces/main';
 import CompetitionContext from '../context/CompetitionContext';
 import RouteContext, { Route } from '../context/RouteContext';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
 
@@ -26,6 +26,8 @@ const Rankings = ({ users }: { users: Users }) => {
 	const { setRoute } = useContext(RouteContext)!;
 	const competition = useContext(CompetitionContext);
 	const [sortOption, setSortOption] = useState(SortOptions.points);
+
+	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	const Circle = ({ children, className }: { children: ReactNode; className: string }) => {
 		return (
@@ -80,7 +82,11 @@ const Rankings = ({ users }: { users: Users }) => {
 
 	return (
 		<div
-			className={`m-3 sm:m-6 p-3 sm:p-6 shadow-pop rounded-md bg-dark-${competition.name} text-light-${competition.name} select-none`}>
+			className={classNames(
+				gcc('bg-dark'),
+				gcc('text-light'),
+				'm-3 sm:m-6 p-3 sm:p-6 shadow-pop rounded-md select-none'
+			)}>
 			<div className="font-bold text-2xl mb-4">Ranking</div>
 
 			<div className="font-bold flex flex-row flex-wrap items-center justify-center sm:justify-center mb-6">
@@ -101,21 +107,30 @@ const Rankings = ({ users }: { users: Users }) => {
 							<div
 								className={classNames(
 									'cursor-pointer hover:bg-opacity-50 flex flex-col sm:flex-row justify-center items-center',
-									`rounded-md bg-blue-${competition.name} my-4 mx-0 sm:mx-4 p-3`
+									gcc('bg-blue'),
+									`rounded-md my-4 mx-0 sm:mx-4 p-3`
 								)}
 								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
 								<div className="flex flex-col sm:flex-row flex-wrap items-center justify-evenly mb-0 sm:justify-start sm:mr-4">
 									<DesktopOnly>
 										<div className="flex flex-row items-center justify-center w-8 h-8 m-2 font-bold text-xl">
 											<span
-												className={`bg-light-${competition.name} text-dark-${competition.name} rounded-full w-full h-full flex items-center justify-center p-2mr-1`}>
+												className={classNames(
+													gcc('bg-light'),
+													gcc('text-dark'),
+													'rounded-full w-full h-full flex items-center justify-center p-2mr-1'
+												)}>
 												{index + 1}
 											</span>
 										</div>
 									</DesktopOnly>
 									<MobileOnly>
 										<div
-											className={`absolute top-0 -left-0 bg-light-${competition.name} rounded-md w-12 text-dark-${competition.name} font-bold text-center`}>
+											className={classNames(
+												gcc('bg-light'),
+												gcc('text-dark'),
+												'absolute top-0 -left-0 rounded-md w-12 font-bold text-center'
+											)}>
 											<span className="p-3">{index + 1}</span>
 										</div>
 									</MobileOnly>

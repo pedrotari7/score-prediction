@@ -21,6 +21,7 @@ import {
 import { Competition, Settings, Status } from '../../interfaces/main';
 import { competitions } from '../../shared/utils';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
+import { getCompetitionClass } from '../lib/utils/reactHelper';
 
 const SettingsPage = () => {
 	const userInfo = useContext(UserContext);
@@ -51,8 +52,10 @@ const SettingsPage = () => {
 
 	const { account, subscription, requests } = status;
 
+	const gcc = (p: string) => getCompetitionClass(p, competition);
+
 	return (
-		<div className={`text-light-${competition.name}`}>
+		<div className={gcc('text-light')}>
 			<div className="m-10 p-3 bg-gray-500 rounded-md flex flex-row flex-wrap">
 				<a href="https://dashboard.api-football.com/" target="_blank" rel="noreferrer">
 					<img

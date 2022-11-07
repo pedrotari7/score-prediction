@@ -1,6 +1,6 @@
 import { Disclosure, Transition } from '@headlessui/react';
 import { Dispatch, ReactNode, SetStateAction, useContext, useRef } from 'react';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import CompetitionContext from '../context/CompetitionContext';
 
@@ -23,6 +23,7 @@ const ShowMore = ({
 	};
 
 	const competition = useContext(CompetitionContext);
+	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
 		<div ref={disclosureRef}>
@@ -43,7 +44,10 @@ const ShowMore = ({
 						{more && (
 							<div onClick={() => executeScroll(open)} className="flex justify-center mt-4 ">
 								<Disclosure.Button
-									className={`focus:outline-none p-2 flex justify-center w-full rounded-md hover:bg-blue-${competition.name}`}>
+									className={classNames(
+										gcc('hover:bg-blue'),
+										'focus:outline-none p-2 flex justify-center w-full rounded-md'
+									)}>
 									{!open && <ChevronDownIcon className="block h-8 w-8" aria-hidden="true" />}
 									{open && <ChevronUpIcon className="block h-8 w-8" aria-hidden="true" />}
 								</Disclosure.Button>
