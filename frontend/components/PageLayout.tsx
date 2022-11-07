@@ -1,5 +1,7 @@
 import Head from 'next/head';
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
+import { competitions } from '../../shared/utils';
+import CompetitionContext from '../context/CompetitionContext';
 import Navbar from './Navbar';
 
 const PageLayout = ({
@@ -11,10 +13,15 @@ const PageLayout = ({
 	loading?: boolean;
 	children: ReactNode;
 }) => {
+	const competition = useContext(CompetitionContext);
+
+	const isEuro2020 = competition?.name === competitions.euro2020.name;
+
+	const style = isEuro2020 ? { backgroundImage: 'url(/background.webp)' } : { background: '#242424' };
 	return (
 		<div
-			className="flex flex-col bg-cover bg-center bg-repeat-y w-screen h-screen overflow-scroll"
-			style={{ backgroundImage: 'url(/background.webp)' }}>
+			className="flex flex-col bg-black bg-cover bg-center bg-repeat-y w-screen h-screen overflow-scroll"
+			style={style}>
 			<Head>
 				<title>{title}</title>
 				<link rel="icon" href="/favicon.ico" />
@@ -25,9 +32,11 @@ const PageLayout = ({
 
 			<main className="flex flex-col relative top-16 z-10 w-screen h-full pb-16">{children}</main>
 
-			<div className="fixed bottom-0 w-full select-none">
-				<img src="/footer.png" alt="" className="w-full opacity-70" />
-			</div>
+			{isEuro2020 && (
+				<div className="fixed bottom-0 w-full select-none">
+					<img src="/footer.png" alt="" className="w-full opacity-70" />
+				</div>
+			)}
 		</div>
 	);
 };
