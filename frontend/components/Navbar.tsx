@@ -77,11 +77,11 @@ export default function Navbar({ loading }: { loading: boolean }) {
 													key={item.name}
 													onClick={() => updateRoute(item.info)}
 													className={classNames(
-														'font-bold',
+														'font-bold text-lg',
 														isCurrent(item)
 															? `bg-dark-${competition.name} text-light-${competition.name}`
 															: `text-gray-300 hover:bg-gray-700 hover:text-light-${competition.name}`,
-														'px-3 py-2 rounded-md text-sm font-medium cursor-pointer select-none'
+														'px-3 py-2 rounded-md text-sm cursor-pointer select-none'
 													)}
 													aria-current={isCurrent(item) ? 'page' : undefined}>
 													{item.name}
@@ -188,11 +188,11 @@ export default function Navbar({ loading }: { loading: boolean }) {
 												open = false;
 											}}
 											className={classNames(
-												'font-bold',
+												'font-bold text-lg',
 												isCurrent(item)
 													? `bg-dark-${competition.name} text-light-${competition.name}`
 													: `text-gray-300 hover:bg-gray-700 hover:text-light-${competition.name}`,
-												'block px-3 py-2 rounded-md text-base font-medium cursor-pointer'
+												'block px-3 py-2 rounded-md  cursor-pointer'
 											)}
 											aria-current={isCurrent(item) ? 'page' : undefined}>
 											{item.name}
