@@ -29,7 +29,7 @@ module.exports = {
 				'light-euro2020': '#e1eded',
 
 				'dark-wc2022': '#6c2035',
-				'blue-wc2022': '#d20a46',
+				'blue-wc2022': '#8a1538',
 				'light-wc2022': '#e1eded',
 			},
 			boxShadow: {
