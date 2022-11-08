@@ -62,9 +62,10 @@ const Game = ({
 		<div
 			className={classNames(
 				gcc('text-light'),
+				gcc('bg-dark'),
 				gcc('hover:bg-blue'),
-				`flex flex-col lg:flex-row items-center justify-evenly my-2 rounded p-2 bg-gark shadow-pop`,
-				`cursor-pointer`
+				`flex flex-col lg:flex-row items-center justify-evenly my-2 rounded p-2 shadow-pop`,
+				'cursor-pointer'
 			)}
 			onClick={() => {
 				if (hasBothPredictions || isInPast || !isMyPredictions) {

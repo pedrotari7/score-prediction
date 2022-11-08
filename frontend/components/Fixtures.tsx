@@ -67,8 +67,7 @@ const FixturesPage = ({
 		<div
 			className={classNames(
 				gcc('text-light'),
-				gcc('bg-dark'),
-				'flex flex-col justify-center select-none  m-8 p-8 shadow-pop rounded-md',
+				'flex flex-col justify-center select-none m-8 p-8 shadow-pop rounded-md',
 				'mx-2 md:mx-24 lg:mx-48'
 			)}>
 			<div className="text-3xl mb-6 flex flex-row items-center">
