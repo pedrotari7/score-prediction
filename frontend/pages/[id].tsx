@@ -88,7 +88,10 @@ const Home = () => {
 	const groupMap = Object.values(standings)
 		?.map(s => s?.[1])
 		?.flat()
-		?.reduce((acc, val) => ({ ...acc, [val.team.name]: val.group.split(' ').pop() }), {});
+		?.reduce((acc, val) => {
+			if (!val.group.startsWith('Group')) return acc;
+			return { ...acc, [val.team.id]: val.group.split(' ').pop() };
+		}, {});
 
 	const MainComponent = () => {
 		switch (route.page) {

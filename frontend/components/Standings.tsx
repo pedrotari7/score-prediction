@@ -53,17 +53,17 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 	const competition = useContext(CompetitionContext);
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
-	console.log('fixr', Object.values(fixtures));
 	return (
 		<div className="flex flex-row flex-wrap justify-center select-none">
 			{standings.map(([title, standing]) => {
 				const group = title.split(' ').pop();
 
 				const games = Object.values(fixtures).filter(
-					(f: Fixture) => f.league.round.startsWith(`Group`) && groupMap[f.teams.home.name] === group
+					(f: Fixture) =>
+						f.league.round.startsWith(`Group`) &&
+						groupMap[f.teams.home.id] === group &&
+						groupMap[f.teams.away.id] === group
 				);
-
-				console.log('games', games);
 
 				return (
 					<div
