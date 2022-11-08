@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { ChangeEvent, useContext, useRef } from 'react';
-import { Prediction, Predictions } from '../../interfaces/main';
+import { GroupMap, Prediction, Predictions } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import FixturesContext from '../context/FixturesContext';
@@ -9,6 +9,7 @@ import UserContext from '../context/UserContext';
 import { classNames, formatScore, getCompetitionClass, getCurrentDate } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import ResultContainer from './ResultContainer';
+import { Round } from './Round';
 import ScoreInput from './ScoreInput';
 
 const DEFAULT_PREDICTION = { home: null, away: null };
@@ -18,11 +19,13 @@ const Game = ({
 	updatePrediction,
 	gameID,
 	userID,
+	groupMap,
 }: {
 	predictions: Predictions;
 	updatePrediction: (prediction: Prediction) => Promise<void>;
 	gameID: number;
 	userID: string;
+	groupMap: GroupMap;
 }) => {
 	const data = useContext(FixturesContext)!;
 	const routeInfo = useContext(RouteContext)!;
@@ -42,7 +45,13 @@ const Game = ({
 
 	const prediction = predictions?.[gameID]?.[userID] || DEFAULT_PREDICTION;
 
-	const round = game?.league.round;
+	let round = game?.league.round;
+
+	if (game?.league.round.includes('Group')) {
+		const leg = game?.league.round.split('-').pop();
+		const group = groupMap[game?.teams.home.name];
+		round = group + leg;
+	}
 
 	const gameDate = DateTime.fromISO(game?.fixture.date);
 
@@ -75,9 +84,7 @@ const Game = ({
 				return awayInputRef.current?.focus();
 			}}>
 			<span className="text-xs text-left w-full lg:w-3/12 flex justify-between items-center ">
-				<div className="items-center">
-					<span>{round}</span>
-				</div>
+				<Round game={game} />
 				<span className="text-xs">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm ccc')}</span>
 			</span>
 

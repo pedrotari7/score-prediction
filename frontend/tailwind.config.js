@@ -2,7 +2,7 @@
 
 module.exports = {
 	mode: 'jit',
-	content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './safelist.txt'],
+	content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './lib/**/*.{ts,tsx}', './safelist.txt'],
 
 	darkMode: 'media',
 	theme: {

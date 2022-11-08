@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import Loading from '../components/Loading';
 import { competitions, isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
+import GroupMapContext from '../context/CompetitionContext copy';
 
 const Home = () => {
 	const [loading, setLoading] = useState(true);
@@ -84,6 +85,11 @@ const Home = () => {
 		await updatePredictions(token, uid, gameId, prediction, competition);
 	};
 
+	const groupMap = Object.values(standings)
+		?.map(s => s?.[1])
+		?.flat()
+		?.reduce((acc, val) => ({ ...acc, [val.team.name]: val.group.split(' ').pop() }), {});
+
 	const MainComponent = () => {
 		switch (route.page) {
 			case Route.Home:
@@ -132,9 +138,11 @@ const Home = () => {
 			<UserContext.Provider value={{ uid, token }}>
 				<CompetitionContext.Provider value={competition}>
 					<FixturesContext.Provider value={fixtures}>
-						<PageLayout title={'Score Prediction'} loading={loading}>
-							{loading ? <Loading /> : <MainComponent />}
-						</PageLayout>
+						<GroupMapContext.Provider value={groupMap}>
+							<PageLayout title={'Score Prediction'} loading={loading}>
+								{loading ? <Loading /> : <MainComponent />}
+							</PageLayout>
+						</GroupMapContext.Provider>
 					</FixturesContext.Provider>
 				</CompetitionContext.Provider>
 			</UserContext.Provider>

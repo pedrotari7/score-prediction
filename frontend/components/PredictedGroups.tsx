@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Fixtures, Standing, Standings, Predictions } from '../../interfaces/main';
 import { calculateResults, sortGroup } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import { classNames, getCompetitionClass, GROUP_COLORS } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 
 const PredictedGroups = ({
@@ -44,7 +44,14 @@ const PredictedGroups = ({
 							gcc('bg-dark'),
 							`m-2 p-4 shadow-pop rounded-md text-center flex flex-col`
 						)}>
-						<h2 className={classNames(gcc('text-light'), 'text-2xl mb-4 text-left')}>{title}</h2>
+						<h2
+							className={classNames(
+								gcc('text-light'),
+								GROUP_COLORS[group],
+								'text-2xl mb-4 text-left rounded-md font-bold pl-2'
+							)}>
+							{title}
+						</h2>
 						<table className={classNames(gcc('text-light'))}>
 							<thead>
 								<tr className="text-center">

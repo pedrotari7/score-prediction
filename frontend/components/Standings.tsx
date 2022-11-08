@@ -63,7 +63,7 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 						key={title}
 						className={classNames(
 							gcc('bg-dark'),
-							`m-8 mx-4 p-8 shadow-pop rounded-md text-center flex flex-col`
+							`m-8 mx-4 p-8 shadow-pop rounded-md text-center font-bold flex flex-col`
 						)}>
 						<h2 className={classNames(gcc('text-light'), `text-4xl mb-4 text-left`)}>{title}</h2>
 						<table className={classNames(gcc('text-light'))}>
@@ -95,7 +95,7 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 												<Flag team={place.team} />
 											</td>
 											<td className="md:w-52">
-												<span className="hidden md:flex">{place.team.name}</span>
+												<span className="hidden md:flex font-bold">{place.team.name}</span>
 											</td>
 
 											<td className="w-6">{place.all.played}</td>

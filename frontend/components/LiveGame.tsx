@@ -4,12 +4,14 @@ import { Dispatch, SetStateAction, useContext } from 'react';
 import Countdown, { zeroPad } from 'react-countdown';
 import { isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
+import GroupMapContext from '../context/CompetitionContext copy';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import { classNames, getCompetitionClass, getCurrentDate } from '../lib/utils/reactHelper';
 import ClientOnly from './ClientOnly';
 import Flag from './Flag';
 import GameExtraInfo from './GameExtraInfo';
+import { Round } from './Round';
 import ShowMore from './ShowMore';
 
 const LiveGame = ({
@@ -23,12 +25,19 @@ const LiveGame = ({
 	const data = useContext(FixturesContext);
 	const userInfo = useContext(UserContext);
 	const competition = useContext(CompetitionContext);
+	const groupMap = useContext(GroupMapContext);
 
 	if (!data || !userInfo) return <></>;
 
 	const game = data[gameID];
 
-	const group = game?.league.round;
+	let round = game?.league.round;
+
+	if (game?.league.round.includes('Group')) {
+		const leg = game?.league.round.split('-').pop();
+		const group = groupMap[game?.teams.home.name];
+		round = group + leg;
+	}
 
 	const gameDate = DateTime.fromISO(game?.fixture.date);
 
@@ -48,7 +57,7 @@ const LiveGame = ({
 			<div className="flex flex-col sm:flex-row items-center sm:justify-evenly">
 				<span className="text-sm text-left sm:w-2/12 flex ">
 					<div className="flex items-center justify-center">
-						<span>{group}</span>
+						<Round game={game} />
 					</div>
 				</span>
 

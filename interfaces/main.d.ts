@@ -280,3 +280,5 @@ export interface Status {
 	subscription: Subscription;
 	requests: Requests;
 }
+
+export type GroupMap = Record<string, string>;

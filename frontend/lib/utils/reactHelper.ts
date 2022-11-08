@@ -68,3 +68,14 @@ const VALID_COMPETITIONS: string[] = [competitions.euro2020.name, competitions.w
 
 export const getCompetitionClass = (primitive: string, competition: Competition) =>
 	VALID_COMPETITIONS.some(c => c === competition.name) ? primitive + '-' + competition.name : primitive;
+
+export const GROUP_COLORS: Record<string, string> = {
+	A: 'bg-red-500',
+	B: 'bg-orange-500',
+	C: 'bg-yellow-500',
+	D: 'bg-lime-500',
+	E: 'bg-green-500',
+	F: 'bg-teal-500',
+	G: 'bg-indigo-500',
+	H: 'bg-pink-500',
+};
