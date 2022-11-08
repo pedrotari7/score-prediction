@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { ChangeEvent, useContext, useRef } from 'react';
-import { GroupMap, Prediction, Predictions } from '../../interfaces/main';
+import { Prediction, Predictions } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import FixturesContext from '../context/FixturesContext';
@@ -19,13 +19,11 @@ const Game = ({
 	updatePrediction,
 	gameID,
 	userID,
-	groupMap,
 }: {
 	predictions: Predictions;
 	updatePrediction: (prediction: Prediction) => Promise<void>;
 	gameID: number;
 	userID: string;
-	groupMap: GroupMap;
 }) => {
 	const data = useContext(FixturesContext)!;
 	const routeInfo = useContext(RouteContext)!;
@@ -44,14 +42,6 @@ const Game = ({
 	const game = data[gameID];
 
 	const prediction = predictions?.[gameID]?.[userID] || DEFAULT_PREDICTION;
-
-	let round = game?.league.round;
-
-	if (game?.league.round.includes('Group')) {
-		const leg = game?.league.round.split('-').pop();
-		const group = groupMap[game?.teams.home.name];
-		round = group + leg;
-	}
 
 	const gameDate = DateTime.fromISO(game?.fixture.date);
 

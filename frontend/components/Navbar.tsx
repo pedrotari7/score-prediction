@@ -82,12 +82,10 @@ export default function Navbar({ loading }: { loading: boolean }) {
 													key={item.name}
 													onClick={() => updateRoute(item.info)}
 													className={classNames(
-														'font-bold text-lg',
+														'font-bold text-lg hover:bg-gray-700 ',
 														isCurrent(item)
 															? `${gcc('bg-dark')} ${gcc('text-light')}`
-															: `text-gray-300 hover:bg-gray-700 ${gcc(
-																	'hover:text-light'
-															  )}`,
+															: `text-gray-300 ${gcc('hover:text-light')}`,
 														'px-3 py-2 rounded-md text-sm cursor-pointer select-none'
 													)}
 													aria-current={isCurrent(item) ? 'page' : undefined}>

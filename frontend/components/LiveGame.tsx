@@ -4,7 +4,6 @@ import { Dispatch, SetStateAction, useContext } from 'react';
 import Countdown, { zeroPad } from 'react-countdown';
 import { isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
-import GroupMapContext from '../context/CompetitionContext copy';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import { classNames, getCompetitionClass, getCurrentDate } from '../lib/utils/reactHelper';
@@ -25,19 +24,10 @@ const LiveGame = ({
 	const data = useContext(FixturesContext);
 	const userInfo = useContext(UserContext);
 	const competition = useContext(CompetitionContext);
-	const groupMap = useContext(GroupMapContext);
 
 	if (!data || !userInfo) return <></>;
 
 	const game = data[gameID];
-
-	let round = game?.league.round;
-
-	if (game?.league.round.includes('Group')) {
-		const leg = game?.league.round.split('-').pop();
-		const group = groupMap[game?.teams.home.name];
-		round = group + leg;
-	}
 
 	const gameDate = DateTime.fromISO(game?.fixture.date);
 
