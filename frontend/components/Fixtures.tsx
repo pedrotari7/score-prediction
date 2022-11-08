@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { Fixture, Fixtures, Prediction, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
-import GroupMapContext from '../context/CompetitionContext copy';
 import { useAuth } from '../lib/auth';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import Game from './Game';
@@ -22,8 +21,6 @@ const FixturesPage = ({
 	user: User;
 }) => {
 	const { user: currentUser } = useAuth();
-
-	const groupMap = useContext(GroupMapContext);
 
 	const uid = currentUser?.uid;
 
@@ -59,7 +56,6 @@ const FixturesPage = ({
 			updatePrediction={async (update: Prediction) => await updatePrediction(update, game.fixture?.id)}
 			userID={user.uid}
 			key={index}
-			groupMap={groupMap}
 		/>
 	);
 
