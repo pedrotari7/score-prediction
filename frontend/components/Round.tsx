@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Fixture } from '../../interfaces/main';
 import CompetitionContext from '../context/CompetitionContext';
-import GroupMapContext from '../context/CompetitionContext copy';
+import GroupMapContext from '../context/GroupMapContext';
 import { classNames, getCompetitionClass, GROUP_COLORS } from '../lib/utils/reactHelper';
 
 export const Round = ({ game }: { game: Fixture }) => {

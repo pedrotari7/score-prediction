@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 import Loading from '../components/Loading';
 import { competitions, isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
-import GroupMapContext from '../context/CompetitionContext copy';
+import GroupMapContext from '../context/GroupMapContext';
 
 const Home = () => {
 	const [loading, setLoading] = useState(true);
