@@ -185,7 +185,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 						</div>
 					</div>
 
-					<Disclosure.Panel className={classNames('bg-blue', 'sm:hidden')}>
+					<Disclosure.Panel className={classNames(gcc('bg-blue'), 'sm:hidden')}>
 						<div className="px-2 pt-2 pb-3 space-y-1 flex flex-col">
 							{!loading &&
 								navigation.map(item => (
