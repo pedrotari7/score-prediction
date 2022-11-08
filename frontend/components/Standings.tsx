@@ -3,7 +3,8 @@ import { useContext } from 'react';
 import { Fixture, Fixtures, Standing, Standings } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import GroupMapContext from '../context/GroupMapContext';
+import { classNames, getCompetitionClass, GROUP_COLORS } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 
 const Match = ({ game }: { game: Fixture }) => {
@@ -48,15 +49,21 @@ const Match = ({ game }: { game: Fixture }) => {
 };
 
 const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures: Fixtures }) => {
+	const groupMap = useContext(GroupMapContext);
 	const competition = useContext(CompetitionContext);
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
+	console.log('fixr', Object.values(fixtures));
 	return (
 		<div className="flex flex-row flex-wrap justify-center select-none">
 			{standings.map(([title, standing]) => {
 				const group = title.split(' ').pop();
 
-				const games = Object.values(fixtures).filter(f => f.league.round.startsWith(`Group ${group}`));
+				const games = Object.values(fixtures).filter(
+					(f: Fixture) => f.league.round.startsWith(`Group`) && groupMap[f.teams.home.name] === group
+				);
+
+				console.log('games', games);
 
 				return (
 					<div
@@ -65,7 +72,14 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 							gcc('bg-dark'),
 							`m-8 mx-4 p-8 shadow-pop rounded-md text-center font-bold flex flex-col`
 						)}>
-						<h2 className={classNames(gcc('text-light'), `text-4xl mb-4 text-left`)}>{title}</h2>
+						<h2
+							className={classNames(
+								gcc('text-light'),
+								GROUP_COLORS[group!],
+								`rounded-md pl-2 text-4xl mb-4 text-left`
+							)}>
+							{title}
+						</h2>
 						<table className={classNames(gcc('text-light'))}>
 							<thead>
 								<tr className="text-center">
