@@ -16,7 +16,7 @@ export const Round = ({ game }: { game: Fixture }) => {
 
 	if (game?.league.round.includes('Group')) {
 		const leg = game?.league.round.split('-').pop();
-		const group = groupMap[game?.teams.home.name];
+		const group = groupMap[game?.teams.home.id];
 		round = group + leg;
 		bgColor = GROUP_COLORS[group];
 	}
