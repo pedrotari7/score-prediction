@@ -55,7 +55,7 @@ const API_SPORTS_URL = 'https://v3.football.api-sports.io';
 
 const ADMIN_USERS = ['pedrotari7@gmail.com'];
 
-const DEFAULT_COMPETITION = competitions.wc2022;
+const CURRENT_COMPETITION = competitions.wc2022;
 
 const buildUrl = (url: string, opts: Record<string, unknown>) =>
   url +
@@ -77,7 +77,7 @@ const get = async (url: string, opts: Record<string, unknown> = {}) => {
   }
 };
 
-const parseCompetition = (req: Request) => competitions[req.query.competition as string] || DEFAULT_COMPETITION;
+const parseCompetition = (req: Request) => competitions[req.query.competition as string] || CURRENT_COMPETITION;
 
 const getStandings = async (opts: Record<string, unknown> = {}) => await get('standings', opts);
 
@@ -302,6 +302,16 @@ const getUsers = async (competition: Competition) => {
   const allUsers = (await getAuth(firebaseApp).listUsers()).users.reduce(
     (users, { uid, displayName, photoURL, customClaims, metadata }) => {
       const isNewUser = metadata.creationTime === metadata.lastSignInTime;
+
+      const lastSignInTimeDiff = getTimeDiff(Timestamp.fromDate(new Date(metadata.lastSignInTime)));
+
+      const OneMonth = 60 * 24 * 31;
+
+      const isCurrentCompetition = competition.name === CURRENT_COMPETITION.name;
+
+      if (!(uid in scores) && !(isCurrentCompetition && lastSignInTimeDiff < OneMonth)) {
+        return users;
+      }
       const score = (scores && scores[uid]) ?? DEFAULT_USER_RESULT;
       const admin = customClaims?.admin as boolean;
       return { ...users, [uid]: { uid, displayName, photoURL, admin, score, isNewUser } };
