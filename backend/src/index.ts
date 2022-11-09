@@ -305,7 +305,7 @@ const getUsers = async (competition: Competition) => {
 
       const lastSignInTimeDiff = getTimeDiff(Timestamp.fromDate(new Date(metadata.lastSignInTime)));
 
-      const OneMonth = 60 * 24 * 31;
+      const OneMonth = 60 * 60 * 24 * 31;
 
       const isCurrentCompetition = competition.name === CURRENT_COMPETITION.name;
 
