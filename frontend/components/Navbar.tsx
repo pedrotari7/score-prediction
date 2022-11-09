@@ -166,7 +166,6 @@ export default function Navbar({ loading }: { loading: boolean }) {
 																href=""
 																onClick={async () => {
 																	await getAuth(app).signOut();
-																	router.replace('/login');
 																}}
 																className={classNames(
 																	active ? 'bg-gray-100' : '',
