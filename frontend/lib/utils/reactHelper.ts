@@ -67,7 +67,7 @@ export const zip = <T>(a: T[], b: T[]) => a.map((k, i) => [k, b[i]]);
 const VALID_COMPETITIONS: string[] = [competitions.euro2020.name, competitions.wc2022.name];
 
 export const getCompetitionClass = (primitive: string, competition: Competition) =>
-	VALID_COMPETITIONS.some(c => c === competition.name) ? primitive + '-' + competition.name : primitive;
+	VALID_COMPETITIONS.some(c => c === competition?.name) ? primitive + '-' + competition?.name : primitive;
 
 export const GROUP_COLORS: Record<string, string> = {
 	A: 'bg-red-500',
