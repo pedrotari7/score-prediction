@@ -18,11 +18,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			/* eslint-disable @typescript-eslint/no-explicit-any */
 			(window as any).nookies = nookies;
 		}
-		return getAuth(app).onIdTokenChanged(async (user: User) => {
+
+		const auth = getAuth(app);
+
+		return auth.onIdTokenChanged(async (user: User) => {
 			if (!user) {
 				setUser(null);
 				nookies.destroy(null, 'token');
-				// nookies.set(null, 'token', '', { path: '/', sameSite: 'Lax' });
+				setCookie('');
 				return;
 			}
 

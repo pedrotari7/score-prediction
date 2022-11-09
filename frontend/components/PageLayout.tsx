@@ -19,7 +19,7 @@ const PageLayout = ({
 
 	const style = isEuro2020 ? { backgroundImage: 'url(/background.webp)' } : { background: '#242424' };
 	return (
-		<div className="flex flex-col bg-black bg-cover bg-center bg-repeat-y h-full" style={style}>
+		<div className="flex flex-col bg-cover bg-center bg-repeat-y h-screen w-screen" style={style}>
 			<Head>
 				<title>{title}</title>
 				<link rel="icon" href="/favicon.ico" />

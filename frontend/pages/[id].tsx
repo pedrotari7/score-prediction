@@ -20,10 +20,13 @@ import Loading from '../components/Loading';
 import { competitions, isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import GroupMapContext from '../context/GroupMapContext';
+import Login from '../components/Login';
 
 const Home = () => {
 	const [loading, setLoading] = useState(true);
 	const [token, setToken] = useState('');
+	const [isAuthenticated, setAuthenticated] = useState(false);
+	const [successfulLogin, setSuccessfulLogin] = useState(false);
 
 	const [predictions, setPredictions] = useState({} as Predictions);
 	const [fixtures, setFixtures] = useState({} as Fixtures);
@@ -47,38 +50,40 @@ const Home = () => {
 
 			const { uid, success } = await validateToken(token);
 
-			if (success) {
-				const { fixtures, standings, predictions, users } = await fetchTournament(token, competition);
-
-				if (!standings || !fixtures) return;
-
-				const sortedStandings = Object.entries(standings).sort() as unknown as Standings;
-
-				const sortedFixtures = Object.values(fixtures).sort(
-					({ fixture: a }, { fixture: b }) => a.timestamp - b.timestamp
-				);
-
-				const nextGame = sortedFixtures.findIndex(game => !isGameFinished(game));
-
-				const defaultRoute = nextGame === -1 ? Route.Ranking : Route.Home;
-
-				setFixtures(fixtures);
-				setPredictions(predictions);
-				setStandings(sortedStandings);
-				setUID(uid);
-				setUsers(users);
-				setLoading(false);
-
-				setRoute({ page: uid in users && users[uid].isNewUser ? Route.Rules : defaultRoute, data: undefined });
-			} else {
-				router.replace('/login');
+			if (!success) {
+				setAuthenticated(false);
+				return;
 			}
+
+			setAuthenticated(true);
+			const { fixtures, standings, predictions, users } = await fetchTournament(token, competition);
+
+			if (!standings || !fixtures) return;
+
+			const sortedStandings = Object.entries(standings).sort() as unknown as Standings;
+
+			const sortedFixtures = Object.values(fixtures).sort(
+				({ fixture: a }, { fixture: b }) => a.timestamp - b.timestamp
+			);
+
+			const nextGame = sortedFixtures.findIndex(game => !isGameFinished(game));
+
+			const defaultRoute = nextGame === -1 ? Route.Ranking : Route.Home;
+
+			setFixtures(fixtures);
+			setPredictions(predictions);
+			setStandings(sortedStandings);
+			setUID(uid);
+			setUsers(users);
+			setLoading(false);
+
+			setRoute({ page: uid in users && users[uid].isNewUser ? Route.Rules : defaultRoute, data: undefined });
 		};
 
 		doAsync();
 
 		return () => {};
-	}, [router, competition]);
+	}, [router, competition, successfulLogin]);
 
 	const updatePrediction = async (prediction: Prediction, gameId: number) => {
 		setPredictions({ ...predictions, [gameId]: { ...predictions?.[gameId], [uid]: prediction } });
@@ -142,9 +147,13 @@ const Home = () => {
 				<CompetitionContext.Provider value={competition}>
 					<FixturesContext.Provider value={fixtures}>
 						<GroupMapContext.Provider value={groupMap}>
-							<PageLayout title={'Score Prediction'} loading={loading}>
-								{loading ? <Loading /> : <MainComponent />}
-							</PageLayout>
+							{!isAuthenticated && <Login setSuccessfulLogin={setSuccessfulLogin} />}
+
+							{isAuthenticated && (
+								<PageLayout title={'Score Prediction'} loading={loading}>
+									{loading ? <Loading /> : <MainComponent />}
+								</PageLayout>
+							)}
 						</GroupMapContext.Provider>
 					</FixturesContext.Provider>
 				</CompetitionContext.Provider>
