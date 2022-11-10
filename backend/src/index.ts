@@ -66,14 +66,10 @@ const buildUrl = (url: string, opts: Record<string, unknown>) =>
 
 const get = async (url: string, opts: Record<string, unknown> = {}) => {
   try {
-    const apiKey = functions.config().APISPORTS.key;
-
-    console.log('apiKey', apiKey);
-
     return (await axios.get(buildUrl(`${API_SPORTS_URL}/${url}`, opts), {
       headers: {
         'x-rapidapi-host': 'v3.football.api-sports.io',
-        'x-rapidapi-key': apiKey,
+        'x-rapidapi-key': process.env.APISPORTS,
       },
     })) as any;
   } catch (error: any) {
@@ -596,7 +592,7 @@ app.post('/update-settings', async (req, res) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-exports.api = europe.https.onRequest(<any>app);
+exports.api = europe.runWith({ secrets: ['APISPORTS'] }).https.onRequest(<any>app);
 
 export const addUser = europe.auth.user().onCreate(async user => {
   const isAdmin = ADMIN_USERS.includes(user.email ?? '');
