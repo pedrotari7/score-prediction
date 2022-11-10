@@ -122,6 +122,7 @@ const authenticate = async (req: Request, res: Response, needsAdmin = false) => 
 const getCurrentTime = () => {
   return new Date();
   // Mocked date
+  // return new Date('2022-12-20T17:00:00+0000');
   // return new Date('2021-06-11T19:00:00+0000');
   // return new Date('2016-06-09T19:00:00+0000');
 };
