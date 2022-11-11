@@ -56,9 +56,9 @@ const Rules = () => {
 			</div>
 			<div className="">
 				<div className="font-bold text-2xl mb-4">Deadlines</div>
-				In the group stages the predictions for each game must be done before the its start. For the final
-				stages games, the predictions will be available once the matchup is known and have to be submited before
-				the game starts.
+				In the group stages the predictions for each game must be done before its start. For the final stages
+				games, the predictions will be available once the matchup is known and have to be submited before the
+				game starts.
 			</div>
 		</div>
 	);
