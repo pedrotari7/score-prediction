@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import nookies from 'nookies';
-
 import PageLayout from '../components/PageLayout';
 import SettingsPage from '../components/Settings';
 import Rankings from '../components/Rankings';
@@ -21,10 +19,11 @@ import { competitions, isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import GroupMapContext from '../context/GroupMapContext';
 import Login from '../components/Login';
+import { useAuth } from '../lib/auth';
 
 const Home = () => {
+	const auth = useAuth();
 	const [loading, setLoading] = useState(true);
-	const [token, setToken] = useState('');
 	const [isAuthenticated, setAuthenticated] = useState(false);
 	const [successfulLogin, setSuccessfulLogin] = useState(false);
 
@@ -44,11 +43,11 @@ const Home = () => {
 
 	useEffect(() => {
 		const doAsync = async () => {
-			const { token } = nookies.get();
+			if (!auth.user) return;
 
-			setToken(token);
+			const { token } = auth.user;
 
-			const { uid, success } = await validateToken(token);
+			const { uid, success } = await validateToken(auth.user.token);
 
 			if (!success) {
 				setAuthenticated(false);
@@ -83,11 +82,12 @@ const Home = () => {
 		doAsync();
 
 		return () => {};
-	}, [router, competition, successfulLogin]);
+	}, [router, competition, successfulLogin, auth]);
 
 	const updatePrediction = async (prediction: Prediction, gameId: number) => {
+		if (!auth.user) return;
 		setPredictions({ ...predictions, [gameId]: { ...predictions?.[gameId], [uid]: prediction } });
-		await updatePredictions(token, uid, gameId, prediction, competition);
+		await updatePredictions(auth.user.token, uid, gameId, prediction, competition);
 	};
 
 	const groupMap = Object.values(standings)
@@ -143,7 +143,7 @@ const Home = () => {
 
 	return (
 		<RouteContext.Provider value={{ route, setRoute }}>
-			<UserContext.Provider value={{ uid, token }}>
+			<UserContext.Provider value={{ uid, token: auth.user?.token ?? '' }}>
 				<CompetitionContext.Provider value={competition}>
 					<FixturesContext.Provider value={fixtures}>
 						<GroupMapContext.Provider value={groupMap}>
