@@ -25,7 +25,6 @@ const Home = () => {
 	const auth = useAuth();
 	const [loading, setLoading] = useState(true);
 	const [isAuthenticated, setAuthenticated] = useState(false);
-	const [successfulLogin, setSuccessfulLogin] = useState(false);
 
 	const [predictions, setPredictions] = useState({} as Predictions);
 	const [fixtures, setFixtures] = useState({} as Fixtures);
@@ -82,7 +81,7 @@ const Home = () => {
 		doAsync();
 
 		return () => {};
-	}, [router, competition, successfulLogin, auth]);
+	}, [router, competition, auth]);
 
 	const updatePrediction = async (prediction: Prediction, gameId: number) => {
 		if (!auth.user) return;
@@ -147,7 +146,7 @@ const Home = () => {
 				<CompetitionContext.Provider value={competition}>
 					<FixturesContext.Provider value={fixtures}>
 						<GroupMapContext.Provider value={groupMap}>
-							{!isAuthenticated && <Login setSuccessfulLogin={setSuccessfulLogin} />}
+							{!isAuthenticated && <Login />}
 
 							{isAuthenticated && (
 								<PageLayout title={'Score Prediction'} loading={loading}>

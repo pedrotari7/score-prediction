@@ -2,9 +2,8 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import Head from 'next/head';
 import { app } from '../lib/firebaseClient';
-import { Dispatch, SetStateAction } from 'react';
 
-const Login = ({ setSuccessfulLogin }: { setSuccessfulLogin: Dispatch<SetStateAction<boolean>> }) => {
+const Login = () => {
 	return (
 		<div className="w-screen h-screen">
 			<Head>
@@ -20,10 +19,7 @@ const Login = ({ setSuccessfulLogin }: { setSuccessfulLogin: Dispatch<SetStateAc
 						signInOptions: [GoogleAuthProvider.PROVIDER_ID],
 						callbacks: {
 							// Avoid redirects after sign-in.
-							signInSuccessWithAuthResult: () => {
-								setSuccessfulLogin(true);
-								return false;
-							},
+							signInSuccessWithAuthResult: () => false,
 						},
 					}}
 					firebaseAuth={getAuth(app)}
