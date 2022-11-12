@@ -44,6 +44,7 @@ const Home = () => {
 		const doAsync = async () => {
 			if (!auth.user) {
 				setLoading(false);
+				setAuthenticated(false);
 				return;
 			}
 
@@ -143,8 +144,6 @@ const Home = () => {
 				return <></>;
 		}
 	};
-
-	console.log('loading,isAuthenticated', loading, isAuthenticated);
 
 	return (
 		<RouteContext.Provider value={{ route, setRoute }}>
