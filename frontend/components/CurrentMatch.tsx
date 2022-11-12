@@ -127,7 +127,7 @@ const CurrentMatch = ({
 							`cursor-pointer w-max   rounded-md absolute left-0 top-1/2 transform -translate-y-1/2 sm:-translate-x-full`
 						)}
 						onClick={() => setGameID(prevGameId)}>
-						<ChevronLeftIcon className="h-8 w-8" />
+						<ChevronLeftIcon className={classNames(gcc('text-light'), 'h-8 w-8')} />
 					</div>
 				)}
 				<LiveGame gameID={game.fixture?.id} key={game.fixture?.id} setIsExtraInfoOpen={setIsExtraInfoOpen} />
@@ -139,7 +139,7 @@ const CurrentMatch = ({
 							`cursor-pointer w-max rounded-md absolute right-0 top-1/2 transform -translate-y-1/2 sm:translate-x-full`
 						)}
 						onClick={() => setGameID(nextGameId)}>
-						<ChevronRightIcon className="h-8 w-8" />
+						<ChevronRightIcon className={classNames(gcc('text-light'), 'h-8 w-8')} />
 					</div>
 				)}
 			</div>
