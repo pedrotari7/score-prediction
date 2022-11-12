@@ -42,7 +42,10 @@ const Home = () => {
 
 	useEffect(() => {
 		const doAsync = async () => {
-			if (!auth.user) return;
+			if (!auth.user) {
+				setLoading(false);
+				return;
+			}
 
 			const { token } = auth.user;
 
@@ -50,6 +53,7 @@ const Home = () => {
 
 			if (!success) {
 				setAuthenticated(false);
+				setLoading(false);
 				return;
 			}
 
@@ -140,15 +144,17 @@ const Home = () => {
 		}
 	};
 
+	console.log('loading,isAuthenticated', loading, isAuthenticated);
+
 	return (
 		<RouteContext.Provider value={{ route, setRoute }}>
 			<UserContext.Provider value={{ uid, token: auth.user?.token ?? '' }}>
 				<CompetitionContext.Provider value={competition}>
 					<FixturesContext.Provider value={fixtures}>
 						<GroupMapContext.Provider value={groupMap}>
-							{!isAuthenticated && <Login />}
+							{!isAuthenticated && !loading && <Login />}
 
-							{isAuthenticated && (
+							{(isAuthenticated || loading) && (
 								<PageLayout title={'Score Prediction'} loading={loading}>
 									{loading ? <Loading /> : <MainComponent />}
 								</PageLayout>
