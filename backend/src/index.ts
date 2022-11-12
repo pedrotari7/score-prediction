@@ -44,6 +44,8 @@ app.use(
   })
 );
 
+const isDevMode = process.env.ISDEV;
+
 const europe = functions.region('europe-west1');
 
 const firebaseApp = initializeApp();
@@ -56,6 +58,10 @@ const API_SPORTS_URL = 'https://v3.football.api-sports.io';
 const ADMIN_USERS = ['pedrotari7@gmail.com'];
 
 const CURRENT_COMPETITION = competitions.wc2022;
+
+const logDev = (message?: any, ...optionalParams: any[]): void => {
+  if (isDevMode) console.log(message, optionalParams);
+};
 
 const buildUrl = (url: string, opts: Record<string, unknown>) =>
   url +
@@ -268,7 +274,7 @@ const getPredictions = async (
 
   const predictions = (document.data() ?? {}) as Predictions;
 
-  console.log('adminHideScores :>> ', adminHideScores);
+  logDev('adminHideScores :>> ', adminHideScores);
 
   if ((!adminHideScores && isAdmin) || Object.keys(predictions).length === 0) return predictions;
 
