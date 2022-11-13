@@ -213,7 +213,12 @@ const SettingsPage = () => {
 				<div className="flex flex-row items-center justify-between">
 					<div className="text-xl font-bold">Response</div>
 					<button
-						onClick={() => fileDownload(formattedResponse, `backup-${new Date().toISOString()}.json`)}
+						onClick={() =>
+							fileDownload(
+								formattedResponse,
+								`${competition.name}-backup-${new Date().toISOString()}.json`
+							)
+						}
 						className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
 						Export
 					</button>
