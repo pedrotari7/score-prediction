@@ -9,22 +9,22 @@ export const AuthContext = createContext<{ user: User }>({ user: null });
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User>(null);
 
-	useEffect(() => {
-		const auth = getAuth(app);
+	useEffect(
+		() =>
+			getAuth(app).onIdTokenChanged(async user => {
+				if (!user) {
+					setUser(null);
+					return;
+				}
 
-		return auth.onIdTokenChanged(async user => {
-			if (!user) {
-				setUser(null);
-				return;
-			}
+				const token = await user.getIdToken();
 
-			const token = await user.getIdToken();
+				const isAdmin = (await user.getIdTokenResult()).claims.admin;
 
-			const isAdmin = (await user.getIdTokenResult()).claims.admin;
-
-			setUser({ ...user, admin: isAdmin, token });
-		});
-	}, []);
+				setUser({ ...user, admin: isAdmin, token });
+			}),
+		[]
+	);
 
 	// force refresh the token every 10 minutes
 	// useEffect(() => {
@@ -45,6 +45,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = () => {
-	return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
