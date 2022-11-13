@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
 import UserContext from '../context/UserContext';
 import { useSwipeable } from 'react-swipeable';
 import LiveGame from './LiveGame';
@@ -50,6 +50,38 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 			</div>
 		</ResultContainer>
 	);
+};
+
+const KeyboardHandle = ({
+	prevGameId,
+	nextGameId,
+	children,
+	className,
+	setGameID,
+}: {
+	prevGameId: number | null;
+	nextGameId: number | null;
+	children: ReactNode;
+	className?: string;
+	setGameID: Dispatch<SetStateAction<number>>;
+}) => {
+	useEffect(() => {
+		const keyDownHandler = (event: KeyboardEvent) => {
+			switch (event.code) {
+				case 'ArrowLeft':
+					if (prevGameId !== null) setGameID(prevGameId);
+					break;
+				case 'ArrowRight':
+					if (nextGameId !== null) setGameID(nextGameId);
+					break;
+			}
+		};
+		document.addEventListener('keydown', keyDownHandler);
+
+		return () => document.removeEventListener('keydown', keyDownHandler);
+	}, [prevGameId, nextGameId, setGameID]);
+
+	return <div className={className}>{children}</div>;
 };
 
 const CurrentMatch = ({
@@ -108,66 +140,72 @@ const CurrentMatch = ({
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
-		<main
-			{...handlers}
-			className={classNames(
-				gcc('text-light'),
-				gcc('bg-dark'),
-				'flex flex-col justify-center select-none  m-4 sm:m-8 md:mx-24 p-4 sm:p-8 shadow-pop rounded-md  relative'
-			)}>
-			{!id && <p className="text-3xl mb-2">Next Game</p>}
-			{id && <p className="text-3xl mb-2">{game.league?.round}</p>}
+		<KeyboardHandle prevGameId={prevGameId} nextGameId={nextGameId} setGameID={setGameID}>
+			<main
+				{...handlers}
+				className={classNames(
+					gcc('text-light'),
+					gcc('bg-dark'),
+					'flex flex-col justify-center select-none  m-4 sm:m-8 md:mx-24 p-4 sm:p-8 shadow-pop rounded-md  relative'
+				)}>
+				{!id && <p className="text-3xl mb-2">Next Game</p>}
+				{id && <p className="text-3xl mb-2">{game.league?.round}</p>}
 
-			<div className="relative">
-				{!isExtraInfoOpen && prevGameId !== null && (
-					<div
-						className={classNames(
-							gcc('text-blue'),
-							gcc('hover:text-light'),
-							`cursor-pointer w-max   rounded-md absolute left-0 top-1/2 transform -translate-y-1/2 sm:-translate-x-full`
-						)}
-						onClick={() => setGameID(prevGameId)}>
-						<ChevronLeftIcon className={classNames(gcc('text-light'), 'h-8 w-8')} />
-					</div>
-				)}
-				<LiveGame gameID={game.fixture?.id} key={game.fixture?.id} setIsExtraInfoOpen={setIsExtraInfoOpen} />
-				{!isExtraInfoOpen && nextGameId !== null && (
-					<div
-						className={classNames(
-							gcc('text-blue'),
-							gcc('hover:text-light'),
-							`cursor-pointer w-max rounded-md absolute right-0 top-1/2 transform -translate-y-1/2 sm:translate-x-full`
-						)}
-						onClick={() => setGameID(nextGameId)}>
-						<ChevronRightIcon className={classNames(gcc('text-light'), 'h-8 w-8')} />
-					</div>
-				)}
-			</div>
+				<div className="relative">
+					{!isExtraInfoOpen && prevGameId !== null && (
+						<div
+							className={classNames(
+								gcc('text-blue'),
+								gcc('hover:text-light'),
+								`cursor-pointer w-max   rounded-md absolute left-0 top-1/2 transform -translate-y-1/2 sm:-translate-x-full`
+							)}
+							onClick={() => setGameID(prevGameId)}>
+							<ChevronLeftIcon className={classNames(gcc('text-light'), 'h-8 w-8')} />
+						</div>
+					)}
+					<LiveGame
+						gameID={game.fixture?.id}
+						key={game.fixture?.id}
+						setIsExtraInfoOpen={setIsExtraInfoOpen}
+					/>
+					{!isExtraInfoOpen && nextGameId !== null && (
+						<div
+							className={classNames(
+								gcc('text-blue'),
+								gcc('hover:text-light'),
+								`cursor-pointer w-max rounded-md absolute right-0 top-1/2 transform -translate-y-1/2 sm:translate-x-full`
+							)}
+							onClick={() => setGameID(nextGameId)}>
+							<ChevronRightIcon className={classNames(gcc('text-light'), 'h-8 w-8')} />
+						</div>
+					)}
+				</div>
 
-			<div className="mt-6">
-				<div className="text-xl mb-4">My Prediction</div>
-				<div className="flex flex-row flex-wrap">
-					{Object.entries(gamePredictions)
-						.filter(([uid, _]) => uid === userInfo?.uid)
-						.map(([uid, prediction]) => (
+				<div className="mt-6">
+					<div className="text-xl mb-4">My Prediction</div>
+					<div className="flex flex-row flex-wrap">
+						{Object.entries(gamePredictions)
+							.filter(([uid, _]) => uid === userInfo?.uid)
+							.map(([uid, prediction]) => (
+								<UserGuess user={users[uid]} guess={prediction} key={uid} game={game} />
+							))}
+					</div>
+				</div>
+
+				<div className="mt-6 mb-20 z-10">
+					<div className="text-xl mb-4">Predictions</div>
+					<div className="flex flex-row flex-wrap">
+						{gamePredictionsAndResults.map(({ uid, prediction }) => (
 							<UserGuess user={users[uid]} guess={prediction} key={uid} game={game} />
 						))}
+					</div>
 				</div>
-			</div>
 
-			<div className="mt-6 mb-20 z-10">
-				<div className="text-xl mb-4">Predictions</div>
-				<div className="flex flex-row flex-wrap">
-					{gamePredictionsAndResults.map(({ uid, prediction }) => (
-						<UserGuess user={users[uid]} guess={prediction} key={uid} game={game} />
-					))}
-				</div>
-			</div>
-
-			{stadiumImage && (
-				<img className="object-cover absolute bottom-0 right-6 opacity-50 z-0 w-48" src={stadiumImage} />
-			)}
-		</main>
+				{stadiumImage && (
+					<img className="object-cover absolute bottom-0 right-6 opacity-50 z-0 w-48" src={stadiumImage} />
+				)}
+			</main>
+		</KeyboardHandle>
 	);
 };
 
