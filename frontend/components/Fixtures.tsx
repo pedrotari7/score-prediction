@@ -6,6 +6,7 @@ import { useAuth } from '../lib/auth';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import Game from './Game';
 import PredictedGroups from './PredictedGroups';
+import { UserScores } from './UserScores';
 
 const FixturesPage = ({
 	fixtures,
@@ -70,10 +71,15 @@ const FixturesPage = ({
 				'flex flex-col justify-center select-none m-8 p-8 shadow-pop rounded-md',
 				'mx-2 md:mx-24 lg:mx-48'
 			)}>
-			<div className="text-3xl mb-6 flex flex-row items-center">
-				<img className="object-cover h-8 w-8 rounded-full mr-2" src={user?.photoURL} />
-				{uid !== user.uid && <p>{user.displayName}</p>}
-				{uid === user.uid && <p>My Predictions</p>}
+			<div className="text-3xl mb-6 flex flex-col sm:flex-row items-center gap-2">
+				<div className="flex flex-row items-center justify-center">
+					<img className="object-cover h-8 w-8 rounded-full mr-2" src={user?.photoURL} />
+					{uid !== user.uid && <p>{user.displayName}</p>}
+					{uid === user.uid && <p>My Predictions</p>}
+				</div>
+				<div className="text-sm">
+					<UserScores user={user} />
+				</div>
 			</div>
 
 			{Object.entries(otherStageFixtures)
