@@ -80,7 +80,7 @@ const Home = () => {
 			setUsers(users);
 			setLoading(false);
 
-			setRoute({ page: uid in users && users[uid].isNewUser ? Route.Rules : defaultRoute, data: undefined });
+			setRoute({ page: uid in users && users[uid].shouldOnboard ? Route.Rules : defaultRoute, data: undefined });
 		};
 
 		doAsync();
