@@ -321,7 +321,13 @@ const getUsers = async (competition: Competition) => {
       }
       const score = (scores && scores[uid]) ?? DEFAULT_USER_RESULT;
       const admin = customClaims?.admin as boolean;
-      return { ...users, [uid]: { uid, displayName, photoURL, admin, score, isNewUser } };
+
+      // const OneMinute = 60;
+      const OneSecond = 60;
+
+      const shouldOnboard = isNewUser || lastSignInTimeDiff > OneSecond;
+
+      return { ...users, [uid]: { uid, displayName, photoURL, admin, score, isNewUser, shouldOnboard } };
     },
     {}
   );
@@ -573,7 +579,7 @@ app.get('/validate-token', async (req, res) => {
 
   if (!decodedToken) return res.json({ success: false, uid: '' });
 
-  const { uid } = decodedToken as DecodedIdToken;
+  const { uid } = decodedToken;
 
   return res.json({ success: true, uid });
 });

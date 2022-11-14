@@ -212,6 +212,7 @@ export interface User extends Record<string, any> {
 	score: UserResult;
 	uid: string;
 	isNewUser: boolean;
+	shouldOnboard: boolean;
 }
 
 export interface Users {
