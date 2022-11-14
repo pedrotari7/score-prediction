@@ -322,10 +322,7 @@ const getUsers = async (competition: Competition) => {
       const score = (scores && scores[uid]) ?? DEFAULT_USER_RESULT;
       const admin = customClaims?.admin as boolean;
 
-      // const OneMinute = 60;
-      const OneSecond = 60;
-
-      const shouldOnboard = isNewUser || lastSignInTimeDiff > OneSecond;
+      const shouldOnboard = isNewUser || lastSignInTimeDiff > OneMonth;
 
       return { ...users, [uid]: { uid, displayName, photoURL, admin, score, isNewUser, shouldOnboard } };
     },
