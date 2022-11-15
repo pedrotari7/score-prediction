@@ -9,6 +9,7 @@ import ResultContainer from './ResultContainer';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { getResult, isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
+import Loading from './Loading';
 
 const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game: Fixture }) => {
 	const routeInfo = useContext(RouteContext)!;
@@ -114,7 +115,7 @@ const CurrentMatch = ({
 		preventDefaultTouchmoveEvent: true,
 	});
 
-	if (!game) return <></>;
+	if (!game) return <Loading />;
 
 	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
 
