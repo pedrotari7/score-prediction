@@ -20,6 +20,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 	const { user } = useAuth();
 
 	const navigation: NavItem[] = [
+		{ name: 'NextGame', info: { page: Route.Match } },
 		{ name: 'MyPredictions', info: { page: Route.Predictions, data: user?.uid } },
 		{ name: 'Ranking', info: { page: Route.Ranking } },
 		{ name: 'Standings', info: { page: Route.Standings } },
