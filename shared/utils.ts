@@ -27,7 +27,7 @@ export const competitions: Competitions = {
 	},
 };
 
-export const isNum = (n: number | null) => typeof n === 'number';
+export const isNum = (n: number | null): n is number => typeof n === 'number';
 
 export const isEmpty = (obj: Object) => Object.keys(obj).length == 0;
 

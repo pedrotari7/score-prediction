@@ -22,6 +22,9 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
+	const hiddenScore = parsedGuess.home === 'H' && parsedGuess.away === 'H';
+	const invalidScore = parsedGuess.home === 'X' && parsedGuess.away === 'X';
+
 	return (
 		<ResultContainer
 			prediction={guess}
@@ -38,17 +41,22 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 				<span>{user?.displayName}</span>
 			</span>
 
-			<div className="flex flex-row">
-				<div className="flex flex-row items-center justify-end font-bold">
-					<span className="mr-2">{parsedGuess.home}</span>
-				</div>
+			{hiddenScore && <div className="font-sm font-bold ">Hidden</div>}
+			{invalidScore && <div className="font-sm font-bold ">Invalid</div>}
 
-				<span className="">-</span>
+			{!hiddenScore && !invalidScore && (
+				<div className="flex flex-row">
+					<div className="flex flex-row items-center justify-end font-bold">
+						<span className="mr-2">{parsedGuess.home}</span>
+					</div>
 
-				<div className="flex flex-row items-center justify-start font-bold">
-					<span className="ml-2">{parsedGuess.away}</span>
+					<span className="">-</span>
+
+					<div className="flex flex-row items-center justify-start font-bold">
+						<span className="ml-2">{parsedGuess.away}</span>
+					</div>
 				</div>
-			</div>
+			)}
 		</ResultContainer>
 	);
 };

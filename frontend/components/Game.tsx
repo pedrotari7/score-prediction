@@ -52,7 +52,7 @@ const Game = ({
 		await updatePrediction({ ...prediction, [team]: isNaN(value) ? null : value });
 	};
 
-	const isValidScore = (n: number | null) => isNum(n) && n! >= 0;
+	const isValidScore = (n: number | null) => isNum(n) && n >= 0;
 
 	const hasBothPredictions = isValidScore(prediction.home) && isValidScore(prediction.away);
 
