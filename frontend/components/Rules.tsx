@@ -41,7 +41,7 @@ export const GroupsPoints = () => (
 	<div>
 		<div className="font-bold text-2xl mb-4">Groups</div>
 		<div className="bg-purple-700 rounded-md p-2 mb-4 flex flex-row flex-wrap text-lg">
-			You will be awarded 1 point per each succesful guess on a team&apos;s final position in the group stage.
+			You will be awarded 1 point per each successful guess on a team&apos;s final position in the group stage.
 			<span className="font-bold text-2xl mt-2 w-full">+1 Point</span>
 		</div>
 	</div>
@@ -54,7 +54,7 @@ export const FinalStages = () => (
 		prediction will be compared with the result at the end of the 90 or 120 minutes.
 		<div className="bg- bg-gray-500 rounded-md p-2 my-4 ">
 			Nonetheless, in case of penalty shootout if you guessed correctly the team that ends up going through to the
-			next stage, you will be awarded 1 extra point that adds to the ones that you might have acheived during the
+			next stage, you will be awarded 1 extra point that adds to the ones that you might have achieved during the
 			regular time.
 		</div>
 	</div>
@@ -64,7 +64,7 @@ export const Deadlines = () => (
 	<div className="">
 		<div className="font-bold text-2xl mb-4">Deadlines</div>
 		In the group stages the predictions for each game must be done before its start. For the final stages games, the
-		predictions will be available once the matchup is known and have to be submited before the game starts.
+		predictions will be available once the matchup is known and have to be submitted before the game starts.
 	</div>
 );
 
