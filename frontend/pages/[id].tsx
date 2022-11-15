@@ -25,6 +25,7 @@ const Home = () => {
 	const auth = useAuth();
 	const [loading, setLoading] = useState(true);
 	const [isAuthenticated, setAuthenticated] = useState(false);
+	const [triedToValidateToken, setTriedToValidateToken] = useState(false);
 
 	const [predictions, setPredictions] = useState({} as Predictions);
 	const [fixtures, setFixtures] = useState({} as Fixtures);
@@ -51,6 +52,8 @@ const Home = () => {
 			const { token } = auth.user;
 
 			const { uid, success } = await validateToken(auth.user.token);
+
+			setTriedToValidateToken(true);
 
 			if (!success) {
 				setAuthenticated(false);
@@ -80,21 +83,14 @@ const Home = () => {
 
 			if (uid in users && users[uid].shouldOnboard) {
 				setRoute({ page: Route.Rules });
-				return;
-			}
-
-			if (nextGame !== undefined) {
+			} else if (nextGame) {
 				const nextGamePrediction = predictions[nextGame.fixture.id];
 				if (!nextGamePrediction || !(uid in nextGamePrediction)) {
 					setRoute({ page: Route.Predictions, data: uid });
-					return;
 				}
 			} else {
 				setRoute({ page: Route.Ranking });
-				return;
 			}
-
-			setRoute({ page: Route.Home });
 		};
 
 		doAsync();
@@ -119,6 +115,7 @@ const Home = () => {
 	const MainComponent = () => {
 		switch (route.page) {
 			case Route.Home:
+			case Route.Match:
 				return (
 					<CurrentMatch
 						fixtures={fixtures}
@@ -143,15 +140,7 @@ const Home = () => {
 				return <StandingsPage standings={standings} fixtures={fixtures} />;
 			case Route.Settings:
 				return <SettingsPage />;
-			case Route.Match:
-				return (
-					<CurrentMatch
-						fixtures={fixtures}
-						predictions={predictions}
-						users={users}
-						gameID={route?.data as number}
-					/>
-				);
+
 			case Route.Rules:
 				return <Rules />;
 			default:
@@ -159,17 +148,19 @@ const Home = () => {
 		}
 	};
 
+	const showLogin = (!isAuthenticated && !loading && triedToValidateToken) || auth.user === undefined;
+
 	return (
 		<RouteContext.Provider value={{ route, setRoute }}>
 			<UserContext.Provider value={{ uid, token: auth.user?.token ?? '' }}>
 				<CompetitionContext.Provider value={competition}>
 					<FixturesContext.Provider value={fixtures}>
 						<GroupMapContext.Provider value={groupMap}>
-							{!isAuthenticated && !loading && <Login />}
+							{showLogin && <Login />}
 
-							{(isAuthenticated || loading) && (
+							{!showLogin && (
 								<PageLayout title={'Score Prediction'} loading={loading}>
-									{loading ? <Loading /> : <MainComponent />}
+									{loading || !triedToValidateToken ? <Loading /> : <MainComponent />}
 								</PageLayout>
 							)}
 						</GroupMapContext.Provider>

@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, createContext, ReactNode } from 'react
 import { User as FirebaseUser, getAuth } from 'firebase/auth';
 import { app } from './firebaseClient';
 
-type User = (FirebaseUser & { token: string; admin?: boolean }) | null;
+type User = (FirebaseUser & { token: string; admin?: boolean }) | null | undefined;
 
 export const AuthContext = createContext<{ user: User }>({ user: null });
 
@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		() =>
 			getAuth(app).onIdTokenChanged(async user => {
 				if (!user) {
-					setUser(null);
+					setUser(undefined);
 					return;
 				}
 
