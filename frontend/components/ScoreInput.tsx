@@ -23,7 +23,6 @@ const ScoreInput = ({
 		<input
 			value={value ?? ''}
 			min={0}
-			max={20}
 			onChange={async e => {
 				e.stopPropagation();
 				e.preventDefault();
