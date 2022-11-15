@@ -251,9 +251,13 @@ const updateGroups = async (
       .map(([_, g]) => g);
 
     for (const group of validGroups) {
-      const teamsIDs = group.map(t => t.team.id);
-      const sortedGroup = sortGroup(teamsIDs, teamsResults, fixtures, predictions, user);
-      groupPoints[user] += sortedGroup.reduce((total, teamId, idx) => total + (teamId === teamsIDs[idx] ? 1 : 0), 0);
+      const isGroupFinished = group.map(t => t.all.played).every(played => played === 3);
+
+      if (isGroupFinished) {
+        const teamsIDs = group.map(t => t.team.id);
+        const sortedGroup = sortGroup(teamsIDs, teamsResults, fixtures, predictions, user);
+        groupPoints[user] += sortedGroup.reduce((total, teamId, idx) => total + (teamId === teamsIDs[idx] ? 1 : 0), 0);
+      }
     }
   }
 
