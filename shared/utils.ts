@@ -93,7 +93,7 @@ export const isGameStarted = (game: Fixture) => game.fixture.status.short !== 'N
 
 export const isGameOnGoing = (game: Fixture) => !isGameFinished(game) && isGameStarted(game);
 
-export const intializeTeamResult = (): PredResult => ({
+export const initializeTeamResult = (): PredResult => ({
 	points: 0,
 	wins: 0,
 	draws: 0,
@@ -111,8 +111,8 @@ export const calculateResults = (fixtures: Fixture[], predictions: Predictions, 
 		const homeTeam = game.teams.home.id;
 		const awayTeam = game.teams.away.id;
 
-		if (!(homeTeam in teams)) teams[homeTeam] = intializeTeamResult();
-		if (!(awayTeam in teams)) teams[awayTeam] = intializeTeamResult();
+		if (!(homeTeam in teams)) teams[homeTeam] = initializeTeamResult();
+		if (!(awayTeam in teams)) teams[awayTeam] = initializeTeamResult();
 
 		const prediction = predictions?.[game.fixture.id]?.[uid];
 
