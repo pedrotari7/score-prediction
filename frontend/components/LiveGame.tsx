@@ -43,7 +43,7 @@ const LiveGame = ({
 		<ShowMore
 			setIsOpen={setIsExtraInfoOpen}
 			more={game.fixture.status.short !== 'NS' && <GameExtraInfo game={game} />}
-			className={classNames(gcc('text-light'), 'flex flex-col  my-2 rounded p-2 bg-gark shadow-pop')}>
+			className={classNames(gcc('text-light'), gcc('bg-blue'), 'flex flex-col  my-2 rounded p-2 shadow-pop')}>
 			<div className="flex flex-col sm:flex-row items-center sm:justify-evenly">
 				<span className="text-sm text-left sm:w-2/12 flex ">
 					<div className="flex items-center justify-center">

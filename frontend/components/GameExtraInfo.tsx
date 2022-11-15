@@ -54,7 +54,7 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 				onClick={() => setPanelMode(option)}
 				className={classNames(
 					gcc('hover:bg-light'),
-					active ? gcc('bg-blue') : '',
+					active ? gcc('bg-dark') : '',
 					'my-4 mx-2 sm:mx-4 py-2 px-4 rounded-md',
 					'hover:bg-opacity-50 cursor-pointer'
 				)}>
