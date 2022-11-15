@@ -33,7 +33,7 @@ const Home = () => {
 
 	const [uid, setUID] = useState('');
 
-	const [route, setRoute] = useState<RouteInfo>({ page: Route.Home, data: undefined });
+	const [route, setRoute] = useState<RouteInfo>({ page: Route.Home });
 
 	const router = useRouter();
 	const { id: competitionName } = router.query;
@@ -69,9 +69,7 @@ const Home = () => {
 				({ fixture: a }, { fixture: b }) => a.timestamp - b.timestamp
 			);
 
-			const nextGame = sortedFixtures.findIndex(game => !isGameFinished(game));
-
-			const defaultRoute = nextGame === -1 ? Route.Ranking : Route.Home;
+			const nextGame = sortedFixtures.find(game => !isGameFinished(game));
 
 			setFixtures(fixtures);
 			setPredictions(predictions);
@@ -80,7 +78,23 @@ const Home = () => {
 			setUsers(users);
 			setLoading(false);
 
-			setRoute({ page: uid in users && users[uid].shouldOnboard ? Route.Rules : defaultRoute, data: undefined });
+			if (uid in users && users[uid].shouldOnboard) {
+				setRoute({ page: Route.Rules });
+				return;
+			}
+
+			if (nextGame !== undefined) {
+				const nextGamePrediction = predictions[nextGame.fixture.id];
+				if (!nextGamePrediction || !(uid in nextGamePrediction)) {
+					setRoute({ page: Route.Predictions, data: uid });
+					return;
+				}
+			} else {
+				setRoute({ page: Route.Ranking });
+				return;
+			}
+
+			setRoute({ page: Route.Home });
 		};
 
 		doAsync();

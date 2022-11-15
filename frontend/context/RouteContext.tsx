@@ -7,7 +7,6 @@ export interface RouteInfo {
 
 export enum Route {
 	Home = 'home',
-	Fixtures = 'fixtures',
 	Predictions = 'predictions',
 	Standings = 'standings',
 	Ranking = 'ranking',
