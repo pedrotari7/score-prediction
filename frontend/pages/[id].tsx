@@ -160,7 +160,11 @@ const Home = () => {
 
 							{!showLogin && (
 								<PageLayout title={'Score Prediction'} loading={loading}>
-									{loading || !triedToValidateToken ? <Loading /> : <MainComponent />}
+									{loading || !triedToValidateToken ? (
+										<Loading message="Logging in..." />
+									) : (
+										<MainComponent />
+									)}
 								</PageLayout>
 							)}
 						</GroupMapContext.Provider>

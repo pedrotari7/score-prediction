@@ -1,5 +1,6 @@
-const Loading = () => (
-	<div className="w-full h-full flex items-center justify-center">
+const Loading = ({ message }: { message?: string }) => (
+	<div className="w-full h-full flex flex-col items-center justify-center text-white">
+		<div className="text-4xl">{message}</div>
 		<img className="" src="loader.svg" />
 	</div>
 );

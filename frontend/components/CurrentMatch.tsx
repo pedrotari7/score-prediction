@@ -123,7 +123,7 @@ const CurrentMatch = ({
 		preventDefaultTouchmoveEvent: true,
 	});
 
-	if (!game) return <Loading />;
+	if (!game) return <Loading message="Fetching tournament info..." />;
 
 	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
 
