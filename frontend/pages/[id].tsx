@@ -49,19 +49,11 @@ const Home = () => {
 				return;
 			}
 
-			const { token } = auth.user;
-
-			const { uid, success } = await validateToken(auth.user.token);
+			const { token, uid } = auth.user;
 
 			setTriedToValidateToken(true);
-
-			if (!success) {
-				setAuthenticated(false);
-				setLoading(false);
-				return;
-			}
-
 			setAuthenticated(true);
+
 			const { fixtures, standings, predictions, users } = await fetchTournament(token, competition);
 
 			if (!standings || !fixtures) return;
