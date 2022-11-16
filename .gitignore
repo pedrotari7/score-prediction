@@ -106,3 +106,5 @@ dist
 # Firebase
 .firebase/
 backend/.runtimeconfig.json
+
+.DS_Store
