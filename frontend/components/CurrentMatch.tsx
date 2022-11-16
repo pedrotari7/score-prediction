@@ -211,7 +211,8 @@ const CurrentMatch = ({
 				</div>
 
 				{stadiumImage && (
-					<img className="object-cover absolute bottom-0 right-6 opacity-50 z-0 w-48" src={stadiumImage} />
+					<div></div>
+					// <img className="object-cover absolute bottom-0 right-6 opacity-50 z-0 w-48" src={stadiumImage} />
 				)}
 			</main>
 		</KeyboardHandle>
