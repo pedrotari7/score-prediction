@@ -420,7 +420,7 @@ app.get('/tournament', async (req, res) => {
 
   const standingsDocument = await getDBStandings(competition).get();
 
-  let standings = standingsDocument.data();
+  const standings = standingsDocument.data();
 
   if (!standings && settings.allowUpdateStandings) {
     console.log('There are no current standings');
