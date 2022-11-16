@@ -39,7 +39,9 @@ export default function Navbar({ loading }: { loading: boolean }) {
 	const updateRoute = (info: RouteInfo) => setRoute(info);
 
 	const isCurrent = ({ info: { page } }: NavItem) => {
-		return page === Route.Predictions ? route.data === user?.uid : page === route.page;
+		return page === Route.Predictions && route.page === Route.Predictions
+			? route.data === user?.uid
+			: page === route.page;
 	};
 
 	const otherCompetitions = [competitions.euro2020, competitions.wc2022]
