@@ -5,7 +5,7 @@ import SettingsPage from '../components/Settings';
 import Leaderboard from '../components/Leaderboard';
 import StandingsPage from '../components/Standings';
 
-import { updatePredictions, fetchTournament, validateToken } from './api';
+import { updatePredictions, fetchTournament } from './api';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
