@@ -42,7 +42,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 		return page === Route.Predictions ? route.data === user?.uid : page === route.page;
 	};
 
-	const otherCompetitions = Object.values(competitions)
+	const otherCompetitions = [competitions.euro2020, competitions.wc2022]
 		.map(c => c.name)
 		.filter(comp => comp !== competition.name);
 
