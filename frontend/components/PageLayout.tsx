@@ -17,7 +17,7 @@ const PageLayout = ({
 
 	const isEuro2020 = competition?.name === competitions.euro2020.name;
 
-	const style = isEuro2020 ? { backgroundImage: 'url(/background.webp)' } : { background: '#242424' };
+	const style = isEuro2020 ? { backgroundImage: 'url(/background.webp)' } : { background: '#181a1b' };
 	return (
 		<div className="flex flex-col bg-cover bg-center bg-repeat-y h-screen w-screen overflow-x-hidden" style={style}>
 			<Head>
