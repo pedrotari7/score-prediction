@@ -17,6 +17,7 @@ const Login = () => {
 				<StyledFirebaseAuth
 					uiConfig={{
 						signInOptions: [GoogleAuthProvider.PROVIDER_ID],
+						signInFlow: 'popup',
 						callbacks: {
 							// Avoid redirects after sign-in.
 							signInSuccessWithAuthResult: () => false,
