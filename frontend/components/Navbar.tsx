@@ -1,4 +1,4 @@
-import { Fragment, useContext } from 'react';
+import { Dispatch, Fragment, SetStateAction, useContext } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
@@ -15,7 +15,13 @@ interface NavItem {
 	info: RouteInfo;
 }
 
-export default function Navbar({ loading }: { loading: boolean }) {
+export default function Navbar({
+	loading,
+	setLoading,
+}: {
+	loading: boolean;
+	setLoading: Dispatch<SetStateAction<boolean>>;
+}) {
 	const router = useRouter();
 	const { user } = useAuth();
 
@@ -154,6 +160,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 																	href=""
 																	onClick={e => {
 																		e.preventDefault();
+																		setLoading(true);
 																		router.push(`/${comp}`);
 																	}}
 																	className={classNames(

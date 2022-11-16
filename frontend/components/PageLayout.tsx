@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { ReactNode, useContext } from 'react';
+import { Dispatch, ReactNode, SetStateAction, useContext } from 'react';
 import { competitions } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import Navbar from './Navbar';
@@ -7,10 +7,12 @@ import Navbar from './Navbar';
 const PageLayout = ({
 	title,
 	loading = false,
+	setLoading,
 	children,
 }: {
 	title: string;
 	loading?: boolean;
+	setLoading: Dispatch<SetStateAction<boolean>>;
 	children: ReactNode;
 }) => {
 	const competition = useContext(CompetitionContext);
@@ -26,7 +28,7 @@ const PageLayout = ({
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			</Head>
 
-			<Navbar loading={loading} />
+			<Navbar loading={loading} setLoading={setLoading} />
 
 			<main className="flex flex-col relative top-16 h-[calc(100vh-4rem)] z-10">{children}</main>
 
