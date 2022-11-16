@@ -152,7 +152,10 @@ export default function Navbar({ loading }: { loading: boolean }) {
 															{({ active }) => (
 																<a
 																	href=""
-																	onClick={async () => router.push(`/${comp}`)}
+																	onClick={e => {
+																		e.preventDefault();
+																		router.push(`/${comp}`);
+																	}}
 																	className={classNames(
 																		active ? 'bg-gray-100' : '',
 																		'block px-4 py-2 text-sm text-gray-700'
