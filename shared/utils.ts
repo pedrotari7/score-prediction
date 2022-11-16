@@ -10,7 +10,7 @@ import {
 } from '../interfaces/main';
 
 export const competitions: Competitions = {
-	// euro2016: { name: 'euro2016', league: 4, season: 2016, start: '2016-06-10', end: '2016-07-10', logo: '/logo.svg' },
+	euro2016: { name: 'euro2016', league: 4, season: 2016, start: '2016-06-10', end: '2016-07-10', logo: '/logo.svg' },
 	euro2020: { name: 'euro2020', league: 4, season: 2020, start: '2021-06-09', end: '2021-07-15', logo: '/logo.svg' },
 
 	// wc2010: { name: 'wc2010', league: 1, season: 2010, start: '2010-06-10', end: '2010-07-12', logo: '/logo.svg' },
