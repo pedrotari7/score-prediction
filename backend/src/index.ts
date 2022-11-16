@@ -424,7 +424,7 @@ app.get('/tournament', async (req, res) => {
 
   if (!standings && settings.allowUpdateStandings) {
     console.log('There are no current standings');
-    standings = await updateStandings(competition);
+    standings!.data = await updateStandings(competition);
   }
 
   const standingsTimeDiffSeconds = getTimeDiff(standings?.timestamp);
@@ -441,7 +441,7 @@ app.get('/tournament', async (req, res) => {
 
   if (settings.allowUpdateStandings || standingsTimeDiffSeconds > timeGuard) {
     console.log('standings needs update');
-    standings = await updateStandings(competition);
+    standings!.data = await updateStandings(competition);
   }
 
   if (settings.allowUpdateFixtures || fixturesTimeDiffSeconds > timeGuard) {
