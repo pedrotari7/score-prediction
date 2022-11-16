@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import PageLayout from '../components/PageLayout';
 import SettingsPage from '../components/Settings';
-import Rankings from '../components/Rankings';
+import Leaderboard from '../components/Leaderboard';
 import StandingsPage from '../components/Standings';
 
 import { updatePredictions, fetchTournament, validateToken } from './api';
@@ -89,7 +89,7 @@ const Home = () => {
 					setRoute({ page: Route.Predictions, data: uid });
 				}
 			} else {
-				setRoute({ page: Route.Ranking });
+				setRoute({ page: Route.Leaderboard });
 			}
 		};
 
@@ -134,8 +134,8 @@ const Home = () => {
 						user={users[route.data!]}
 					/>
 				);
-			case Route.Ranking:
-				return <Rankings users={users} />;
+			case Route.Leaderboard:
+				return <Leaderboard users={users} />;
 			case Route.Standings:
 				return <StandingsPage standings={standings} fixtures={fixtures} />;
 			case Route.Settings:

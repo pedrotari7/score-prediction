@@ -23,7 +23,7 @@ const SortOptions: Record<string, SortOption> = {
 	groups: { key: 'groups', text: 'Groups', color: 'bg-purple-700' },
 };
 
-const Rankings = ({ users }: { users: Users }) => {
+const Leaderboard = ({ users }: { users: Users }) => {
 	const { setRoute } = useContext(RouteContext)!;
 	const competition = useContext(CompetitionContext);
 	const [sortOption, setSortOption] = useState(SortOptions.points);
@@ -71,7 +71,7 @@ const Rankings = ({ users }: { users: Users }) => {
 
 	return (
 		<div className={classNames(gcc('text-light'), 'm-3 sm:m-6 p-3 sm:p-6 shadow-pop rounded-md select-none')}>
-			<div className="font-bold text-2xl mb-4">Ranking</div>
+			<div className="font-bold text-2xl mb-4">Leaderboard</div>
 
 			<div className="font-bold flex flex-row flex-wrap items-center justify-center sm:justify-center mb-6">
 				{Object.values(SortOptions).map(option => (
@@ -136,4 +136,4 @@ const Rankings = ({ users }: { users: Users }) => {
 	);
 };
 
-export default Rankings;
+export default Leaderboard;

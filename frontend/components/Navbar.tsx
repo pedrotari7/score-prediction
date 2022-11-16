@@ -22,7 +22,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 	const navigation: NavItem[] = [
 		{ name: 'NextGame', info: { page: Route.Match } },
 		{ name: 'MyPredictions', info: { page: Route.Predictions, data: user?.uid } },
-		{ name: 'Ranking', info: { page: Route.Ranking } },
+		{ name: 'Leaderboard', info: { page: Route.Leaderboard } },
 		{ name: 'Standings', info: { page: Route.Standings } },
 		{ name: 'Rules', info: { page: Route.Rules } },
 	];

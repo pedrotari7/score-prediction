@@ -170,7 +170,7 @@ const SettingsPage = () => {
 				<button
 					onClick={async () => setResponse(await resetStandings(userInfo.token, competition))}
 					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
-					Fetch Rankings
+					Fetch Leaderboard
 				</button>
 				<button
 					onClick={async () => setResponse(await resetFixtures(userInfo.token, competition))}
