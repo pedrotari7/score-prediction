@@ -439,12 +439,12 @@ app.get('/tournament', async (req, res) => {
 
   const timeGuard = hasGamesOngoing || hasNonStartedGames ? GAME_TIME : STALE_TIME;
 
-  if (settings.allowUpdateStandings && standingsTimeDiffSeconds > timeGuard) {
+  if (settings.allowUpdateStandings || standingsTimeDiffSeconds > timeGuard) {
     console.log('standings needs update');
     standings = await updateStandings(competition);
   }
 
-  if (settings.allowUpdateFixtures && fixturesTimeDiffSeconds > timeGuard) {
+  if (settings.allowUpdateFixtures || fixturesTimeDiffSeconds > timeGuard) {
     console.log('fixtures needs update');
 
     const gamesToUpdate = hasGamesOngoing
