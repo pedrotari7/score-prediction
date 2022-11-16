@@ -129,12 +129,12 @@ export const calculateResults = (fixtures: Fixture[], predictions: Predictions, 
 			}
 			teams[homeTeam].points = calculatePoints(teams[homeTeam]);
 			teams[awayTeam].points = calculatePoints(teams[awayTeam]);
-		}
-		teams[homeTeam].ga += prediction?.home ?? 0;
-		teams[homeTeam].gc += prediction?.away ?? 0;
 
-		teams[awayTeam].ga += prediction?.away ?? 0;
-		teams[awayTeam].gc += prediction?.home ?? 0;
+			teams[homeTeam].ga += prediction?.home ?? 0;
+			teams[homeTeam].gc += prediction?.away ?? 0;
+			teams[awayTeam].ga += prediction?.away ?? 0;
+			teams[awayTeam].gc += prediction?.home ?? 0;
+		}
 
 		return teams;
 	}, {} as Record<number, PredResult>);
