@@ -170,7 +170,8 @@ export default function Navbar({ loading }: { loading: boolean }) {
 														{({ active }) => (
 															<a
 																href=""
-																onClick={async () => {
+																onClick={async e => {
+																	e.preventDefault();
 																	await getAuth(app).signOut();
 																}}
 																className={classNames(
