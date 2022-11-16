@@ -24,7 +24,7 @@ export default function Navbar({ loading }: { loading: boolean }) {
 		{ name: 'MyPredictions', info: { page: Route.Predictions, data: user?.uid } },
 		{ name: 'Leaderboard', info: { page: Route.Leaderboard } },
 		{ name: 'Standings', info: { page: Route.Standings } },
-		{ name: 'Rules', info: { page: Route.Rules } },
+		{ name: 'Rules', info: { page: Route.Rules, data: user?.uid } },
 	];
 
 	const routeInfo = useContext(RouteContext);

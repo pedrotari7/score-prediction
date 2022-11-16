@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import CompetitionContext from '../context/CompetitionContext';
+import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 
 export const ExactScore = () => (
@@ -72,25 +73,49 @@ const Rules = () => {
 	const competition = useContext(CompetitionContext);
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
+	const routeInfo = useContext(RouteContext);
+
+	if (!routeInfo) return <></>;
+
+	const { setRoute, route } = routeInfo;
+
+	const updateRoute = (info: RouteInfo) => setRoute(info);
+
 	return (
-		<div
-			className={classNames(
-				gcc('text-light'),
-				gcc('bg-dark'),
-				`flex flex-col justify-center select-none  m-8 p-8 shadow-pop rounded-md`,
-				'mx-8 md:mx-24 lg:mx-48'
-			)}>
-			<div className="font-bold mb-4 text-4xl">Rules</div>
-			<div className="font-bold text-2xl mb-4">Points in each game</div>
-			<ExactScore />
-			<CorrectResult />
-			<RightGoals />
-			<NoPoints />
-			<ExtraInfo />
-			<GroupsPoints />
-			<FinalStages />
-			<Deadlines />
-		</div>
+		<>
+			<div
+				className={classNames(
+					gcc('text-light'),
+					gcc('bg-dark'),
+					`flex flex-col justify-center select-none  m-8 p-8 shadow-pop rounded-md`,
+					'mx-8 md:mx-24 lg:mx-48'
+				)}>
+				<div className="font-bold mb-4 text-4xl">Rules</div>
+				<div className="font-bold text-2xl mb-4">Points in each game</div>
+				<ExactScore />
+				<CorrectResult />
+				<RightGoals />
+				<NoPoints />
+				<ExtraInfo />
+				<GroupsPoints />
+				<FinalStages />
+				<Deadlines />
+			</div>
+			<div
+				className={classNames(
+					gcc('text-light'),
+					`flex flex-col justify-center select-none  m-8 p-8 rounded-md`,
+					'mx-8 md:mx-24 lg:mx-48 mb-10'
+				)}></div>
+			<div
+				className={classNames(
+					gcc('bg-light'),
+					'fixed bottom-4 right-4 p-4 rounded-md shadow-pop cursor-pointer font-bold'
+				)}
+				onClick={() => updateRoute({ page: Route.Predictions, data: route.data })}>
+				My Predictions
+			</div>
+		</>
 	);
 };
 

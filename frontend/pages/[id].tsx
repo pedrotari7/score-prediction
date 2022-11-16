@@ -82,7 +82,7 @@ const Home = () => {
 			setLoading(false);
 
 			if (uid in users && users[uid].shouldOnboard) {
-				setRoute({ page: Route.Rules });
+				setRoute({ page: Route.Rules, data: uid });
 			} else if (nextGame) {
 				const nextGamePrediction = predictions[nextGame.fixture.id];
 				if (!nextGamePrediction || !(uid in nextGamePrediction)) {
