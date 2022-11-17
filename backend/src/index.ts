@@ -385,9 +385,11 @@ app.get('/fetch-users', async (req, res) => {
   if (!authResult.success) return authResult.result;
 
   const allUsers = (await getAuth(firebaseApp).listUsers()).users
-    .map(({ displayName, metadata, uid }) => ({
+    .map(({ displayName, metadata, uid, photoURL, email }) => ({
       displayName,
       uid,
+      photoURL,
+      email,
       ...metadata,
     }))
     .sort((a, b) => new Date(b.lastSignInTime).getTime() - new Date(a.lastSignInTime).getTime());

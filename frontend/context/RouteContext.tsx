@@ -8,6 +8,7 @@ export enum Route {
 	Settings = 'settings',
 	Match = 'match',
 	Rules = 'rules',
+	Users = 'users',
 }
 
 export interface RouteInfo {

@@ -137,20 +137,36 @@ export default function Navbar({
 														'origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none'
 													)}>
 													{user?.admin && (
-														<Menu.Item>
-															{({ active }) => (
-																<div
-																	onClick={() =>
-																		updateRoute({ page: Route.Settings })
-																	}
-																	className={classNames(
-																		active ? 'bg-gray-100' : '',
-																		'cursor-pointer block px-4 py-2 text-sm text-gray-700'
-																	)}>
-																	Settings
-																</div>
-															)}
-														</Menu.Item>
+														<>
+															<Menu.Item>
+																{({ active }) => (
+																	<div
+																		onClick={() =>
+																			updateRoute({ page: Route.Users })
+																		}
+																		className={classNames(
+																			active ? 'bg-gray-100' : '',
+																			'cursor-pointer block px-4 py-2 text-sm text-gray-700'
+																		)}>
+																		Users
+																	</div>
+																)}
+															</Menu.Item>
+															<Menu.Item>
+																{({ active }) => (
+																	<div
+																		onClick={() =>
+																			updateRoute({ page: Route.Settings })
+																		}
+																		className={classNames(
+																			active ? 'bg-gray-100' : '',
+																			'cursor-pointer block px-4 py-2 text-sm text-gray-700'
+																		)}>
+																		Settings
+																	</div>
+																)}
+															</Menu.Item>
+														</>
 													)}
 
 													{otherCompetitions.map(comp => (

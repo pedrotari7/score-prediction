@@ -21,6 +21,7 @@ import GroupMapContext from '../context/GroupMapContext';
 import Login from '../components/Login';
 import { useAuth } from '../lib/auth';
 import UpdateTournamentContext from '../context/UpdateTournamentContext';
+import UsersList from '../components/Users';
 
 const Home = () => {
 	const auth = useAuth();
@@ -133,9 +134,10 @@ const Home = () => {
 				return <StandingsPage standings={standings} fixtures={fixtures} />;
 			case Route.Settings:
 				return <SettingsPage />;
-
 			case Route.Rules:
 				return <Rules />;
+			case Route.Users:
+				return <UsersList users={users} />;
 			default:
 				return <></>;
 		}
