@@ -10,6 +10,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { getResult, isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import Loading from './Loading';
+import RefreshComp from './RefreshComp';
 
 const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game: Fixture }) => {
 	const routeInfo = useContext(RouteContext)!;
@@ -158,8 +159,11 @@ const CurrentMatch = ({
 					gcc('bg-dark'),
 					'flex flex-col justify-center select-none  m-4 sm:m-8 md:mx-24 p-4 sm:p-8 shadow-pop rounded-md  relative'
 				)}>
-				{!id && <p className="text-3xl mb-2">Next Game</p>}
-				{id && <p className="text-3xl mb-2">{game.league?.round}</p>}
+				<div className={classNames('flex flex-row items-center justify-between mb-4')}>
+					{!id && <p className="text-3xl mb-2">Next Game</p>}
+					{id && <p className="text-3xl mb-2">{game.league?.round}</p>}
+					<RefreshComp />
+				</div>
 
 				<div className="relative">
 					{!isExtraInfoOpen && prevGameId !== null && (

@@ -20,6 +20,7 @@ import CompetitionContext from '../context/CompetitionContext';
 import GroupMapContext from '../context/GroupMapContext';
 import Login from '../components/Login';
 import { useAuth } from '../lib/auth';
+import UpdateTournamentContext from '../context/UpdateTournamentContext';
 
 const Home = () => {
 	const auth = useAuth();
@@ -41,52 +42,52 @@ const Home = () => {
 
 	const competition: Competition = competitions[competitionName as string];
 
-	useEffect(() => {
-		const doAsync = async () => {
-			if (!auth.user) {
-				setLoading(false);
-				setAuthenticated(false);
-				return;
-			}
-
-			const { token, uid } = auth.user;
-
-			setTriedToValidateToken(true);
-			setAuthenticated(true);
-
-			const { fixtures, standings, predictions, users } = await fetchTournament(token, competition);
-
-			if (!standings || !fixtures) return;
-
-			const sortedStandings = Object.entries(standings).sort() as unknown as Standings;
-
-			const sortedFixtures = Object.values(fixtures).sort(
-				({ fixture: a }, { fixture: b }) => a.timestamp - b.timestamp
-			);
-
-			const nextGame = sortedFixtures.find(game => !isGameFinished(game));
-
-			setFixtures(fixtures);
-			setPredictions(predictions);
-			setStandings(sortedStandings);
-			setUID(uid);
-			setUsers(users);
+	const updateTournament = async () => {
+		if (!auth.user) {
 			setLoading(false);
+			setAuthenticated(false);
+			return;
+		}
 
-			if (uid in users && users[uid].shouldOnboard) {
-				setRoute({ page: Route.Rules, data: uid });
-			} else if (nextGame) {
-				const nextGamePrediction = predictions[nextGame.fixture.id];
-				if (!nextGamePrediction || !(uid in nextGamePrediction)) {
-					setRoute({ page: Route.Predictions, data: uid });
-				}
-			} else {
-				setRoute({ page: Route.Leaderboard });
+		const { token, uid } = auth.user;
+
+		setTriedToValidateToken(true);
+		setAuthenticated(true);
+
+		const { fixtures, standings, predictions, users } = await fetchTournament(token, competition);
+
+		if (!standings || !fixtures) return;
+
+		const sortedStandings = Object.entries(standings).sort() as unknown as Standings;
+
+		const sortedFixtures = Object.values(fixtures).sort(
+			({ fixture: a }, { fixture: b }) => a.timestamp - b.timestamp
+		);
+
+		setFixtures(fixtures);
+		setPredictions(predictions);
+		setStandings(sortedStandings);
+		setUID(uid);
+		setUsers(users);
+
+		setLoading(false);
+
+		const nextGame = sortedFixtures.find(game => !isGameFinished(game));
+
+		if (uid in users && users[uid].shouldOnboard) {
+			setRoute({ page: Route.Rules, data: uid });
+		} else if (nextGame) {
+			const nextGamePrediction = predictions[nextGame.fixture.id];
+			if (!nextGamePrediction || !(uid in nextGamePrediction)) {
+				setRoute({ page: Route.Predictions, data: uid });
 			}
-		};
+		} else {
+			setRoute({ page: Route.Leaderboard });
+		}
+	};
 
-		doAsync();
-
+	useEffect(() => {
+		updateTournament();
 		return () => {};
 	}, [router, competition, auth]);
 
@@ -148,17 +149,19 @@ const Home = () => {
 				<CompetitionContext.Provider value={competition}>
 					<FixturesContext.Provider value={fixtures}>
 						<GroupMapContext.Provider value={groupMap}>
-							{showLogin && <Login />}
+							<UpdateTournamentContext.Provider value={updateTournament}>
+								{showLogin && <Login />}
 
-							{!showLogin && (
-								<PageLayout title={'Score Prediction'} loading={loading} setLoading={setLoading}>
-									{loading || !triedToValidateToken ? (
-										<Loading message="Logging in..." />
-									) : (
-										<MainComponent />
-									)}
-								</PageLayout>
-							)}
+								{!showLogin && (
+									<PageLayout title={'Score Prediction'} loading={loading} setLoading={setLoading}>
+										{loading || !triedToValidateToken ? (
+											<Loading message="Logging in..." />
+										) : (
+											<MainComponent />
+										)}
+									</PageLayout>
+								)}
+							</UpdateTournamentContext.Provider>
 						</GroupMapContext.Provider>
 					</FixturesContext.Provider>
 				</CompetitionContext.Provider>

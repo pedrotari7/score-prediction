@@ -5,6 +5,7 @@ import RouteContext, { Route } from '../context/RouteContext';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
+import RefreshComp from './RefreshComp';
 import { UserScores } from './UserScores';
 
 interface SortOption {
@@ -71,7 +72,10 @@ const Leaderboard = ({ users }: { users: Users }) => {
 
 	return (
 		<div className={classNames(gcc('text-light'), 'm-3 sm:m-6 p-3 sm:p-6 shadow-pop rounded-md select-none')}>
-			<div className="font-bold text-2xl mb-4">Leaderboard</div>
+			<div className={classNames('flex flex-row items-center justify-between mb-4')}>
+				<div className="font-bold text-2xl">Leaderboard</div>
+				<RefreshComp />
+			</div>
 
 			<div className="font-bold flex flex-row flex-wrap items-center justify-center sm:justify-center mb-6">
 				{Object.values(SortOptions).map(option => (

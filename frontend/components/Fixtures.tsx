@@ -6,6 +6,7 @@ import { useAuth } from '../lib/auth';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import Game from './Game';
 import PredictedGroups from './PredictedGroups';
+import RefreshComp from './RefreshComp';
 import { UserScores } from './UserScores';
 
 const FixturesPage = ({
@@ -95,7 +96,10 @@ const FixturesPage = ({
 				})}
 
 			<div className="flex flex-col">
-				<div className="text-3xl mb-6">Group Stage</div>
+				<div className={classNames('flex flex-row items-center justify-between mb-6')}>
+					<div className="text-3xl">Group Stage</div>
+					<RefreshComp />
+				</div>
 
 				<div className="flex flex-col-reverse md:flex-col">
 					<PredictedGroups
