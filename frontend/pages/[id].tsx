@@ -137,7 +137,7 @@ const Home = () => {
 			case Route.Rules:
 				return <Rules />;
 			case Route.Users:
-				return <UsersList users={users} />;
+				return <UsersList />;
 			default:
 				return <></>;
 		}
