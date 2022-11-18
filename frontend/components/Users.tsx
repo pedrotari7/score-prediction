@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import CompetitionContext from '../context/CompetitionContext';
 import UserContext from '../context/UserContext';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
@@ -11,20 +12,29 @@ const UsersList = () => {
 	const userInfo = useContext(UserContext);
 	const [users, setUsers] = useState<any>();
 
-	useEffect(() => {
-		const doAsync = async () => {
-			if (userInfo) {
-				setUsers(await fetchUsers(userInfo.token, competition));
-			}
-		};
-		doAsync();
+	const update = useCallback(async () => {
+		console.log('update');
+		if (userInfo) {
+			setUsers(await fetchUsers(userInfo.token, competition));
+		}
 	}, [userInfo, competition]);
+
+	useEffect(() => {
+		update();
+	}, [update]);
 
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
 		<div className={classNames(gcc('text-light'), 'm-3 sm:m-6 p-3 sm:p-6 shadow-pop rounded-md select-none')}>
-			<div className="font-bold text-2xl mb-4">Users</div>
+			<div className={classNames('flex flex-row items-center justify-between mb-4')}>
+				<div className="font-bold text-2xl">Users</div>
+				<ArrowPathIcon
+					className={classNames(gcc('text-light'), 'h-6 w-6', 'hover:opacity-80 cursor-pointer')}
+					onClick={() => update()}
+				/>{' '}
+			</div>
+
 			<div className="flex flex-col item-center  justify-evenly w-full">
 				{users &&
 					Object.values(users).map((user: any, index) => {
