@@ -1,6 +1,7 @@
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import CompetitionContext from '../context/CompetitionContext';
+import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import { fetchUsers } from '../pages/api';
@@ -8,6 +9,7 @@ import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
 
 const UsersList = () => {
+	const { setRoute } = useContext(RouteContext)!;
 	const competition = useContext(CompetitionContext);
 	const userInfo = useContext(UserContext);
 	const [users, setUsers] = useState<any>();
@@ -39,7 +41,10 @@ const UsersList = () => {
 				{users &&
 					Object.values(users).map((user: any, index) => {
 						return (
-							<div key={user.uid} className="relative w-full ">
+							<div
+								key={user.uid}
+								className="relative w-full "
+								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
 								<div
 									className={classNames(
 										'w-full',
