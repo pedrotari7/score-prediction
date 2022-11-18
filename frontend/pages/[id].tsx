@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import PageLayout from '../components/PageLayout';
 import SettingsPage from '../components/Settings';
@@ -43,7 +43,7 @@ const Home = () => {
 
 	const competition: Competition = competitions[competitionName as string];
 
-	const updateTournament = async () => {
+	const updateTournament = useCallback(async () => {
 		if (!auth.user) {
 			setLoading(false);
 			setAuthenticated(false);
@@ -85,12 +85,11 @@ const Home = () => {
 		} else {
 			setRoute({ page: Route.Leaderboard });
 		}
-	};
+	}, [competition, auth]);
 
 	useEffect(() => {
 		updateTournament();
-		return () => {};
-	}, [router, competition, auth]);
+	}, [router, updateTournament]);
 
 	const updatePrediction = async (prediction: Prediction, gameId: number) => {
 		if (!auth.user) return;
