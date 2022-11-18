@@ -24,7 +24,7 @@ const SortOptions: Record<string, SortOption> = {
 	groups: { key: 'groups', text: 'Groups', color: 'bg-purple-700' },
 };
 
-const Leaderboard = ({ users }: { users: Users }) => {
+const Leaderboards = ({ users }: { users: Users }) => {
 	const { setRoute } = useContext(RouteContext)!;
 	const competition = useContext(CompetitionContext);
 	const [sortOption, setSortOption] = useState(SortOptions.points);
@@ -73,7 +73,7 @@ const Leaderboard = ({ users }: { users: Users }) => {
 	return (
 		<div className={classNames(gcc('text-light'), 'm-3 sm:m-6 p-3 sm:p-6 shadow-pop rounded-md select-none')}>
 			<div className={classNames('flex flex-row items-center justify-between mb-4')}>
-				<div className="font-bold text-2xl">Leaderboard</div>
+				<div className="font-bold text-2xl">Leaderboards</div>
 				<RefreshComp />
 			</div>
 
@@ -140,4 +140,4 @@ const Leaderboard = ({ users }: { users: Users }) => {
 	);
 };
 
-export default Leaderboard;
+export default Leaderboards;

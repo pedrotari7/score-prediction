@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import PageLayout from '../components/PageLayout';
 import SettingsPage from '../components/Settings';
-import Leaderboard from '../components/Leaderboard';
+import Leaderboards from '../components/Leaderboard';
 import StandingsPage from '../components/Standings';
 
 import { updatePredictions, fetchTournament } from './api';
@@ -128,7 +128,7 @@ const Home = () => {
 					/>
 				);
 			case Route.Leaderboard:
-				return <Leaderboard users={users} />;
+				return <Leaderboards users={users} />;
 			case Route.Standings:
 				return <StandingsPage standings={standings} fixtures={fixtures} />;
 			case Route.Settings:
