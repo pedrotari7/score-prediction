@@ -15,7 +15,6 @@ const UsersList = () => {
 	const [users, setUsers] = useState<any>();
 
 	const update = useCallback(async () => {
-		console.log('update');
 		if (userInfo) {
 			setUsers(await fetchUsers(userInfo.token, competition));
 		}
@@ -40,6 +39,7 @@ const UsersList = () => {
 			<div className="flex flex-col item-center  justify-evenly w-full">
 				{users &&
 					Object.values(users).map((user: any, index) => {
+						if (!user) return <></>;
 						return (
 							<div
 								key={user.uid}
