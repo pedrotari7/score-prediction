@@ -1,5 +1,5 @@
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
-import React, { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import CompetitionContext from '../context/CompetitionContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UpdateTournamentContext from '../context/UpdateTournamentContext';
@@ -8,7 +8,7 @@ import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import { createLeaderboard } from '../pages/api';
 import Loading from './Loading';
 
-const CreateLeaderboard = ({ setCurrentLeaderboard }: { setCurrentLeaderboard: Dispatch<SetStateAction<string>> }) => {
+const CreateLeaderboard = () => {
 	const competition = useContext(CompetitionContext);
 	const updateCompetition = useContext(UpdateTournamentContext)!;
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -56,15 +56,14 @@ const CreateLeaderboard = ({ setCurrentLeaderboard }: { setCurrentLeaderboard: D
 									const result = await createLeaderboard(name, userInfo.token);
 									await updateCompetition();
 									if (result.success && routeInfo) {
-										setCurrentLeaderboard(result.uid);
 										routeInfo.setRoute({ page: Route.Leaderboard, data: result.uid });
 									}
 								}
 								setLoading(false);
 							}
 						}}>
-						{!loading && <Loading className="w-4 h-4" />}
-						{loading && <div>Create</div>}
+						{loading && <Loading className="w-4 h-4" />}
+						{!loading && <div>Create</div>}
 					</div>
 				</>
 			)}

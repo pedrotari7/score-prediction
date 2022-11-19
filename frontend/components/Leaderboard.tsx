@@ -104,7 +104,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 					)}
 
 					<div className="flex flex-row gap-2 flex-wrap justify-center">
-						<CreateLeaderboard setCurrentLeaderboard={setCurrentLeaderboard} />
+						<CreateLeaderboard />
 						{!isGlobalLeaderboard && <ShareLeaderboard leaderboardId={currentLeaderboard} />}
 					</div>
 				</>
