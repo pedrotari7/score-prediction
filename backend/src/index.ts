@@ -693,9 +693,9 @@ app.post('/leaderboard', async (req, res) => {
 
     const userExtraInfo = (await getDBUser(callerUID).get()).data();
 
-    const result = await getDBUser(callerUID).update({ leaderboards: [...userExtraInfo?.leaderboards, leaderboardId] });
+    await getDBUser(callerUID).update({ leaderboards: [...userExtraInfo?.leaderboards, leaderboardId] });
 
-    return res.json(result);
+    return res.json({ success: true });
   }
   return res.json({ success: true });
 });
