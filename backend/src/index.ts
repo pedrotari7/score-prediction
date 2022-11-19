@@ -631,7 +631,7 @@ app.post('/update-settings', async (req, res) => {
 });
 
 app.post('/create-leaderboard', async (req, res) => {
-  const authResult = await authenticate(req, res, true);
+  const authResult = await authenticate(req, res);
   if (!authResult.success) return res.json(authResult.result);
 
   const { uid: callerUID } = authResult.result as DecodedIdToken;
@@ -661,7 +661,7 @@ app.post('/create-leaderboard', async (req, res) => {
 });
 
 app.get('/leaderboard', async (req, res) => {
-  const authResult = await authenticate(req, res, true);
+  const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;
 
   const leaderboardId = req.query.leaderboardId as string;
@@ -674,7 +674,7 @@ app.get('/leaderboard', async (req, res) => {
 });
 
 app.post('/leaderboard', async (req, res) => {
-  const authResult = await authenticate(req, res, true);
+  const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;
 
   const { uid: callerUID } = authResult.result as DecodedIdToken;
