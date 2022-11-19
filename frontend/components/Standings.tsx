@@ -58,12 +58,14 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 			{standings.map(([title, standing]) => {
 				const group = title.split(' ').pop();
 
-				const games = Object.values(fixtures).filter(
-					(f: Fixture) =>
-						f.league.round.startsWith(`Group`) &&
-						groupMap[f.teams.home.id] === group &&
-						groupMap[f.teams.away.id] === group
-				);
+				const games = Object.values(fixtures)
+					.filter(
+						(f: Fixture) =>
+							f.league.round.startsWith(`Group`) &&
+							groupMap[f.teams.home.id] === group &&
+							groupMap[f.teams.away.id] === group
+					)
+					.sort((a: Fixture, b: Fixture) => a.fixture.timestamp - b.fixture.timestamp);
 
 				return (
 					<div
