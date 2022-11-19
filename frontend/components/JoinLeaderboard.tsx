@@ -42,8 +42,8 @@ const JoinLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
 				'm-12 sm:m-24 p-3 sm:p-6 shadow-pop rounded-md select-none h-full',
 				'flex flex-col items-center justify-center gap-12 sm:gap-20'
 			)}>
-			<div className={classNames('font-bold text-4xl sm:text-4xl md:text-7xl')}>Join Leaderboard</div>
-			<div className={classNames('font-bold text-3xl sm:text-3xl md:text-6xl')}>{leaderboard.name}</div>
+			<div className={classNames('font-bold text-3xl sm:text-4xl md:text-7xl')}>Join Leaderboard</div>
+			<div className={classNames('font-bold text-2xl sm:text-3xl md:text-6xl')}>{leaderboard.name}</div>
 			<div className={classNames('text-xl')}>{leaderboard.id}</div>
 			<div
 				onClick={async () => {
