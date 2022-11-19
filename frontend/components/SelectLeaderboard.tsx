@@ -26,7 +26,7 @@ const SelectLeaderboard = ({
 			onChange={selectedOption => {
 				if (selectedOption) {
 					setCurrentLeaderboard(selectedOption.value);
-					setMembers(allLeaderboards[selectedOption.value].members);
+					setMembers(allLeaderboards[selectedOption.value]?.members ?? []);
 				}
 			}}
 			value={{
