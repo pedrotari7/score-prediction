@@ -10,14 +10,17 @@ import axios from 'axios';
 
 import {
   Competition,
+  CreateLeaderboardResult,
   Fixture,
   FixtureExtraInfo,
   Fixtures,
   GroupPoints,
+  Leaderboard,
   Predictions,
   Settings,
   Standing,
   Status,
+  Tournament,
   UserResult,
 } from '../../interfaces/main';
 import { DEFAULT_USER_RESULT, joinResults } from './util';
@@ -147,6 +150,7 @@ const getDBPredictions = (competition: Competition) => getDbDoc(competition, 'pr
 const getDBScores = (competition: Competition) => getDbDoc(competition, 'scores');
 const getDBGroupPoints = (competition: Competition) => getDbDoc(competition, 'groupPoints');
 const getDBSettings = () => getDoc('admin', 'settings');
+const getDBUser = (uid: string) => getDoc('users', uid);
 
 const updateStandings = async (competition: Competition) => {
   const response = await getStandings({ league: competition.league, season: competition.season });
@@ -467,7 +471,26 @@ app.get('/tournament', async (req, res) => {
 
   const users = await getUsers(competition);
 
-  return res.json({ fixtures: fixtures?.data, standings: standings?.data, predictions, users });
+  const userExtraInfo = (await getDBUser(decodedToken.uid).get()).data() ?? { leaderboards: [] };
+
+  const leaderboards: Record<string, Leaderboard> =
+    (
+      await Promise.all<Leaderboard>(
+        userExtraInfo?.leaderboards?.map(async (l: string) =>
+          (await getFirestore(firebaseApp).collection('leaderboards').doc(l).get()).data()
+        )
+      )
+    ).reduce((acc, l) => ({ ...acc, [l.id]: l }), {}) ?? {};
+
+  const tournament: Tournament = {
+    fixtures: fixtures?.data,
+    standings: standings?.data,
+    predictions,
+    users,
+    userExtraInfo: { ...userExtraInfo, leaderboards },
+  };
+
+  return res.json(tournament);
 });
 
 app.post('/update-predictions', async (req, res) => {
@@ -605,6 +628,76 @@ app.post('/update-settings', async (req, res) => {
   const result = await getDBSettings().set(settings);
 
   return res.json(result);
+});
+
+app.post('/create-leaderboard', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return res.json(authResult.result);
+
+  const { uid: callerUID } = authResult.result as DecodedIdToken;
+
+  const { name } = JSON.parse(req.body);
+
+  const leaderboardDoc = getFirestore(firebaseApp).collection('leaderboards').doc();
+
+  const leaderboard: Leaderboard = { id: leaderboardDoc.id, name, members: [callerUID], creator: callerUID };
+
+  leaderboardDoc.set(leaderboard);
+
+  const currentUser = (await getDBUser(callerUID).get()).data() as { leaderboards: string[] };
+
+  if (currentUser) {
+    await getDBUser(callerUID).set({
+      ...currentUser,
+      leaderboards: [...currentUser?.leaderboards, leaderboardDoc.id],
+    });
+  } else {
+    await getDBUser(callerUID).set({ leaderboards: [leaderboardDoc.id] });
+  }
+
+  const response: CreateLeaderboardResult = { success: true, uid: leaderboardDoc.id, name };
+
+  return res.json(response);
+});
+
+app.get('/leaderboard', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
+
+  const leaderboardId = req.query.leaderboardId as string;
+
+  const leaderboard = (
+    await getFirestore(firebaseApp).collection('leaderboards').doc(leaderboardId).get()
+  ).data() as Leaderboard;
+
+  return res.json(leaderboard);
+});
+
+app.post('/leaderboard', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
+
+  const { uid: callerUID } = authResult.result as DecodedIdToken;
+
+  const leaderboardId = req.query.leaderboardId as string;
+
+  const leaderboard = (
+    await getFirestore(firebaseApp).collection('leaderboards').doc(leaderboardId).get()
+  ).data() as Leaderboard;
+
+  if (!leaderboard.members.includes(callerUID)) {
+    getFirestore(firebaseApp)
+      .collection('leaderboards')
+      .doc(leaderboardId)
+      .set({ ...leaderboard, members: [...leaderboard.members, callerUID] });
+
+    const userExtraInfo = (await getDBUser(callerUID).get()).data();
+
+    const result = await getDBUser(callerUID).update({ leaderboards: [...userExtraInfo?.leaderboards, leaderboardId] });
+
+    return res.json(result);
+  }
+  return res.json({ success: true });
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -239,11 +239,16 @@ export interface Competition {
 
 export type Competitions = Record<string, Competition>;
 
+export interface UserExtraInfo {
+	leaderboards: Record<string, Leaderboard>;
+}
+
 export interface Tournament {
 	fixtures: Fixtures;
 	standings: Standings;
 	predictions: Predictions;
 	users: Users;
+	userExtraInfo: UserExtraInfo;
 }
 
 export interface VerificationResult {
@@ -283,3 +288,16 @@ export interface Status {
 }
 
 export type GroupMap = Record<string, string>;
+
+export interface CreateLeaderboardResult {
+	success: boolean;
+	uid: string;
+	name: string;
+}
+
+export interface Leaderboard {
+	id: string;
+	name: string;
+	members: string[];
+	creator: string;
+}

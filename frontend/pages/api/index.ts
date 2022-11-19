@@ -8,6 +8,7 @@ import {
 	VerificationResult,
 	Status,
 	Competition,
+	CreateLeaderboardResult,
 } from '../../../interfaces/main';
 import { competitions } from '../../../shared/utils';
 import fetcher from '../../lib/fetcher';
@@ -88,3 +89,21 @@ export const updateSettings = async (token: string, settings: Settings): Promise
 };
 
 export const fetchStatus = async (token: string): Promise<Status> => await cFetch(`${backendUrl}/fetch-status`, token);
+
+export const createLeaderboard = async (name: string, token: string): Promise<CreateLeaderboardResult> =>
+	await cFetch(
+		`${backendUrl}/create-leaderboard`,
+		token,
+		undefined,
+		{},
+		{
+			body: JSON.stringify({ name }),
+			method: 'POST',
+		}
+	);
+
+export const fetchLeaderboard = async (leaderboardId: string, token: string) =>
+	await cFetch(`${backendUrl}/leaderboard`, token, undefined, { leaderboardId });
+
+export const joinLeaderboard = async (leaderboardId: string, token: string): Promise<CreateLeaderboardResult> =>
+	await cFetch(`${backendUrl}/leaderboard`, token, undefined, { leaderboardId }, { method: 'POST' });

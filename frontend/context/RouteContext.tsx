@@ -9,6 +9,7 @@ export enum Route {
 	Match = 'match',
 	Rules = 'rules',
 	Users = 'users',
+	JoinLeaderboard = 'joinLeaderboard',
 }
 
 export interface RouteInfo {

@@ -1,5 +1,5 @@
 import { MouseEventHandler, ReactNode, useContext, useState } from 'react';
-import { Users } from '../../interfaces/main';
+import { Leaderboard, Users } from '../../interfaces/main';
 import CompetitionContext from '../context/CompetitionContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
@@ -7,6 +7,9 @@ import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
 import RefreshComp from './RefreshComp';
 import { UserScores } from './UserScores';
+import CreateLeaderboard from './CreateLeaderboard';
+import SelectLeaderboard from './SelectLeaderboard';
+import ShareLeaderboard from './ShareLeaderboard';
 
 interface SortOption {
 	key: string;
@@ -24,10 +27,18 @@ const SortOptions: Record<string, SortOption> = {
 	groups: { key: 'groups', text: 'Groups', color: 'bg-purple-700' },
 };
 
-const Leaderboards = ({ users }: { users: Users }) => {
-	const { setRoute } = useContext(RouteContext)!;
+const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Record<string, Leaderboard> }) => {
+	const { route, setRoute } = useContext(RouteContext)!;
 	const competition = useContext(CompetitionContext);
 	const [sortOption, setSortOption] = useState(SortOptions.points);
+	const initialLeaderboard = route.data ? (route.data as string) : 'global';
+
+	const [currentLeaderboard, setCurrentLeaderboard] = useState(initialLeaderboard);
+
+	const initialMembers =
+		initialLeaderboard === 'global' ? Object.keys(users) : leaderboards[initialLeaderboard].members;
+
+	const [members, setMembers] = useState<string[]>(initialMembers);
 
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
@@ -56,8 +67,11 @@ const Leaderboards = ({ users }: { users: Users }) => {
 		);
 	};
 
+	const hasLeaderboards = Object.keys(leaderboards).length > 0;
+	const isGlobalLeaderboard = currentLeaderboard === 'global';
+
 	const sortedUsers = Object.values(users)
-		.filter(user => user.score)
+		.filter(user => user.score && members.includes(user.uid))
 		.sort(
 			(a, b) =>
 				b.score[sortOption.key] - a.score[sortOption.key] ||
@@ -75,6 +89,25 @@ const Leaderboards = ({ users }: { users: Users }) => {
 			<div className={classNames('flex flex-row items-center justify-between mb-4')}>
 				<div className="font-bold text-2xl">Leaderboards</div>
 				<RefreshComp />
+			</div>
+
+			<div className="flex flex-col sm:flex-row items-center gap-4 mb-4">
+				<>
+					{hasLeaderboards && (
+						<SelectLeaderboard
+							users={users}
+							leaderboards={leaderboards}
+							currentLeaderboard={currentLeaderboard}
+							setCurrentLeaderboard={setCurrentLeaderboard}
+							setMembers={setMembers}
+						/>
+					)}
+
+					<div className="flex flex-row gap-2 flex-wrap justify-center">
+						<CreateLeaderboard setCurrentLeaderboard={setCurrentLeaderboard} />
+						{!isGlobalLeaderboard && <ShareLeaderboard leaderboardId={currentLeaderboard} />}
+					</div>
+				</>
 			</div>
 
 			<div className="font-bold flex flex-row flex-wrap items-center justify-center sm:justify-center mb-6">

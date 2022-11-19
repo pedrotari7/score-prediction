@@ -11,7 +11,7 @@ import UserContext from '../context/UserContext';
 import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import FixturesPage from '../components/Fixtures';
 import CurrentMatch from '../components/CurrentMatch';
-import { Competition, Fixtures, Prediction, Predictions, Standings, Users } from '../../interfaces/main';
+import { Competition, Fixtures, Leaderboard, Prediction, Predictions, Standings, Users } from '../../interfaces/main';
 import Rules from '../components/Rules';
 import { useRouter } from 'next/router';
 import Loading from '../components/Loading';
@@ -22,6 +22,7 @@ import Login from '../components/Login';
 import { useAuth } from '../lib/auth';
 import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UsersList from '../components/Users';
+import JoinLeaderboard from '../components/JoinLeaderboard';
 
 const Home = () => {
 	const auth = useAuth();
@@ -29,9 +30,11 @@ const Home = () => {
 	const [isAuthenticated, setAuthenticated] = useState(false);
 	const [triedToValidateToken, setTriedToValidateToken] = useState(false);
 
-	const [predictions, setPredictions] = useState({} as Predictions);
-	const [fixtures, setFixtures] = useState({} as Fixtures);
-	const [standings, setStandings] = useState([] as Standings);
+	const [predictions, setPredictions] = useState<Predictions>({});
+	const [fixtures, setFixtures] = useState<Fixtures>({});
+	const [standings, setStandings] = useState<Standings>([]);
+	const [leaderboards, setLeaderboards] = useState<Record<string, Leaderboard>>({});
+
 	const [users, setUsers] = useState({} as Users);
 
 	const [uid, setUID] = useState('');
@@ -39,7 +42,8 @@ const Home = () => {
 	const [route, setRoute] = useState<RouteInfo>({ page: Route.Home });
 
 	const router = useRouter();
-	const { id: competitionName } = router.query;
+
+	const { id: competitionName, join: leaderboardId } = router.query;
 
 	const competition: Competition = competitions[competitionName as string];
 
@@ -55,9 +59,9 @@ const Home = () => {
 		setTriedToValidateToken(true);
 		setAuthenticated(true);
 
-		const { fixtures, standings, predictions, users } = await fetchTournament(token, competition);
+		const { fixtures, standings, predictions, users, userExtraInfo } = await fetchTournament(token, competition);
 
-		if (!standings || !fixtures) return;
+		if (!standings || !fixtures || !userExtraInfo) return;
 
 		const sortedStandings = Object.entries(standings).sort() as unknown as Standings;
 
@@ -65,6 +69,7 @@ const Home = () => {
 			({ fixture: a }, { fixture: b }) => a.timestamp - b.timestamp
 		);
 
+		setLeaderboards(userExtraInfo.leaderboards);
 		setFixtures(fixtures);
 		setPredictions(predictions);
 		setStandings(sortedStandings);
@@ -72,6 +77,11 @@ const Home = () => {
 		setUsers(users);
 
 		setLoading(false);
+
+		if (leaderboardId) {
+			setRoute({ page: Route.JoinLeaderboard, data: leaderboardId as string });
+			return;
+		}
 
 		const nextGame = sortedFixtures.find(game => !isGameFinished(game));
 
@@ -85,7 +95,7 @@ const Home = () => {
 		} else {
 			setRoute({ page: Route.Leaderboard });
 		}
-	}, [competition, auth]);
+	}, [competition, auth, leaderboardId]);
 
 	useEffect(() => {
 		updateTournament();
@@ -128,7 +138,7 @@ const Home = () => {
 					/>
 				);
 			case Route.Leaderboard:
-				return <Leaderboards users={users} />;
+				return <Leaderboards users={users} leaderboards={leaderboards} />;
 			case Route.Standings:
 				return <StandingsPage standings={standings} fixtures={fixtures} />;
 			case Route.Settings:
@@ -137,6 +147,8 @@ const Home = () => {
 				return <Rules />;
 			case Route.Users:
 				return <UsersList />;
+			case Route.JoinLeaderboard:
+				return <JoinLeaderboard leaderboardId={leaderboardId as string} />;
 			default:
 				return <></>;
 		}
