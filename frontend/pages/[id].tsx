@@ -59,11 +59,6 @@ const Home = () => {
 		setTriedToValidateToken(true);
 		setAuthenticated(true);
 
-		if (leaderboardId) {
-			setRoute({ page: Route.JoinLeaderboard, data: leaderboardId as string });
-			return;
-		}
-
 		const { fixtures, standings, predictions, users, userExtraInfo } = await fetchTournament(token, competition);
 
 		if (!standings || !fixtures || !userExtraInfo) return;
@@ -82,6 +77,11 @@ const Home = () => {
 		setUsers(users);
 
 		setLoading(false);
+
+		if (leaderboardId) {
+			setRoute({ page: Route.JoinLeaderboard, data: leaderboardId as string });
+			return;
+		}
 
 		const nextGame = sortedFixtures.find(game => !isGameFinished(game));
 
