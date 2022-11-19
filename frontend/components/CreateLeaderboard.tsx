@@ -44,7 +44,10 @@ const CreateLeaderboard = ({ setCurrentLeaderboard }: { setCurrentLeaderboard: D
 						ref={inputRef}
 					/>
 					<div
-						className={classNames(gcc('bg-blue'), 'rounded-md p-2 cursor-pointer w-20 flex justify-center')}
+						className={classNames(
+							gcc('bg-blue'),
+							'rounded-md p-2 cursor-pointer w-20 flex justify-center items-center h-10'
+						)}
 						onClick={async () => {
 							if (inputRef.current && userInfo && !loading) {
 								setLoading(true);
@@ -60,8 +63,8 @@ const CreateLeaderboard = ({ setCurrentLeaderboard }: { setCurrentLeaderboard: D
 								setLoading(false);
 							}
 						}}>
-						{loading && <Loading className="w-5 h-5" />}
-						{!loading && <div>Create</div>}
+						{!loading && <Loading className="w-4 h-4" />}
+						{loading && <div>Create</div>}
 					</div>
 				</>
 			)}
