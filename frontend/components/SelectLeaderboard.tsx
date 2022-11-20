@@ -22,7 +22,27 @@ const SelectLeaderboard = ({
 
 	return (
 		<Select
-			className=" text-red-900 w-96 max-w-full"
+			className="w-96 max-w-full"
+			styles={{
+				control: styles => ({
+					...styles,
+					backgroundColor: '#181a1b',
+					border: 0,
+					outline: '1px solid white',
+				}),
+				input: styles => ({ ...styles, backgroundColor: 'transparent', color: '#fff' }),
+				menu: styles => ({ ...styles, backgroundColor: 'transparent', color: '#fff' }),
+				singleValue: styles => ({ ...styles, backgroundColor: 'transparent', color: '#fff' }),
+
+				option: (styles, { isDisabled, isFocused }) => {
+					return {
+						...styles,
+						backgroundColor: isFocused ? '#2b2d2e' : '#181a1b',
+						color: '#FFF',
+						cursor: isDisabled ? 'not-allowed' : 'pointer',
+					};
+				},
+			}}
 			onChange={selectedOption => {
 				if (selectedOption) {
 					setCurrentLeaderboard(selectedOption.value);
