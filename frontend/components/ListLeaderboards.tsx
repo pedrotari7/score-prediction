@@ -59,7 +59,7 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 										</span>
 										<div className="flex flex-row gap-4 flex-wrap">
 											{l.members.map(m => (
-												<div className={classNames(gcc('bg-blue'), 'p-2 rounded-md')}>
+												<div key={m} className={classNames(gcc('bg-blue'), 'p-2 rounded-md')}>
 													{users[m].displayName}
 												</div>
 											))}
