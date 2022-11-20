@@ -25,13 +25,13 @@ const Match = ({ game }: { game: Fixture }) => {
 			</div>
 
 			{!isGameFinished(game) && (
-				<span className="text-xs w-5/12 sm:w-3/12">
+				<span className="text-xs w-6/12 sm:w-4/12">
 					{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm ccc')}
 				</span>
 			)}
 
 			{isGameFinished(game) && (
-				<span className="text-md w-5/12 sm:w-3/12 font-bold">
+				<span className="text-md w-6/12 sm:w-4/12 font-bold">
 					<span>{game.goals.home}</span>
 					<span className="mx-2">-</span>
 					<span>{game.goals.away}</span>
