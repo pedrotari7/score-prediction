@@ -2,6 +2,8 @@ import { Lineup, LineupPlayer, LineupPlayers, Player, PlayersMap } from '../../i
 import { classNames, DEFAULT_IMAGE } from '../lib/utils/reactHelper';
 
 const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersMap }) => {
+	if (!lineups || !players) return <></>;
+
 	const [homeLineup, awayLineup] = lineups;
 
 	const Player = ({
