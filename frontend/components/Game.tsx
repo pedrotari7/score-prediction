@@ -81,7 +81,7 @@ const Game = ({
 
 			<div className="flex flex-row lg:w-8/12 justify-center items-center">
 				<div className="flex flex-row items-center justify-end lg:w-5/12">
-					<span className="hidden lg:block mr-2 font-bold">{game?.teams.home.name}</span>
+					<span className="hidden sm:block mr-2 font-bold">{game?.teams.home.name}</span>
 					<Flag team={game?.teams.home} />
 				</div>
 
@@ -141,7 +141,7 @@ const Game = ({
 
 				<div className="flex flex-row items-center justify-start lg:w-5/12 my-2 lg:my-0">
 					<Flag team={game?.teams.away} />
-					<span className="hidden lg:block ml-2 font-bold">{game?.teams.away.name}</span>
+					<span className="hidden sm:block ml-2 font-bold">{game?.teams.away.name}</span>
 				</div>
 			</div>
 
