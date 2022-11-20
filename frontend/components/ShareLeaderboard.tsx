@@ -16,7 +16,6 @@ const ShareLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
 		<CopyToClipboard
 			text={url}
 			onCopy={() => {
-				console.log('copied');
 				setCopied(true);
 				setTimeout(() => setCopied(false), 3000);
 			}}>
