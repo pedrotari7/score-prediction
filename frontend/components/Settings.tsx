@@ -17,6 +17,7 @@ import {
 	updateSettings,
 	fetchStatus,
 	fetchTournament,
+	fetchLeaderboards,
 } from '../pages/api';
 import { Competition, Settings, Status } from '../../interfaces/main';
 import { competitions } from '../../shared/utils';
@@ -182,6 +183,18 @@ const SettingsPage = () => {
 					onClick={async () => setResponse(await fetchPredictions(userInfo.token, competition))}
 					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
 					Fetch Predictions
+				</button>
+
+				<button
+					onClick={async () => setResponse(await fetchLeaderboards(userInfo.token))}
+					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
+					Fetch Leaderboards
+				</button>
+
+				<button
+					onClick={async () => setResponse(await fetchUsers(userInfo.token, competition))}
+					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
+					Fetch Users
 				</button>
 
 				<button
