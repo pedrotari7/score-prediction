@@ -23,6 +23,7 @@ const SelectLeaderboard = ({
 	return (
 		<Select
 			className="w-96 max-w-full"
+			isSearchable={false}
 			styles={{
 				control: styles => ({
 					...styles,
