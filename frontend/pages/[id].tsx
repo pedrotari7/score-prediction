@@ -86,9 +86,12 @@ const Home = () => {
 
 		const nextGame = sortedFixtures.find(game => !isGameFinished(game));
 
-		if (uid in users && users[uid].shouldOnboard) {
-			setRoute({ page: Route.Rules, data: uid });
-		} else if (nextGame) {
+		// if (uid in users && users[uid].shouldOnboard) {
+		// 	setRoute({ page: Route.Rules, data: uid });
+		// 	return
+		// }
+
+		if (nextGame) {
 			const nextGamePrediction = predictions[nextGame.fixture.id];
 			if (!nextGamePrediction || !(uid in nextGamePrediction)) {
 				setRoute({ page: Route.Predictions, data: uid });
