@@ -23,6 +23,7 @@ import { useAuth } from '../lib/auth';
 import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UsersList from '../components/Users';
 import JoinLeaderboard from '../components/JoinLeaderboard';
+import ListLeaderboards from '../components/ListLeaderboards';
 
 const Home = () => {
 	const auth = useAuth();
@@ -149,6 +150,8 @@ const Home = () => {
 				return <UsersList />;
 			case Route.JoinLeaderboard:
 				return <JoinLeaderboard leaderboardId={leaderboardId as string} />;
+			case Route.ListLeaderboards:
+				return <ListLeaderboards users={users} />;
 			default:
 				return <></>;
 		}

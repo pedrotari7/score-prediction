@@ -700,6 +700,14 @@ app.post('/leaderboard', async (req, res) => {
   return res.json({ success: true });
 });
 
+app.get('/leaderboards', async (req, res) => {
+  const authResult = await authenticate(req, res);
+  if (!authResult.success) return authResult.result;
+
+  const snapshot = await getFirestore(firebaseApp).collection('leaderboards').get();
+  return res.json(snapshot.docs.map(doc => doc.data()));
+});
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 exports.api = europe.runWith({ secrets: ['APISPORTS'] }).https.onRequest(<any>app);
 

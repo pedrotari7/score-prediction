@@ -156,6 +156,22 @@ export default function Navbar({
 																{({ active }) => (
 																	<div
 																		onClick={() =>
+																			updateRoute({
+																				page: Route.ListLeaderboards,
+																			})
+																		}
+																		className={classNames(
+																			active ? 'bg-gray-100' : '',
+																			'cursor-pointer block px-4 py-2 text-sm text-gray-700'
+																		)}>
+																		Leaderboards
+																	</div>
+																)}
+															</Menu.Item>
+															<Menu.Item>
+																{({ active }) => (
+																	<div
+																		onClick={() =>
 																			updateRoute({ page: Route.Settings })
 																		}
 																		className={classNames(

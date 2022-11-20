@@ -107,3 +107,5 @@ export const fetchLeaderboard = async (leaderboardId: string, token: string) =>
 
 export const joinLeaderboard = async (leaderboardId: string, token: string): Promise<CreateLeaderboardResult> =>
 	await cFetch(`${backendUrl}/leaderboard`, token, undefined, { leaderboardId }, { method: 'POST' });
+
+export const fetchLeaderboards = async (token: string) => await cFetch(`${backendUrl}/leaderboards`, token);

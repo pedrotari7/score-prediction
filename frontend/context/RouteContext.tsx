@@ -5,6 +5,7 @@ export enum Route {
 	Predictions = 'predictions',
 	Standings = 'standings',
 	Leaderboard = 'leaderboard',
+	ListLeaderboards = 'listLeaderboards',
 	Settings = 'settings',
 	Match = 'match',
 	Rules = 'rules',
