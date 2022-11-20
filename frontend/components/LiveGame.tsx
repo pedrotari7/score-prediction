@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon';
-import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useContext } from 'react';
 import Countdown, { zeroPad } from 'react-countdown';
 import { isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import FixturesContext from '../context/FixturesContext';
+import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UserContext from '../context/UserContext';
 import { classNames, getCompetitionClass, getCurrentDate } from '../lib/utils/reactHelper';
 import ClientOnly from './ClientOnly';
@@ -20,10 +20,10 @@ const LiveGame = ({
 	gameID: number;
 	setIsExtraInfoOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-	const router = useRouter();
 	const data = useContext(FixturesContext);
 	const userInfo = useContext(UserContext);
 	const competition = useContext(CompetitionContext);
+	const updateCompetition = useContext(UpdateTournamentContext)!;
 
 	if (!data || !userInfo) return <></>;
 
@@ -62,7 +62,7 @@ const LiveGame = ({
 							<ClientOnly>
 								<Countdown
 									date={gameDate.toMillis()}
-									onComplete={() => router.push('/')}
+									onComplete={() => updateCompetition()}
 									renderer={({ hours, minutes, seconds }) => (
 										<span>
 											{zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}
