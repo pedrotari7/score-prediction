@@ -721,3 +721,28 @@ export const addUser = europe.auth.user().onCreate(async user => {
     await getAuth(firebaseApp).setCustomUserClaims(user.uid, { admin: isAdmin });
   }
 });
+
+app.delete('/leaderboard', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return res.json(authResult.result);
+
+  const { leaderboardId } = JSON.parse(req.body);
+
+  console.log('leaderboardId', leaderboardId);
+
+  const leaderboardDoc = getFirestore(firebaseApp).collection('leaderboards').doc(leaderboardId);
+
+  const leaderboard = (await leaderboardDoc.get()).data() as Leaderboard;
+
+  leaderboardDoc.delete();
+
+  for (const member of leaderboard.members) {
+    const currentUser = (await getDBUser(member).get()).data() as { leaderboards: string[] };
+    if (currentUser) {
+      const leaderboards = currentUser.leaderboards.filter(l => l !== leaderboardId);
+      await getDBUser(member).set({ ...currentUser, leaderboards });
+    }
+  }
+
+  return res.json({ success: true });
+});

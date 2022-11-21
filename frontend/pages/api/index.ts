@@ -109,3 +109,15 @@ export const joinLeaderboard = async (leaderboardId: string, token: string): Pro
 	await cFetch(`${backendUrl}/leaderboard`, token, undefined, { leaderboardId }, { method: 'POST' });
 
 export const fetchLeaderboards = async (token: string) => await cFetch(`${backendUrl}/leaderboards`, token);
+
+export const deleteLeaderboard = async (leaderboardId: string, token: string) =>
+	await cFetch(
+		`${backendUrl}/leaderboard`,
+		token,
+		undefined,
+		{},
+		{
+			body: JSON.stringify({ leaderboardId }),
+			method: 'DELETE',
+		}
+	);

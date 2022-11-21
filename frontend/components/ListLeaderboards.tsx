@@ -1,16 +1,18 @@
-import { ArrowPathIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon, TrashIcon } from '@heroicons/react/24/outline';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Leaderboard, Users } from '../../interfaces/main';
 import CompetitionContext from '../context/CompetitionContext';
 import RouteContext, { Route } from '../context/RouteContext';
+import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UserContext from '../context/UserContext';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
-import { fetchLeaderboards } from '../pages/api';
+import { deleteLeaderboard, fetchLeaderboards } from '../pages/api';
 
 const ListLeaderboards = ({ users }: { users: Users }) => {
 	const { setRoute } = useContext(RouteContext)!;
 	const competition = useContext(CompetitionContext);
 	const userInfo = useContext(UserContext);
+	const updateCompetition = useContext(UpdateTournamentContext)!;
 	const [leaderboards, setLeaderboards] = useState<Leaderboard[]>([]);
 
 	const update = useCallback(async () => {
@@ -32,7 +34,7 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 				<ArrowPathIcon
 					className={classNames(gcc('text-light'), 'h-6 w-6', 'hover:opacity-80 cursor-pointer')}
 					onClick={() => update()}
-				/>{' '}
+				/>
 			</div>
 
 			<div className="flex flex-col item-center  justify-evenly w-full">
@@ -51,6 +53,16 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 										'flex flex-row items-center gap-2  my-2 sm:m-2 rounded p-4',
 										'cursor-pointer hover:bg-opacity-50 select-none'
 									)}>
+									<TrashIcon
+										className="h-5 w-5 absolute top-4 right-1 z-10 opacity-80 hover:opacity-100"
+										onClick={async e => {
+											e.stopPropagation();
+											if (userInfo) {
+												await deleteLeaderboard(l.id, userInfo.token);
+												await updateCompetition();
+											}
+										}}
+									/>
 									<div className="text-xs text-left flex flex-row flex-wrap items-center gap-4">
 										<span className="font-bold text-lg">{l?.name}</span>
 										<span>{l.id}</span>
