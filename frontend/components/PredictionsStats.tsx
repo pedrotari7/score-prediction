@@ -30,7 +30,7 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 				<div className="mt-6">
 					<div className="text-xl mb-4">Stats</div>
 					<div className="flex flex-row flex-wrap">
-						<div className="flex flex-row items-center justify-start gap-4">
+						<div className="flex flex-row items-center justify-start gap-4 flex-wrap">
 							<div
 								className={classNames(
 									gcc('bg-blue'),
