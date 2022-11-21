@@ -135,7 +135,7 @@ const CurrentMatch = ({
 			prediction,
 			result: getResult(prediction, game),
 		}))
-		.sort((a, b) => a.uid.localeCompare(b.uid))
+		.sort((a, b) => users[a.uid].displayName.localeCompare(users[b.uid].displayName))
 		.sort((a, b) => (b.result.points ?? 0) - (a.result.points ?? 0));
 
 	const findGame = (dir: -1 | 1) => {
