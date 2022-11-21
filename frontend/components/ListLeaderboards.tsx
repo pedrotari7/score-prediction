@@ -71,7 +71,17 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 										</span>
 										<div className="flex flex-row gap-4 flex-wrap">
 											{l.members.map(m => (
-												<div key={m} className={classNames(gcc('bg-blue'), 'p-2 rounded-md')}>
+												<div
+													key={m}
+													className={classNames(
+														gcc('bg-blue'),
+														gcc('hover:bg-dark'),
+														'p-2 rounded-md'
+													)}
+													onClick={e => {
+														e.stopPropagation();
+														setRoute({ page: Route.Predictions, data: m });
+													}}>
 													{users[m].displayName}
 												</div>
 											))}
