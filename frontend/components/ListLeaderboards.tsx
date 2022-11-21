@@ -7,6 +7,7 @@ import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UserContext from '../context/UserContext';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import { deleteLeaderboard, fetchLeaderboards } from '../pages/api';
+import DeleteButton from './DeleteButton';
 
 const ListLeaderboards = ({ users }: { users: Users }) => {
 	const { setRoute } = useContext(RouteContext)!;
@@ -53,10 +54,9 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 										'flex flex-row items-center gap-2  my-2 sm:m-2 rounded p-4',
 										'cursor-pointer hover:bg-opacity-50 select-none'
 									)}>
-									<TrashIcon
-										className="h-5 w-5 absolute top-4 right-1 z-10 opacity-80 hover:opacity-100"
-										onClick={async e => {
-											e.stopPropagation();
+									<DeleteButton
+										className="absolute top-4 right-1 z-10"
+										onClick={async () => {
 											if (userInfo) {
 												await deleteLeaderboard(l.id, userInfo.token);
 												await updateCompetition();
