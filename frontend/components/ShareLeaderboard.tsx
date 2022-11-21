@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import CompetitionContext from '../context/CompetitionContext';
 import { CheckIcon, ShareIcon } from '@heroicons/react/24/outline';
@@ -10,8 +10,13 @@ const ShareLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	const [copied, setCopied] = useState(false);
+	const [origin, setOrigin] = useState('');
 
-	const url = `https://www.score-prediction.com?join=${leaderboardId}`;
+	useEffect(() => {
+		setOrigin(window.location.origin);
+	}, []);
+
+	const url = `${origin}?join=${leaderboardId}`;
 	return (
 		<CopyToClipboard
 			text={url}
