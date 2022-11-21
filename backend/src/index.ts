@@ -693,7 +693,10 @@ app.post('/leaderboard', async (req, res) => {
 
     const userExtraInfo = (await getDBUser(callerUID).get()).data();
 
-    await getDBUser(callerUID).update({ leaderboards: [...userExtraInfo?.leaderboards, leaderboardId] });
+    await getDBUser(callerUID).set({
+      ...(userExtraInfo ?? {}),
+      leaderboards: [...(userExtraInfo?.leaderboards ?? []), leaderboardId],
+    });
 
     return res.json({ success: true });
   }
