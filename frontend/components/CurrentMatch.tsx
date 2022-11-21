@@ -207,7 +207,9 @@ const CurrentMatch = ({
 				</div>
 
 				<div className="mt-6 mb-20 z-10">
-					<div className="text-xl mb-4">Predictions</div>
+					<div className="text-xl mb-4">
+						Predictions <span className="opacity-50">({gamePredictionsAndResults.length})</span>
+					</div>
 					<div className="flex flex-row flex-wrap">
 						{gamePredictionsAndResults.map(({ uid, prediction }) => (
 							<UserGuess user={users[uid]} guess={prediction} key={uid} game={game} />
