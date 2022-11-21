@@ -109,7 +109,10 @@ const GameFacts = ({
 					{isYellowCard && <img className="mx-3 h-5 w-3" src="/events/yellow_card.svg" />}
 					{isSecondYellowCard && <img className="mx-3 h-5 w-3" src="/events/yellow_card.svg" />}
 					{isRedCard && <img className="mx-3 h-5 w-3" src="/events/red_card.svg" />}
-					<PlayerWithPhoto player={event.player} />
+					<div className={classNames('flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
+						<PlayerWithPhoto player={event.player} />
+						{event.comments && <span className="text-sm mx-2">{event.comments}</span>}
+					</div>
 				</EventContainer>
 			);
 		} else if (event.type === EventType.Var) {
@@ -123,14 +126,8 @@ const GameFacts = ({
 						version="1.1"
 						xmlns="http://www.w3.org/2000/svg">
 						<title>icVar</title>
-						<g
-							id="Page-1"
-							stroke="none"
-							stroke-width="1"
-							fill="none"
-							fill-rule="evenodd"
-							data-darkreader-inline-stroke="">
-							<g id="icVar" fill="white" data-darkreader-inline-fill="">
+						<g id="Page-1" stroke="none" strokeWidth="1" fill="none">
+							<g id="icVar" fill="white">
 								<polygon
 									id="Fill-1"
 									points="11.00702 9.18445 12.57398 9.18445 11.79102 6.7395"></polygon>
