@@ -1,10 +1,19 @@
 import { Lineup, LineupPlayer, LineupPlayers, Player, PlayersMap } from '../../interfaces/main';
 import { classNames, DEFAULT_IMAGE } from '../lib/utils/reactHelper';
 
+const LineupUnavailable = () => (
+	<div className={'bg-gray-700 rounded-md flex flex-col text-sm sm:text-base items-center p-8'}>
+		{' '}
+		Lineups Unavailable
+	</div>
+);
+
 const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersMap }) => {
-	if (!lineups || !players) return <></>;
+	if (!lineups || !players) return <LineupUnavailable />;
 
 	const [homeLineup, awayLineup] = lineups;
+
+	if (!homeLineup || !awayLineup) return <LineupUnavailable />;
 
 	const Player = ({
 		player,
