@@ -4,28 +4,28 @@ import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 
 export const ExactScore = () => (
-	<div className="rounded-md p-2 mb-4 bg-green-500 flex flex-row flex-wrap text-lg">
+	<div className="rounded-md p-2 mb-4 bg-green-600 flex flex-row flex-wrap text-lg">
 		Exact Score (right outcome of the game and exact number of goals scored by both teams)
 		<span className="font-bold text-2xl mt-2 w-full">+5 Points</span>
 	</div>
 );
 
 export const CorrectResult = () => (
-	<div className="rounded-md p-2 mb-4 bg-yellow-500 flex flex-row flex-wrap text-lg">
+	<div className="rounded-md p-2 mb-4 bg-yellow-600 flex flex-row flex-wrap text-lg">
 		Correct Result (right outcome of the game, but wrong number of goals of at least one of the teams)
 		<span className="font-bold text-2xl mt-2 w-full">+3 Points</span>
 	</div>
 );
 
 export const RightGoals = () => (
-	<div className="rounded-md p-2 mb-4 bg-pink-500 flex flex-row flex-wrap text-lg">
+	<div className="rounded-md p-2 mb-4 bg-pink-600 flex flex-row flex-wrap text-lg">
 		Right number of goals from one of the teams
 		<span className="font-bold text-2xl mt-2 w-full">+1 Point</span>
 	</div>
 );
 
 export const NoPoints = () => (
-	<div className="rounded-md p-2 mb-4 bg-red-500 flex flex-row flex-wrap text-lg">
+	<div className="rounded-md p-2 mb-4 bg-red-600 flex flex-row flex-wrap text-lg">
 		None of the above
 		<span className="font-bold text-2xl mt-2 w-full">+0 Points</span>
 	</div>

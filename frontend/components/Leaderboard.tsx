@@ -19,11 +19,11 @@ interface SortOption {
 
 const SortOptions: Record<string, SortOption> = {
 	points: { key: 'points', text: 'Points', color: ' bg-gray-700' },
-	exact: { key: 'exact', text: 'Exact', color: 'bg-green-500' },
-	result: { key: 'result', text: 'Correct Result', color: 'bg-yellow-500' },
-	onescore: { key: 'onescore', text: 'Team Score', color: 'bg-pink-500' },
+	exact: { key: 'exact', text: 'Exact', color: 'bg-green-600' },
+	result: { key: 'result', text: 'Correct Result', color: 'bg-yellow-600' },
+	onescore: { key: 'onescore', text: 'Team Score', color: 'bg-pink-600' },
 	penalty: { key: 'penalty', text: 'Penalties', color: 'bg-gray-500' },
-	fail: { key: 'fail', text: 'Fail', color: 'bg-red-500' },
+	fail: { key: 'fail', text: 'Fail', color: 'bg-red-600' },
 	groups: { key: 'groups', text: 'Groups', color: 'bg-purple-700' },
 };
 

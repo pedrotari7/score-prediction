@@ -15,10 +15,10 @@ const Circle = ({ children, className }: { children: ReactNode; className: strin
 export const UserScores = ({ user }: { user: User }) => {
 	return (
 		<div className="flex flex-row justify-center items-center flex-wrap">
-			<Circle className="bg-green-500">{user.score.exact}</Circle>
-			<Circle className="bg-yellow-500">{user.score.result}</Circle>
-			<Circle className="bg-pink-500">{user.score.onescore}</Circle>
-			<Circle className="bg-red-500">{user.score.fail}</Circle>
+			<Circle className="bg-green-600">{user.score.exact}</Circle>
+			<Circle className="bg-yellow-600">{user.score.result}</Circle>
+			<Circle className="bg-pink-600">{user.score.onescore}</Circle>
+			<Circle className="bg-red-600">{user.score.fail}</Circle>
 			<Circle className="bg-purple-700">{user.score.groups}</Circle>
 			<Circle className="bg-gray-500">{user.score.penalty}</Circle>
 			<Circle className="bg-gray-700 w-10 h-10 p-4 my-2">{user.score.points}</Circle>

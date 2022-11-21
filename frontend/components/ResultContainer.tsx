@@ -45,10 +45,10 @@ const ResultContainer = ({
 			className={classNames(
 				className,
 				'rounded-md text-center relative border-2',
-				isExactScore ? 'bg-green-500' : '',
-				isCorrectResult ? 'bg-yellow-500' : '',
-				isCorrectGoal ? 'bg-pink-500' : '',
-				isWrong ? 'bg-red-500' : '',
+				isExactScore ? 'bg-green-600' : '',
+				isCorrectResult ? 'bg-yellow-600' : '',
+				isCorrectGoal ? 'bg-pink-600' : '',
+				isWrong ? 'bg-red-600' : '',
 				isPredictValid ? 'border-transparent' : 'border-red-600'
 			)}>
 			{isPenaltyWinner && (

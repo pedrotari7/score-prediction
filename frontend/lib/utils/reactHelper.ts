@@ -70,12 +70,12 @@ export const getCompetitionClass = (primitive: string, competition: Competition)
 	VALID_COMPETITIONS.some(c => c === competition?.name) ? primitive + '-' + competition?.name : primitive;
 
 export const GROUP_COLORS: Record<string, string> = {
-	A: 'bg-red-500',
-	B: 'bg-orange-500',
-	C: 'bg-yellow-500',
-	D: 'bg-lime-500',
-	E: 'bg-green-500',
-	F: 'bg-teal-500',
-	G: 'bg-indigo-500',
-	H: 'bg-pink-500',
+	A: 'bg-red-600',
+	B: 'bg-orange-600',
+	C: 'bg-yellow-600',
+	D: 'bg-lime-600',
+	E: 'bg-green-600',
+	F: 'bg-teal-600',
+	G: 'bg-indigo-600',
+	H: 'bg-pink-600',
 };

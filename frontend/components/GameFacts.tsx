@@ -93,8 +93,8 @@ const GameFacts = ({
 						src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAATlBMVEVHcEzkXVoAl17kXVkAl1/kXVoAl1zkWlrkXlrlXVkAl18An18AmV8Al17kXFrlXVvkXFoAl14Al14Al17kXVoAmF3kXVoAmF7lXlsAmF/fU5yDAAAAGHRSTlMA76DgQPBgMH+AIBBQwGBwwO/wr7+Q37C91jpQAAAAk0lEQVQ4y+XU2Q4CIQyF4cKAuI+OW/v+L+qF0YSlyX9r5lx/obQ0iPx/0pG5g9mGHWhQJoMyGZQfOJD729VG6eTJnLTS3NATH+0dX8vQRdh1hOOJcI4RvkzlyvPubU/tgirZxxLUg9I5pU6p022d4rku5wZOjtNAYW5LZ1j6J3dV5jJoO7PxfKVQKVSyz6hMF1lR3lY7HudLRmFoAAAAAElFTkSuQmCC"
 					/>
 					<div className={classNames('flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
-						<PlayerWithPhoto color="text-green-500" player={event.player} />
-						<PlayerWithPhoto color="text-red-500" player={event.assist} />
+						<PlayerWithPhoto color="text-green-600" player={event.player} />
+						<PlayerWithPhoto color="text-red-600" player={event.assist} />
 					</div>
 				</EventContainer>
 			);
