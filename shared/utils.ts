@@ -31,7 +31,7 @@ export const isNum = (n: number | null): n is number => typeof n === 'number';
 
 export const isEmpty = (obj: Object) => Object.keys(obj).length == 0;
 
-export const getOutcome = (g: Result): string | null => {
+export const getOutcome = (g: Result): 'winH' | 'winA' | 'draw' | null => {
 	if (!isNum(g.home) || !isNum(g.away)) return null;
 	if (g.home > g.away) return 'winH';
 	if (g.home < g.away) return 'winA';

@@ -11,6 +11,7 @@ import { getResult, isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import Loading from './Loading';
 import RefreshComp from './RefreshComp';
+import PredictionsStats from './PredictionsStats';
 
 const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game: Fixture }) => {
 	const routeInfo = useContext(RouteContext)!;
@@ -110,7 +111,9 @@ const CurrentMatch = ({
 
 	const [id, setGameID] = useState(gameID);
 
-	const sortedFixtures = Object.values(fixtures).sort((a, b) => a.fixture.timestamp - b.fixture.timestamp);
+	const sortedFixtures = Object.values(fixtures).sort(
+		(a, b) => a.fixture.timestamp - b.fixture.timestamp
+	) as Fixture[];
 
 	const nextGame = sortedFixtures.findIndex(game => !isGameFinished(game));
 
@@ -205,6 +208,8 @@ const CurrentMatch = ({
 							))}
 					</div>
 				</div>
+
+				<PredictionsStats game={game} gamePredictions={gamePredictions} />
 
 				<div className="mt-6 mb-20 z-10">
 					<div className="text-xl mb-4">
