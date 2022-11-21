@@ -119,8 +119,8 @@ const CurrentMatch = ({
 	const [isExtraInfoOpen, setIsExtraInfoOpen] = useState(false);
 
 	const handlers = useSwipeable({
-		onSwipedLeft: () => nextGameId !== null && setGameID(nextGameId),
-		onSwipedRight: () => prevGameId !== null && setGameID(prevGameId),
+		onSwipedLeft: () => nextGameId !== null && !isExtraInfoOpen && setGameID(nextGameId),
+		onSwipedRight: () => prevGameId !== null && !isExtraInfoOpen && setGameID(prevGameId),
 		preventDefaultTouchmoveEvent: true,
 	});
 
