@@ -63,12 +63,18 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 											}
 										}}
 									/>
-									<div className="text-xs text-left flex flex-row flex-wrap items-center gap-4">
-										<span className="font-bold text-lg">{l?.name}</span>
-										<span>{l.id}</span>
-										<span className={classNames('bg-gray-800', 'p-2 rounded-md')}>
-											{users[l.creator].displayName}
-										</span>
+									<div className="flex flex-col gap-4">
+										<div className="flex flex-row flex-wrap items-center gap-4 text-lg">
+											<span className="font-bold">{l?.name}</span>
+											<span className="opacity-50">({l.members.length})</span>
+										</div>
+										<div className="flex gap-4 items-center">
+											<span className={classNames('bg-gray-800', 'p-2 rounded-md')}>
+												{users[l.creator].displayName}
+											</span>
+											<span>{l.id}</span>
+										</div>
+
 										<div className="flex flex-row gap-4 flex-wrap">
 											{l.members.map(m => (
 												<div
