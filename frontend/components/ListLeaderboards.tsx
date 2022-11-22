@@ -1,4 +1,3 @@
-import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Leaderboard, Users } from '../../interfaces/main';
 import CompetitionContext from '../context/CompetitionContext';
@@ -80,12 +79,18 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 													className={classNames(
 														gcc('bg-blue'),
 														gcc('hover:bg-dark'),
-														'p-2 rounded-md'
+														'p-2 rounded-md flex flex-row items-center'
 													)}
 													onClick={e => {
 														e.stopPropagation();
 														setRoute({ page: Route.Predictions, data: m });
 													}}>
+													{users[m]?.photoURL && (
+														<img
+															className="object-cover h-8 w-8 rounded-full mr-2"
+															src={users[m]?.photoURL}
+														/>
+													)}
 													{users[m].displayName}
 												</div>
 											))}
