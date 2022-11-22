@@ -15,34 +15,35 @@ const Match = ({ game }: { game: Fixture }) => {
 		<div
 			className={classNames(
 				gcc('text-light'),
-				'flex flex-row items-center justify-evenly rounded p-2 select-none'
-			)}>
-			<div className="flex flex-row items-center justify-end w-2/12 sm:w-5/12">
-				<span className="hidden sm:block mr-2 text-right">{game?.teams.home.name}</span>
+				'flex select-none flex-row items-center justify-evenly rounded p-2'
+			)}
+		>
+			<div className="flex w-2/12 flex-row items-center justify-end sm:w-5/12">
+				<span className="mr-2 hidden text-right sm:block">{game?.teams.home.name}</span>
 				<div className="flex items-center justify-center">
 					<Flag team={game?.teams.home} />
 				</div>
 			</div>
 
 			{!isGameFinished(game) && (
-				<span className="text-xs w-6/12 sm:w-4/12">
+				<span className="w-6/12 text-xs sm:w-4/12">
 					{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm ccc')}
 				</span>
 			)}
 
 			{isGameFinished(game) && (
-				<span className="text-md w-6/12 sm:w-4/12 font-bold">
+				<span className="text-md w-6/12 font-bold sm:w-4/12">
 					<span>{game.goals.home}</span>
 					<span className="mx-2">-</span>
 					<span>{game.goals.away}</span>
 				</span>
 			)}
 
-			<div className="flex flex-row items-center justify-start w-2/12 sm:w-5/12">
+			<div className="flex w-2/12 flex-row items-center justify-start sm:w-5/12">
 				<div className="flex items-center justify-center">
 					<Flag team={game?.teams.away} />
 				</div>
-				<span className="hidden sm:block ml-2 text-left">{game?.teams.away.name}</span>
+				<span className="ml-2 hidden text-left sm:block">{game?.teams.away.name}</span>
 			</div>
 		</div>
 	);
@@ -54,7 +55,7 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
-		<div className="flex flex-row flex-wrap justify-center select-none">
+		<div className="flex select-none flex-row flex-wrap justify-center">
 			{standings.map(([title, standing]) => {
 				const group = title.split(' ').pop();
 
@@ -72,14 +73,16 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 						key={title}
 						className={classNames(
 							gcc('bg-dark'),
-							`m-8 mx-4 p-8 shadow-pop rounded-md text-center font-bold flex flex-col`
-						)}>
+							`m-8 mx-4 flex flex-col rounded-md p-8 text-center font-bold shadow-pop`
+						)}
+					>
 						<h2
 							className={classNames(
 								gcc('text-light'),
 								GROUP_COLORS[group!],
-								`rounded-md pl-2 text-4xl mb-4 text-left`
-							)}>
+								`mb-4 rounded-md pl-2 text-left text-4xl`
+							)}
+						>
 							{title}
 						</h2>
 						<table className={classNames(gcc('text-light'))}>
@@ -111,7 +114,7 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 												<Flag team={place.team} />
 											</td>
 											<td className="md:w-52">
-												<span className="hidden md:flex font-bold">{place.team.name}</span>
+												<span className="hidden font-bold md:flex">{place.team.name}</span>
 											</td>
 
 											<td className="w-6">{place.all.played}</td>
@@ -129,8 +132,9 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 														promotion ? 'bg-ok' : '',
 														bestThird ? 'bg-warn' : '',
 
-														'w-3 h-3 rounded-full ml-2'
-													)}></div>
+														'ml-2 h-3 w-3 rounded-full'
+													)}
+												></div>
 											</td>
 										</tr>
 									);

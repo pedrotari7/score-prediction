@@ -57,28 +57,28 @@ const SettingsPage = () => {
 
 	return (
 		<div className={gcc('text-light')}>
-			<div className="m-10 p-3 bg-gray-500 rounded-md flex flex-row flex-wrap">
+			<div className="m-10 flex flex-row flex-wrap rounded-md bg-gray-500 p-3">
 				<a href="https://dashboard.api-football.com/" target="_blank" rel="noreferrer">
 					<img
-						className="h-12 w-12 mb-4 absolute right-12"
+						className="absolute right-12 mb-4 h-12 w-12"
 						src="https://dashboard.api-football.com/public/img/api-sports-small-logo.png"
 					/>
 				</a>
-				<div className="flex flex-col bg-gray-600 p-3 w-max rounded-md m-4">
-					<span className="text-lg font-bold mb-3">Account</span>
+				<div className="m-4 flex w-max flex-col rounded-md bg-gray-600 p-3">
+					<span className="mb-3 text-lg font-bold">Account</span>
 					<span>{`${account.firstname} ${account.lastname}`}</span>
 					<span>{account.email}</span>
 				</div>
 
-				<div className="flex flex-col bg-gray-600 p-3 w-max rounded-md m-4">
-					<span className="text-lg font-bold mb-3">Subscription</span>
+				<div className="m-4 flex w-max flex-col rounded-md bg-gray-600 p-3">
+					<span className="mb-3 text-lg font-bold">Subscription</span>
 					<span>{subscription.plan}</span>
 					<span>{subscription.end}</span>
 					<span>{subscription.active ? 'Active' : 'Not Active'}</span>
 				</div>
 
-				<div className="flex flex-col bg-gray-600 p-3 w-max rounded-md m-4">
-					<span className="text-lg font-bold mb-3">Requests</span>
+				<div className="m-4 flex w-max flex-col rounded-md bg-gray-600 p-3">
+					<span className="mb-3 text-lg font-bold">Requests</span>
 					<CircularProgressbar
 						value={requests.current}
 						maxValue={requests.limit_day}
@@ -88,7 +88,7 @@ const SettingsPage = () => {
 				</div>
 			</div>
 			<Listbox value={competition} onChange={setCompetition}>
-				<div className="relative mt-1 w-96 m-10">
+				<div className="relative m-10 mt-1 w-96">
 					<Listbox.Button className="relative w-full cursor-default rounded-lg bg-gray-600 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
 						<span className="block truncate">{competition.name}</span>
 						<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -99,7 +99,8 @@ const SettingsPage = () => {
 						as={Fragment}
 						leave="transition ease-in duration-100"
 						leaveFrom="opacity-100"
-						leaveTo="opacity-0">
+						leaveTo="opacity-0"
+					>
 						<Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-gray-600 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
 							{Object.values(competitions).map(comp => (
 								<Listbox.Option
@@ -109,13 +110,13 @@ const SettingsPage = () => {
 											active ? 'bg-amber-100 text-amber-900' : 'text-white'
 										}`
 									}
-									value={comp}>
+									value={comp}
+								>
 									{({ selected }) => (
 										<>
 											<span
-												className={`block truncate ${
-													selected ? 'font-medium' : 'font-normal'
-												}`}>
+												className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}
+											>
 												{comp.name}
 											</span>
 											{selected ? (
@@ -132,8 +133,8 @@ const SettingsPage = () => {
 				</div>
 			</Listbox>
 
-			<div className="myi-3 mx-10 p-3 bg-gray-600 rounded-md">
-				<label className="inline-flex items-center mt-3 mx-4 cursor-pointer select-none">
+			<div className="myi-3 mx-10 rounded-md bg-gray-600 p-3">
+				<label className="mx-4 mt-3 inline-flex cursor-pointer select-none items-center">
 					<input
 						type="checkbox"
 						className="form-checkbox h-5 w-5"
@@ -142,7 +143,7 @@ const SettingsPage = () => {
 					/>
 					<span className="ml-2">Admin Hide Scores</span>
 				</label>
-				<label className="inline-flex items-center mt-3 mx-4 cursor-pointer select-none">
+				<label className="mx-4 mt-3 inline-flex cursor-pointer select-none items-center">
 					<input
 						type="checkbox"
 						className="form-checkbox h-5 w-5"
@@ -151,7 +152,7 @@ const SettingsPage = () => {
 					/>
 					<span className="ml-2">Allow Update Fixtures</span>
 				</label>
-				<label className="inline-flex items-center mt-3 mx-4 cursor-pointer select-none">
+				<label className="mx-4 mt-3 inline-flex cursor-pointer select-none items-center">
 					<input
 						type="checkbox"
 						className="form-checkbox h-5 w-5"
@@ -161,68 +162,78 @@ const SettingsPage = () => {
 					<span className="ml-2">Allow Update Standings</span>
 				</label>
 			</div>
-			<div className="flex flex-col sm:flex-row flex-wrap items-center justify-center">
+			<div className="flex flex-col flex-wrap items-center justify-center sm:flex-row">
 				<button
 					onClick={async () => setResponse(await fetchTournament(userInfo.token, competition))}
-					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
+					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+				>
 					Fetch Tournament
 				</button>
 
 				<button
 					onClick={async () => setResponse(await resetStandings(userInfo.token, competition))}
-					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
+					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+				>
 					Fetch Leaderboard
 				</button>
 				<button
 					onClick={async () => setResponse(await resetFixtures(userInfo.token, competition))}
-					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
+					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+				>
 					Fetch Fixtures
 				</button>
 
 				<button
 					onClick={async () => setResponse(await fetchPredictions(userInfo.token, competition))}
-					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
+					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+				>
 					Fetch Predictions
 				</button>
 
 				<button
 					onClick={async () => setResponse(await fetchLeaderboards(userInfo.token))}
-					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
+					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+				>
 					Fetch Leaderboards
 				</button>
 
 				<button
 					onClick={async () => setResponse(await fetchUsers(userInfo.token, competition))}
-					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
+					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+				>
 					Fetch Users
 				</button>
 
 				<button
 					onClick={async () => setResponse(await fetchUsers(userInfo.token, competition))}
-					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
+					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+				>
 					Fetch Users
 				</button>
 
 				<button
 					onClick={async () => setResponse(await updatePoints(userInfo.token, competition))}
-					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
+					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+				>
 					Update Points
 				</button>
 
 				<button
 					onClick={async () => setResponse(await updateGroups(userInfo.token, competition))}
-					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
+					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+				>
 					Update Groups
 				</button>
 
 				<button
 					onClick={() => cleanup(userInfo.token, competition)}
-					className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
+					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+				>
 					Cleanup
 				</button>
 			</div>
 
-			<div className="bg-gray-700 m-10 rounded-md p-5">
+			<div className="m-10 rounded-md bg-gray-700 p-5">
 				<div className="flex flex-row items-center justify-between">
 					<div className="text-xl font-bold">Response</div>
 					<button
@@ -232,11 +243,12 @@ const SettingsPage = () => {
 								`${competition.name}-backup-${new Date().toISOString()}.json`
 							)
 						}
-						className={`bg-dark text-white font-bold py-2 px-4 rounded m-5`}>
+						className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+					>
 						Export
 					</button>
 				</div>
-				<pre className="text-xs overflow-x-scroll">{formattedResponse}</pre>
+				<pre className="overflow-x-scroll text-xs">{formattedResponse}</pre>
 			</div>
 		</div>
 	);

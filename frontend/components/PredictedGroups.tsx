@@ -21,8 +21,8 @@ const PredictedGroups = ({
 
 	const teamsResults = calculateResults(Object.values(fixtures), predictions, userID);
 
-	const TickIcon = () => <img className="h-5 w-5 p-1 mx-1" src="/tick.svg" />;
-	const CloseIcon = () => <img className="h-5 w-5 p-1 mx-1" src="/close.svg" />;
+	const TickIcon = () => <img className="mx-1 h-5 w-5 p-1" src="/tick.svg" />;
+	const CloseIcon = () => <img className="mx-1 h-5 w-5 p-1" src="/close.svg" />;
 
 	return (
 		<div className="flex flex-row flex-wrap justify-center">
@@ -42,14 +42,16 @@ const PredictedGroups = ({
 						key={title}
 						className={classNames(
 							gcc('bg-dark'),
-							`m-2 p-4 shadow-pop rounded-md text-center flex flex-col`
-						)}>
+							`m-2 flex flex-col rounded-md p-4 text-center shadow-pop`
+						)}
+					>
 						<h2
 							className={classNames(
 								gcc('text-light'),
 								GROUP_COLORS[group],
-								'text-2xl mb-4 text-left rounded-md font-bold pl-2'
-							)}>
+								'mb-4 rounded-md pl-2 text-left text-2xl font-bold'
+							)}
+						>
 							{title}
 						</h2>
 						<table className={classNames(gcc('text-light'))}>
@@ -89,7 +91,7 @@ const PredictedGroups = ({
 
 											<td className="w-6">{points}</td>
 											<td className="ml-2">
-												<div className="flex flex-row justify-start items-center">
+												<div className="flex flex-row items-center justify-start">
 													<Flag team={standing[index].team} />
 													{isCorrectPrediction
 														? hasGames && <TickIcon />

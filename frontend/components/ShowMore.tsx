@@ -38,16 +38,18 @@ const ShowMore = ({
 							enterTo="transform scale-100 opacity-100"
 							leave="transition duration-75 ease-out"
 							leaveFrom="transform scale-100 opacity-100"
-							leaveTo="transform scale-95 opacity-0">
+							leaveTo="transform scale-95 opacity-0"
+						>
 							{open && <div>{more}</div>}
 						</Transition>
 						{more && (
-							<div onClick={() => executeScroll(open)} className="flex justify-center mt-4 ">
+							<div onClick={() => executeScroll(open)} className="mt-4 flex justify-center ">
 								<Disclosure.Button
 									className={classNames(
 										gcc('hover:bg-blue'),
-										'focus:outline-none p-2 flex justify-center w-full rounded-md'
-									)}>
+										'flex w-full justify-center rounded-md p-2 focus:outline-none'
+									)}
+								>
 									{!open && (
 										<div className="flex flex-col items-center opacity-60">
 											<span>Show More</span>

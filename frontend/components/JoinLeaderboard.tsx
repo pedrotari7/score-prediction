@@ -39,11 +39,12 @@ const JoinLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
 		<div
 			className={classNames(
 				gcc('text-light'),
-				'm-12 sm:m-24 p-3 sm:p-6 shadow-pop rounded-md select-none h-full',
+				'm-12 h-full select-none rounded-md p-3 shadow-pop sm:m-24 sm:p-6',
 				'flex flex-col items-center justify-center gap-12 sm:gap-20'
-			)}>
-			<div className={classNames('font-bold text-3xl sm:text-4xl md:text-7xl')}>Join Leaderboard</div>
-			<div className={classNames('font-bold text-2xl sm:text-3xl md:text-6xl')}>{leaderboard.name}</div>
+			)}
+		>
+			<div className={classNames('text-3xl font-bold sm:text-4xl md:text-7xl')}>Join Leaderboard</div>
+			<div className={classNames('text-2xl font-bold sm:text-3xl md:text-6xl')}>{leaderboard.name}</div>
 			<div className={classNames('text-xl')}>{leaderboard.id}</div>
 			<div
 				onClick={async () => {
@@ -63,11 +64,12 @@ const JoinLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
 					}
 				}}
 				className={classNames(
-					'font-bold text-3xl p-4 px-6 rounded-md cursor-pointer w-48 h-16 flex justify-center',
+					'flex h-16 w-48 cursor-pointer justify-center rounded-md p-4 px-6 text-3xl font-bold',
 					gcc('bg-blue'),
 					!loading ? gcc('hover:bg-dark') : ''
-				)}>
-				{!loading ? <span>Join</span> : <Loading className="w-6 h-6" />}
+				)}
+			>
+				{!loading ? <span>Join</span> : <Loading className="h-6 w-6" />}
 			</div>
 		</div>
 	);

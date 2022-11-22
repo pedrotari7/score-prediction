@@ -35,12 +35,13 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 			className={classNames(
 				gcc('text-light'),
 				game.fixture.status.short === 'NS' ? gcc('bg-blue') : '',
-				'flex flex-row items-center justify-between  my-2 sm:m-2 rounded p-4 w-full sm:w-max',
-				'cursor-pointer hover:bg-opacity-50 select-none'
+				'my-2 flex w-full flex-row  items-center justify-between rounded p-4 sm:m-2 sm:w-max',
+				'cursor-pointer select-none hover:bg-opacity-50'
 			)}
-			onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
-			<span className="text-xs text-left flex flex-row items-center mr-8">
-				{user?.photoURL && <img className="object-cover h-8 w-8 rounded-full mr-2" src={user?.photoURL} />}
+			onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
+		>
+			<span className="mr-8 flex flex-row items-center text-left text-xs">
+				{user?.photoURL && <img className="mr-2 h-8 w-8 rounded-full object-cover" src={user?.photoURL} />}
 				<span>{user?.displayName}</span>
 			</span>
 
@@ -165,11 +166,12 @@ const CurrentMatch = ({
 				className={classNames(
 					gcc('text-light'),
 					gcc('bg-dark'),
-					'flex flex-col justify-center select-none  m-4 sm:m-8 md:mx-24 p-4 sm:p-8 shadow-pop rounded-md  relative'
-				)}>
-				<div className={classNames('flex flex-row items-center justify-between mb-4')}>
-					{!id && <p className="text-3xl mb-2">Next Game</p>}
-					{id && <p className="text-3xl mb-2">{game.league?.round}</p>}
+					'relative m-4 flex select-none  flex-col justify-center rounded-md p-4 shadow-pop sm:m-8 sm:p-8  md:mx-24'
+				)}
+			>
+				<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
+					{!id && <p className="mb-2 text-3xl">Next Game</p>}
+					{id && <p className="mb-2 text-3xl">{game.league?.round}</p>}
 					<RefreshComp />
 				</div>
 
@@ -179,9 +181,10 @@ const CurrentMatch = ({
 							className={classNames(
 								gcc('text-blue'),
 								gcc('hover:text-light'),
-								`cursor-pointer w-max   rounded-md absolute left-0 top-1/2 transform -translate-y-1/2 sm:-translate-x-full`
+								`absolute left-0   top-1/2 w-max -translate-y-1/2 transform cursor-pointer rounded-md sm:-translate-x-full`
 							)}
-							onClick={() => setGameID(prevGameId)}>
+							onClick={() => setGameID(prevGameId)}
+						>
 							<ChevronLeftIcon className={classNames(gcc('text-light'), 'h-8 w-8')} />
 						</div>
 					)}
@@ -195,16 +198,17 @@ const CurrentMatch = ({
 							className={classNames(
 								gcc('text-blue'),
 								gcc('hover:text-light'),
-								`cursor-pointer w-max rounded-md absolute right-0 top-1/2 transform -translate-y-1/2 sm:translate-x-full`
+								`absolute right-0 top-1/2 w-max -translate-y-1/2 transform cursor-pointer rounded-md sm:translate-x-full`
 							)}
-							onClick={() => setGameID(nextGameId)}>
+							onClick={() => setGameID(nextGameId)}
+						>
 							<ChevronRightIcon className={classNames(gcc('text-light'), 'h-8 w-8')} />
 						</div>
 					)}
 				</div>
 
 				<div className="mt-6">
-					<div className="text-xl mb-4">My Prediction</div>
+					<div className="mb-4 text-xl">My Prediction</div>
 					<div className="flex flex-row flex-wrap">
 						{Object.entries(gamePredictions)
 							.filter(([uid, _]) => uid === userInfo?.uid)
@@ -216,8 +220,8 @@ const CurrentMatch = ({
 
 				<PredictionsStats game={game} gamePredictions={gamePredictions} />
 
-				<div className="mt-6 mb-20 z-10">
-					<div className="text-xl mb-4 flex flex-row items-center justify-between">
+				<div className="z-10 mt-6 mb-20">
+					<div className="mb-4 flex flex-row items-center justify-between text-xl">
 						<div>
 							Predictions <span className="opacity-50">({gamePredictionsAndResults.length})</span>
 						</div>

@@ -64,7 +64,7 @@ const Game = ({
 				gcc('text-light'),
 				gcc('bg-dark'),
 				gcc('hover:bg-blue'),
-				`flex flex-col lg:flex-row items-center justify-evenly my-2 rounded p-2 shadow-pop`,
+				`my-2 flex flex-col items-center justify-evenly rounded p-2 shadow-pop lg:flex-row`,
 				'cursor-pointer'
 			)}
 			onClick={() => {
@@ -73,15 +73,16 @@ const Game = ({
 				}
 				if (!isValidScore(prediction.home)) return homeInputRef.current?.focus();
 				return awayInputRef.current?.focus();
-			}}>
-			<span className="text-xs text-left w-full lg:w-3/12 flex justify-between items-center ">
+			}}
+		>
+			<span className="flex w-full items-center justify-between text-left text-xs lg:w-3/12 ">
 				<Round game={game} />
 				<span className="text-xs">{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm ccc')}</span>
 			</span>
 
-			<div className="flex flex-row lg:w-8/12 justify-center items-center">
+			<div className="flex flex-row items-center justify-center lg:w-8/12">
 				<div className="flex flex-row items-center justify-end lg:w-5/12">
-					<span className="hidden sm:block mr-2 font-bold">{game?.teams.home.name}</span>
+					<span className="mr-2 hidden font-bold sm:block">{game?.teams.home.name}</span>
 					<Flag team={game?.teams.home} />
 				</div>
 
@@ -106,14 +107,14 @@ const Game = ({
 				)}
 
 				{!isInPast && !isMyPredictions && (
-					<div className="font-bold mx-4">
+					<div className="mx-4 font-bold">
 						{formatScore(prediction.home)} - {formatScore(prediction.away)}
 					</div>
 				)}
 
 				{isInPast && (
-					<div className="font-bold mx-4 lg:w-3/12 flex flex-col items-center justify-center">
-						<ResultContainer className="min-w-result px-2 mb-2" prediction={prediction} game={game}>
+					<div className="mx-4 flex flex-col items-center justify-center font-bold lg:w-3/12">
+						<ResultContainer className="mb-2 min-w-result px-2" prediction={prediction} game={game}>
 							{(!isValidScore(prediction.home) || !isValidScore(prediction.away)) && (
 								<span>No prediction</span>
 							)}
@@ -123,10 +124,10 @@ const Game = ({
 								</div>
 							)}
 						</ResultContainer>
-						<div className="flex flex-row items-center flex-wrap justify-center">
+						<div className="flex flex-row flex-wrap items-center justify-center">
 							{game.goals.home} - {game.goals.away}
 							{game.score.penalty.home && (
-								<div className="text-sm ml-2">
+								<div className="ml-2 text-sm">
 									<span>(</span>
 									<span>{game.score.penalty.home}</span>
 									<span className="mx-2">-</span>
@@ -139,13 +140,13 @@ const Game = ({
 					</div>
 				)}
 
-				<div className="flex flex-row items-center justify-start lg:w-5/12 my-2 lg:my-0">
+				<div className="my-2 flex flex-row items-center justify-start lg:my-0 lg:w-5/12">
 					<Flag team={game?.teams.away} />
-					<span className="hidden sm:block ml-2 font-bold">{game?.teams.away.name}</span>
+					<span className="ml-2 hidden font-bold sm:block">{game?.teams.away.name}</span>
 				</div>
 			</div>
 
-			<span className="text-xs text-right lg:w-2/12 my-2 lg:my-0">
+			<span className="my-2 text-right text-xs lg:my-0 lg:w-2/12">
 				{game?.fixture.venue.name}, {game?.fixture.venue.city}
 			</span>
 		</div>

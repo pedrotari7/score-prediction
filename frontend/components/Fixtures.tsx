@@ -69,12 +69,13 @@ const FixturesPage = ({
 		<div
 			className={classNames(
 				gcc('text-light'),
-				'flex flex-col justify-center select-none m-8 p-8 shadow-pop rounded-md',
+				'm-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop',
 				'mx-2 md:mx-24 lg:mx-48'
-			)}>
-			<div className="text-3xl mb-6 flex flex-col sm:flex-row items-center gap-2">
+			)}
+		>
+			<div className="mb-6 flex flex-col items-center gap-2 text-3xl sm:flex-row">
 				<div className="flex flex-row items-center justify-center">
-					<img className="object-cover h-8 w-8 rounded-full mr-2" src={user?.photoURL} />
+					<img className="mr-2 h-8 w-8 rounded-full object-cover" src={user?.photoURL} />
 					{uid !== user.uid && <p>{user.displayName}</p>}
 					{uid === user.uid && <p>My Predictions</p>}
 				</div>
@@ -89,14 +90,14 @@ const FixturesPage = ({
 					games.sort(sortWithFinishedLast);
 					return (
 						<div key={round} className="mb-6">
-							<div className="text-3xl mb-6">{round}</div>
+							<div className="mb-6 text-3xl">{round}</div>
 							{games.map(GameFilled)}
 						</div>
 					);
 				})}
 
 			<div className="flex flex-col">
-				<div className={classNames('flex flex-row items-center justify-between mb-6')}>
+				<div className={classNames('mb-6 flex flex-row items-center justify-between')}>
 					<div className="text-3xl">Group Stage</div>
 					<RefreshComp />
 				</div>

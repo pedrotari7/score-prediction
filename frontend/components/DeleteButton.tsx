@@ -22,21 +22,23 @@ const DeleteButton = ({ className, onClick }: { className: string; onClick: Mous
 			{confirm && (
 				<div className={classNames('flex flex-row gap-2', className)}>
 					<div
-						className="flex items-center justify-center py-2 px-4 rounded-md w-20 h-10 bg-red-800"
+						className="flex h-10 w-20 items-center justify-center rounded-md bg-red-800 py-2 px-4"
 						onClick={async e => {
 							e.stopPropagation();
 							setLoading(true);
 							await onClick(e);
 							setLoading(false);
-						}}>
+						}}
+					>
 						{loading ? <Loading /> : <span>delete</span>}
 					</div>
 					<div
-						className="flex items-center justify-center py-2 px-4 rounded-md w-20 h-10 bg-slate-600"
+						className="flex h-10 w-20 items-center justify-center rounded-md bg-slate-600 py-2 px-4"
 						onClick={e => {
 							e.stopPropagation();
 							setConfirm(false);
-						}}>
+						}}
+					>
 						cancel
 					</div>
 				</div>

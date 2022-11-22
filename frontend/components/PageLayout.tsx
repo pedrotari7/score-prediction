@@ -21,7 +21,7 @@ const PageLayout = ({
 
 	const style = isEuro2020 ? { backgroundImage: 'url(/background.webp)' } : { background: '#181a1b' };
 	return (
-		<div className="flex flex-col bg-cover bg-center bg-repeat-y h-screen w-screen overflow-x-hidden" style={style}>
+		<div className="flex h-screen w-screen flex-col overflow-x-hidden bg-cover bg-center bg-repeat-y" style={style}>
 			<Head>
 				<title>{title}</title>
 				<link rel="icon" href="/favicon.ico" />
@@ -30,7 +30,7 @@ const PageLayout = ({
 
 			<Navbar loading={loading} setLoading={setLoading} />
 
-			<main className="flex flex-col relative top-16 h-[calc(100vh-4rem)] z-10">{children}</main>
+			<main className="relative top-16 z-10 flex h-[calc(100vh-4rem)] flex-col">{children}</main>
 
 			{isEuro2020 && (
 				<div className="fixed bottom-0 w-full select-none">

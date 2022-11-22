@@ -43,22 +43,23 @@ const LiveGame = ({
 		<ShowMore
 			setIsOpen={setIsExtraInfoOpen}
 			more={game.fixture.status.short !== 'NS' && <GameExtraInfo game={game} />}
-			className={classNames(gcc('text-light'), gcc('bg-blue'), 'flex flex-col  my-2 rounded p-2 shadow-pop')}>
-			<div className="flex flex-col sm:flex-row items-center sm:justify-evenly">
-				<span className="text-sm text-left sm:w-2/12 flex ">
+			className={classNames(gcc('text-light'), gcc('bg-blue'), 'my-2 flex  flex-col rounded p-2 shadow-pop')}
+		>
+			<div className="flex flex-col items-center sm:flex-row sm:justify-evenly">
+				<span className="flex text-left text-sm sm:w-2/12 ">
 					<div className="flex items-center justify-center">
 						<Round game={game} />
 					</div>
 				</span>
 
-				<div className="w-10/12 flex flex-row justify-evenly sm:justify-center items-center my-4">
+				<div className="my-4 flex w-10/12 flex-row items-center justify-evenly sm:justify-center">
 					<div className="flex flex-row items-center justify-end sm:w-4/12">
-						<span className="text-xl hidden sm:block mr-2">{game?.teams.home.name}</span>
+						<span className="mr-2 hidden text-xl sm:block">{game?.teams.home.name}</span>
 						<Flag team={game?.teams.home} />
 					</div>
 
 					{isInPast && isCountdown && (
-						<span className="text-3xl sm:w-4/12 text-center mx-2">
+						<span className="mx-2 text-center text-3xl sm:w-4/12">
 							<ClientOnly>
 								<Countdown
 									date={gameDate.toMillis()}
@@ -74,13 +75,13 @@ const LiveGame = ({
 					)}
 
 					{isInPast && !isCountdown && (
-						<span className="text-3xl sm:w-4/12 text-center mx-2">
+						<span className="mx-2 text-center text-3xl sm:w-4/12">
 							{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm')}
 						</span>
 					)}
 
 					{!isInPast && (
-						<span className="text-3xl sm:w-4/12 text-center mx-2">
+						<span className="mx-2 text-center text-3xl sm:w-4/12">
 							<div>
 								<span>{game.goals.home}</span>
 								<span className="mx-2">-</span>
@@ -96,9 +97,9 @@ const LiveGame = ({
 								</div>
 							)}
 							<div className="mt-2">
-								<span className="text-xs mm-1">{game.fixture.status.long}</span>
+								<span className="mm-1 text-xs">{game.fixture.status.long}</span>
 								{!isGameFinished(game) && game.fixture.status.elapsed && (
-									<span className="text-base mx-1">{game.fixture.status.elapsed}&apos;</span>
+									<span className="mx-1 text-base">{game.fixture.status.elapsed}&apos;</span>
 								)}
 							</div>
 						</span>
@@ -106,11 +107,11 @@ const LiveGame = ({
 
 					<div className="flex flex-row items-center justify-start sm:w-4/12">
 						<Flag team={game?.teams.away} />
-						<span className="text-xl hidden sm:block ml-2">{game?.teams.away.name}</span>
+						<span className="ml-2 hidden text-xl sm:block">{game?.teams.away.name}</span>
 					</div>
 				</div>
 
-				<span className="text-sm text-right sm:w-2/12">
+				<span className="text-right text-sm sm:w-2/12">
 					{game?.fixture.venue.name}, {game?.fixture.venue.city}
 				</span>
 			</div>

@@ -29,35 +29,37 @@ const GameStats = ({ stats, colors }: { stats: Statistic[] | undefined; colors: 
 	delete combStats['Ball Possession'];
 
 	const BallPossession = () => (
-		<div className="flex flex-col w-full my-2">
+		<div className="my-2 flex w-full flex-col">
 			<div className="w-full text-center">Ball Possession</div>
 
-			<div className="flex flex-row items-center w-full h-6 my-2">
+			<div className="my-2 flex h-6 w-full flex-row items-center">
 				<div
-					className="rounded-l-md text-left py-2 "
+					className="rounded-l-md py-2 text-left "
 					style={{
 						backgroundColor: `#${homeColor}`,
 						color: getContrastYIQ(homeColor),
 						width: ballPossession[1] ?? '50%',
-					}}>
-					<span className="h-6 my-2 px-2 w-12">{ballPossession[1]}</span>
+					}}
+				>
+					<span className="my-2 h-6 w-12 px-2">{ballPossession[1]}</span>
 				</div>
 				<div
-					className="rounded-r-md text-right py-2 "
+					className="rounded-r-md py-2 text-right "
 					style={{
 						backgroundColor: `#${awayColor}`,
 						color: getContrastYIQ(awayColor),
 						width: ballPossession[2] ?? '50%',
-					}}>
-					<span className="h-6 my-2 px-2 w-12">{ballPossession[2]}</span>
+					}}
+				>
+					<span className="my-2 h-6 w-12 px-2">{ballPossession[2]}</span>
 				</div>
 			</div>
 		</div>
 	);
 
 	return (
-		<div className="bg-gray-700 rounded-md p-6 flex justify-center">
-			<div className="flex flex-col justify-center items-center text-sm sm:text-base w-full xl:w-1/3 sm:w-1/2">
+		<div className="flex justify-center rounded-md bg-gray-700 p-6">
+			<div className="flex w-full flex-col items-center justify-center text-sm sm:w-1/2 sm:text-base xl:w-1/3">
 				<BallPossession />
 				{Object.entries(combStats).map(([type, [idx, homeValue, awayValue]]) => {
 					let homeStyle = {};
@@ -69,16 +71,18 @@ const GameStats = ({ stats, colors }: { stats: Statistic[] | undefined; colors: 
 						awayStyle = { backgroundColor: `#${awayColor}`, color: getContrastYIQ(awayColor) };
 					}
 					return (
-						<div key={idx} className="flex flex-row items-center justify-between w-full">
+						<div key={idx} className="flex w-full flex-row items-center justify-between">
 							<div
-								className="text-center h-6 flex items-center justify-center  rounded-md my-2 px-2 w-12"
-								style={homeStyle}>
+								className="my-2 flex h-6 w-12 items-center  justify-center rounded-md px-2 text-center"
+								style={homeStyle}
+							>
 								{homeValue ?? 0}
 							</div>
-							<div className="text-center flex items-center h-6 my-2">{type}</div>
+							<div className="my-2 flex h-6 items-center text-center">{type}</div>
 							<div
-								className="text-center flex items-center justify-center  h-6 rounded-md my-2 px-2 w-12"
-								style={awayStyle}>
+								className="my-2 flex h-6 w-12  items-center justify-center rounded-md px-2 text-center"
+								style={awayStyle}
+							>
 								{awayValue ?? 0}
 							</div>
 						</div>

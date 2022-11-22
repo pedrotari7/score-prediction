@@ -28,10 +28,11 @@ const CreateLeaderboard = () => {
 		<div
 			className={classNames(
 				!open ? gcc('hover:bg-dark') : '',
-				'flex flex-row gap-2 items-center h-12 p-2 rounded-md font-bold cursor-pointer',
-				'transition-all duration-100 ease-in-out max-w-full'
+				'flex h-12 cursor-pointer flex-row items-center gap-2 rounded-md p-2 font-bold',
+				'max-w-full transition-all duration-100 ease-in-out'
 			)}
-			onClick={async () => setOpen(true)}>
+			onClick={async () => setOpen(true)}
+		>
 			<div className="">
 				<PlusCircleIcon className={classNames(gcc('text-light'), 'h-8 w-8 cursor-pointer')} />
 			</div>
@@ -40,13 +41,13 @@ const CreateLeaderboard = () => {
 					<input
 						placeholder="leaderboard name"
 						type="text"
-						className="bg-white text-black focus:outline-none px-3 py-2 w-48"
+						className="w-48 bg-white px-3 py-2 text-black focus:outline-none"
 						ref={inputRef}
 					/>
 					<div
 						className={classNames(
 							gcc('bg-blue'),
-							'rounded-md p-2 cursor-pointer w-20 flex justify-center items-center h-10'
+							'flex h-10 w-20 cursor-pointer items-center justify-center rounded-md p-2'
 						)}
 						onClick={async () => {
 							if (inputRef.current && userInfo && !loading) {
@@ -61,8 +62,9 @@ const CreateLeaderboard = () => {
 								}
 								setLoading(false);
 							}
-						}}>
-						{loading && <Loading className="w-4 h-4" />}
+						}}
+					>
+						{loading && <Loading className="h-4 w-4" />}
 						{!loading && <div>Create</div>}
 					</div>
 				</>

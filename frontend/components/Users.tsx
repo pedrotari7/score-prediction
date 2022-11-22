@@ -27,13 +27,13 @@ const UsersList = () => {
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
-		<div className={classNames(gcc('text-light'), 'm-3 sm:m-6 p-3 sm:p-6 shadow-pop rounded-md select-none')}>
-			<div className={classNames('flex flex-row items-center justify-between mb-4')}>
-				<div className="font-bold text-2xl">Users</div>
+		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:m-6 sm:p-6')}>
+			<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
+				<div className="text-2xl font-bold">Users</div>
 				<RefreshButton onClick={update} />
 			</div>
 
-			<div className="flex flex-col item-center  justify-evenly w-full">
+			<div className="item-center flex w-full  flex-col justify-evenly">
 				{users &&
 					Object.values(users).map((user: any, index) => {
 						if (!user) return <></>;
@@ -41,22 +41,25 @@ const UsersList = () => {
 							<div
 								key={index}
 								className="relative w-full "
-								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
+								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
+							>
 								<div
 									className={classNames(
 										'w-full',
 										gcc('bg-dark'),
-										'flex flex-row items-center gap-2  my-2 sm:m-2 rounded p-4',
-										'cursor-pointer hover:bg-opacity-50 select-none'
-									)}>
+										'my-2 flex flex-row items-center  gap-2 rounded p-4 sm:m-2',
+										'cursor-pointer select-none hover:bg-opacity-50'
+									)}
+								>
 									<DesktopOnly>
-										<div className="flex flex-row items-center justify-center w-8 h-8 m-2 font-bold text-xl">
+										<div className="m-2 flex h-8 w-8 flex-row items-center justify-center text-xl font-bold">
 											<span
 												className={classNames(
 													gcc('bg-light'),
 													gcc('text-dark'),
-													'rounded-full w-full h-full flex items-center justify-center p-2mr-1'
-												)}>
+													'p-2mr-1 flex h-full w-full items-center justify-center rounded-full'
+												)}
+											>
 												{index + 1}
 											</span>
 										</div>
@@ -66,19 +69,20 @@ const UsersList = () => {
 											className={classNames(
 												gcc('bg-light'),
 												gcc('text-dark'),
-												'absolute -top-1 -left-0 rounded-md w-12 font-bold text-center'
-											)}>
+												'absolute -top-1 -left-0 w-12 rounded-md text-center font-bold'
+											)}
+										>
 											<span className="p-3">{index + 1}</span>
 										</div>
 									</MobileOnly>
-									<div className="text-xs text-left flex flex-row flex-wrap items-center gap-4">
+									<div className="flex flex-row flex-wrap items-center gap-4 text-left text-xs">
 										{user?.photoURL && (
 											<img
-												className="object-cover h-8 w-8 rounded-full mr-2"
+												className="mr-2 h-8 w-8 rounded-full object-cover"
 												src={user?.photoURL}
 											/>
 										)}
-										<span className="font-bold text-lg">{user?.displayName}</span>
+										<span className="text-lg font-bold">{user?.displayName}</span>
 										<span>{user?.uid}</span>
 										<span>{user?.email}</span>
 										<span>{user?.lastRefreshTime}</span>

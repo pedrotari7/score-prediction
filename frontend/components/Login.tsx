@@ -13,15 +13,15 @@ const Login = () => {
 	const isAllowedBrowser = !isFacebookApp();
 
 	return (
-		<div className="w-screen h-screen">
+		<div className="h-screen w-screen">
 			<Head>
 				<title>Login</title>
 				<link rel="icon" href="/favicon.ico" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			</Head>
-			<video className="absolute object-cover h-full" src="/sample.m4v" muted autoPlay></video>
-			<div className="flex flex-col items-center justify-evenly absolute w-screen h-full bg-[#181a1b] bg-opacity-90">
-				<div className="text-light text-4xl md:text-8xl font-bold text-center">SCORE PREDICTION</div>
+			<video className="absolute h-full object-cover" src="/sample.m4v" muted autoPlay></video>
+			<div className="absolute flex h-full w-screen flex-col items-center justify-evenly bg-[#181a1b] bg-opacity-90">
+				<div className="text-center text-4xl font-bold text-light md:text-8xl">SCORE PREDICTION</div>
 				{isAllowedBrowser && (
 					<StyledFirebaseAuth
 						uiConfig={{
@@ -36,8 +36,8 @@ const Login = () => {
 					/>
 				)}
 				{!isAllowedBrowser && (
-					<div className="bg-red-200 text-2xl rounded-md p-4 flex flex-row items-center gap-2">
-						<ExclamationTriangleIcon className="text-red-800 h-10 w-10 font-bold" />
+					<div className="flex flex-row items-center gap-2 rounded-md bg-red-200 p-4 text-2xl">
+						<ExclamationTriangleIcon className="h-10 w-10 font-bold text-red-800" />
 						<span className="text-red-800"> Browser not supported </span>
 					</div>
 				)}

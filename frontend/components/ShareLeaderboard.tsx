@@ -23,8 +23,9 @@ const ShareLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
 			onCopy={() => {
 				setCopied(true);
 				setTimeout(() => setCopied(false), 3000);
-			}}>
-			<div className={(gcc('hover:bg-dark'), 'flex flex-row items-center gap-2 cursor-pointer font-bold')}>
+			}}
+		>
+			<div className={(gcc('hover:bg-dark'), 'flex cursor-pointer flex-row items-center gap-2 font-bold')}>
 				{!copied && (
 					<>
 						<ShareIcon className={classNames(gcc('text-light'), 'h-8 w-8')} />

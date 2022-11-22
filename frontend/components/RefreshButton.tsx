@@ -21,7 +21,7 @@ const RefreshButton = ({
 				gcc('text-light'),
 				loading ? 'animate-spin' : '',
 				'h-6 w-6',
-				'hover:opacity-80 cursor-pointer',
+				'cursor-pointer hover:opacity-80',
 				className
 			)}
 			onClick={async event => {

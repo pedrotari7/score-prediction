@@ -4,30 +4,30 @@ import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 
 export const ExactScore = () => (
-	<div className="rounded-md p-2 mb-4 bg-green-600 flex flex-row flex-wrap text-lg">
+	<div className="mb-4 flex flex-row flex-wrap rounded-md bg-green-600 p-2 text-lg">
 		Exact Score (right outcome of the game and exact number of goals scored by both teams)
-		<span className="font-bold text-2xl mt-2 w-full">+5 Points</span>
+		<span className="mt-2 w-full text-2xl font-bold">+5 Points</span>
 	</div>
 );
 
 export const CorrectResult = () => (
-	<div className="rounded-md p-2 mb-4 bg-yellow-600 flex flex-row flex-wrap text-lg">
+	<div className="mb-4 flex flex-row flex-wrap rounded-md bg-yellow-600 p-2 text-lg">
 		Correct Result (right outcome of the game, but wrong number of goals of at least one of the teams)
-		<span className="font-bold text-2xl mt-2 w-full">+3 Points</span>
+		<span className="mt-2 w-full text-2xl font-bold">+3 Points</span>
 	</div>
 );
 
 export const RightGoals = () => (
-	<div className="rounded-md p-2 mb-4 bg-pink-600 flex flex-row flex-wrap text-lg">
+	<div className="mb-4 flex flex-row flex-wrap rounded-md bg-pink-600 p-2 text-lg">
 		Right number of goals from one of the teams
-		<span className="font-bold text-2xl mt-2 w-full">+1 Point</span>
+		<span className="mt-2 w-full text-2xl font-bold">+1 Point</span>
 	</div>
 );
 
 export const NoPoints = () => (
-	<div className="rounded-md p-2 mb-4 bg-red-600 flex flex-row flex-wrap text-lg">
+	<div className="mb-4 flex flex-row flex-wrap rounded-md bg-red-600 p-2 text-lg">
 		None of the above
-		<span className="font-bold text-2xl mt-2 w-full">+0 Points</span>
+		<span className="mt-2 w-full text-2xl font-bold">+0 Points</span>
 	</div>
 );
 
@@ -40,20 +40,20 @@ export const ExtraInfo = () => (
 
 export const GroupsPoints = () => (
 	<div>
-		<div className="font-bold text-2xl mb-4">Groups</div>
-		<div className="bg-purple-700 rounded-md p-2 mb-4 flex flex-row flex-wrap text-lg">
+		<div className="mb-4 text-2xl font-bold">Groups</div>
+		<div className="mb-4 flex flex-row flex-wrap rounded-md bg-purple-700 p-2 text-lg">
 			You will be awarded 1 point per each successful guess on a team&apos;s final position in the group stage.
-			<span className="font-bold text-2xl mt-2 w-full">+1 Point</span>
+			<span className="mt-2 w-full text-2xl font-bold">+1 Point</span>
 		</div>
 	</div>
 );
 
 export const FinalStages = () => (
 	<div className="mb-4">
-		<div className="font-bold text-2xl mb-4">Final Stages</div>
+		<div className="mb-4 text-2xl font-bold">Final Stages</div>
 		In the final stages of the tournament each game is similar to the group stage games, but in this case your
 		prediction will be compared with the result at the end of the 90 or 120 minutes.
-		<div className="bg- bg-gray-500 rounded-md p-2 my-4 ">
+		<div className="bg- my-4 rounded-md bg-gray-500 p-2 ">
 			Nonetheless, in case of penalty shootout if you guessed correctly the team that ends up going through to the
 			next stage, you will be awarded 1 extra point that adds to the ones that you might have achieved during the
 			regular time.
@@ -63,7 +63,7 @@ export const FinalStages = () => (
 
 export const Deadlines = () => (
 	<div className="">
-		<div className="font-bold text-2xl mb-4">Deadlines</div>
+		<div className="mb-4 text-2xl font-bold">Deadlines</div>
 		In the group stages the predictions for each game must be done before its start. For the final stages games, the
 		predictions will be available once the matchup is known and have to be submitted before the game starts.
 	</div>
@@ -87,11 +87,12 @@ const Rules = () => {
 				className={classNames(
 					gcc('text-light'),
 					gcc('bg-dark'),
-					`flex flex-col justify-center select-none  m-8 p-8 shadow-pop rounded-md`,
+					`m-8 flex select-none flex-col  justify-center rounded-md p-8 shadow-pop`,
 					'mx-8 md:mx-24 lg:mx-48'
-				)}>
-				<div className="font-bold mb-4 text-4xl">Rules</div>
-				<div className="font-bold text-2xl mb-4">Points in each game</div>
+				)}
+			>
+				<div className="mb-4 text-4xl font-bold">Rules</div>
+				<div className="mb-4 text-2xl font-bold">Points in each game</div>
 				<ExactScore />
 				<CorrectResult />
 				<RightGoals />
@@ -104,15 +105,17 @@ const Rules = () => {
 			<div
 				className={classNames(
 					gcc('text-light'),
-					`flex flex-col justify-center select-none  m-8 p-8 rounded-md`,
-					'mx-8 md:mx-24 lg:mx-48 mb-10'
-				)}></div>
+					`m-8 flex select-none flex-col  justify-center rounded-md p-8`,
+					'mx-8 mb-10 md:mx-24 lg:mx-48'
+				)}
+			></div>
 			<div
 				className={classNames(
 					gcc('bg-light'),
-					'fixed bottom-4 right-4 p-4 rounded-md shadow-pop cursor-pointer font-bold'
+					'fixed bottom-4 right-4 cursor-pointer rounded-md p-4 font-bold shadow-pop'
 				)}
-				onClick={() => updateRoute({ page: Route.Predictions, data: route.data })}>
+				onClick={() => updateRoute({ page: Route.Predictions, data: route.data })}
+			>
 				My Predictions
 			</div>
 		</>

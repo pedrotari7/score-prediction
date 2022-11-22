@@ -29,13 +29,13 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
-		<div className={classNames(gcc('text-light'), 'm-3 sm:m-6 p-3 sm:p-6 shadow-pop rounded-md select-none')}>
-			<div className={classNames('flex flex-row items-center justify-between mb-4')}>
-				<div className="font-bold text-2xl">Leaderboards</div>
+		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:m-6 sm:p-6')}>
+			<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
+				<div className="text-2xl font-bold">Leaderboards</div>
 				<RefreshButton onClick={update} />
 			</div>
 
-			<div className="flex flex-col item-center  justify-evenly w-full">
+			<div className="item-center flex w-full  flex-col justify-evenly">
 				{leaderboards &&
 					leaderboards.map(l => {
 						if (!l) return <></>;
@@ -43,14 +43,16 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 							<div
 								key={l.id}
 								className="relative w-full "
-								onClick={() => setRoute({ page: Route.Leaderboard, data: l.id })}>
+								onClick={() => setRoute({ page: Route.Leaderboard, data: l.id })}
+							>
 								<div
 									className={classNames(
 										'w-full',
 										gcc('bg-dark'),
-										'flex flex-row items-center gap-2  my-2 sm:m-2 rounded p-4',
-										'cursor-pointer hover:bg-opacity-50 select-none'
-									)}>
+										'my-2 flex flex-row items-center  gap-2 rounded p-4 sm:m-2',
+										'cursor-pointer select-none hover:bg-opacity-50'
+									)}
+								>
 									<DeleteButton
 										className="absolute top-4 right-1 z-10"
 										onClick={async () => {
@@ -65,29 +67,30 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 											<span className="font-bold">{l?.name}</span>
 											<span className="opacity-50">({l.members.length})</span>
 										</div>
-										<div className="flex gap-4 items-center">
-											<span className={classNames('bg-gray-800', 'p-2 rounded-md')}>
+										<div className="flex items-center gap-4">
+											<span className={classNames('bg-gray-800', 'rounded-md p-2')}>
 												{users[l.creator].displayName}
 											</span>
 											<span>{l.id}</span>
 										</div>
 
-										<div className="flex flex-row gap-4 flex-wrap">
+										<div className="flex flex-row flex-wrap gap-4">
 											{l.members.map(m => (
 												<div
 													key={m}
 													className={classNames(
 														gcc('bg-blue'),
 														gcc('hover:bg-dark'),
-														'p-2 rounded-md flex flex-row items-center'
+														'flex flex-row items-center rounded-md p-2'
 													)}
 													onClick={e => {
 														e.stopPropagation();
 														setRoute({ page: Route.Predictions, data: m });
-													}}>
+													}}
+												>
 													{users[m]?.photoURL && (
 														<img
-															className="object-cover h-8 w-8 rounded-full mr-2"
+															className="mr-2 h-8 w-8 rounded-full object-cover"
 															src={users[m]?.photoURL}
 														/>
 													)}
