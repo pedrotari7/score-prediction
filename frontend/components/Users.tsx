@@ -39,7 +39,7 @@ const UsersList = () => {
 						if (!user) return <></>;
 						return (
 							<div
-								key={user.uid}
+								key={index}
 								className="relative w-full "
 								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}>
 								<div
