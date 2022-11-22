@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "firebase": "firebase",
-    "ci": "yarn install --frozen-lockfile"
+    "ci": "yarn install --frozen-lockfile",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "firebase": "^8.5.0",
-    "firebase-tools": "^9.10.2"
+    "firebase-tools": "^9.10.2",
+    "husky": "^8.0.2"
   }
 }
