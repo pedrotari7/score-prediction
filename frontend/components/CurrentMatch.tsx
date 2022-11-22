@@ -221,15 +221,17 @@ const CurrentMatch = ({
 						<div>
 							Predictions <span className="opacity-50">({gamePredictionsAndResults.length})</span>
 						</div>
-						<SelectLeaderboard
-							users={users}
-							leaderboards={leaderboards}
-							currentLeaderboard={currentLeaderboard}
-							setCurrentLeaderboard={setCurrentLeaderboard}
-							setMembers={setMembers}
-							className="!w-36 text-xs"
-							backgroundColor="#74122f"
-						/>
+						{Object.keys(leaderboards).length > 0 && (
+							<SelectLeaderboard
+								users={users}
+								leaderboards={leaderboards}
+								currentLeaderboard={currentLeaderboard}
+								setCurrentLeaderboard={setCurrentLeaderboard}
+								setMembers={setMembers}
+								className="!w-36 text-xs"
+								backgroundColor="#74122f"
+							/>
+						)}
 					</div>
 					<div className="flex flex-row flex-wrap">
 						{gamePredictionsAndResults.map(({ uid, prediction }) => (
