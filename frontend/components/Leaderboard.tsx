@@ -124,7 +124,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 			<div className="flex flex-row item-center flex-wrap justify-evenly w-full">
 				{sortedUsers.map((user, index) => {
 					return (
-						<div key={user.uid} className="relative w-full sm:w-max">
+						<div key={index} className="relative w-full sm:w-max">
 							<div
 								className={classNames(
 									'cursor-pointer hover:bg-opacity-50 flex flex-col sm:flex-row justify-center items-center',
