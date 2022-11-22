@@ -1,6 +1,10 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-cd frontend; npm run lint; npm run  build
-cd backend; npm run lint; npm run build
+cd frontend
+yarn lint
+yarn build
+cd ../backend
+yarn lint
+yarn build
 
