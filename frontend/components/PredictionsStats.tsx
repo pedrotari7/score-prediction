@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Fixture, GamePredictions } from '../../interfaces/main';
-import { getOutcome, isGameStarted } from '../../shared/utils';
+import { getOutcome, isGameFinished, isGameStarted } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import Flag from './Flag';
@@ -23,6 +23,7 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 	const TickIcon = () => <img className="h-7 w-7 p-1 mx-1" src="/tick.svg" />;
 
 	const result = getOutcome(game.goals);
+	const finished = isGameFinished(game);
 
 	return (
 		<div>
@@ -39,7 +40,7 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 								<Flag team={game?.teams.home} />
 								<span className="text-xl hidden sm:block">{game?.teams.home.name}</span>
 								<span className="text-xl font-bold">{outcomes.winH}</span>
-								{result === 'winH' && <TickIcon />}
+								{finished && result === 'winH' && <TickIcon />}
 							</div>
 							<div
 								className={classNames(
@@ -49,7 +50,7 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 								<Flag team={game?.teams.away} />
 								<span className="text-xl hidden sm:block">{game?.teams.away.name}</span>
 								<span className="text-xl font-bold">{outcomes.winA}</span>
-								{result === 'winA' && <TickIcon />}
+								{game && result === 'winA' && <TickIcon />}
 							</div>
 
 							<div
@@ -59,7 +60,7 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 								)}>
 								<span className="text-xl"> Draw</span>
 								<span className="text-xl font-bold">{outcomes.draw}</span>
-								{result === 'draw' && <TickIcon />}
+								{game && result === 'draw' && <TickIcon />}
 							</div>
 						</div>
 					</div>
