@@ -30,13 +30,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	// useEffect(() => {
 	// 	const handle = setInterval(async () => {
 	// 		const user = getAuth(app).currentUser;
+	// 		console.log('refresh', user);
 	// 		if (user) {
 	// 			await user.getIdToken(true);
 	// 			const token = await user.getIdToken();
 	// 			const isAdmin = (await user.getIdTokenResult()).claims.admin;
-	// 			setUser({ ...user, admin: isAdmin });
-	// 			nookies.destroy(null, 'token');
-	// 			setCookie(token);
+	// 			setUser({ ...user, admin: isAdmin, token });
 	// 		}
 	// 	}, 1000 * 60 * 10);
 	// 	return () => clearInterval(handle);
