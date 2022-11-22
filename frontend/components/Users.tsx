@@ -1,4 +1,3 @@
-import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import CompetitionContext from '../context/CompetitionContext';
 import RouteContext, { Route } from '../context/RouteContext';
@@ -7,6 +6,7 @@ import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import { fetchUsers } from '../pages/api';
 import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
+import RefreshButton from './RefreshButton';
 
 const UsersList = () => {
 	const { setRoute } = useContext(RouteContext)!;
@@ -30,10 +30,7 @@ const UsersList = () => {
 		<div className={classNames(gcc('text-light'), 'm-3 sm:m-6 p-3 sm:p-6 shadow-pop rounded-md select-none')}>
 			<div className={classNames('flex flex-row items-center justify-between mb-4')}>
 				<div className="font-bold text-2xl">Users</div>
-				<ArrowPathIcon
-					className={classNames(gcc('text-light'), 'h-6 w-6', 'hover:opacity-80 cursor-pointer')}
-					onClick={() => update()}
-				/>{' '}
+				<RefreshButton onClick={update} />
 			</div>
 
 			<div className="flex flex-col item-center  justify-evenly w-full">
