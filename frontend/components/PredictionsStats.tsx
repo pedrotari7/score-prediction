@@ -50,7 +50,7 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 								<Flag team={game?.teams.away} />
 								<span className="text-xl hidden sm:block">{game?.teams.away.name}</span>
 								<span className="text-xl font-bold">{outcomes.winA}</span>
-								{game && result === 'winA' && <TickIcon />}
+								{finished && result === 'winA' && <TickIcon />}
 							</div>
 
 							<div
@@ -60,7 +60,7 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 								)}>
 								<span className="text-xl"> Draw</span>
 								<span className="text-xl font-bold">{outcomes.draw}</span>
-								{game && result === 'draw' && <TickIcon />}
+								{finished && result === 'draw' && <TickIcon />}
 							</div>
 						</div>
 					</div>
