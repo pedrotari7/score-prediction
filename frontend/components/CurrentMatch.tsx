@@ -2,7 +2,7 @@ import { Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } 
 import UserContext from '../context/UserContext';
 import { useSwipeable } from 'react-swipeable';
 import LiveGame from './LiveGame';
-import { Fixture, Fixtures, Prediction, Predictions, User, Users } from '../../interfaces/main';
+import { Fixture, Fixtures, Leaderboard, Prediction, Predictions, User, Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
 import { classNames, formatScore, getCompetitionClass, getStadiumImageURL } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
@@ -12,6 +12,7 @@ import CompetitionContext from '../context/CompetitionContext';
 import Loading from './Loading';
 import RefreshComp from './RefreshComp';
 import PredictionsStats from './PredictionsStats';
+import SelectLeaderboard from './SelectLeaderboard';
 
 const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game: Fixture }) => {
 	const routeInfo = useContext(RouteContext)!;
@@ -100,16 +101,20 @@ const CurrentMatch = ({
 	predictions,
 	users,
 	gameID,
+	leaderboards,
 }: {
 	fixtures: Fixtures;
 	predictions: Predictions;
 	users: Users;
 	gameID: number;
+	leaderboards: Record<string, Leaderboard>;
 }) => {
 	const userInfo = useContext(UserContext);
 	const competition = useContext(CompetitionContext);
 
 	const [id, setGameID] = useState(gameID);
+	const [currentLeaderboard, setCurrentLeaderboard] = useState('global');
+	const [members, setMembers] = useState<string[]>(Object.keys(users));
 
 	const sortedFixtures = Object.values(fixtures).sort(
 		(a, b) => a.fixture.timestamp - b.fixture.timestamp
@@ -132,7 +137,7 @@ const CurrentMatch = ({
 	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
 
 	const gamePredictionsAndResults = Object.entries(gamePredictions)
-		.filter(([uid]) => uid !== userInfo?.uid)
+		.filter(([uid]) => uid !== userInfo?.uid && members.includes(uid))
 		.map(([uid, prediction]) => ({
 			uid,
 			prediction,
@@ -212,8 +217,19 @@ const CurrentMatch = ({
 				<PredictionsStats game={game} gamePredictions={gamePredictions} />
 
 				<div className="mt-6 mb-20 z-10">
-					<div className="text-xl mb-4">
-						Predictions <span className="opacity-50">({gamePredictionsAndResults.length})</span>
+					<div className="text-xl mb-4 flex flex-row items-center justify-between">
+						<div>
+							Predictions <span className="opacity-50">({gamePredictionsAndResults.length})</span>
+						</div>
+						<SelectLeaderboard
+							users={users}
+							leaderboards={leaderboards}
+							currentLeaderboard={currentLeaderboard}
+							setCurrentLeaderboard={setCurrentLeaderboard}
+							setMembers={setMembers}
+							className="!w-36 text-xs"
+							backgroundColor="#74122f"
+						/>
 					</div>
 					<div className="flex flex-row flex-wrap">
 						{gamePredictionsAndResults.map(({ uid, prediction }) => (

@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { Leaderboard, Users } from '../../interfaces/main';
 import Select from 'react-select';
+import { classNames } from '../lib/utils/reactHelper';
 
 const SelectLeaderboard = ({
 	users,
@@ -8,12 +9,16 @@ const SelectLeaderboard = ({
 	setMembers,
 	currentLeaderboard,
 	setCurrentLeaderboard,
+	className,
+	backgroundColor = '#181a1b',
 }: {
 	users: Users;
 	leaderboards: Record<string, Leaderboard>;
 	setMembers: Dispatch<SetStateAction<string[]>>;
 	currentLeaderboard: string;
 	setCurrentLeaderboard: Dispatch<SetStateAction<string>>;
+	className?: string;
+	backgroundColor?: string;
 }) => {
 	const allLeaderboards: Record<string, Leaderboard> = {
 		global: { id: 'global', name: 'Global', members: Object.keys(users), creator: 'global' },
@@ -22,12 +27,12 @@ const SelectLeaderboard = ({
 
 	return (
 		<Select
-			className="w-96 max-w-full"
+			className={classNames('w-96 max-w-full', className ?? '')}
 			isSearchable={false}
 			styles={{
 				control: styles => ({
 					...styles,
-					backgroundColor: '#181a1b',
+					backgroundColor,
 					border: 0,
 					outline: '1px solid white',
 				}),
@@ -38,7 +43,7 @@ const SelectLeaderboard = ({
 				option: (styles, { isDisabled, isFocused }) => {
 					return {
 						...styles,
-						backgroundColor: isFocused ? '#2b2d2e' : '#181a1b',
+						backgroundColor: isFocused ? '#2b2d2e' : backgroundColor,
 						color: '#FFF',
 						cursor: isDisabled ? 'not-allowed' : 'pointer',
 					};

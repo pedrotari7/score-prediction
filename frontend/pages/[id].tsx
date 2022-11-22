@@ -129,6 +129,7 @@ const Home = () => {
 						predictions={predictions}
 						users={users}
 						gameID={route?.data as number}
+						leaderboards={leaderboards}
 					/>
 				);
 			case Route.Predictions:
