@@ -85,7 +85,7 @@ const Game = ({
 					<Flag team={game?.teams.home} />
 				</div>
 
-				<div className="flex w-4/12 flex-row items-center justify-center lg:w-3/12">
+				<div className="flex w-4/12 flex-row items-center justify-center lg:w-4/12">
 					{!isInPast && isMyPredictions && (
 						<>
 							<ScoreInput
