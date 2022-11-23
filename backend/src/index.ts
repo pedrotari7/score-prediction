@@ -23,10 +23,11 @@ import {
   Tournament,
   UserResult,
 } from '../../interfaces/main';
-import { DEFAULT_USER_RESULT, joinResults } from './util';
+import { joinResults } from './util';
 import {
   calculateResults,
   competitions,
+  DEFAULT_USER_RESULT,
   getResult,
   isGameOnGoing,
   isGameStarted,

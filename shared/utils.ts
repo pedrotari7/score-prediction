@@ -27,6 +27,16 @@ export const competitions: Competitions = {
 	},
 };
 
+export const DEFAULT_USER_RESULT: UserResult = {
+	points: 0,
+	exact: 0,
+	result: 0,
+	onescore: 0,
+	penalty: 0,
+	fail: 0,
+	groups: 0,
+};
+
 export const isNum = (n: number | null): n is number => typeof n === 'number';
 
 export const isEmpty = (obj: Object) => Object.keys(obj).length == 0;
