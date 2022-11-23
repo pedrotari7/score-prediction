@@ -1,11 +1,20 @@
 import React, { useContext } from 'react';
-import { Fixture, GamePredictions } from '../../interfaces/main';
+import { Fixture, GamePredictions, UserResult } from '../../interfaces/main';
 import { getOutcome, isGameFinished, isGameStarted } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import Flag from './Flag';
+import { Circle } from './UserScores';
 
-const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredictions: GamePredictions }) => {
+const PredictionsStats = ({
+	game,
+	gamePredictions,
+	resultsTally,
+}: {
+	game: Fixture;
+	gamePredictions: GamePredictions;
+	resultsTally: Partial<UserResult>;
+}) => {
 	const competition = useContext(CompetitionContext);
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
@@ -28,8 +37,8 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 	return (
 		<div>
 			{isGameStarted(game) && (
-				<div className='mt-6'>
-					<div className='mb-4 text-xl'>Stats</div>
+				<div className='mt-6 flex flex-col gap-6'>
+					<div className='text-xl font-bold'>Stats</div>
 					<div className='flex flex-row flex-wrap'>
 						<div className='flex flex-row flex-wrap items-center justify-start gap-4'>
 							<div
@@ -66,6 +75,21 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 								{finished && result === 'draw' && <TickIcon />}
 							</div>
 						</div>
+					</div>
+					<div className='flex flex-row flex-wrap items-center'>
+						{(resultsTally.exact ?? 0) > 0 && (
+							<Circle className='bg-green-600'>{resultsTally.exact}</Circle>
+						)}
+						{(resultsTally.result ?? 0) > 0 && (
+							<Circle className='bg-yellow-600'>{resultsTally.result}</Circle>
+						)}
+						{(resultsTally.onescore ?? 0) > 0 && (
+							<Circle className='bg-pink-600'>{resultsTally.onescore}</Circle>
+						)}
+						{(resultsTally.fail ?? 0) > 0 && <Circle className='bg-red-600'>{resultsTally.fail}</Circle>}
+						{(resultsTally.penalty ?? 0) > 0 && (
+							<Circle className='bg-gray-500'>{resultsTally.penalty}</Circle>
+						)}
 					</div>
 				</div>
 			)}

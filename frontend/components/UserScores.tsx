@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { User } from '../../interfaces/main';
 import { classNames } from '../lib/utils/reactHelper';
 
-const Circle = ({ children, className }: { children: ReactNode; className: string }) => (
+export const Circle = ({ children, className }: { children: ReactNode; className: string }) => (
 	<div
 		className={classNames(
 			'mx-1 flex h-6 w-6 select-none flex-row items-center justify-center rounded-full p-4 text-center',

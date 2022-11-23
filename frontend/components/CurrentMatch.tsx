@@ -7,7 +7,7 @@ import RouteContext, { Route } from '../context/RouteContext';
 import { classNames, formatScore, getCompetitionClass, getStadiumImageURL } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { getResult, isGameFinished } from '../../shared/utils';
+import { DEFAULT_USER_RESULT, getResult, isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import Loading from './Loading';
 import RefreshComp from './RefreshComp';
@@ -147,6 +147,18 @@ const CurrentMatch = ({
 		.sort((a, b) => users[a.uid].displayName.localeCompare(users[b.uid].displayName))
 		.sort((a, b) => (b.result.points ?? 0) - (a.result.points ?? 0));
 
+	const resultsTally = gamePredictionsAndResults.reduce(
+		(acc, { result: r }) => ({
+			...acc,
+			exact: acc.exact + (r.exact ?? 0),
+			onescore: acc.onescore + (r.onescore ?? 0),
+			result: acc.result + (r.result ?? 0),
+			penalty: acc.penalty + (r.penalty ?? 0),
+			fail: acc.fail + (r.fail ?? 0),
+		}),
+		DEFAULT_USER_RESULT
+	);
+
 	const findGame = (dir: -1 | 1) => {
 		const prevGameIdx = sortedFixtures.findIndex(g => g.fixture.id === game.fixture.id) + dir;
 		return sortedFixtures[prevGameIdx] ? sortedFixtures[prevGameIdx].fixture.id : null;
@@ -208,7 +220,7 @@ const CurrentMatch = ({
 				</div>
 
 				<div className='mt-6'>
-					<div className='mb-4 text-xl'>My Prediction</div>
+					<div className='mb-4 text-xl font-bold'>My Prediction</div>
 					<div className='flex flex-row flex-wrap'>
 						{Object.entries(gamePredictions)
 							.filter(([uid, _]) => uid === userInfo?.uid)
@@ -218,11 +230,11 @@ const CurrentMatch = ({
 					</div>
 				</div>
 
-				<PredictionsStats game={game} gamePredictions={gamePredictions} />
+				<PredictionsStats game={game} gamePredictions={gamePredictions} resultsTally={resultsTally} />
 
 				<div className='z-10 mt-6 mb-20'>
 					<div className='mb-4 flex flex-row items-center justify-between text-xl'>
-						<div>
+						<div className='font-bold'>
 							Predictions <span className='opacity-50'>({gamePredictionsAndResults.length})</span>
 						</div>
 						{Object.keys(leaderboards).length > 0 && (
