@@ -9,7 +9,7 @@ module.exports = {
 	useTabs: true,
 	bracketSpacing: true,
 	jsxSingleQuote: true,
-	jsxBracketSameLine: false,
+	bracketSameLine: false,
 	arrowParens: 'avoid',
 	htmlWhitespaceSensitivity: 'ignore',
 	endOfLine: 'lf',
