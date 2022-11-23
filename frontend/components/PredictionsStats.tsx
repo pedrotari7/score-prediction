@@ -20,7 +20,7 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 		{ winH: 0, winA: 0, draw: 0 }
 	);
 
-	const TickIcon = () => <img className="mx-1 h-7 w-7 p-1" src="/tick.svg" />;
+	const TickIcon = () => <img className='mx-1 h-7 w-7 p-1' src='/tick.svg' />;
 
 	const result = getOutcome(game.goals);
 	const finished = isGameFinished(game);
@@ -28,10 +28,10 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 	return (
 		<div>
 			{isGameStarted(game) && (
-				<div className="mt-6">
-					<div className="mb-4 text-xl">Stats</div>
-					<div className="flex flex-row flex-wrap">
-						<div className="flex flex-row flex-wrap items-center justify-start gap-4">
+				<div className='mt-6'>
+					<div className='mb-4 text-xl'>Stats</div>
+					<div className='flex flex-row flex-wrap'>
+						<div className='flex flex-row flex-wrap items-center justify-start gap-4'>
 							<div
 								className={classNames(
 									gcc('bg-blue'),
@@ -39,8 +39,8 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 								)}
 							>
 								<Flag team={game?.teams.home} />
-								<span className="hidden text-xl sm:block">{game?.teams.home.name}</span>
-								<span className="text-xl font-bold">{outcomes.winH}</span>
+								<span className='hidden text-xl sm:block'>{game?.teams.home.name}</span>
+								<span className='text-xl font-bold'>{outcomes.winH}</span>
 								{finished && result === 'winH' && <TickIcon />}
 							</div>
 							<div
@@ -50,8 +50,8 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 								)}
 							>
 								<Flag team={game?.teams.away} />
-								<span className="hidden text-xl sm:block">{game?.teams.away.name}</span>
-								<span className="text-xl font-bold">{outcomes.winA}</span>
+								<span className='hidden text-xl sm:block'>{game?.teams.away.name}</span>
+								<span className='text-xl font-bold'>{outcomes.winA}</span>
 								{finished && result === 'winA' && <TickIcon />}
 							</div>
 
@@ -61,8 +61,8 @@ const PredictionsStats = ({ game, gamePredictions }: { game: Fixture; gamePredic
 									'flex flex-row items-center justify-center gap-2 rounded-md p-2 shadow-pop'
 								)}
 							>
-								<span className="text-xl"> Draw</span>
-								<span className="text-xl font-bold">{outcomes.draw}</span>
+								<span className='text-xl'> Draw</span>
+								<span className='text-xl font-bold'>{outcomes.draw}</span>
 								{finished && result === 'draw' && <TickIcon />}
 							</div>
 						</div>

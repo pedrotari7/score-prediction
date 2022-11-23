@@ -31,18 +31,18 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 	return (
 		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:m-6 sm:p-6')}>
 			<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
-				<div className="text-2xl font-bold">Leaderboards</div>
+				<div className='text-2xl font-bold'>Leaderboards</div>
 				<RefreshButton onClick={update} />
 			</div>
 
-			<div className="item-center flex w-full  flex-col justify-evenly">
+			<div className='item-center flex w-full  flex-col justify-evenly'>
 				{leaderboards &&
 					leaderboards.map(l => {
 						if (!l) return <></>;
 						return (
 							<div
 								key={l.id}
-								className="relative w-full "
+								className='relative w-full '
 								onClick={() => setRoute({ page: Route.Leaderboard, data: l.id })}
 							>
 								<div
@@ -54,7 +54,7 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 									)}
 								>
 									<DeleteButton
-										className="absolute top-4 right-1 z-10"
+										className='absolute top-4 right-1 z-10'
 										onClick={async () => {
 											if (userInfo) {
 												await deleteLeaderboard(l.id, userInfo.token);
@@ -62,19 +62,19 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 											}
 										}}
 									/>
-									<div className="flex flex-col gap-4">
-										<div className="flex flex-row flex-wrap items-center gap-4 text-lg">
-											<span className="font-bold">{l?.name}</span>
-											<span className="opacity-50">({l.members.length})</span>
+									<div className='flex flex-col gap-4'>
+										<div className='flex flex-row flex-wrap items-center gap-4 text-lg'>
+											<span className='font-bold'>{l?.name}</span>
+											<span className='opacity-50'>({l.members.length})</span>
 										</div>
-										<div className="flex items-center gap-4">
+										<div className='flex items-center gap-4'>
 											<span className={classNames('bg-gray-800', 'rounded-md p-2')}>
 												{users[l.creator].displayName}
 											</span>
 											<span>{l.id}</span>
 										</div>
 
-										<div className="flex flex-row flex-wrap gap-4">
+										<div className='flex flex-row flex-wrap gap-4'>
 											{l.members.map(m => (
 												<div
 													key={m}
@@ -90,7 +90,7 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 												>
 													{users[m]?.photoURL && (
 														<img
-															className="mr-2 h-8 w-8 rounded-full object-cover"
+															className='mr-2 h-8 w-8 rounded-full object-cover'
 															src={users[m]?.photoURL}
 														/>
 													)}

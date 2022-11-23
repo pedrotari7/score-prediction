@@ -27,23 +27,23 @@ const ShowMore = ({
 
 	return (
 		<div ref={disclosureRef}>
-			<Disclosure as="div" className={classNames(className)}>
+			<Disclosure as='div' className={classNames(className)}>
 				{({ open }) => (
 					<>
 						{children}
 
 						<Transition
-							enter="transition duration-100 ease-out"
-							enterFrom="transform scale-95 opacity-0"
-							enterTo="transform scale-100 opacity-100"
-							leave="transition duration-75 ease-out"
-							leaveFrom="transform scale-100 opacity-100"
-							leaveTo="transform scale-95 opacity-0"
+							enter='transition duration-100 ease-out'
+							enterFrom='transform scale-95 opacity-0'
+							enterTo='transform scale-100 opacity-100'
+							leave='transition duration-75 ease-out'
+							leaveFrom='transform scale-100 opacity-100'
+							leaveTo='transform scale-95 opacity-0'
 						>
 							{open && <div>{more}</div>}
 						</Transition>
 						{more && (
-							<div onClick={() => executeScroll(open)} className="mt-4 flex justify-center ">
+							<div onClick={() => executeScroll(open)} className='mt-4 flex justify-center '>
 								<Disclosure.Button
 									className={classNames(
 										gcc('hover:bg-blue'),
@@ -51,14 +51,14 @@ const ShowMore = ({
 									)}
 								>
 									{!open && (
-										<div className="flex flex-col items-center opacity-60">
+										<div className='flex flex-col items-center opacity-60'>
 											<span>Show More</span>
-											<ChevronDownIcon className="block h-8 w-8" aria-hidden="true" />
+											<ChevronDownIcon className='block h-8 w-8' aria-hidden='true' />
 										</div>
 									)}
 									{open && (
-										<div className="flex flex-col items-center opacity-60">
-											<ChevronUpIcon className="block h-8 w-8" aria-hidden="true" />
+										<div className='flex flex-col items-center opacity-60'>
+											<ChevronUpIcon className='block h-8 w-8' aria-hidden='true' />
 											<span>Show Less</span>
 										</div>
 									)}

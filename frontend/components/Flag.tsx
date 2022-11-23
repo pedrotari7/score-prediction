@@ -4,7 +4,7 @@ import { classNames } from '../lib/utils/reactHelper';
 const Flag = ({ className = '', team }: { team: Team; className?: string }) => {
 	return (
 		<div className={classNames(className, 'flex items-center justify-center')}>
-			<img className="mx-2 h-5 w-7" src={FLAGS[team?.id]} />
+			<img className='mx-2 h-5 w-7' src={FLAGS[team?.id]} />
 		</div>
 	);
 };

@@ -21,11 +21,11 @@ const PredictedGroups = ({
 
 	const teamsResults = calculateResults(Object.values(fixtures), predictions, userID);
 
-	const TickIcon = () => <img className="mx-1 h-5 w-5 p-1" src="/tick.svg" />;
-	const CloseIcon = () => <img className="mx-1 h-5 w-5 p-1" src="/close.svg" />;
+	const TickIcon = () => <img className='mx-1 h-5 w-5 p-1' src='/tick.svg' />;
+	const CloseIcon = () => <img className='mx-1 h-5 w-5 p-1' src='/close.svg' />;
 
 	return (
-		<div className="flex flex-row flex-wrap justify-center">
+		<div className='flex flex-row flex-wrap justify-center'>
 			{standings.map(([title, standing]) => {
 				const group = title.split(' ').pop();
 
@@ -56,7 +56,7 @@ const PredictedGroups = ({
 						</h2>
 						<table className={classNames(gcc('text-light'))}>
 							<thead>
-								<tr className="text-center">
+								<tr className='text-center'>
 									<th></th>
 									<th>W</th>
 									<th>D</th>
@@ -76,22 +76,22 @@ const PredictedGroups = ({
 
 									const { wins, draws, loses, points, ga, gc } = teamsResults[place.team.id];
 									return (
-										<tr key={place.rank} className="">
-											<td className="mr">
+										<tr key={place.rank} className=''>
+											<td className='mr'>
 												<Flag team={place.team} />
 											</td>
 
-											<td className="w-6">{wins}</td>
-											<td className="w-6">{draws}</td>
-											<td className="w-6">{loses}</td>
+											<td className='w-6'>{wins}</td>
+											<td className='w-6'>{draws}</td>
+											<td className='w-6'>{loses}</td>
 
-											<td className="w-6">{ga}</td>
-											<td className="w-6">{gc}</td>
-											<td className="w-6">{ga - gc}</td>
+											<td className='w-6'>{ga}</td>
+											<td className='w-6'>{gc}</td>
+											<td className='w-6'>{ga - gc}</td>
 
-											<td className="w-6">{points}</td>
-											<td className="ml-2">
-												<div className="flex flex-row items-center justify-start">
+											<td className='w-6'>{points}</td>
+											<td className='ml-2'>
+												<div className='flex flex-row items-center justify-start'>
 													<Flag team={standing[index].team} />
 													{isCorrectPrediction
 														? hasGames && <TickIcon />

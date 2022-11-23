@@ -79,7 +79,7 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 
 	return (
 		<>
-			<div className="flex flex-row items-center justify-center">
+			<div className='flex flex-row items-center justify-center'>
 				{options.map((option, idx) => (
 					<NavOption key={idx} active={panelMode === option} option={option} />
 				))}

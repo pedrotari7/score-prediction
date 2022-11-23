@@ -175,7 +175,7 @@ const Home = () => {
 								{!showLogin && (
 									<PageLayout title={'Score Prediction'} loading={loading} setLoading={setLoading}>
 										{loading || !triedToValidateToken ? (
-											<Loading message="Logging in..." />
+											<Loading message='Logging in...' />
 										) : (
 											<MainComponent />
 										)}

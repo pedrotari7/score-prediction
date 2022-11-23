@@ -33,15 +33,15 @@ const CreateLeaderboard = () => {
 			)}
 			onClick={async () => setOpen(true)}
 		>
-			<div className="">
+			<div className=''>
 				<PlusCircleIcon className={classNames(gcc('text-light'), 'h-8 w-8 cursor-pointer')} />
 			</div>
 			{open && (
 				<>
 					<input
-						placeholder="leaderboard name"
-						type="text"
-						className="w-48 bg-white px-3 py-2 text-black focus:outline-none"
+						placeholder='leaderboard name'
+						type='text'
+						className='w-48 bg-white px-3 py-2 text-black focus:outline-none'
 						ref={inputRef}
 					/>
 					<div
@@ -64,7 +64,7 @@ const CreateLeaderboard = () => {
 							}
 						}}
 					>
-						{loading && <Loading className="h-4 w-4" />}
+						{loading && <Loading className='h-4 w-4' />}
 						{!loading && <div>Create</div>}
 					</div>
 				</>

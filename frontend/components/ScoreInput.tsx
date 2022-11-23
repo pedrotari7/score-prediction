@@ -41,7 +41,7 @@ const ScoreInput = ({
 			id={id}
 			name={id}
 			ref={innerRef}
-			type="number"
+			type='number'
 		/>
 	);
 };

@@ -22,7 +22,7 @@ const DeleteButton = ({ className, onClick }: { className: string; onClick: Mous
 			{confirm && (
 				<div className={classNames('flex flex-row gap-2', className)}>
 					<div
-						className="flex h-10 w-20 items-center justify-center rounded-md bg-red-800 py-2 px-4"
+						className='flex h-10 w-20 items-center justify-center rounded-md bg-red-800 py-2 px-4'
 						onClick={async e => {
 							e.stopPropagation();
 							setLoading(true);
@@ -33,7 +33,7 @@ const DeleteButton = ({ className, onClick }: { className: string; onClick: Mous
 						{loading ? <Loading /> : <span>delete</span>}
 					</div>
 					<div
-						className="flex h-10 w-20 items-center justify-center rounded-md bg-slate-600 py-2 px-4"
+						className='flex h-10 w-20 items-center justify-center rounded-md bg-slate-600 py-2 px-4'
 						onClick={e => {
 							e.stopPropagation();
 							setConfirm(false);

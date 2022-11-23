@@ -88,11 +88,11 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 	return (
 		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:m-6 sm:p-6')}>
 			<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
-				<div className="text-2xl font-bold">Leaderboards</div>
+				<div className='text-2xl font-bold'>Leaderboards</div>
 				<RefreshComp />
 			</div>
 
-			<div className="mb-4 flex flex-col items-center gap-4 sm:flex-row">
+			<div className='mb-4 flex flex-col items-center gap-4 sm:flex-row'>
 				<>
 					{hasLeaderboards && (
 						<SelectLeaderboard
@@ -104,14 +104,14 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 						/>
 					)}
 
-					<div className="flex flex-row flex-wrap justify-center gap-2">
+					<div className='flex flex-row flex-wrap justify-center gap-2'>
 						<CreateLeaderboard />
 						{!isGlobalLeaderboard && <ShareLeaderboard leaderboardId={currentLeaderboard} />}
 					</div>
 				</>
 			</div>
 
-			<div className="mb-6 flex flex-row flex-wrap items-center justify-center font-bold sm:justify-center">
+			<div className='mb-6 flex flex-row flex-wrap items-center justify-center font-bold sm:justify-center'>
 				{Object.values(SortOptions).map(option => (
 					<FilterOption
 						key={option.key}
@@ -123,10 +123,10 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 					</FilterOption>
 				))}
 			</div>
-			<div className="item-center flex w-full flex-row flex-wrap justify-evenly">
+			<div className='item-center flex w-full flex-row flex-wrap justify-evenly'>
 				{sortedUsers.map((user, index) => {
 					return (
-						<div key={index} className="relative w-full sm:w-max">
+						<div key={index} className='relative w-full sm:w-max'>
 							<div
 								className={classNames(
 									'flex cursor-pointer flex-col items-center justify-center hover:bg-opacity-50 sm:flex-row',
@@ -135,9 +135,9 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 								)}
 								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 							>
-								<div className="mb-0 flex flex-col flex-wrap items-center justify-evenly sm:mr-4 sm:flex-row sm:justify-start">
+								<div className='mb-0 flex flex-col flex-wrap items-center justify-evenly sm:mr-4 sm:flex-row sm:justify-start'>
 									<DesktopOnly>
-										<div className="m-2 flex h-8 w-8 flex-row items-center justify-center text-xl font-bold">
+										<div className='m-2 flex h-8 w-8 flex-row items-center justify-center text-xl font-bold'>
 											<span
 												className={classNames(
 													gcc('bg-light'),
@@ -157,15 +157,15 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 												'absolute top-0 -left-0 w-12 rounded-md text-center font-bold'
 											)}
 										>
-											<span className="p-3">{index + 1}</span>
+											<span className='p-3'>{index + 1}</span>
 										</div>
 									</MobileOnly>
-									<div className="mb-2 flex flex-row flex-wrap items-center justify-center sm:mb-0">
+									<div className='mb-2 flex flex-row flex-wrap items-center justify-center sm:mb-0'>
 										<img
-											className="mr-2 h-8 w-8 rounded-full object-cover sm:h-12 sm:w-12"
+											className='mr-2 h-8 w-8 rounded-full object-cover sm:h-12 sm:w-12'
 											src={user.photoURL}
 										/>
-										<span className="text-center sm:text-2xl">{user.displayName}</span>
+										<span className='text-center sm:text-2xl'>{user.displayName}</span>
 									</div>
 								</div>
 								<UserScores user={user} />

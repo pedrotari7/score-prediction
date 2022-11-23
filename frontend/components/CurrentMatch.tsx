@@ -40,24 +40,24 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 			)}
 			onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 		>
-			<span className="mr-8 flex flex-row items-center text-left text-xs">
-				{user?.photoURL && <img className="mr-2 h-8 w-8 rounded-full object-cover" src={user?.photoURL} />}
+			<span className='mr-8 flex flex-row items-center text-left text-xs'>
+				{user?.photoURL && <img className='mr-2 h-8 w-8 rounded-full object-cover' src={user?.photoURL} />}
 				<span>{user?.displayName}</span>
 			</span>
 
-			{hiddenScore && <div className="font-sm font-bold ">Hidden</div>}
-			{invalidScore && <div className="font-sm font-bold ">Invalid</div>}
+			{hiddenScore && <div className='font-sm font-bold '>Hidden</div>}
+			{invalidScore && <div className='font-sm font-bold '>Invalid</div>}
 
 			{!hiddenScore && !invalidScore && (
-				<div className="flex flex-row">
-					<div className="flex flex-row items-center justify-end font-bold">
-						<span className="mr-2">{parsedGuess.home}</span>
+				<div className='flex flex-row'>
+					<div className='flex flex-row items-center justify-end font-bold'>
+						<span className='mr-2'>{parsedGuess.home}</span>
 					</div>
 
-					<span className="">-</span>
+					<span className=''>-</span>
 
-					<div className="flex flex-row items-center justify-start font-bold">
-						<span className="ml-2">{parsedGuess.away}</span>
+					<div className='flex flex-row items-center justify-start font-bold'>
+						<span className='ml-2'>{parsedGuess.away}</span>
 					</div>
 				</div>
 			)}
@@ -133,7 +133,7 @@ const CurrentMatch = ({
 		preventDefaultTouchmoveEvent: true,
 	});
 
-	if (!game) return <Loading message="Fetching tournament info..." />;
+	if (!game) return <Loading message='Fetching tournament info...' />;
 
 	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
 
@@ -170,12 +170,12 @@ const CurrentMatch = ({
 				)}
 			>
 				<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
-					{!id && <p className="mb-2 text-3xl">Next Game</p>}
-					{id && <p className="mb-2 text-3xl">{game.league?.round}</p>}
+					{!id && <p className='mb-2 text-3xl'>Next Game</p>}
+					{id && <p className='mb-2 text-3xl'>{game.league?.round}</p>}
 					<RefreshComp />
 				</div>
 
-				<div className="relative">
+				<div className='relative'>
 					{!isExtraInfoOpen && prevGameId !== null && (
 						<div
 							className={classNames(
@@ -207,9 +207,9 @@ const CurrentMatch = ({
 					)}
 				</div>
 
-				<div className="mt-6">
-					<div className="mb-4 text-xl">My Prediction</div>
-					<div className="flex flex-row flex-wrap">
+				<div className='mt-6'>
+					<div className='mb-4 text-xl'>My Prediction</div>
+					<div className='flex flex-row flex-wrap'>
 						{Object.entries(gamePredictions)
 							.filter(([uid, _]) => uid === userInfo?.uid)
 							.map(([uid, prediction]) => (
@@ -220,10 +220,10 @@ const CurrentMatch = ({
 
 				<PredictionsStats game={game} gamePredictions={gamePredictions} />
 
-				<div className="z-10 mt-6 mb-20">
-					<div className="mb-4 flex flex-row items-center justify-between text-xl">
+				<div className='z-10 mt-6 mb-20'>
+					<div className='mb-4 flex flex-row items-center justify-between text-xl'>
 						<div>
-							Predictions <span className="opacity-50">({gamePredictionsAndResults.length})</span>
+							Predictions <span className='opacity-50'>({gamePredictionsAndResults.length})</span>
 						</div>
 						{Object.keys(leaderboards).length > 0 && (
 							<SelectLeaderboard
@@ -232,12 +232,12 @@ const CurrentMatch = ({
 								currentLeaderboard={currentLeaderboard}
 								setCurrentLeaderboard={setCurrentLeaderboard}
 								setMembers={setMembers}
-								className="!w-36 text-xs"
-								backgroundColor="#74122f"
+								className='!w-36 text-xs'
+								backgroundColor='#74122f'
 							/>
 						)}
 					</div>
-					<div className="flex flex-row flex-wrap">
+					<div className='flex flex-row flex-wrap'>
 						{gamePredictionsAndResults.map(({ uid, prediction }) => (
 							<UserGuess user={users[uid]} guess={prediction} key={uid} game={game} />
 						))}

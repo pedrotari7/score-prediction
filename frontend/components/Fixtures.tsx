@@ -73,13 +73,13 @@ const FixturesPage = ({
 				'mx-2 md:mx-24 lg:mx-48'
 			)}
 		>
-			<div className="mb-6 flex flex-col items-center gap-2 text-3xl sm:flex-row">
-				<div className="flex flex-row items-center justify-center">
-					<img className="mr-2 h-8 w-8 rounded-full object-cover" src={user?.photoURL} />
+			<div className='mb-6 flex flex-col items-center gap-2 text-3xl sm:flex-row'>
+				<div className='flex flex-row items-center justify-center'>
+					<img className='mr-2 h-8 w-8 rounded-full object-cover' src={user?.photoURL} />
 					{uid !== user.uid && <p>{user.displayName}</p>}
 					{uid === user.uid && <p>My Predictions</p>}
 				</div>
-				<div className="text-sm">
+				<div className='text-sm'>
 					<UserScores user={user} />
 				</div>
 			</div>
@@ -89,20 +89,20 @@ const FixturesPage = ({
 				.map(([round, games]) => {
 					games.sort(sortWithFinishedLast);
 					return (
-						<div key={round} className="mb-6">
-							<div className="mb-6 text-3xl">{round}</div>
+						<div key={round} className='mb-6'>
+							<div className='mb-6 text-3xl'>{round}</div>
 							{games.map(GameFilled)}
 						</div>
 					);
 				})}
 
-			<div className="flex flex-col">
+			<div className='flex flex-col'>
 				<div className={classNames('mb-6 flex flex-row items-center justify-between')}>
-					<div className="text-3xl">Group Stage</div>
+					<div className='text-3xl'>Group Stage</div>
 					<RefreshComp />
 				</div>
 
-				<div className="flex flex-col-reverse md:flex-col">
+				<div className='flex flex-col-reverse md:flex-col'>
 					<PredictedGroups
 						predictions={predictions}
 						fixtures={fixtures}
@@ -110,7 +110,7 @@ const FixturesPage = ({
 						userID={user.uid}
 					/>
 
-					<div className="flex flex-col">{sortedGroupStageFixtures.map(GameFilled)}</div>
+					<div className='flex flex-col'>{sortedGroupStageFixtures.map(GameFilled)}</div>
 				</div>
 			</div>
 		</div>

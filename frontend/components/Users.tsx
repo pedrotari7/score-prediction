@@ -29,18 +29,18 @@ const UsersList = () => {
 	return (
 		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:m-6 sm:p-6')}>
 			<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
-				<div className="text-2xl font-bold">Users</div>
+				<div className='text-2xl font-bold'>Users</div>
 				<RefreshButton onClick={update} />
 			</div>
 
-			<div className="item-center flex w-full  flex-col justify-evenly">
+			<div className='item-center flex w-full  flex-col justify-evenly'>
 				{users &&
 					Object.values(users).map((user: any, index) => {
 						if (!user) return <></>;
 						return (
 							<div
 								key={index}
-								className="relative w-full "
+								className='relative w-full '
 								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 							>
 								<div
@@ -52,7 +52,7 @@ const UsersList = () => {
 									)}
 								>
 									<DesktopOnly>
-										<div className="m-2 flex h-8 w-8 flex-row items-center justify-center text-xl font-bold">
+										<div className='m-2 flex h-8 w-8 flex-row items-center justify-center text-xl font-bold'>
 											<span
 												className={classNames(
 													gcc('bg-light'),
@@ -72,17 +72,17 @@ const UsersList = () => {
 												'absolute -top-1 -left-0 w-12 rounded-md text-center font-bold'
 											)}
 										>
-											<span className="p-3">{index + 1}</span>
+											<span className='p-3'>{index + 1}</span>
 										</div>
 									</MobileOnly>
-									<div className="flex flex-row flex-wrap items-center gap-4 text-left text-xs">
+									<div className='flex flex-row flex-wrap items-center gap-4 text-left text-xs'>
 										{user?.photoURL && (
 											<img
-												className="mr-2 h-8 w-8 rounded-full object-cover"
+												className='mr-2 h-8 w-8 rounded-full object-cover'
 												src={user?.photoURL}
 											/>
 										)}
-										<span className="text-lg font-bold">{user?.displayName}</span>
+										<span className='text-lg font-bold'>{user?.displayName}</span>
 										<span>{user?.uid}</span>
 										<span>{user?.email}</span>
 										<span>{user?.lastRefreshTime}</span>
