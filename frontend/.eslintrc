@@ -34,7 +34,8 @@
 		"@typescript-eslint/no-empty-function": ["error", { "allow": ["arrowFunctions"] }],
 		"@next/next/no-img-element": "off",
 		"jsx-a11y/alt-text": "off",
-		"@typescript-eslint/explicit-module-boundary-types": "off"
+		"@typescript-eslint/explicit-module-boundary-types": "off",
+		"no-mixed-spaces-and-tabs": ["warn"]
 	},
 	"settings": {
 		"react": {

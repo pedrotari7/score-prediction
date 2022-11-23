@@ -7,7 +7,7 @@ import RouteContext, { Route } from '../context/RouteContext';
 import { classNames, formatScore, getCompetitionClass, getStadiumImageURL } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { DEFAULT_USER_RESULT, getResult, isGameFinished } from '../../shared/utils';
+import { DEFAULT_USER_RESULT, getResult, isGameFinished, isGameStarted } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import Loading from './Loading';
 import RefreshComp from './RefreshComp';
@@ -137,8 +137,10 @@ const CurrentMatch = ({
 
 	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
 
-	const gamePredictionsAndResults = Object.entries(gamePredictions)
-		.filter(([uid]) => uid !== userInfo.uid && members.includes(uid))
+	const currentLeaderboardPredictions = Object.entries(gamePredictions).filter(([uid]) => members.includes(uid));
+
+	const gamePredictionsAndResults = currentLeaderboardPredictions
+		.filter(([uid]) => uid !== userInfo.uid)
 		.map(([uid, prediction]) => ({
 			uid,
 			prediction,
@@ -147,20 +149,19 @@ const CurrentMatch = ({
 		.sort((a, b) => users[a.uid].displayName.localeCompare(users[b.uid].displayName))
 		.sort((a, b) => (b.result.points ?? 0) - (a.result.points ?? 0));
 
-	const resultsTally = [
-		...gamePredictionsAndResults,
-		{ result: getResult(gamePredictions[userInfo.uid], game) },
-	].reduce(
-		(acc, { result: r }) => ({
-			...acc,
-			exact: acc.exact + (r.exact ?? 0),
-			onescore: acc.onescore + (r.onescore ?? 0),
-			result: acc.result + (r.result ?? 0),
-			penalty: acc.penalty + (r.penalty ?? 0),
-			fail: acc.fail + (r.fail ?? 0),
-		}),
-		DEFAULT_USER_RESULT
-	);
+	const resultsTally = isGameStarted(game)
+		? [...gamePredictionsAndResults, { result: getResult(gamePredictions[userInfo.uid], game) }].reduce(
+				(acc, { result: r }) => ({
+					...acc,
+					exact: acc.exact + (r.exact ?? 0),
+					onescore: acc.onescore + (r.onescore ?? 0),
+					result: acc.result + (r.result ?? 0),
+					penalty: acc.penalty + (r.penalty ?? 0),
+					fail: acc.fail + (r.fail ?? 0),
+				}),
+				DEFAULT_USER_RESULT
+		  )
+		: {};
 
 	const findGame = (dir: -1 | 1) => {
 		const prevGameIdx = sortedFixtures.findIndex(g => g.fixture.id === game.fixture.id) + dir;
@@ -233,7 +234,11 @@ const CurrentMatch = ({
 					</div>
 				</div>
 
-				<PredictionsStats game={game} gamePredictions={gamePredictions} resultsTally={resultsTally} />
+				<PredictionsStats
+					game={game}
+					gamePredictions={currentLeaderboardPredictions.map(([_, p]) => p)}
+					resultsTally={resultsTally}
+				/>
 
 				<div className='z-10 mt-6 mb-20'>
 					<div className='mb-4 flex flex-row items-center justify-between text-xl'>

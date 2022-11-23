@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Fixture, GamePredictions, UserResult } from '../../interfaces/main';
+import { Fixture, Prediction, UserResult } from '../../interfaces/main';
 import { getOutcome, isGameFinished, isGameStarted } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
@@ -12,7 +12,7 @@ const PredictionsStats = ({
 	resultsTally,
 }: {
 	game: Fixture;
-	gamePredictions: GamePredictions;
+	gamePredictions: Prediction[];
 	resultsTally: Partial<UserResult>;
 }) => {
 	const competition = useContext(CompetitionContext);
@@ -20,8 +20,8 @@ const PredictionsStats = ({
 
 	if (!game || !isGameStarted(game)) return <></>;
 
-	const outcomes = Object.entries(gamePredictions).reduce(
-		(acc, [_, prediction]) => {
+	const outcomes = gamePredictions.reduce(
+		(acc, prediction) => {
 			const outcome = getOutcome(prediction);
 			if (!outcome) return acc;
 			return { ...acc, [outcome]: acc[outcome] + 1 };
