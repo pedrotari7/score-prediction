@@ -133,12 +133,12 @@ const CurrentMatch = ({
 		preventDefaultTouchmoveEvent: true,
 	});
 
-	if (!game) return <Loading message='Fetching tournament info...' />;
+	if (!game || !userInfo) return <Loading message='Fetching tournament info...' />;
 
 	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
 
 	const gamePredictionsAndResults = Object.entries(gamePredictions)
-		.filter(([uid]) => uid !== userInfo?.uid && members.includes(uid))
+		.filter(([uid]) => uid !== userInfo.uid && members.includes(uid))
 		.map(([uid, prediction]) => ({
 			uid,
 			prediction,
@@ -147,7 +147,10 @@ const CurrentMatch = ({
 		.sort((a, b) => users[a.uid].displayName.localeCompare(users[b.uid].displayName))
 		.sort((a, b) => (b.result.points ?? 0) - (a.result.points ?? 0));
 
-	const resultsTally = gamePredictionsAndResults.reduce(
+	const resultsTally = [
+		...gamePredictionsAndResults,
+		{ result: getResult(gamePredictions[userInfo.uid], game) },
+	].reduce(
 		(acc, { result: r }) => ({
 			...acc,
 			exact: acc.exact + (r.exact ?? 0),
