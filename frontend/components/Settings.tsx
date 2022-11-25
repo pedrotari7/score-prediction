@@ -205,13 +205,6 @@ const SettingsPage = () => {
 				</button>
 
 				<button
-					onClick={async () => setResponse(await fetchUsers(userInfo.token, competition))}
-					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
-				>
-					Fetch Users
-				</button>
-
-				<button
 					onClick={async () => setResponse(await updatePoints(userInfo.token, competition))}
 					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
 				>

@@ -491,6 +491,10 @@ app.get('/tournament', async (req, res) => {
     userExtraInfo: { ...userExtraInfo, leaderboards },
   };
 
+  const updatedUserExtraInfo = { ...userExtraInfo, lastCheckIn: FieldValue.serverTimestamp() };
+
+  await getDBUser(decodedToken.uid).set(updatedUserExtraInfo);
+
   return res.json(tournament);
 });
 
