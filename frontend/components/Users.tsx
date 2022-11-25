@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import CompetitionContext from '../context/CompetitionContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
-import { classNames, getCompetitionClass, timeAgo } from '../lib/utils/reactHelper';
+import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import { fetchUsers } from '../pages/api';
 import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
@@ -89,9 +89,9 @@ const UsersList = () => {
 										<span>{user?.lastRefreshTime}</span>
 										{user?.userExtraInfo?.lastCheckIn?._seconds && (
 											<span className='rounded-md bg-cyan-900 p-2'>
-												{timeAgo(
-													DateTime.fromSeconds(user?.userExtraInfo?.lastCheckIn?._seconds)
-												)}
+												{DateTime.fromSeconds(
+													user?.userExtraInfo?.lastCheckIn?._seconds
+												).toRelative({ style: 'narrow' })}
 											</span>
 										)}
 									</div>
