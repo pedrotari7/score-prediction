@@ -2,11 +2,12 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import CompetitionContext from '../context/CompetitionContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import { classNames, getCompetitionClass, timeAgo } from '../lib/utils/reactHelper';
 import { fetchUsers } from '../pages/api';
 import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
 import RefreshButton from './RefreshButton';
+import { DateTime } from 'luxon';
 
 const UsersList = () => {
 	const { setRoute } = useContext(RouteContext)!;
@@ -35,7 +36,7 @@ const UsersList = () => {
 
 			<div className='item-center flex w-full  flex-col justify-evenly'>
 				{users &&
-					Object.values(users).map((user: any, index) => {
+					users.map((user: any, index: number) => {
 						if (!user) return <></>;
 						return (
 							<div
@@ -86,6 +87,13 @@ const UsersList = () => {
 										<span>{user?.uid}</span>
 										<span>{user?.email}</span>
 										<span>{user?.lastRefreshTime}</span>
+										{user?.userExtraInfo?.lastCheckIn?._seconds && (
+											<span className='rounded-md bg-cyan-900 p-2'>
+												{timeAgo(
+													DateTime.fromSeconds(user?.userExtraInfo?.lastCheckIn?._seconds)
+												)}
+											</span>
+										)}
 									</div>
 								</div>
 							</div>
