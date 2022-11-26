@@ -91,12 +91,15 @@ const parseCompetition = (req: Request) => competitions[req.query.competition as
 
 const getStandings = async (opts: Record<string, unknown> = {}) => await get('standings', opts);
 
-const getFixtures = async (opts: Record<string, unknown> = {}) => (await get('fixtures', opts)).data.response;
+const getFixtures = async (opts: Record<string, unknown> = {}) => await get('fixtures', opts);
 
 const getStatus = async (): Promise<Status> => (await get('status')).data.response;
 
-const getFullFixture = async (eventID: number, opts: Record<string, unknown> = {}): Promise<Fixture> => {
-  return (await get('fixtures', { id: eventID, ...opts })).data.response.pop();
+const getFullFixture = async (eventID: number, opts: Record<string, unknown> = {}): Promise<Fixture | null> => {
+  const fullFixtures = await get('fixtures', { id: eventID, ...opts });
+
+  if (fullFixtures.response.status !== 200) return null;
+  return fullFixtures.data.response.pop();
 };
 
 const decodeToken = async (token: string | undefined) => {
@@ -156,6 +159,8 @@ const getDBUser = (uid: string) => getDoc('users', uid);
 const updateStandings = async (competition: Competition) => {
   const response = await getStandings({ league: competition.league, season: competition.season });
 
+  if (response.response.status !== 200) return null;
+
   const standings =
     competition.name !== competitions.euro2016.name
       ? response.data.response?.[0]?.league.standings
@@ -178,12 +183,16 @@ const updateStandings = async (competition: Competition) => {
 
 const updateFixtures = async (competition: Competition, gamesToUpdate: number[], oldFixtures: Fixtures = {}) => {
   if (gamesToUpdate.length === 0) {
-    const fixtures: Fixture[] = await getFixtures({
+    const response = await getFixtures({
       league: competition.league,
       season: competition.season,
       from: competition.start,
       to: competition.end,
     });
+
+    if (response.response.status !== 200) return {};
+
+    const fixtures: Fixture[] = response.data.response;
     const fixtureMap = fixtures.reduce(
       (acc, game) => ({ ...acc, [game.fixture.id]: { ...oldFixtures[game.fixture.id], ...game } }),
       {} as Fixtures
@@ -193,9 +202,10 @@ const updateFixtures = async (competition: Competition, gamesToUpdate: number[],
     return fixtureMap;
   } else {
     for (const gameID of gamesToUpdate) {
-      const { fixture, teams, league, goals, score, events, lineups, statistics, players } = await getFullFixture(
-        gameID
-      );
+      const fullFixture = await getFullFixture(gameID);
+      if (!fullFixture) return oldFixtures;
+
+      const { fixture, teams, league, goals, score, events, lineups, statistics, players } = fullFixture;
 
       const extraInfo = { events, lineups, statistics, players };
 
@@ -447,7 +457,10 @@ app.get('/tournament', async (req, res) => {
 
   if (!standings && settings.allowUpdateStandings) {
     console.log('There are no current standings');
-    standings!.data = await updateStandings(competition);
+    const newStandings = await updateStandings(competition);
+    if (newStandings) {
+      standings!.data = newStandings;
+    }
   }
 
   const standingsTimeDiffSeconds = getTimeDiff(standings?.timestamp);
@@ -464,7 +477,10 @@ app.get('/tournament', async (req, res) => {
 
   if (settings.allowUpdateStandings || standingsTimeDiffSeconds > timeGuard) {
     console.log('standings needs update');
-    standings!.data = await updateStandings(competition);
+    const newStandings = await updateStandings(competition);
+    if (newStandings) {
+      standings!.data = newStandings;
+    }
   }
 
   if (settings.allowUpdateFixtures || fixturesTimeDiffSeconds > timeGuard) {
