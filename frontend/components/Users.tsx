@@ -8,17 +8,21 @@ import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
 import RefreshButton from './RefreshButton';
 import { DateTime } from 'luxon';
+import Loading from './Loading';
 
 const UsersList = () => {
 	const { setRoute } = useContext(RouteContext)!;
 	const competition = useContext(CompetitionContext);
 	const userInfo = useContext(UserContext);
 	const [users, setUsers] = useState<any>();
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const update = useCallback(async () => {
+		setLoading(true);
 		if (userInfo) {
 			setUsers(await fetchUsers(userInfo.token, competition));
 		}
+		setLoading(false);
 	}, [userInfo, competition]);
 
 	useEffect(() => {
@@ -35,7 +39,9 @@ const UsersList = () => {
 			</div>
 
 			<div className='item-center flex w-full  flex-col justify-evenly'>
-				{users &&
+				{loading && <Loading message='Fetching users...' />}
+				{!loading &&
+					users &&
 					users.map((user: any, index: number) => {
 						if (!user) return <></>;
 						return (
@@ -58,7 +64,7 @@ const UsersList = () => {
 												className={classNames(
 													gcc('bg-light'),
 													gcc('text-dark'),
-													'p-2mr-1 flex h-full w-full items-center justify-center rounded-full'
+													'mr-1 flex h-full w-full items-center justify-center rounded-full p-2 px-6'
 												)}
 											>
 												{index + 1}
