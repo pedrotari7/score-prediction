@@ -78,9 +78,9 @@ export default function Navbar({
 									</Disclosure.Button>
 								)}
 							</div>
-							<div className='flex flex-1 cursor-pointer items-center justify-center sm:items-stretch sm:justify-start'>
+							<div className='flex flex-1 items-center justify-center sm:items-stretch sm:justify-start'>
 								<div
-									className='flex flex-shrink-0 items-center'
+									className='flex flex-shrink-0 cursor-pointer items-center'
 									onClick={() => updateRoute({ page: Route.Home })}
 								>
 									<img className='block h-8 w-auto' src={competition.logo} alt='logo' />
@@ -107,17 +107,22 @@ export default function Navbar({
 									</div>
 								</div>
 							</div>
-							<div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
+							<div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto  sm:pr-0'>
 								{/* Profile dropdown */}
-								<Menu as='div' className='relative ml-3'>
+								<Menu as='div' className='relative'>
 									{({ open }) => (
 										<>
 											<div>
 												{user && (
-													<Menu.Button className='flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800'>
+													<Menu.Button
+														className={classNames(
+															'flex rounded-full bg-gray-800 text-sm',
+															'focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-2 focus:ring-offset-gray-800'
+														)}
+													>
 														<span className='sr-only'>Open user menu</span>
 														<img
-															className='h-8 w-8 rounded-full'
+															className='border-6 h-10 w-10 rounded-full border-4 border-transparent bg-[#181a1b] hover:border-white'
 															src={user?.photoURL || ''}
 															alt=''
 														/>
