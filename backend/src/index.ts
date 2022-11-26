@@ -98,7 +98,7 @@ const getStatus = async (): Promise<Status> => (await get('status')).data.respon
 const getFullFixture = async (eventID: number, opts: Record<string, unknown> = {}): Promise<Fixture | null> => {
   const fullFixtures = await get('fixtures', { id: eventID, ...opts });
 
-  if (fullFixtures.response.status !== 200) return null;
+  if (fullFixtures.status !== 200) return null;
   return fullFixtures.data.response.pop();
 };
 
@@ -159,7 +159,7 @@ const getDBUser = (uid: string) => getDoc('users', uid);
 const updateStandings = async (competition: Competition) => {
   const response = await getStandings({ league: competition.league, season: competition.season });
 
-  if (response.response.status !== 200) return null;
+  if (response.status !== 200) return null;
 
   const standings =
     competition.name !== competitions.euro2016.name
@@ -190,7 +190,7 @@ const updateFixtures = async (competition: Competition, gamesToUpdate: number[],
       to: competition.end,
     });
 
-    if (response.response.status !== 200) return {};
+    if (response.status !== 200) return {};
 
     const fixtures: Fixture[] = response.data.response;
     const fixtureMap = fixtures.reduce(
