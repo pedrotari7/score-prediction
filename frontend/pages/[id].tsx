@@ -50,9 +50,9 @@ const Home = () => {
 
 	const competition: Competition = competitions[competitionName as string];
 
-	const updateNoSpoilers = async (ns: boolean) => {
+	const updateNoSpoilers = (ns: boolean) => {
 		if (auth.user) {
-			await postNoSpoilers(ns, auth.user.token);
+			postNoSpoilers(ns, auth.user.token);
 		}
 		setNoSpoilers(ns);
 	};
