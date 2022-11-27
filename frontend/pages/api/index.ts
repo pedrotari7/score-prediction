@@ -121,3 +121,15 @@ export const deleteLeaderboard = async (leaderboardId: string, token: string) =>
 			method: 'DELETE',
 		}
 	);
+
+export const postNoSpoilers = async (noSpoilers: boolean, token: string): Promise<{ success: boolean }> =>
+	await cFetch(
+		`${backendUrl}/no-spoilers`,
+		token,
+		undefined,
+		{},
+		{
+			body: JSON.stringify({ noSpoilers }),
+			method: 'POST',
+		}
+	);

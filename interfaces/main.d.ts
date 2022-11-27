@@ -241,6 +241,7 @@ export type Competitions = Record<string, Competition>;
 
 export interface UserExtraInfo {
 	leaderboards: Record<string, Leaderboard>;
+	noSpoilers: boolean;
 }
 
 export interface Tournament {

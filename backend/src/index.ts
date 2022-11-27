@@ -520,7 +520,7 @@ app.get('/tournament', async (req, res) => {
     standings: standings?.data,
     predictions,
     users,
-    userExtraInfo: { ...userExtraInfo, leaderboards },
+    userExtraInfo: { noSpoilers: false, ...userExtraInfo, leaderboards },
   };
 
   const updatedUserExtraInfo = { ...userExtraInfo, lastCheckIn: FieldValue.serverTimestamp() };
@@ -780,6 +780,24 @@ app.delete('/leaderboard', async (req, res) => {
       await getDBUser(member).set({ ...currentUser, leaderboards });
     }
   }
+
+  return res.json({ success: true });
+});
+
+app.post('/no-spoilers', async (req, res) => {
+  const authResult = await authenticate(req, res);
+  if (!authResult.success) return authResult.result;
+
+  const { uid: callerUID } = authResult.result as DecodedIdToken;
+
+  const { noSpoilers } = JSON.parse(req.body);
+
+  const userExtraInfo = (await getDBUser(callerUID).get()).data();
+
+  await getDBUser(callerUID).set({
+    ...(userExtraInfo ?? {}),
+    noSpoilers,
+  });
 
   return res.json({ success: true });
 });

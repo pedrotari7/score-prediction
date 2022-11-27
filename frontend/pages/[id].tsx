@@ -5,7 +5,7 @@ import SettingsPage from '../components/Settings';
 import Leaderboards from '../components/Leaderboard';
 import StandingsPage from '../components/Standings';
 
-import { updatePredictions, fetchTournament } from './api';
+import { updatePredictions, fetchTournament, postNoSpoilers } from './api';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
 import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
@@ -50,6 +50,13 @@ const Home = () => {
 
 	const competition: Competition = competitions[competitionName as string];
 
+	const updateNoSpoilers = async (ns: boolean) => {
+		if (auth.user) {
+			await postNoSpoilers(ns, auth.user.token);
+		}
+		setNoSpoilers(ns);
+	};
+
 	const updateTournament = useCallback(async () => {
 		if (!auth.user) {
 			setLoading(false);
@@ -72,6 +79,7 @@ const Home = () => {
 			({ fixture: a }, { fixture: b }) => a.timestamp - b.timestamp
 		);
 
+		setNoSpoilers(userExtraInfo.noSpoilers);
 		setLeaderboards(userExtraInfo.leaderboards);
 		setFixtures(fixtures);
 		setPredictions(predictions);
@@ -167,7 +175,7 @@ const Home = () => {
 
 	return (
 		<RouteContext.Provider value={{ route, setRoute }}>
-			<NoSpoilersContext.Provider value={{ noSpoilers, setNoSpoilers }}>
+			<NoSpoilersContext.Provider value={{ noSpoilers, setNoSpoilers: updateNoSpoilers }}>
 				<UserContext.Provider value={{ uid, token: auth.user?.token ?? '' }}>
 					<CompetitionContext.Provider value={competition}>
 						<FixturesContext.Provider value={fixtures}>
