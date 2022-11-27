@@ -88,7 +88,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 		);
 
 	return (
-		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:m-6 sm:p-6')}>
+		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:mx-[5%] sm:p-6')}>
 			<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
 				<div className='text-2xl font-bold'>Leaderboards</div>
 				<RefreshComp />
@@ -128,21 +128,21 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 				</div>
 			</RedactedSpoilers>
 
-			<div className='item-center flex w-full flex-row flex-wrap justify-evenly'>
+			<div className='item-center flex flex-col justify-center'>
 				{sortedUsers.map((user, index) => {
 					return (
-						<div key={index} className='relative w-full sm:w-max'>
+						<div key={index} className='relative'>
 							<div
 								className={classNames(
-									'flex cursor-pointer flex-col items-center justify-center hover:bg-opacity-50 sm:flex-row',
+									'flex cursor-pointer flex-col items-center justify-between hover:bg-opacity-50 sm:flex-row',
 									gcc('bg-blue'),
-									`my-4 mx-0 rounded-md p-3 sm:mx-4`
+									`my-4 mx-1 rounded-md p-3 sm:mx-[5%] md:mx-[5%] lg:mx-[20%] `
 								)}
 								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 							>
 								<div className='mb-0 flex flex-col flex-wrap items-center justify-evenly sm:mr-4 sm:flex-row sm:justify-start'>
 									<DesktopOnly>
-										<div className='m-2 flex h-8 w-8 flex-row items-center justify-center text-xl font-bold'>
+										<div className='m-2 mr-6 flex h-8 w-8 flex-row items-center justify-center text-xl font-bold'>
 											<span
 												className={classNames(
 													gcc('bg-light'),
@@ -167,7 +167,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 									</MobileOnly>
 									<div className='mb-2 flex flex-row flex-wrap items-center justify-center sm:mb-0'>
 										<img
-											className='mr-2 h-8 w-8 rounded-full object-cover sm:h-12 sm:w-12'
+											className='mr-2 h-8 w-8 rounded-full object-cover sm:mr-6 sm:h-12 sm:w-12'
 											src={user.photoURL}
 										/>
 										<span className='text-center sm:text-2xl'>{user.displayName}</span>
