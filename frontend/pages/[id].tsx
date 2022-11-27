@@ -42,7 +42,7 @@ const Home = () => {
 	const [uid, setUID] = useState('');
 
 	const [route, setRoute] = useState<RouteInfo>({ page: Route.Home });
-	const [noSpoilers, setNoSpoilers] = useState<boolean>(false);
+	const [noSpoilers, setNoSpoilers] = useState<boolean | null>(null);
 
 	const router = useRouter();
 

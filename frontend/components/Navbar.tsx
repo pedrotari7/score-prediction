@@ -115,7 +115,7 @@ export default function Navbar({
 								<Menu as='div' className='relative'>
 									{({ open }) => (
 										<div className='item-center flex flex-row gap-2'>
-											{user && user.admin && !loading && <NoSpoilersToggle />}
+											{user && user.admin && noSpoilers !== null && <NoSpoilersToggle />}
 											<div className='flex items-center justify-center'>
 												{user && (
 													<Menu.Button
