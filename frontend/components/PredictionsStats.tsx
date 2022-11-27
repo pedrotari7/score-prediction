@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Fixture, Prediction, UserResult } from '../../interfaces/main';
 import { getOutcome, isGameFinished, isGameStarted } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
+import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import { Circle } from './UserScores';
@@ -15,6 +16,7 @@ const PredictionsStats = ({
 	gamePredictions: Prediction[];
 	resultsTally: Partial<UserResult>;
 }) => {
+	const { RedactedSpoilers } = useNoSpoilers();
 	const competition = useContext(CompetitionContext);
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
@@ -50,7 +52,9 @@ const PredictionsStats = ({
 								<Flag team={game?.teams.home} />
 								<span className='hidden text-xl sm:block'>{game?.teams.home.name}</span>
 								<span className='text-xl font-bold'>{outcomes.winH}</span>
-								{finished && result === 'winH' && <TickIcon />}
+								<RedactedSpoilers>
+									<>{finished && result === 'winH' && <TickIcon />}</>
+								</RedactedSpoilers>
 							</div>
 							<div
 								className={classNames(
@@ -61,7 +65,9 @@ const PredictionsStats = ({
 								<Flag team={game?.teams.away} />
 								<span className='hidden text-xl sm:block'>{game?.teams.away.name}</span>
 								<span className='text-xl font-bold'>{outcomes.winA}</span>
-								{finished && result === 'winA' && <TickIcon />}
+								<RedactedSpoilers>
+									<>{finished && result === 'winA' && <TickIcon />}</>
+								</RedactedSpoilers>
 							</div>
 
 							<div
@@ -72,25 +78,32 @@ const PredictionsStats = ({
 							>
 								<span className='text-xl'> Draw</span>
 								<span className='text-xl font-bold'>{outcomes.draw}</span>
-								{finished && result === 'draw' && <TickIcon />}
+								<RedactedSpoilers>
+									<>{finished && result === 'draw' && <TickIcon />}</>
+								</RedactedSpoilers>
 							</div>
 						</div>
 					</div>
-					<div className='flex flex-row flex-wrap items-center'>
-						{(resultsTally.exact ?? 0) > 0 && (
-							<Circle className='bg-green-600'>{resultsTally.exact}</Circle>
-						)}
-						{(resultsTally.result ?? 0) > 0 && (
-							<Circle className='bg-yellow-600'>{resultsTally.result}</Circle>
-						)}
-						{(resultsTally.onescore ?? 0) > 0 && (
-							<Circle className='bg-pink-600'>{resultsTally.onescore}</Circle>
-						)}
-						{(resultsTally.fail ?? 0) > 0 && <Circle className='bg-red-600'>{resultsTally.fail}</Circle>}
-						{(resultsTally.penalty ?? 0) > 0 && (
-							<Circle className='bg-gray-500'>{resultsTally.penalty}</Circle>
-						)}
-					</div>
+
+					<RedactedSpoilers>
+						<div className='flex flex-row flex-wrap items-center'>
+							{(resultsTally.exact ?? 0) > 0 && (
+								<Circle className='bg-green-600'>{resultsTally.exact}</Circle>
+							)}
+							{(resultsTally.result ?? 0) > 0 && (
+								<Circle className='bg-yellow-600'>{resultsTally.result}</Circle>
+							)}
+							{(resultsTally.onescore ?? 0) > 0 && (
+								<Circle className='bg-pink-600'>{resultsTally.onescore}</Circle>
+							)}
+							{(resultsTally.fail ?? 0) > 0 && (
+								<Circle className='bg-red-600'>{resultsTally.fail}</Circle>
+							)}
+							{(resultsTally.penalty ?? 0) > 0 && (
+								<Circle className='bg-gray-500'>{resultsTally.penalty}</Circle>
+							)}
+						</div>
+					</RedactedSpoilers>
 				</div>
 			)}
 		</div>

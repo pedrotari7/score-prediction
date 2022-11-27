@@ -13,6 +13,7 @@ import Loading from './Loading';
 import RefreshComp from './RefreshComp';
 import PredictionsStats from './PredictionsStats';
 import SelectLeaderboard from './SelectLeaderboard';
+import useNoSpoilers from '../hooks/useNoSpoilers';
 
 const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game: Fixture }) => {
 	const routeInfo = useContext(RouteContext)!;
@@ -20,10 +21,6 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 	const { setRoute } = routeInfo;
 
 	const parsedGuess = { home: formatScore(guess.home), away: formatScore(guess.away) };
-
-	const competition = useContext(CompetitionContext);
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	const hiddenScore = parsedGuess.home === 'H' && parsedGuess.away === 'H';
 	const invalidScore = parsedGuess.home === 'X' && parsedGuess.away === 'X';
@@ -33,19 +30,16 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 			prediction={guess}
 			game={game}
 			className={classNames(
-				gcc('text-light'),
-				game.fixture.status.short === 'NS' ? gcc('bg-blue') : '',
 				'my-2 flex w-full flex-row  items-center justify-between rounded p-4 sm:m-2 sm:w-max',
-				'cursor-pointer select-none hover:bg-opacity-50'
+				'cursor-pointer select-none gap-4 hover:bg-opacity-50'
 			)}
 			onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 		>
-			<span className='mr-8 flex flex-row items-center text-left text-xs'>
+			<span className='flex flex-row items-center text-left text-xs'>
 				{user?.photoURL && <img className='mr-2 h-8 w-8 rounded-full object-cover' src={user?.photoURL} />}
 				<span>{user?.displayName}</span>
 			</span>
 
-			{hiddenScore && <div className='font-sm font-bold '>Hidden</div>}
 			{invalidScore && <div className='font-sm font-bold '>Invalid</div>}
 
 			{!hiddenScore && !invalidScore && (
@@ -112,6 +106,7 @@ const CurrentMatch = ({
 }) => {
 	const userInfo = useContext(UserContext);
 	const competition = useContext(CompetitionContext);
+	const { noSpoilers } = useNoSpoilers();
 
 	const [id, setGameID] = useState(gameID);
 	const [currentLeaderboard, setCurrentLeaderboard] = useState('global');
@@ -139,16 +134,20 @@ const CurrentMatch = ({
 
 	const currentLeaderboardPredictions = Object.entries(gamePredictions).filter(([uid]) => members.includes(uid));
 
-	const gamePredictionsAndResults = currentLeaderboardPredictions
+	let gamePredictionsAndResults = currentLeaderboardPredictions
 		.filter(([uid]) => uid !== userInfo.uid)
 		.map(([uid, prediction]) => ({
 			uid,
 			prediction,
 			result: getResult(prediction, game),
 		}))
-		.sort((a, b) => users[a.uid].displayName.localeCompare(users[b.uid].displayName))
-		.sort((a, b) => (b.result.points ?? 0) - (a.result.points ?? 0));
+		.sort((a, b) => users[a.uid].displayName.localeCompare(users[b.uid].displayName));
 
+	if (!noSpoilers) {
+		gamePredictionsAndResults = gamePredictionsAndResults.sort(
+			(a, b) => (b.result.points ?? 0) - (a.result.points ?? 0)
+		);
+	}
 	const resultsTally = isGameStarted(game)
 		? [...gamePredictionsAndResults, { result: getResult(gamePredictions[userInfo.uid], game) }].reduce(
 				(acc, { result: r }) => ({
@@ -186,8 +185,8 @@ const CurrentMatch = ({
 				)}
 			>
 				<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
-					{!id && <p className='mb-2 text-3xl'>Next Game</p>}
-					{id && <p className='mb-2 text-3xl'>{game.league?.round}</p>}
+					{!id && <p className='text-3xl'>Next Game</p>}
+					{id && <p className='text-3xl'>{game.league?.round}</p>}
 					<RefreshComp />
 				</div>
 

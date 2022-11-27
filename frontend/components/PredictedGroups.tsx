@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Fixtures, Standing, Standings, Predictions } from '../../interfaces/main';
 import { calculateResults, sortGroup } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
+import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames, getCompetitionClass, GROUP_COLORS } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 
@@ -16,6 +17,7 @@ const PredictedGroups = ({
 	predictions: Predictions;
 	userID: string;
 }) => {
+	const { RedactedSpoilers } = useNoSpoilers();
 	const competition = useContext(CompetitionContext);
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
@@ -90,12 +92,16 @@ const PredictedGroups = ({
 											<td className='w-6'>{ga - gc}</td>
 
 											<td className='w-6'>{points}</td>
-											<td className='ml-2'>
-												<div className='flex flex-row items-center justify-start'>
-													<Flag team={standing[index].team} />
-													{isCorrectPrediction
-														? hasGames && <TickIcon />
-														: hasGames && <CloseIcon />}
+											<td className=''>
+												<div className='flex flex-row items-center justify-center'>
+													<RedactedSpoilers withIcon iconStyle='w-4 h-4'>
+														<>
+															<Flag team={standing[index].team} />
+															{isCorrectPrediction
+																? hasGames && <TickIcon />
+																: hasGames && <CloseIcon />}
+														</>
+													</RedactedSpoilers>
 												</div>
 											</td>
 										</tr>

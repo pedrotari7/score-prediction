@@ -24,6 +24,7 @@ import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UsersList from '../components/Users';
 import JoinLeaderboard from '../components/JoinLeaderboard';
 import ListLeaderboards from '../components/ListLeaderboards';
+import NoSpoilersContext from '../context/NoSpoilersContext';
 
 const Home = () => {
 	const auth = useAuth();
@@ -41,6 +42,7 @@ const Home = () => {
 	const [uid, setUID] = useState('');
 
 	const [route, setRoute] = useState<RouteInfo>({ page: Route.Home });
+	const [noSpoilers, setNoSpoilers] = useState<boolean>(false);
 
 	const router = useRouter();
 
@@ -165,27 +167,33 @@ const Home = () => {
 
 	return (
 		<RouteContext.Provider value={{ route, setRoute }}>
-			<UserContext.Provider value={{ uid, token: auth.user?.token ?? '' }}>
-				<CompetitionContext.Provider value={competition}>
-					<FixturesContext.Provider value={fixtures}>
-						<GroupMapContext.Provider value={groupMap}>
-							<UpdateTournamentContext.Provider value={updateTournament}>
-								{showLogin && <Login />}
+			<NoSpoilersContext.Provider value={{ noSpoilers, setNoSpoilers }}>
+				<UserContext.Provider value={{ uid, token: auth.user?.token ?? '' }}>
+					<CompetitionContext.Provider value={competition}>
+						<FixturesContext.Provider value={fixtures}>
+							<GroupMapContext.Provider value={groupMap}>
+								<UpdateTournamentContext.Provider value={updateTournament}>
+									{showLogin && <Login />}
 
-								{!showLogin && (
-									<PageLayout title={'Score Prediction'} loading={loading} setLoading={setLoading}>
-										{loading || !triedToValidateToken ? (
-											<Loading message='Logging in...' />
-										) : (
-											<MainComponent />
-										)}
-									</PageLayout>
-								)}
-							</UpdateTournamentContext.Provider>
-						</GroupMapContext.Provider>
-					</FixturesContext.Provider>
-				</CompetitionContext.Provider>
-			</UserContext.Provider>
+									{!showLogin && (
+										<PageLayout
+											title={'Score Prediction'}
+											loading={loading}
+											setLoading={setLoading}
+										>
+											{loading || !triedToValidateToken ? (
+												<Loading message='Logging in...' />
+											) : (
+												<MainComponent />
+											)}
+										</PageLayout>
+									)}
+								</UpdateTournamentContext.Provider>
+							</GroupMapContext.Provider>
+						</FixturesContext.Provider>
+					</CompetitionContext.Provider>
+				</UserContext.Provider>
+			</NoSpoilersContext.Provider>
 		</RouteContext.Provider>
 	);
 };

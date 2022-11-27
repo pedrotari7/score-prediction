@@ -1,7 +1,9 @@
-import { ReactNode, MouseEventHandler } from 'react';
+import { ReactNode, MouseEventHandler, useContext } from 'react';
 import { Fixture, Prediction } from '../../interfaces/main';
 import { getExtraTimeResult, getOutcome, isNum, isPenaltyShootout } from '../../shared/utils';
-import { classNames } from '../lib/utils/reactHelper';
+import CompetitionContext from '../context/CompetitionContext';
+import useNoSpoilers from '../hooks/useNoSpoilers';
+import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 
 const ResultContainer = ({
 	children,
@@ -16,7 +18,11 @@ const ResultContainer = ({
 	game: Fixture;
 	onClick?: MouseEventHandler<HTMLDivElement>;
 }) => {
+	const competition = useContext(CompetitionContext);
+	const gcc = (p: string) => getCompetitionClass(p, competition);
+
 	const result = getExtraTimeResult(game);
+	const { noSpoilers } = useNoSpoilers();
 
 	const { home: predH, away: predA } = prediction;
 	const { home: realH, away: realA } = result;
@@ -43,13 +49,15 @@ const ResultContainer = ({
 		<div
 			onClick={onClick}
 			className={classNames(
-				className,
+				gcc('text-light'),
+				gcc('bg-blue'),
 				'relative rounded-md border-2 text-center',
-				isExactScore ? 'bg-green-600' : '',
-				isCorrectResult ? 'bg-yellow-600' : '',
-				isCorrectGoal ? 'bg-pink-600' : '',
-				isWrong ? 'bg-red-600' : '',
-				isPredictValid ? 'border-transparent' : 'border-red-600'
+				!noSpoilers && isExactScore ? 'bg-green-600' : '',
+				!noSpoilers && isCorrectResult ? 'bg-yellow-600' : '',
+				!noSpoilers && isCorrectGoal ? 'bg-pink-600' : '',
+				!noSpoilers && isWrong ? 'bg-red-600' : '',
+				isPredictValid ? 'border-transparent' : 'border-red-600',
+				className
 			)}
 		>
 			{isPenaltyWinner && (

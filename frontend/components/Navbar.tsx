@@ -9,6 +9,8 @@ import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import { app } from '../lib/firebaseClient';
 import CompetitionContext from '../context/CompetitionContext';
 import { competitions } from '../../shared/utils';
+import NoSpoilersToggle from './NoSpoilersToggle';
+import useNoSpoilers from '../hooks/useNoSpoilers';
 
 interface NavItem {
 	name: string;
@@ -25,13 +27,14 @@ export default function Navbar({
 	const router = useRouter();
 	const { user } = useAuth();
 
+	const { noSpoilers } = useNoSpoilers();
 	const navigation: NavItem[] = [
 		{ name: 'NextGame', info: { page: Route.Match } },
 		{ name: 'MyPredictions', info: { page: Route.Predictions, data: user?.uid } },
 		{ name: 'Leaderboard', info: { page: Route.Leaderboard } },
 		{ name: 'Standings', info: { page: Route.Standings } },
 		{ name: 'Rules', info: { page: Route.Rules, data: user?.uid } },
-	];
+	].filter(it => !noSpoilers || (noSpoilers && it.info.page !== Route.Standings));
 
 	const routeInfo = useContext(RouteContext);
 	const competition = useContext(CompetitionContext);
@@ -88,9 +91,9 @@ export default function Navbar({
 								<div className='hidden sm:ml-6 sm:block'>
 									<div className='flex space-x-4'>
 										{!loading &&
-											navigation.map(item => (
+											navigation.map((item, index) => (
 												<div
-													key={item.name}
+													key={index}
 													onClick={() => updateRoute(item.info)}
 													className={classNames(
 														'text-lg font-bold hover:bg-gray-700 ',
@@ -111,12 +114,13 @@ export default function Navbar({
 								{/* Profile dropdown */}
 								<Menu as='div' className='relative'>
 									{({ open }) => (
-										<>
-											<div>
+										<div className='item-center flex flex-row gap-2'>
+											{user && user.admin && <NoSpoilersToggle />}
+											<div className='flex items-center justify-center'>
 												{user && (
 													<Menu.Button
 														className={classNames(
-															'flex rounded-full bg-gray-800 text-sm',
+															'flex items-center rounded-full bg-gray-800 text-sm',
 															'focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-2 focus:ring-offset-gray-800'
 														)}
 													>
@@ -238,7 +242,7 @@ export default function Navbar({
 													</Menu.Item>
 												</Menu.Items>
 											</Transition>
-										</>
+										</div>
 									)}
 								</Menu>
 							</div>

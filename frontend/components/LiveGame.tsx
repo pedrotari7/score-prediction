@@ -6,6 +6,7 @@ import CompetitionContext from '../context/CompetitionContext';
 import FixturesContext from '../context/FixturesContext';
 import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UserContext from '../context/UserContext';
+import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames, getCompetitionClass, getCurrentDate } from '../lib/utils/reactHelper';
 import ClientOnly from './ClientOnly';
 import Flag from './Flag';
@@ -24,6 +25,7 @@ const LiveGame = ({
 	const userInfo = useContext(UserContext);
 	const competition = useContext(CompetitionContext);
 	const updateCompetition = useContext(UpdateTournamentContext)!;
+	const { RedactedSpoilers, noSpoilers } = useNoSpoilers();
 
 	if (!data || !userInfo) return <></>;
 
@@ -42,7 +44,7 @@ const LiveGame = ({
 	return (
 		<ShowMore
 			setIsOpen={setIsExtraInfoOpen}
-			more={game.fixture.status.short !== 'NS' && <GameExtraInfo game={game} />}
+			more={game.fixture.status.short !== 'NS' && !noSpoilers && <GameExtraInfo game={game} />}
 			className={classNames(gcc('text-light'), gcc('bg-blue'), 'my-2 flex  flex-col rounded p-2 shadow-pop')}
 		>
 			<div className='flex flex-col items-center sm:flex-row sm:justify-evenly'>
@@ -83,25 +85,30 @@ const LiveGame = ({
 					{!isInPast && (
 						<span className='mx-2 text-center text-3xl sm:w-4/12'>
 							<div>
-								<span>{game.goals.home}</span>
-								<span className='mx-2'>-</span>
-								<span>{game.goals.away}</span>
+								<RedactedSpoilers message='Hidden' withIcon>
+									<>
+										<span>{game.goals.home}</span>
+										<span className='mx-2'>-</span>
+										<span>{game.goals.away}</span>
+									</>
+								</RedactedSpoilers>
 							</div>
-							{game.score.penalty.home && (
+							{game.score.penalty.home && !noSpoilers && (
 								<div className='text-sm'>
 									<span>(</span>
-									<span>{game.score.penalty.home}</span>
 									<span className='mx-2'>-</span>
 									<span>{game.score.penalty.away}</span>
 									<span> PEN)</span>
 								</div>
 							)}
-							<div className='mt-2'>
-								<span className='mm-1 text-xs'>{game.fixture.status.long}</span>
-								{!isGameFinished(game) && game.fixture.status.elapsed && (
-									<span className='mx-1 text-base'>{game.fixture.status.elapsed}&apos;</span>
-								)}
-							</div>
+							{!noSpoilers && (
+								<div className='mt-2'>
+									<span className='mm-1 text-xs'>{game.fixture.status.long}</span>
+									{!isGameFinished(game) && game.fixture.status.elapsed && (
+										<span className='mx-1 text-base'>{game.fixture.status.elapsed}&apos;</span>
+									)}
+								</div>
+							)}
 						</span>
 					)}
 

@@ -6,6 +6,7 @@ import CompetitionContext from '../context/CompetitionContext';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
+import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames, formatScore, getCompetitionClass, getCurrentDate } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import ResultContainer from './ResultContainer';
@@ -29,6 +30,8 @@ const Game = ({
 	const routeInfo = useContext(RouteContext)!;
 	const competition = useContext(CompetitionContext);
 	const { uid } = useContext(UserContext)!;
+
+	const { RedactedSpoilers } = useNoSpoilers();
 
 	const homeInputRef = useRef<HTMLInputElement>(null);
 	const awayInputRef = useRef<HTMLInputElement>(null);
@@ -129,19 +132,21 @@ const Game = ({
 									</div>
 								)}
 							</ResultContainer>
-							<div className='flex flex-row flex-wrap items-center justify-center'>
-								{game.goals.home} - {game.goals.away}
-								{game.score.penalty.home && (
-									<div className='ml-2 text-sm'>
-										<span>(</span>
-										<span>{game.score.penalty.home}</span>
-										<span className='mx-2'>-</span>
-										<span>{game.score.penalty.away}</span>
-										<span>)</span>
-									</div>
-								)}
-								<span className='ml-2'>{game.fixture.status.short}</span>
-							</div>
+							<RedactedSpoilers message='Hidden' withIcon iconStyle='w-6 h-6' className='text-xs'>
+								<div className='flex flex-row flex-wrap items-center justify-center'>
+									{game.goals.home} - {game.goals.away}
+									{game.score.penalty.home && (
+										<div className='ml-2 text-sm'>
+											<span>(</span>
+											<span>{game.score.penalty.home}</span>
+											<span className='mx-2'>-</span>
+											<span>{game.score.penalty.away}</span>
+											<span>)</span>
+										</div>
+									)}
+									<span className='ml-2'>{game.fixture.status.short}</span>
+								</div>
+							</RedactedSpoilers>
 						</div>
 					)}
 				</div>

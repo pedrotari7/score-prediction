@@ -10,6 +10,7 @@ import { UserScores } from './UserScores';
 import CreateLeaderboard from './CreateLeaderboard';
 import SelectLeaderboard from './SelectLeaderboard';
 import ShareLeaderboard from './ShareLeaderboard';
+import useNoSpoilers from '../hooks/useNoSpoilers';
 
 interface SortOption {
 	key: string;
@@ -28,6 +29,7 @@ const SortOptions: Record<string, SortOption> = {
 };
 
 const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Record<string, Leaderboard> }) => {
+	const { RedactedSpoilers } = useNoSpoilers();
 	const { route, setRoute } = useContext(RouteContext)!;
 	const competition = useContext(CompetitionContext);
 	const [sortOption, setSortOption] = useState(SortOptions.points);
@@ -111,18 +113,21 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 				</>
 			</div>
 
-			<div className='mb-6 flex flex-row flex-wrap items-center justify-center font-bold sm:justify-center'>
-				{Object.values(SortOptions).map(option => (
-					<FilterOption
-						key={option.key}
-						active={option.text === sortOption.text}
-						className={option.color}
-						onClick={() => setSortOption(option)}
-					>
-						{option.text}
-					</FilterOption>
-				))}
-			</div>
+			<RedactedSpoilers>
+				<div className='mb-6 flex flex-row flex-wrap items-center justify-center font-bold sm:justify-center'>
+					{Object.values(SortOptions).map(option => (
+						<FilterOption
+							key={option.key}
+							active={option.text === sortOption.text}
+							className={option.color}
+							onClick={() => setSortOption(option)}
+						>
+							{option.text}
+						</FilterOption>
+					))}
+				</div>
+			</RedactedSpoilers>
+
 			<div className='item-center flex w-full flex-row flex-wrap justify-evenly'>
 				{sortedUsers.map((user, index) => {
 					return (
@@ -168,7 +173,9 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 										<span className='text-center sm:text-2xl'>{user.displayName}</span>
 									</div>
 								</div>
-								<UserScores user={user} />
+								<RedactedSpoilers>
+									<UserScores user={user} />
+								</RedactedSpoilers>
 							</div>
 						</div>
 					);

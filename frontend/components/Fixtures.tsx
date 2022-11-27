@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Fixture, Fixtures, Prediction, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
+import useNoSpoilers from '../hooks/useNoSpoilers';
 import { useAuth } from '../lib/auth';
 import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
 import Game from './Game';
@@ -23,6 +24,7 @@ const FixturesPage = ({
 	user: User;
 }) => {
 	const { user: currentUser } = useAuth();
+	const { RedactedSpoilers } = useNoSpoilers();
 
 	const uid = currentUser?.uid;
 
@@ -79,9 +81,12 @@ const FixturesPage = ({
 					{uid !== user.uid && <p>{user.displayName}</p>}
 					{uid === user.uid && <p>My Predictions</p>}
 				</div>
-				<div className='text-sm'>
-					<UserScores user={user} />
-				</div>
+
+				<RedactedSpoilers>
+					<div className='text-sm'>
+						<UserScores user={user} />
+					</div>
+				</RedactedSpoilers>
 			</div>
 
 			{Object.entries(otherStageFixtures)
