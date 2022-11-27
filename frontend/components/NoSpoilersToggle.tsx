@@ -28,7 +28,7 @@ const NoSpoilersToggle = () => {
 						<EyeSlashIcon strokeWidth={2} className='h-4 w-4 text-white' />
 					</div>
 				}
-				checked={noSpoilers}
+				checked={noSpoilers ?? false}
 				className='react-switch'
 			/>
 		</label>
