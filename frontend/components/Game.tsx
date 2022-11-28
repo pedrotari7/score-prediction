@@ -2,12 +2,12 @@ import { DateTime } from 'luxon';
 import { ChangeEvent, useContext, useRef } from 'react';
 import { Prediction, Predictions } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
-import CompetitionContext from '../context/CompetitionContext';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
+import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
-import { classNames, formatScore, getCompetitionClass, getCurrentDate } from '../lib/utils/reactHelper';
+import { classNames, formatScore, getCurrentDate } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import ResultContainer from './ResultContainer';
 import { Round } from './Round';
@@ -28,7 +28,7 @@ const Game = ({
 }) => {
 	const data = useContext(FixturesContext)!;
 	const routeInfo = useContext(RouteContext)!;
-	const competition = useContext(CompetitionContext);
+	const { gcc } = useCompetition();
 	const { uid } = useContext(UserContext)!;
 
 	const { RedactedSpoilers } = useNoSpoilers();
@@ -58,8 +58,6 @@ const Game = ({
 	const isValidScore = (n: number | null) => isNum(n) && n >= 0;
 
 	const hasBothPredictions = isValidScore(prediction.home) && isValidScore(prediction.away);
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
 		<div

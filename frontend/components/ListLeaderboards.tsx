@@ -1,17 +1,17 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Leaderboard, Users } from '../../interfaces/main';
-import CompetitionContext from '../context/CompetitionContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UserContext from '../context/UserContext';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import useCompetition from '../hooks/useCompetition';
+import { classNames } from '../lib/utils/reactHelper';
 import { deleteLeaderboard, fetchLeaderboards } from '../pages/api';
 import DeleteButton from './DeleteButton';
 import RefreshButton from './RefreshButton';
 
 const ListLeaderboards = ({ users }: { users: Users }) => {
 	const { setRoute } = useContext(RouteContext)!;
-	const competition = useContext(CompetitionContext);
+	const { gcc } = useCompetition();
 	const userInfo = useContext(UserContext);
 	const updateCompetition = useContext(UpdateTournamentContext)!;
 	const [leaderboards, setLeaderboards] = useState<Leaderboard[]>([]);
@@ -25,8 +25,6 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 	useEffect(() => {
 		update();
 	}, [update]);
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
 		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:m-6 sm:p-6')}>

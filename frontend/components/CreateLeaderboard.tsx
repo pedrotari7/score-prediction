@@ -1,15 +1,14 @@
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import CompetitionContext from '../context/CompetitionContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UserContext from '../context/UserContext';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import useCompetition from '../hooks/useCompetition';
+import { classNames } from '../lib/utils/reactHelper';
 import { createLeaderboard } from '../pages/api';
 import Loading from './Loading';
 
 const CreateLeaderboard = () => {
-	const competition = useContext(CompetitionContext);
 	const updateCompetition = useContext(UpdateTournamentContext)!;
 	const inputRef = useRef<HTMLInputElement>(null);
 	const userInfo = useContext(UserContext);
@@ -18,8 +17,7 @@ const CreateLeaderboard = () => {
 
 	const [open, setOpen] = useState(false);
 
-	const gcc = (p: string) => getCompetitionClass(p, competition);
-
+	const { gcc } = useCompetition();
 	useEffect(() => {
 		inputRef.current?.focus();
 	}, [inputRef]);

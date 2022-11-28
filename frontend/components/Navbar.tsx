@@ -1,16 +1,16 @@
 import { Dispatch, Fragment, SetStateAction, useContext } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import { classNames } from '../lib/utils/reactHelper';
 import { getAuth } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth';
 import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import { app } from '../lib/firebaseClient';
-import CompetitionContext from '../context/CompetitionContext';
 import { competitions } from '../../shared/utils';
 import NoSpoilersToggle from './NoSpoilersToggle';
 import useNoSpoilers from '../hooks/useNoSpoilers';
+import useCompetition from '../hooks/useCompetition';
 
 interface NavItem {
 	name: string;
@@ -28,6 +28,8 @@ export default function Navbar({
 	const { user } = useAuth();
 
 	const { noSpoilers } = useNoSpoilers();
+	const { gcc, competition } = useCompetition();
+
 	const navigation: NavItem[] = [
 		{ name: 'NextGame', info: { page: Route.Match } },
 		{ name: 'MyPredictions', info: { page: Route.Predictions, data: user?.uid } },
@@ -37,9 +39,6 @@ export default function Navbar({
 	].filter(it => !noSpoilers || (noSpoilers && it.info.page !== Route.Standings));
 
 	const routeInfo = useContext(RouteContext);
-	const competition = useContext(CompetitionContext);
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	if (!routeInfo || !competition) return <></>;
 

@@ -1,16 +1,16 @@
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useState } from 'react';
 import { Leaderboard } from '../../interfaces/main';
-import CompetitionContext from '../context/CompetitionContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UserContext from '../context/UserContext';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import useCompetition from '../hooks/useCompetition';
+import { classNames } from '../lib/utils/reactHelper';
 import { fetchLeaderboard, joinLeaderboard } from '../pages/api';
 import Loading from './Loading';
 
 const JoinLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
-	const competition = useContext(CompetitionContext);
+	const { gcc } = useCompetition();
 	const userInfo = useContext(UserContext);
 	const routeInfo = useContext(RouteContext);
 	const updateCompetition = useContext(UpdateTournamentContext)!;
@@ -30,8 +30,6 @@ const JoinLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
 
 		doAsync();
 	}, [userInfo, leaderboardId]);
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	if (!leaderboard) return <></>;
 

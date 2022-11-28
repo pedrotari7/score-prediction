@@ -2,12 +2,12 @@ import { DateTime } from 'luxon';
 import { Dispatch, SetStateAction, useContext } from 'react';
 import Countdown, { zeroPad } from 'react-countdown';
 import { isGameFinished } from '../../shared/utils';
-import CompetitionContext from '../context/CompetitionContext';
 import FixturesContext from '../context/FixturesContext';
 import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UserContext from '../context/UserContext';
+import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
-import { classNames, getCompetitionClass, getCurrentDate } from '../lib/utils/reactHelper';
+import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
 import ClientOnly from './ClientOnly';
 import Flag from './Flag';
 import GameExtraInfo from './GameExtraInfo';
@@ -23,7 +23,7 @@ const LiveGame = ({
 }) => {
 	const data = useContext(FixturesContext);
 	const userInfo = useContext(UserContext);
-	const competition = useContext(CompetitionContext);
+	const { gcc } = useCompetition();
 	const updateCompetition = useContext(UpdateTournamentContext)!;
 	const { RedactedSpoilers, noSpoilers } = useNoSpoilers();
 
@@ -38,8 +38,6 @@ const LiveGame = ({
 	const timeDiff = gameDate.diff(getCurrentDate(), 'days').days;
 
 	const isCountdown = timeDiff <= 1;
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
 		<ShowMore

@@ -1,18 +1,18 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import CompetitionContext from '../context/CompetitionContext';
 import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import { classNames } from '../lib/utils/reactHelper';
 import { fetchUsers } from '../pages/api';
 import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
 import RefreshButton from './RefreshButton';
 import { DateTime } from 'luxon';
 import Loading from './Loading';
+import useCompetition from '../hooks/useCompetition';
 
 const UsersList = () => {
 	const { setRoute } = useContext(RouteContext)!;
-	const competition = useContext(CompetitionContext);
+	const { gcc, competition } = useCompetition();
 	const userInfo = useContext(UserContext);
 	const [users, setUsers] = useState<any>();
 	const [loading, setLoading] = useState<boolean>(false);
@@ -28,8 +28,6 @@ const UsersList = () => {
 	useEffect(() => {
 		update();
 	}, [update]);
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
 		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:m-6 sm:p-6')}>

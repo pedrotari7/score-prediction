@@ -1,7 +1,7 @@
 import { useContext } from 'react';
-import CompetitionContext from '../context/CompetitionContext';
 import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import useCompetition from '../hooks/useCompetition';
+import { classNames } from '../lib/utils/reactHelper';
 
 export const ExactScore = () => (
 	<div className='mb-4 flex flex-row flex-wrap rounded-md bg-green-600 p-2 text-lg'>
@@ -70,8 +70,7 @@ export const Deadlines = () => (
 );
 
 const Rules = () => {
-	const competition = useContext(CompetitionContext);
-	const gcc = (p: string) => getCompetitionClass(p, competition);
+	const { gcc } = useCompetition();
 
 	const routeInfo = useContext(RouteContext);
 

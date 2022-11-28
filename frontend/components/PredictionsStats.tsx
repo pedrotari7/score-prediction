@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Fixture, Prediction, UserResult } from '../../interfaces/main';
 import { getOutcome, isGameFinished, isGameStarted } from '../../shared/utils';
-import CompetitionContext from '../context/CompetitionContext';
+import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import { classNames } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import { Circle } from './UserScores';
 
@@ -17,8 +17,7 @@ const PredictionsStats = ({
 	resultsTally: Partial<UserResult>;
 }) => {
 	const { RedactedSpoilers } = useNoSpoilers();
-	const competition = useContext(CompetitionContext);
-	const gcc = (p: string) => getCompetitionClass(p, competition);
+	const { gcc } = useCompetition();
 
 	if (!game || !isGameStarted(game)) return <></>;
 

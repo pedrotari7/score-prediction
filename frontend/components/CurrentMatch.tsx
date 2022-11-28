@@ -4,16 +4,16 @@ import { useSwipeable } from 'react-swipeable';
 import LiveGame from './LiveGame';
 import { Fixture, Fixtures, Leaderboard, Prediction, Predictions, User, Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
-import { classNames, formatScore, getCompetitionClass, getStadiumImageURL } from '../lib/utils/reactHelper';
+import { classNames, formatScore, getStadiumImageURL } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { DEFAULT_USER_RESULT, getResult, isGameFinished, isGameStarted } from '../../shared/utils';
-import CompetitionContext from '../context/CompetitionContext';
 import Loading from './Loading';
 import RefreshComp from './RefreshComp';
 import PredictionsStats from './PredictionsStats';
 import SelectLeaderboard from './SelectLeaderboard';
 import useNoSpoilers from '../hooks/useNoSpoilers';
+import useCompetition from '../hooks/useCompetition';
 
 const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game: Fixture }) => {
 	const routeInfo = useContext(RouteContext)!;
@@ -105,7 +105,8 @@ const CurrentMatch = ({
 	leaderboards: Record<string, Leaderboard>;
 }) => {
 	const userInfo = useContext(UserContext);
-	const competition = useContext(CompetitionContext);
+
+	const { gcc } = useCompetition();
 	const { noSpoilers } = useNoSpoilers();
 
 	const [id, setGameID] = useState(gameID);
@@ -171,8 +172,6 @@ const CurrentMatch = ({
 	const nextGameId = findGame(1);
 
 	const stadiumImage = getStadiumImageURL(game?.fixture.venue);
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
 		<KeyboardHandle prevGameId={prevGameId} nextGameId={nextGameId} setGameID={setGameID}>

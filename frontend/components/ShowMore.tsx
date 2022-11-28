@@ -1,8 +1,8 @@
 import { Disclosure, Transition } from '@headlessui/react';
-import { Dispatch, ReactNode, SetStateAction, useContext, useRef } from 'react';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import { Dispatch, ReactNode, SetStateAction, useRef } from 'react';
+import { classNames } from '../lib/utils/reactHelper';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
-import CompetitionContext from '../context/CompetitionContext';
+import useCompetition from '../hooks/useCompetition';
 
 const ShowMore = ({
 	children,
@@ -22,8 +22,7 @@ const ShowMore = ({
 		setIsOpen(!open);
 	};
 
-	const competition = useContext(CompetitionContext);
-	const gcc = (p: string) => getCompetitionClass(p, competition);
+	const { gcc } = useCompetition();
 
 	return (
 		<div ref={disclosureRef}>

@@ -1,10 +1,9 @@
-import { useContext } from 'react';
 import { Fixture, Fixtures, Prediction, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
-import CompetitionContext from '../context/CompetitionContext';
+import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { useAuth } from '../lib/auth';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import { classNames } from '../lib/utils/reactHelper';
 import Game from './Game';
 import PredictedGroups from './PredictedGroups';
 import RefreshComp from './RefreshComp';
@@ -25,6 +24,7 @@ const FixturesPage = ({
 }) => {
 	const { user: currentUser } = useAuth();
 	const { RedactedSpoilers } = useNoSpoilers();
+	const { gcc } = useCompetition();
 
 	const uid = currentUser?.uid;
 
@@ -62,10 +62,6 @@ const FixturesPage = ({
 			key={index}
 		/>
 	);
-
-	const competition = useContext(CompetitionContext);
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
 		<div

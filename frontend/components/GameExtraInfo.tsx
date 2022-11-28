@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import { Fixture, FixtureExtraInfo, PlayersMap } from '../../interfaces/main';
-import CompetitionContext from '../context/CompetitionContext';
 import UserContext from '../context/UserContext';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import useCompetition from '../hooks/useCompetition';
+import { classNames } from '../lib/utils/reactHelper';
 import { fetchFixtureExtraInfo } from '../pages/api';
 import GameFacts from './GameFacts';
 import GameLineup from './GameLineup';
@@ -22,7 +22,7 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 	const options = [GamePanel.Facts, GamePanel.Lineup, GamePanel.Stats];
 
 	const { token } = useContext(UserContext)!;
-	const competition = useContext(CompetitionContext);
+	const { gcc, competition } = useCompetition();
 
 	useEffect(() => {
 		const doAsync = async () => {
@@ -47,8 +47,6 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 	const colors = extraInfo?.lineups?.map(l => l.team.colors.player.primary) ?? [];
 
 	const NavOption = ({ option, active }: { option: GamePanel; active: boolean }) => {
-		const gcc = (p: string) => getCompetitionClass(p, competition);
-
 		return (
 			<div
 				onClick={() => setPanelMode(option)}

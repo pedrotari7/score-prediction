@@ -1,7 +1,7 @@
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
-import React, { MouseEventHandler, useContext, useState } from 'react';
-import CompetitionContext from '../context/CompetitionContext';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import React, { MouseEventHandler, useState } from 'react';
+import useCompetition from '../hooks/useCompetition';
+import { classNames } from '../lib/utils/reactHelper';
 
 const RefreshButton = ({
 	className = '',
@@ -10,10 +10,8 @@ const RefreshButton = ({
 	className?: string;
 	onClick: MouseEventHandler<SVGSVGElement>;
 }) => {
-	const competition = useContext(CompetitionContext);
+	const { gcc } = useCompetition();
 	const [loading, setLoading] = useState(false);
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
 		<ArrowPathIcon

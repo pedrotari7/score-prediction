@@ -1,8 +1,8 @@
-import { ReactNode, useContext } from 'react';
+import { ReactNode } from 'react';
 import { Event, Fixture, FixtureExtraInfo, Player, PlayersMap, Result } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
-import CompetitionContext from '../context/CompetitionContext';
-import { classNames, DEFAULT_IMAGE, getCompetitionClass } from '../lib/utils/reactHelper';
+import useCompetition from '../hooks/useCompetition';
+import { classNames, DEFAULT_IMAGE } from '../lib/utils/reactHelper';
 
 enum EventType {
 	Goal = 'Goal',
@@ -20,9 +20,7 @@ const GameFacts = ({
 	players: PlayersMap;
 	extraInfo: FixtureExtraInfo;
 }) => {
-	const competition = useContext(CompetitionContext);
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
+	const { gcc } = useCompetition();
 
 	const Referee = () => (
 		<div className='my-6 flex flex-row items-center justify-center'>

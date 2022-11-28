@@ -2,14 +2,13 @@ import { DateTime } from 'luxon';
 import { useContext } from 'react';
 import { Fixture, Fixtures, Standing, Standings } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
-import CompetitionContext from '../context/CompetitionContext';
 import GroupMapContext from '../context/GroupMapContext';
-import { classNames, getCompetitionClass, GROUP_COLORS } from '../lib/utils/reactHelper';
+import useCompetition from '../hooks/useCompetition';
+import { classNames, GROUP_COLORS } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 
 const Match = ({ game }: { game: Fixture }) => {
-	const competition = useContext(CompetitionContext);
-	const gcc = (p: string) => getCompetitionClass(p, competition);
+	const { gcc } = useCompetition();
 
 	return (
 		<div
@@ -51,8 +50,7 @@ const Match = ({ game }: { game: Fixture }) => {
 
 const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures: Fixtures }) => {
 	const groupMap = useContext(GroupMapContext);
-	const competition = useContext(CompetitionContext);
-	const gcc = (p: string) => getCompetitionClass(p, competition);
+	const { gcc } = useCompetition();
 
 	return (
 		<div className='flex select-none flex-row flex-wrap justify-center'>

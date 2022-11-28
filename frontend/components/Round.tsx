@@ -1,14 +1,12 @@
 import React, { useContext } from 'react';
 import { Fixture } from '../../interfaces/main';
-import CompetitionContext from '../context/CompetitionContext';
 import GroupMapContext from '../context/GroupMapContext';
-import { classNames, getCompetitionClass, GROUP_COLORS } from '../lib/utils/reactHelper';
+import useCompetition from '../hooks/useCompetition';
+import { classNames, GROUP_COLORS } from '../lib/utils/reactHelper';
 
 export const Round = ({ game }: { game: Fixture }) => {
 	const groupMap = useContext(GroupMapContext);
-	const competition = useContext(CompetitionContext);
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
+	const { gcc } = useCompetition();
 
 	let round = game?.league.round;
 

@@ -1,13 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
-import CompetitionContext from '../context/CompetitionContext';
+import React, { useEffect, useState } from 'react';
+import { classNames } from '../lib/utils/reactHelper';
 import { CheckIcon, ShareIcon } from '@heroicons/react/24/outline';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import useCompetition from '../hooks/useCompetition';
 
 const ShareLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
-	const competition = useContext(CompetitionContext);
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
+	const { gcc } = useCompetition();
 
 	const [copied, setCopied] = useState(false);
 	const [origin, setOrigin] = useState('');

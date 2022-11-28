@@ -1,7 +1,7 @@
-import { ChangeEvent, MutableRefObject, useContext } from 'react';
+import { ChangeEvent, MutableRefObject } from 'react';
 import { isNum } from '../../shared/utils';
-import CompetitionContext from '../context/CompetitionContext';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import useCompetition from '../hooks/useCompetition';
+import { classNames } from '../lib/utils/reactHelper';
 
 const ScoreInput = ({
 	className,
@@ -16,8 +16,7 @@ const ScoreInput = ({
 	id: string;
 	innerRef: MutableRefObject<HTMLInputElement | null>;
 }) => {
-	const competition = useContext(CompetitionContext);
-	const gcc = (p: string) => getCompetitionClass(p, competition);
+	const { gcc } = useCompetition();
 
 	return (
 		<input

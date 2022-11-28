@@ -1,9 +1,8 @@
-import { useContext } from 'react';
 import { Fixtures, Standing, Standings, Predictions } from '../../interfaces/main';
 import { calculateResults, sortGroup } from '../../shared/utils';
-import CompetitionContext from '../context/CompetitionContext';
+import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
-import { classNames, getCompetitionClass, GROUP_COLORS } from '../lib/utils/reactHelper';
+import { classNames, GROUP_COLORS } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 
 const PredictedGroups = ({
@@ -18,8 +17,7 @@ const PredictedGroups = ({
 	userID: string;
 }) => {
 	const { RedactedSpoilers } = useNoSpoilers();
-	const competition = useContext(CompetitionContext);
-	const gcc = (p: string) => getCompetitionClass(p, competition);
+	const { gcc } = useCompetition();
 
 	const teamsResults = calculateResults(Object.values(fixtures), predictions, userID);
 

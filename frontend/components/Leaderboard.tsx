@@ -1,8 +1,7 @@
 import { MouseEventHandler, ReactNode, useContext, useState } from 'react';
 import { Leaderboard, Users } from '../../interfaces/main';
-import CompetitionContext from '../context/CompetitionContext';
 import RouteContext, { Route } from '../context/RouteContext';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import { classNames } from '../lib/utils/reactHelper';
 import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
 import RefreshComp from './RefreshComp';
@@ -11,6 +10,7 @@ import CreateLeaderboard from './CreateLeaderboard';
 import SelectLeaderboard from './SelectLeaderboard';
 import ShareLeaderboard from './ShareLeaderboard';
 import useNoSpoilers from '../hooks/useNoSpoilers';
+import useCompetition from '../hooks/useCompetition';
 
 interface SortOption {
 	key: string;
@@ -31,7 +31,7 @@ const SortOptions: Record<string, SortOption> = {
 const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Record<string, Leaderboard> }) => {
 	const { RedactedSpoilers } = useNoSpoilers();
 	const { route, setRoute } = useContext(RouteContext)!;
-	const competition = useContext(CompetitionContext);
+	const { gcc } = useCompetition();
 	const [sortOption, setSortOption] = useState(SortOptions.points);
 	const initialLeaderboard = route.data ? (route.data as string) : 'global';
 
@@ -41,8 +41,6 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 		initialLeaderboard === 'global' ? Object.keys(users) : leaderboards[initialLeaderboard]?.members ?? [];
 
 	const [members, setMembers] = useState<string[]>(initialMembers);
-
-	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	const FilterOption = ({
 		children,
