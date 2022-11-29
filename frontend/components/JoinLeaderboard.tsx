@@ -22,14 +22,22 @@ const JoinLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
 
 	useEffect(() => {
 		const doAsync = async () => {
-			if (userInfo) {
+			if (userInfo && routeInfo) {
 				const l = await fetchLeaderboard(leaderboardId, userInfo.token);
+
+				if (l && l.members.includes(userInfo.uid)) {
+					routeInfo.setRoute({ page: Route.Leaderboard, data: leaderboardId });
+					const { pathname, query } = router;
+					delete router.query.join;
+					router.replace({ pathname, query }, undefined, { shallow: true });
+				}
+
 				setLeaderboard(l);
 			}
 		};
 
 		doAsync();
-	}, [userInfo, leaderboardId]);
+	}, [userInfo, routeInfo, router, leaderboardId]);
 
 	if (!leaderboard) return <></>;
 

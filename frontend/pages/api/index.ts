@@ -9,6 +9,7 @@ import {
 	Status,
 	Competition,
 	CreateLeaderboardResult,
+	Leaderboard,
 } from '../../../interfaces/main';
 import { competitions } from '../../../shared/utils';
 import fetcher from '../../lib/fetcher';
@@ -102,7 +103,7 @@ export const createLeaderboard = async (name: string, token: string): Promise<Cr
 		}
 	);
 
-export const fetchLeaderboard = async (leaderboardId: string, token: string) =>
+export const fetchLeaderboard = async (leaderboardId: string, token: string): Promise<Leaderboard> =>
 	await cFetch(`${backendUrl}/leaderboard`, token, undefined, { leaderboardId });
 
 export const joinLeaderboard = async (leaderboardId: string, token: string): Promise<CreateLeaderboardResult> =>
