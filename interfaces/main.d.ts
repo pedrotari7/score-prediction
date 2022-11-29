@@ -302,3 +302,7 @@ export interface Leaderboard {
 	members: string[];
 	creator: string;
 }
+
+export interface ResponseStatus {
+	success: boolean;
+}

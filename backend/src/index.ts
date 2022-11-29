@@ -542,7 +542,7 @@ app.post('/update-predictions', async (req, res) => {
 
   const { uid, gameId, prediction } = JSON.parse(req.body);
 
-  if (uid !== callerUID) return res.status(403).json({ error: 'Forbidden' });
+  if (uid !== callerUID) return res.status(403).json({ error: 'Forbidden', result: false });
 
   const competition = parseCompetition(req);
 
@@ -552,7 +552,7 @@ app.post('/update-predictions', async (req, res) => {
 
   const isInPast = gameDate && getCurrentTime() < gameDate;
 
-  if (!isInPast) return res.status(403).json({ error: 'Forbidden' });
+  if (!isInPast) return res.status(403).json({ error: 'Forbidden', result: false });
 
   let change = {};
 
@@ -571,7 +571,7 @@ app.post('/update-predictions', async (req, res) => {
   // TODO: Update this with the helper function
   const result = await getFirestore(firebaseApp).collection(competition.name).doc('predictions').update(change);
 
-  return res.json(result);
+  return res.json({ ...result, success: true });
 });
 
 app.get('/points', async (req, res) => {

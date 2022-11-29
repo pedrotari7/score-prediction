@@ -10,6 +10,7 @@ import {
 	Competition,
 	CreateLeaderboardResult,
 	Leaderboard,
+	ResponseStatus,
 } from '../../../interfaces/main';
 import { competitions } from '../../../shared/utils';
 import fetcher from '../../lib/fetcher';
@@ -40,7 +41,7 @@ export const updatePredictions = async (
 	gameId: number,
 	prediction: Prediction,
 	competition: Competition
-): Promise<void> => {
+): Promise<ResponseStatus> => {
 	return await cFetch(
 		`${backendUrl}/update-predictions`,
 		token,

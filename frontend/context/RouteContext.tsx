@@ -11,6 +11,7 @@ export enum Route {
 	Rules = 'rules',
 	Users = 'users',
 	JoinLeaderboard = 'joinLeaderboard',
+	RefreshPage = 'refreshPage',
 }
 
 export interface RouteInfo {

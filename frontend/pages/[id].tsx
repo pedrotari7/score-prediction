@@ -25,6 +25,7 @@ import UsersList from '../components/Users';
 import JoinLeaderboard from '../components/JoinLeaderboard';
 import ListLeaderboards from '../components/ListLeaderboards';
 import NoSpoilersContext from '../context/NoSpoilersContext';
+import RefreshPage from '../components/RefreshPage';
 
 const Home = () => {
 	const auth = useAuth();
@@ -118,7 +119,14 @@ const Home = () => {
 	const updatePrediction = async (prediction: Prediction, gameId: number) => {
 		if (!auth.user) return;
 		setPredictions({ ...predictions, [gameId]: { ...predictions?.[gameId], [uid]: prediction } });
-		await updatePredictions(auth.user.token, uid, gameId, prediction, competition);
+
+		const result = await updatePredictions(auth.user.token, uid, gameId, prediction, competition);
+
+		if (!result.success) {
+			setRoute({ page: Route.RefreshPage });
+		}
+
+		console.log('result', result);
 	};
 
 	const groupMap = Object.values(standings)
@@ -164,6 +172,8 @@ const Home = () => {
 				return <UsersList />;
 			case Route.JoinLeaderboard:
 				return <JoinLeaderboard leaderboardId={leaderboardId as string} />;
+			case Route.RefreshPage:
+				return <RefreshPage />;
 			case Route.ListLeaderboards:
 				return <ListLeaderboards users={users} />;
 			default:
