@@ -33,6 +33,7 @@ import {
   isGameStarted,
   isNum,
   sortGroup,
+  sortWorldCupGroup,
 } from '../../shared/utils';
 
 const app = express();
@@ -270,7 +271,10 @@ const updateGroups = async (
 
       if (isGroupFinished) {
         const teamsIDs = group.map(t => t.team.id);
-        const sortedGroup = sortGroup(teamsIDs, teamsResults, fixtures, predictions, user);
+
+        const sortFn = competition.name === competitions.wc2022.name ? sortWorldCupGroup : sortGroup;
+        const sortedGroup = sortFn(teamsIDs, teamsResults, fixtures, predictions, user);
+
         groupPoints[user] += sortedGroup.reduce((total, teamId, idx) => total + (teamId === teamsIDs[idx] ? 1 : 0), 0);
       }
     }

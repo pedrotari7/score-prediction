@@ -202,3 +202,66 @@ export const sortGroup = (
 
 	return sortedStandings;
 };
+
+export const sortWorldCupGroup = (
+	groupTeams: number[],
+	teamsResults: Record<number, PredResult>,
+	fixtures: Fixtures,
+	predictions: Predictions,
+	userID: string
+) => {
+	const idx = (p: number, gd: number, ga: number) => p * 100000 + gd * 1000 + ga;
+
+	// The ranking of teams in the group stage is determined as follows:
+	const teamsWithSamePoints = groupTeams.reduce<Record<number, number[]>>((pack, teamID) => {
+		// Points obtained in all group matches
+		const points = teamsResults[teamID].points;
+		// Goal difference in all group matches;
+		const gd = teamsResults[teamID].ga - teamsResults[teamID].gc;
+		// Number of goals scored in all group matches;
+		const ga = teamsResults[teamID].ga;
+
+		const i = idx(points, gd, ga);
+
+		if (!(i in pack)) pack[i] = [];
+		pack[i].push(teamID);
+		return pack;
+	}, {});
+
+	const sortedStandings = Object.entries(teamsWithSamePoints)
+		.sort(([a], [b]) => parseInt(b) - parseInt(a))
+		.flatMap(([_, teams]) => {
+			if (teams.length === 1) return teams;
+
+			const tiedTeamsGames = Object.values(fixtures).filter(
+				(f: Fixture) => teams.includes(f.teams.home.id) && teams.includes(f.teams.away.id)
+			);
+
+			const tiedTeamsResults = calculateResults(tiedTeamsGames, predictions, userID);
+
+			// Points obtained in the matches played between the teams in question;
+
+			// Goal difference in the matches played between the teams in question;
+			// Number of goals scored in the matches played between the teams in question;
+			const sortedTeams = Object.entries(tiedTeamsResults)
+				.sort(([teamA, resultsA], [teamB, resultsB]) => {
+					const localResult = compareResults(resultsA, resultsB);
+
+					if (localResult) return localResult;
+
+					return compareResults(teamsResults[parseInt(teamA)], teamsResults[parseInt(teamB)]);
+				})
+				.map(([t]) => parseInt(t));
+
+			return sortedTeams;
+		});
+
+	return sortedStandings;
+
+	// Fair play points in all group matches (only one deduction can be applied to a player in a single match):
+	// Yellow card: −1 point;
+	// Indirect red card (second yellow card): −3 points;
+	// Direct red card: −4 points;
+	// Yellow card and direct red card: −5 points;
+	// Drawing of lots.
+};

@@ -1,5 +1,5 @@
 import { Fixtures, Standing, Standings, Predictions } from '../../interfaces/main';
-import { calculateResults, sortGroup } from '../../shared/utils';
+import { calculateResults, competitions, sortGroup, sortWorldCupGroup } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames, GROUP_COLORS } from '../lib/utils/reactHelper';
@@ -17,7 +17,7 @@ const PredictedGroups = ({
 	userID: string;
 }) => {
 	const { RedactedSpoilers } = useNoSpoilers();
-	const { gcc } = useCompetition();
+	const { gcc, competition } = useCompetition();
 
 	const teamsResults = calculateResults(Object.values(fixtures), predictions, userID);
 
@@ -33,7 +33,9 @@ const PredictedGroups = ({
 
 				const teamsIDs = standing.map(t => t.team.id);
 
-				const sortedGroup = sortGroup(teamsIDs, teamsResults, fixtures, predictions, userID).map(
+				const sortFn = competition.name === competitions.wc2022.name ? sortWorldCupGroup : sortGroup;
+
+				const sortedGroup = sortFn(teamsIDs, teamsResults, fixtures, predictions, userID).map(
 					teamID => standing.find(el => el.team.id === teamID)!
 				);
 
