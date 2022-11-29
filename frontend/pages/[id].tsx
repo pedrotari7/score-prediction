@@ -125,8 +125,6 @@ const Home = () => {
 		if (!result.success) {
 			setRoute({ page: Route.RefreshPage });
 		}
-
-		console.log('result', result);
 	};
 
 	const groupMap = Object.values(standings)
