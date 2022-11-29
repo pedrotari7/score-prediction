@@ -87,11 +87,15 @@ const FixturesPage = ({
 
 			{Object.entries(otherStageFixtures)
 				.sort(([_, gA], [__, gB]) => gB?.[0]?.fixture.timestamp - gA?.[0]?.fixture.timestamp)
-				.map(([round, games]) => {
+				.map(([round, games], index) => {
 					games.sort(sortWithFinishedLast);
 					return (
 						<div key={round} className='mb-6'>
-							<div className='mb-6 text-3xl'>{round}</div>
+							<div className={classNames('mb-6 flex flex-row items-center justify-between')}>
+								<div className='text-3xl'>{round}</div>
+								{index === 0 && <RefreshComp />}
+							</div>
+
 							{games.map(GameFilled)}
 						</div>
 					);
@@ -100,7 +104,7 @@ const FixturesPage = ({
 			<div className='flex flex-col'>
 				<div className={classNames('mb-6 flex flex-row items-center justify-between')}>
 					<div className='text-3xl'>Group Stage</div>
-					<RefreshComp />
+					{!otherStageFixtures && <RefreshComp />}
 				</div>
 
 				<div className='flex flex-col-reverse md:flex-col'>
