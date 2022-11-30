@@ -47,6 +47,7 @@ const UserGuess = ({
 
 	const parsedGuess = { home: formatScore(guess.home), away: formatScore(guess.away) };
 
+	const emptyScore = guess.home === undefined || guess.away === undefined;
 	const hiddenScore = parsedGuess.home === 'H' && parsedGuess.away === 'H';
 	const invalidScore = parsedGuess.home === 'X' && parsedGuess.away === 'X';
 
@@ -70,11 +71,11 @@ const UserGuess = ({
 				<span>{user?.displayName}</span>
 			</span>
 
-			{invalidScore && <div className='font-sm font-bold '>Invalid</div>}
+			{invalidScore && !emptyScore && <div className='font-sm font-bold '>Invalid</div>}
 
-			{!hiddenScore && !invalidScore && (
+			{!hiddenScore && (
 				<div className='flex flex-row'>
-					{(isInPast || !myGuess) && (
+					{(isInPast || !myGuess) && !invalidScore && (
 						<>
 							<div className='flex flex-row items-center justify-end font-bold'>
 								<span className='mr-2'>{parsedGuess.home}</span>
@@ -261,21 +262,15 @@ const CurrentMatch = ({
 				<div className='mt-6'>
 					<div className='mb-4 text-xl font-bold'>My Prediction</div>
 					<div className='flex flex-row flex-wrap'>
-						{Object.entries(gamePredictions)
-							.filter(([uid, _]) => uid === userInfo?.uid)
-							.map(([uid, prediction]) => {
-								return (
-									<UserGuess
-										gameID={game.fixture.id}
-										user={users[uid]}
-										guess={prediction}
-										key={uid}
-										game={game}
-										updatePrediction={updatePrediction}
-										myGuess
-									/>
-								);
-							})}
+						<UserGuess
+							gameID={game.fixture.id}
+							user={users[userInfo.uid]}
+							guess={gamePredictions[userInfo.uid] ?? { home: undefined, away: undefined }}
+							key={userInfo.uid}
+							game={game}
+							updatePrediction={updatePrediction}
+							myGuess
+						/>
 					</div>
 				</div>
 
