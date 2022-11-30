@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from 'react';
-import { Fixture, FixtureExtraInfo, PlayersMap } from '../../interfaces/main';
-import UserContext from '../context/UserContext';
+import { useState } from 'react';
+import { Fixture, PlayersMap } from '../../interfaces/main';
 import useCompetition from '../hooks/useCompetition';
+import useFixtureExtraInfo from '../hooks/useFixtureExtraInfo';
 import { classNames } from '../lib/utils/reactHelper';
-import { fetchFixtureExtraInfo } from '../pages/api';
 import GameFacts from './GameFacts';
 import GameLineup from './GameLineup';
 import GameStats from './GameStats';
@@ -17,23 +16,14 @@ enum GamePanel {
 
 const GameExtraInfo = ({ game }: { game: Fixture }) => {
 	const [panelMode, setPanelMode] = useState(GamePanel.Facts);
-	const [extraInfo, setExtraInfo] = useState<FixtureExtraInfo>();
 
 	const options = [GamePanel.Facts, GamePanel.Lineup, GamePanel.Stats];
 
-	const { token } = useContext(UserContext)!;
-	const { gcc, competition } = useCompetition();
+	const { gcc } = useCompetition();
 
-	useEffect(() => {
-		const doAsync = async () => {
-			const extra = await fetchFixtureExtraInfo(game.fixture.id, token, competition);
-			setExtraInfo(extra);
-		};
+	const { extraInfo, loading } = useFixtureExtraInfo(game);
 
-		doAsync();
-	}, [game.fixture.id, token, competition]);
-
-	if (!extraInfo) return <Loading />;
+	if (loading || !extraInfo) return <Loading />;
 
 	const players =
 		extraInfo?.players?.reduce(

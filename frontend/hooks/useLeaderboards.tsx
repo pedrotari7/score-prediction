@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { Leaderboard } from '../../interfaces/main';
 import UserContext from '../context/UserContext';
 import { fetchLeaderboards } from '../pages/api';
