@@ -1,33 +1,19 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import RouteContext, { Route } from '../context/RouteContext';
-import UserContext from '../context/UserContext';
 import { classNames } from '../lib/utils/reactHelper';
-import { fetchUsers } from '../pages/api';
 import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
 import RefreshButton from './RefreshButton';
 import { DateTime } from 'luxon';
 import Loading from './Loading';
 import useCompetition from '../hooks/useCompetition';
+import useUsers from '../hooks/useUsers';
 
 const UsersList = () => {
 	const { setRoute } = useContext(RouteContext)!;
-	const { gcc, competition } = useCompetition();
-	const userInfo = useContext(UserContext);
-	const [users, setUsers] = useState<any>();
-	const [loading, setLoading] = useState<boolean>(false);
+	const { gcc } = useCompetition();
 
-	const update = useCallback(async () => {
-		setLoading(true);
-		if (userInfo) {
-			setUsers(await fetchUsers(userInfo.token, competition));
-		}
-		setLoading(false);
-	}, [userInfo, competition]);
-
-	useEffect(() => {
-		update();
-	}, [update]);
+	const { users, loading, update } = useUsers();
 
 	return (
 		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:m-6 sm:p-6')}>
