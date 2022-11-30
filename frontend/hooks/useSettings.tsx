@@ -5,7 +5,11 @@ import { fetchSettings, updateSettings } from '../pages/api';
 
 const useSettings = () => {
 	const [loading, setLoading] = useState(false);
-	const [settings, setSettings] = useState<Settings>();
+	const [settings, setSettings] = useState<Settings>({
+		adminHideScores: false,
+		allowUpdateFixtures: false,
+		allowUpdateStandings: false,
+	});
 	const userInfo = useContext(UserContext);
 
 	const update = useCallback(async () => {
@@ -16,14 +20,17 @@ const useSettings = () => {
 		setLoading(false);
 	}, [userInfo]);
 
-	const toggleSetting = useCallback(async (key: keyof Settings) => {
-		const updatedSettings: Settings = { ...settings, [key]: !settings?.[key] } as Settings;
+	const toggleSetting = useCallback(
+		async (key: keyof Settings) => {
+			const updatedSettings = { ...settings, [key]: !settings?.[key] } as Settings;
 
-		setSettings(updatedSettings);
-		if (userInfo) {
-			await updateSettings(userInfo.token, updatedSettings);
-		}
-	}, []);
+			setSettings(updatedSettings);
+			if (userInfo) {
+				await updateSettings(userInfo.token, updatedSettings);
+			}
+		},
+		[settings]
+	);
 
 	useEffect(() => {
 		update();

@@ -128,7 +128,7 @@ const SettingsPage = () => {
 					<input
 						type='checkbox'
 						className='form-checkbox h-5 w-5'
-						checked={settings?.adminHideScores}
+						checked={settings.adminHideScores}
 						onChange={() => toggleSetting('adminHideScores')}
 					/>
 					<span className='ml-2'>Admin Hide Scores</span>
@@ -137,7 +137,7 @@ const SettingsPage = () => {
 					<input
 						type='checkbox'
 						className='form-checkbox h-5 w-5'
-						checked={settings?.allowUpdateFixtures}
+						checked={settings.allowUpdateFixtures}
 						onChange={() => toggleSetting('allowUpdateFixtures')}
 					/>
 					<span className='ml-2'>Allow Update Fixtures</span>
@@ -146,7 +146,7 @@ const SettingsPage = () => {
 					<input
 						type='checkbox'
 						className='form-checkbox h-5 w-5'
-						checked={settings?.allowUpdateStandings}
+						checked={settings.allowUpdateStandings}
 						onChange={() => toggleSetting('allowUpdateStandings')}
 					/>
 					<span className='ml-2'>Allow Update Standings</span>
