@@ -1,16 +1,41 @@
-import React, { ChangeEvent, useRef } from 'react';
-import { Prediction } from '../../interfaces/main';
+import { DateTime } from 'luxon';
+import React, { ChangeEvent, useCallback, useContext, useRef } from 'react';
+import { Fixture, Prediction } from '../../interfaces/main';
+import { isNum } from '../../shared/utils';
 import ScoreInput from '../components/ScoreInput';
+import RouteContext, { Route } from '../context/RouteContext';
+import UserContext from '../context/UserContext';
+import { getCurrentDate } from '../lib/utils/reactHelper';
 
-export const userInputPrediction = (gameID: string, updatePrediction: (prediction: Prediction) => Promise<void>) => {
+export const userInputPrediction = (
+	gameID: number,
+	prediction: Prediction,
+	updatePrediction: (prediction: Prediction) => Promise<void>
+) => {
 	const homeInputRef = useRef<HTMLInputElement>(null);
 	const awayInputRef = useRef<HTMLInputElement>(null);
+	const { setRoute } = useContext(RouteContext)!;
 
-	const UserInputPrediction = ({ prediction }: { prediction: Prediction }) => {
-		const onPredictionChange = async (e: ChangeEvent<HTMLInputElement>, team: string) => {
-			const value = parseInt(e.target.value);
-			await updatePrediction({ ...prediction, [team]: isNaN(value) ? null : value });
-		};
+	const isValidScore = (n: number | null) => isNum(n) && n >= 0;
+
+	const handleContainerClick = useCallback(() => {
+		const hasBothPredictions = isValidScore(prediction.home) && isValidScore(prediction.away);
+
+		if (hasBothPredictions) {
+			return setRoute({ page: Route.Match, data: gameID });
+		}
+		if (!isValidScore(prediction.home)) return homeInputRef.current?.focus();
+		return awayInputRef.current?.focus();
+	}, [prediction]);
+
+	const UserInputPrediction = () => {
+		const onPredictionChange = useCallback(
+			async (e: ChangeEvent<HTMLInputElement>, team: string) => {
+				const value = parseInt(e.target.value);
+				await updatePrediction({ ...prediction, [team]: isNaN(value) ? null : value });
+			},
+			[prediction]
+		);
 
 		return (
 			<>
@@ -33,5 +58,5 @@ export const userInputPrediction = (gameID: string, updatePrediction: (predictio
 		);
 	};
 
-	return { UserInputPrediction, homeInputRef, awayInputRef };
+	return { UserInputPrediction, handleContainerClick };
 };

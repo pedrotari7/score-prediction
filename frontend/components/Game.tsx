@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { Prediction, Predictions } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
 import FixturesContext from '../context/FixturesContext';
-import RouteContext, { Route } from '../context/RouteContext';
+import RouteContext from '../context/RouteContext';
 import UserContext from '../context/UserContext';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
@@ -33,25 +33,21 @@ const Game = ({
 
 	const { RedactedSpoilers } = useNoSpoilers();
 
-	const { homeInputRef, awayInputRef, UserInputPrediction } = userInputPrediction(gameID, updatePrediction);
+	const prediction = predictions?.[gameID]?.[userID] || DEFAULT_PREDICTION;
+
+	const { UserInputPrediction, handleContainerClick } = userInputPrediction(gameID, prediction, updatePrediction);
 
 	if (!data || !routeInfo) return <></>;
-
-	const { setRoute } = routeInfo;
 
 	const isMyPredictions = uid === userID;
 
 	const game = data[gameID];
-
-	const prediction = predictions?.[gameID]?.[userID] || DEFAULT_PREDICTION;
 
 	const gameDate = DateTime.fromISO(game?.fixture.date);
 
 	const isInPast = getCurrentDate() >= gameDate;
 
 	const isValidScore = (n: number | null) => isNum(n) && n >= 0;
-
-	const hasBothPredictions = isValidScore(prediction.home) && isValidScore(prediction.away);
 
 	return (
 		<div
@@ -62,13 +58,7 @@ const Game = ({
 				`my-2 flex flex-col items-center justify-evenly rounded p-2 shadow-pop lg:flex-row`,
 				'cursor-pointer'
 			)}
-			onClick={() => {
-				if (hasBothPredictions || isInPast || !isMyPredictions) {
-					return setRoute({ page: Route.Match, data: gameID });
-				}
-				if (!isValidScore(prediction.home)) return homeInputRef.current?.focus();
-				return awayInputRef.current?.focus();
-			}}
+			onClick={handleContainerClick}
 		>
 			<span className='flex w-full items-center justify-between text-left text-xs lg:w-3/12 '>
 				<Round game={game} />
@@ -82,7 +72,7 @@ const Game = ({
 				</div>
 
 				<div className='flex w-4/12 flex-row items-center justify-center lg:w-4/12'>
-					{!isInPast && isMyPredictions && <UserInputPrediction prediction={prediction} />}
+					{!isInPast && isMyPredictions && <UserInputPrediction />}
 
 					{!isInPast && !isMyPredictions && (
 						<div className='mx-4 font-bold'>
