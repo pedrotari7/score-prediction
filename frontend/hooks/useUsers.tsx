@@ -5,7 +5,7 @@ import useCompetition from './useCompetition';
 
 const useUsers = () => {
 	const [users, setUsers] = useState<any>();
-	const [loading, setLoading] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(true);
 	const userInfo = useContext(UserContext);
 	const { competition } = useCompetition();
 

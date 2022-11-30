@@ -13,43 +13,37 @@ import {
 	fetchPredictions,
 	fetchUsers,
 	updateGroups,
-	fetchSettings,
-	updateSettings,
 	fetchStatus,
 	fetchTournament,
 	fetchLeaderboards,
 } from '../pages/api';
-import { Competition, Settings, Status } from '../../interfaces/main';
+import { Competition, Status } from '../../interfaces/main';
 import { competitions } from '../../shared/utils';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
 import { getCompetitionClass } from '../lib/utils/reactHelper';
+import useSettings from '../hooks/useSettings';
+import Loading from './Loading';
 
 const SettingsPage = () => {
 	const userInfo = useContext(UserContext);
 	const [response, setResponse] = useState({});
-	const [settings, setSettings] = useState<Settings>();
 	const [status, setStatus] = useState<Status>();
 	const [competition, setCompetition] = useState<Competition>(competitions.wc2022);
+
+	const { settings, toggleSetting, loading: loadSettings } = useSettings();
 
 	useEffect(() => {
 		const doAsync = async () => {
 			if (userInfo) {
-				setSettings(await fetchSettings(userInfo?.token));
 				setStatus(await fetchStatus(userInfo?.token));
 			}
 		};
 		doAsync();
 	}, [userInfo]);
 
-	if (!userInfo || !status || !settings) return <></>;
+	if (!userInfo || !status || loadSettings) return <Loading message='Loading settings' />;
 
 	const formattedResponse = JSON.stringify(response, null, 2);
-
-	const toggleSetting = (key: string) => {
-		const updatedSettings = { ...settings, [key]: !settings?.[key] };
-		setSettings(updatedSettings);
-		updateSettings(userInfo.token, updatedSettings);
-	};
 
 	const { account, subscription, requests } = status;
 

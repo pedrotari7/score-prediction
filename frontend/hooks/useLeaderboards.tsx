@@ -4,7 +4,7 @@ import UserContext from '../context/UserContext';
 import { fetchLeaderboards } from '../pages/api';
 
 const useLeaderboards = () => {
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [leaderboards, setLeaderboards] = useState<Leaderboard[]>([]);
 	const userInfo = useContext(UserContext);
 
