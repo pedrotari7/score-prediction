@@ -1,12 +1,14 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Leaderboard, Users } from '../../interfaces/main';
+import React, { useContext } from 'react';
+import { Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
 import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UserContext from '../context/UserContext';
 import useCompetition from '../hooks/useCompetition';
+import useLeaderboards from '../hooks/useLeaderboards';
 import { classNames } from '../lib/utils/reactHelper';
-import { deleteLeaderboard, fetchLeaderboards } from '../pages/api';
+import { deleteLeaderboard } from '../pages/api';
 import DeleteButton from './DeleteButton';
+import Loading from './Loading';
 import RefreshButton from './RefreshButton';
 
 const ListLeaderboards = ({ users }: { users: Users }) => {
@@ -14,17 +16,10 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 	const { gcc } = useCompetition();
 	const userInfo = useContext(UserContext);
 	const updateCompetition = useContext(UpdateTournamentContext)!;
-	const [leaderboards, setLeaderboards] = useState<Leaderboard[]>([]);
 
-	const update = useCallback(async () => {
-		if (userInfo) {
-			setLeaderboards(await fetchLeaderboards(userInfo.token));
-		}
-	}, [userInfo]);
+	const { update, loading, leaderboards } = useLeaderboards();
 
-	useEffect(() => {
-		update();
-	}, [update]);
+	if (loading) return <Loading message='Fetching leaderboards' />;
 
 	return (
 		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:m-6 sm:p-6')}>
