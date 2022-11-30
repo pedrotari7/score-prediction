@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { useContext } from 'react';
-import { Prediction, Predictions } from '../../interfaces/main';
+import { Predictions, UpdatePrediction } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext from '../context/RouteContext';
@@ -22,7 +22,7 @@ const Game = ({
 	userID,
 }: {
 	predictions: Predictions;
-	updatePrediction: (prediction: Prediction) => Promise<void>;
+	updatePrediction: UpdatePrediction;
 	gameID: number;
 	userID: string;
 }) => {

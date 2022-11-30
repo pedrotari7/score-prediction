@@ -1,4 +1,4 @@
-import { Fixture, Fixtures, Prediction, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
+import { Fixture, Fixtures, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
@@ -57,7 +57,7 @@ const FixturesPage = ({
 		<Game
 			predictions={predictions}
 			gameID={game.fixture?.id}
-			updatePrediction={async (update: Prediction) => await updatePrediction(update, game.fixture?.id)}
+			updatePrediction={updatePrediction}
 			userID={user.uid}
 			key={index}
 		/>

@@ -2,9 +2,18 @@ import { Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } 
 import UserContext from '../context/UserContext';
 import { useSwipeable } from 'react-swipeable';
 import LiveGame from './LiveGame';
-import { Fixture, Fixtures, Leaderboard, Prediction, Predictions, User, Users } from '../../interfaces/main';
+import {
+	Fixture,
+	Fixtures,
+	Leaderboard,
+	Prediction,
+	Predictions,
+	UpdatePrediction,
+	User,
+	Users,
+} from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
-import { classNames, formatScore, getStadiumImageURL } from '../lib/utils/reactHelper';
+import { classNames, formatScore, getCurrentDate, getStadiumImageURL } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { DEFAULT_USER_RESULT, getResult, isGameFinished, isGameStarted } from '../../shared/utils';
@@ -14,8 +23,24 @@ import PredictionsStats from './PredictionsStats';
 import SelectLeaderboard from './SelectLeaderboard';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import useCompetition from '../hooks/useCompetition';
+import { userInputPrediction } from '../hooks/userInputPrediction';
+import { DateTime } from 'luxon';
 
-const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game: Fixture }) => {
+const UserGuess = ({
+	gameID,
+	user,
+	guess,
+	game,
+	updatePrediction,
+	myGuess = false,
+}: {
+	gameID: number;
+	user: User;
+	guess: Prediction;
+	game: Fixture;
+	updatePrediction: UpdatePrediction;
+	myGuess?: boolean;
+}) => {
 	const routeInfo = useContext(RouteContext)!;
 
 	const { setRoute } = routeInfo;
@@ -24,6 +49,11 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 
 	const hiddenScore = parsedGuess.home === 'H' && parsedGuess.away === 'H';
 	const invalidScore = parsedGuess.home === 'X' && parsedGuess.away === 'X';
+
+	const gameDate = DateTime.fromISO(game?.fixture.date);
+	const isInPast = getCurrentDate() >= gameDate;
+
+	const { UserInputPrediction } = userInputPrediction(gameID, guess, updatePrediction);
 
 	return (
 		<ResultContainer
@@ -44,15 +74,20 @@ const UserGuess = ({ user, guess, game }: { user: User; guess: Prediction; game:
 
 			{!hiddenScore && !invalidScore && (
 				<div className='flex flex-row'>
-					<div className='flex flex-row items-center justify-end font-bold'>
-						<span className='mr-2'>{parsedGuess.home}</span>
-					</div>
+					{(isInPast || !myGuess) && (
+						<>
+							<div className='flex flex-row items-center justify-end font-bold'>
+								<span className='mr-2'>{parsedGuess.home}</span>
+							</div>
 
-					<span className=''>-</span>
+							<span className=''>-</span>
 
-					<div className='flex flex-row items-center justify-start font-bold'>
-						<span className='ml-2'>{parsedGuess.away}</span>
-					</div>
+							<div className='flex flex-row items-center justify-start font-bold'>
+								<span className='ml-2'>{parsedGuess.away}</span>
+							</div>
+						</>
+					)}
+					{!isInPast && myGuess && <UserInputPrediction />}
 				</div>
 			)}
 		</ResultContainer>
@@ -97,12 +132,14 @@ const CurrentMatch = ({
 	users,
 	gameID,
 	leaderboards,
+	updatePrediction,
 }: {
 	fixtures: Fixtures;
 	predictions: Predictions;
 	users: Users;
 	gameID: number;
 	leaderboards: Record<string, Leaderboard>;
+	updatePrediction: UpdatePrediction;
 }) => {
 	const userInfo = useContext(UserContext);
 
@@ -226,9 +263,19 @@ const CurrentMatch = ({
 					<div className='flex flex-row flex-wrap'>
 						{Object.entries(gamePredictions)
 							.filter(([uid, _]) => uid === userInfo?.uid)
-							.map(([uid, prediction]) => (
-								<UserGuess user={users[uid]} guess={prediction} key={uid} game={game} />
-							))}
+							.map(([uid, prediction]) => {
+								return (
+									<UserGuess
+										gameID={game.fixture.id}
+										user={users[uid]}
+										guess={prediction}
+										key={uid}
+										game={game}
+										updatePrediction={updatePrediction}
+										myGuess
+									/>
+								);
+							})}
 					</div>
 				</div>
 
@@ -257,7 +304,14 @@ const CurrentMatch = ({
 					</div>
 					<div className='flex flex-row flex-wrap'>
 						{gamePredictionsAndResults.map(({ uid, prediction }) => (
-							<UserGuess user={users[uid]} guess={prediction} key={uid} game={game} />
+							<UserGuess
+								gameID={game.fixture.id}
+								user={users[uid]}
+								guess={prediction}
+								key={uid}
+								game={game}
+								updatePrediction={updatePrediction}
+							/>
 						))}
 					</div>
 				</div>

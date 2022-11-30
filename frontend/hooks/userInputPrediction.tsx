@@ -1,17 +1,10 @@
-import { DateTime } from 'luxon';
 import React, { ChangeEvent, useCallback, useContext, useRef } from 'react';
-import { Fixture, Prediction } from '../../interfaces/main';
+import { Prediction, UpdatePrediction } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
 import ScoreInput from '../components/ScoreInput';
 import RouteContext, { Route } from '../context/RouteContext';
-import UserContext from '../context/UserContext';
-import { getCurrentDate } from '../lib/utils/reactHelper';
 
-export const userInputPrediction = (
-	gameID: number,
-	prediction: Prediction,
-	updatePrediction: (prediction: Prediction) => Promise<void>
-) => {
+export const userInputPrediction = (gameID: number, prediction: Prediction, updatePrediction: UpdatePrediction) => {
 	const homeInputRef = useRef<HTMLInputElement>(null);
 	const awayInputRef = useRef<HTMLInputElement>(null);
 	const { setRoute } = useContext(RouteContext)!;
@@ -28,16 +21,16 @@ export const userInputPrediction = (
 			if (!isValidScore(prediction.home)) return homeInputRef.current?.focus();
 			return awayInputRef.current?.focus();
 		},
-		[prediction]
+		[prediction, gameID]
 	);
 
 	const UserInputPrediction = () => {
 		const onPredictionChange = useCallback(
 			async (e: ChangeEvent<HTMLInputElement>, team: string) => {
 				const value = parseInt(e.target.value);
-				await updatePrediction({ ...prediction, [team]: isNaN(value) ? null : value });
+				await updatePrediction({ ...prediction, [team]: isNaN(value) ? null : value }, gameID);
 			},
-			[prediction]
+			[prediction, gameID, updatePrediction]
 		);
 
 		return (
