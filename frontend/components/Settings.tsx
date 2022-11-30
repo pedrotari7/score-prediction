@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { Fragment, useContext, useState } from 'react';
 import fileDownload from 'js-file-download';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -13,74 +13,70 @@ import {
 	fetchPredictions,
 	fetchUsers,
 	updateGroups,
-	fetchStatus,
 	fetchTournament,
 	fetchLeaderboards,
 } from '../pages/api';
-import { Competition, Status } from '../../interfaces/main';
+import { Competition } from '../../interfaces/main';
 import { competitions } from '../../shared/utils';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
 import { getCompetitionClass } from '../lib/utils/reactHelper';
 import useSettings from '../hooks/useSettings';
 import Loading from './Loading';
+import useStatus from '../hooks/useStatus';
 
 const SettingsPage = () => {
 	const userInfo = useContext(UserContext);
 	const [response, setResponse] = useState({});
-	const [status, setStatus] = useState<Status>();
 	const [competition, setCompetition] = useState<Competition>(competitions.wc2022);
 
 	const { settings, toggleSetting, loading: loadSettings } = useSettings();
 
-	useEffect(() => {
-		const doAsync = async () => {
-			if (userInfo) {
-				setStatus(await fetchStatus(userInfo?.token));
-			}
-		};
-		doAsync();
-	}, [userInfo]);
+	const { status, loading: loadingStatus } = useStatus();
 
-	if (!userInfo || !status || loadSettings) return <Loading message='Loading settings' />;
+	if (!userInfo || loadSettings) return <Loading message='Loading settings' />;
 
 	const formattedResponse = JSON.stringify(response, null, 2);
-
-	const { account, subscription, requests } = status;
 
 	const gcc = (p: string) => getCompetitionClass(p, competition);
 
 	return (
 		<div className={gcc('text-light')}>
-			<div className='m-10 flex flex-row flex-wrap rounded-md bg-gray-500 p-3'>
-				<a href='https://dashboard.api-football.com/' target='_blank' rel='noreferrer'>
-					<img
-						className='absolute right-12 mb-4 h-12 w-12'
-						src='https://dashboard.api-football.com/public/img/api-sports-small-logo.png'
-					/>
-				</a>
-				<div className='m-4 flex w-max flex-col rounded-md bg-gray-600 p-3'>
-					<span className='mb-3 text-lg font-bold'>Account</span>
-					<span>{`${account.firstname} ${account.lastname}`}</span>
-					<span>{account.email}</span>
-				</div>
+			{loadingStatus || !status ? (
+				<Loading message='Loading Status' />
+			) : (
+				<div className='m-10 flex flex-row flex-wrap rounded-md bg-gray-500 p-3'>
+					<a href='https://dashboard.api-football.com/' target='_blank' rel='noreferrer'>
+						<img
+							className='absolute right-12 mb-4 h-12 w-12'
+							src='https://dashboard.api-football.com/public/img/api-sports-small-logo.png'
+						/>
+					</a>
 
-				<div className='m-4 flex w-max flex-col rounded-md bg-gray-600 p-3'>
-					<span className='mb-3 text-lg font-bold'>Subscription</span>
-					<span>{subscription.plan}</span>
-					<span>{subscription.end}</span>
-					<span>{subscription.active ? 'Active' : 'Not Active'}</span>
-				</div>
+					<div className='m-4 flex w-max flex-col rounded-md bg-gray-600 p-3'>
+						<span className='mb-3 text-lg font-bold'>Account</span>
+						<span>{`${status.account.firstname} ${status.account.lastname}`}</span>
+						<span>{status.account.email}</span>
+					</div>
 
-				<div className='m-4 flex w-max flex-col rounded-md bg-gray-600 p-3'>
-					<span className='mb-3 text-lg font-bold'>Requests</span>
-					<CircularProgressbar
-						value={requests.current}
-						maxValue={requests.limit_day}
-						text={`${requests.current}/${requests.limit_day}`}
-						styles={buildStyles({ textSize: '10px' })}
-					/>
+					<div className='m-4 flex w-max flex-col rounded-md bg-gray-600 p-3'>
+						<span className='mb-3 text-lg font-bold'>Subscription</span>
+						<span>{status.subscription.plan}</span>
+						<span>{status.subscription.end}</span>
+						<span>{status.subscription.active ? 'Active' : 'Not Active'}</span>
+					</div>
+
+					<div className='m-4 flex w-max flex-col rounded-md bg-gray-600 p-3'>
+						<span className='mb-3 text-lg font-bold'>Requests</span>
+						<CircularProgressbar
+							value={status.requests.current}
+							maxValue={status.requests.limit_day}
+							text={`${status.requests.current}/${status.requests.limit_day}`}
+							styles={buildStyles({ textSize: '10px' })}
+						/>
+					</div>
 				</div>
-			</div>
+			)}
+
 			<Listbox value={competition} onChange={setCompetition}>
 				<div className='relative m-10 mt-1 w-96'>
 					<Listbox.Button className='relative w-full cursor-default rounded-lg bg-gray-600 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm'>
