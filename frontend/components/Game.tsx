@@ -58,7 +58,7 @@ const Game = ({
 				`my-2 flex flex-col items-center justify-evenly rounded p-2 shadow-pop lg:flex-row`,
 				'cursor-pointer'
 			)}
-			onClick={handleContainerClick}
+			onClick={() => handleContainerClick(isMyPredictions)}
 		>
 			<span className='flex w-full items-center justify-between text-left text-xs lg:w-3/12 '>
 				<Round game={game} />

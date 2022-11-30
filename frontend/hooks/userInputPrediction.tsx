@@ -18,15 +18,18 @@ export const userInputPrediction = (
 
 	const isValidScore = (n: number | null) => isNum(n) && n >= 0;
 
-	const handleContainerClick = useCallback(() => {
-		const hasBothPredictions = isValidScore(prediction.home) && isValidScore(prediction.away);
+	const handleContainerClick = useCallback(
+		(isMyPredictions: boolean) => {
+			const hasBothPredictions = isValidScore(prediction.home) && isValidScore(prediction.away);
 
-		if (hasBothPredictions) {
-			return setRoute({ page: Route.Match, data: gameID });
-		}
-		if (!isValidScore(prediction.home)) return homeInputRef.current?.focus();
-		return awayInputRef.current?.focus();
-	}, [prediction]);
+			if (hasBothPredictions || !isMyPredictions) {
+				return setRoute({ page: Route.Match, data: gameID });
+			}
+			if (!isValidScore(prediction.home)) return homeInputRef.current?.focus();
+			return awayInputRef.current?.focus();
+		},
+		[prediction]
+	);
 
 	const UserInputPrediction = () => {
 		const onPredictionChange = useCallback(
