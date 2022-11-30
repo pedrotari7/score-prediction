@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { ChangeEvent, useContext, useRef } from 'react';
+import { useContext } from 'react';
 import { Prediction, Predictions } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
 import FixturesContext from '../context/FixturesContext';
@@ -7,11 +7,11 @@ import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
+import { userInputPrediction } from '../hooks/userInputPrediction';
 import { classNames, formatScore, getCurrentDate } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import ResultContainer from './ResultContainer';
 import { Round } from './Round';
-import ScoreInput from './ScoreInput';
 
 const DEFAULT_PREDICTION = { home: null, away: null };
 
@@ -33,8 +33,7 @@ const Game = ({
 
 	const { RedactedSpoilers } = useNoSpoilers();
 
-	const homeInputRef = useRef<HTMLInputElement>(null);
-	const awayInputRef = useRef<HTMLInputElement>(null);
+	const { homeInputRef, awayInputRef, UserInputPrediction } = userInputPrediction(gameID, updatePrediction);
 
 	if (!data || !routeInfo) return <></>;
 
@@ -49,11 +48,6 @@ const Game = ({
 	const gameDate = DateTime.fromISO(game?.fixture.date);
 
 	const isInPast = getCurrentDate() >= gameDate;
-
-	const onPredictionChange = async (e: ChangeEvent<HTMLInputElement>, team: string) => {
-		const value = parseInt(e.target.value);
-		await updatePrediction({ ...prediction, [team]: isNaN(value) ? null : value });
-	};
 
 	const isValidScore = (n: number | null) => isNum(n) && n >= 0;
 
@@ -88,29 +82,7 @@ const Game = ({
 				</div>
 
 				<div className='flex w-4/12 flex-row items-center justify-center lg:w-4/12'>
-					{!isInPast && isMyPredictions && (
-						<>
-							<ScoreInput
-								innerRef={homeInputRef}
-								id={`${gameID}-home`}
-								value={prediction.home}
-								className='mx-2'
-								onchange={async (e: ChangeEvent<HTMLInputElement>) =>
-									await onPredictionChange(e, 'home')
-								}
-							/>
-
-							<ScoreInput
-								innerRef={awayInputRef}
-								id={`${gameID}-away`}
-								value={prediction.away}
-								className='mx-2'
-								onchange={async (e: ChangeEvent<HTMLInputElement>) =>
-									await onPredictionChange(e, 'away')
-								}
-							/>
-						</>
-					)}
+					{!isInPast && isMyPredictions && <UserInputPrediction prediction={prediction} />}
 
 					{!isInPast && !isMyPredictions && (
 						<div className='mx-4 font-bold'>
