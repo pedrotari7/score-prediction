@@ -1,3 +1,4 @@
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Fixtures, Standing, Standings, Predictions } from '../../interfaces/main';
 import { calculateResults, competitions, sortGroup, sortWorldCupGroup } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
@@ -21,8 +22,12 @@ const PredictedGroups = ({
 
 	const teamsResults = calculateResults(Object.values(fixtures), predictions, userID);
 
-	const TickIcon = () => <img className='mx-1 h-5 w-5 p-1' src='/tick.svg' />;
-	const CloseIcon = () => <img className='mx-1 h-5 w-5 p-1' src='/close.svg' />;
+	const TickIcon = ({ disable }: { disable: boolean }) => (
+		<CheckIcon className={classNames('h-5 w-5', disable ? 'text-green-500' : 'text-yellow-500')} />
+	);
+	const CloseIcon = ({ disable }: { disable: boolean }) => (
+		<XMarkIcon className={classNames('h-5 w-5', disable ? 'text-red-500' : 'text-yellow-500')} />
+	);
 
 	return (
 		<div className='flex flex-row flex-wrap justify-center'>
@@ -38,6 +43,8 @@ const PredictedGroups = ({
 				const sortedGroup = sortFn(teamsIDs, teamsResults, fixtures, predictions, userID).map(
 					teamID => standing.find(el => el.team.id === teamID)!
 				);
+
+				const hasFinished = sortedGroup.every(s => s.all.played === teamsIDs.length - 1);
 
 				return (
 					<div
@@ -75,7 +82,6 @@ const PredictedGroups = ({
 								{sortedGroup.map((place: Standing, index: number) => {
 									const isCorrectPrediction = standing[index].team.id === place.team.id;
 									const hasGames = standing[index].all.played > 0;
-
 									const { wins, draws, loses, points, ga, gc } = teamsResults[place.team.id];
 									return (
 										<tr key={place.rank} className=''>
@@ -98,8 +104,8 @@ const PredictedGroups = ({
 														<>
 															<Flag team={standing[index].team} />
 															{isCorrectPrediction
-																? hasGames && <TickIcon />
-																: hasGames && <CloseIcon />}
+																? hasGames && <TickIcon disable={hasFinished} />
+																: hasGames && <CloseIcon disable={hasFinished} />}
 														</>
 													</RedactedSpoilers>
 												</div>

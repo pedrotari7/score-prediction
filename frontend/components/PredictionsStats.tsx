@@ -1,3 +1,4 @@
+import { CheckIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 import { Fixture, Prediction, UserResult } from '../../interfaces/main';
 import { getOutcome, isGameFinished, isGameStarted, median } from '../../shared/utils';
@@ -30,7 +31,7 @@ const PredictionsStats = ({
 		{ winH: 0, winA: 0, draw: 0 }
 	);
 
-	const TickIcon = () => <img className='mx-1 h-7 w-7 p-1' src='/tick.svg' />;
+	const TickIcon = () => <CheckIcon className='h-6 w-6 text-green-500' />;
 
 	const result = getOutcome(game.goals);
 	const finished = isGameFinished(game);
