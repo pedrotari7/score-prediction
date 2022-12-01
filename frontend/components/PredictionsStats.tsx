@@ -1,6 +1,6 @@
 import React from 'react';
 import { Fixture, Prediction, UserResult } from '../../interfaces/main';
-import { average, getOutcome, isGameFinished, isGameStarted, median } from '../../shared/utils';
+import { getOutcome, isGameFinished, isGameStarted, median } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames } from '../lib/utils/reactHelper';
