@@ -429,7 +429,7 @@ app.get('/fetch-users', async (req, res) => {
     return new Date(b.lastSignInTime).getTime() - new Date(a.lastSignInTime).getTime();
   });
 
-  return res.json(allUsers);
+  return res.json({ success: true, data: allUsers });
 });
 
 app.get('/tournament', async (req, res) => {
