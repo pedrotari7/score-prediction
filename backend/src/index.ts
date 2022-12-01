@@ -749,7 +749,7 @@ app.get('/leaderboards', async (req, res) => {
   if (!authResult.success) return authResult.result;
 
   const snapshot = await getFirestore(firebaseApp).collection('leaderboards').get();
-  return res.json(snapshot.docs.map(doc => doc.data()));
+  return res.json({ success: true, data: snapshot.docs.map(doc => doc.data()) });
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
