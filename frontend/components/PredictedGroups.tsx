@@ -46,6 +46,10 @@ const PredictedGroups = ({
 
 				const hasFinished = sortedGroup.every(s => s.all.played === teamsIDs.length - 1);
 
+				const correctPredictions = sortedGroup
+					.map((s, idx) => standing[idx].team.id === s.team.id)
+					.reduce((acc, r) => acc + +r, 0);
+
 				return (
 					<div
 						key={title}
@@ -54,15 +58,17 @@ const PredictedGroups = ({
 							`m-2 flex flex-col rounded-md p-4 text-center shadow-pop`
 						)}
 					>
-						<h2
+						<div
 							className={classNames(
 								gcc('text-light'),
 								GROUP_COLORS[group],
-								'mb-4 rounded-md pl-2 text-left text-2xl font-bold'
+								'mb-4 rounded-md pl-2 text-left text-2xl font-bold',
+								'flex flex-row items-center justify-between'
 							)}
 						>
-							{title}
-						</h2>
+							<h2>{title}</h2>
+							<span className='mx-2 text-sm'>{`${correctPredictions} / ${standing.length}`}</span>
+						</div>
 						<table className={classNames(gcc('text-light'))}>
 							<thead>
 								<tr className='text-center'>
