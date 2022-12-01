@@ -1,6 +1,6 @@
 import React from 'react';
 import { Fixture, Prediction, UserResult } from '../../interfaces/main';
-import { getOutcome, isGameFinished, isGameStarted } from '../../shared/utils';
+import { average, getOutcome, isGameFinished, isGameStarted, median } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames } from '../lib/utils/reactHelper';
@@ -34,6 +34,14 @@ const PredictionsStats = ({
 
 	const result = getOutcome(game.goals);
 	const finished = isGameFinished(game);
+
+	const [homePredictions, awayPredictions] = gamePredictions.reduce<number[][]>(
+		([home, away], p) => [
+			[...home, p.home],
+			[...away, p.away],
+		],
+		[[], []]
+	);
 
 	return (
 		<div>
@@ -103,6 +111,11 @@ const PredictionsStats = ({
 							)}
 						</div>
 					</RedactedSpoilers>
+
+					<div className='flex flex-row items-center gap-2'>
+						<span className='font-bold'>Average prediction</span>
+						<span>{`${median(homePredictions)} - ${median(awayPredictions)}`}</span>
+					</div>
 				</div>
 			)}
 		</div>

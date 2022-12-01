@@ -265,3 +265,13 @@ export const sortWorldCupGroup = (
 	// Yellow card and direct red card: −5 points;
 	// Drawing of lots.
 };
+
+export const median = (values: number[]): number => {
+	values.sort();
+
+	const half = Math.floor(values.length / 2);
+
+	return values.length % 2 ? values[half] : Math.round((values[half - 1] + values[half]) / 2.0);
+};
+
+export const average = (values: number[]): number => values.reduce((acc, v) => acc + v) / values.length;
