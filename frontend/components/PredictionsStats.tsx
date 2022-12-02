@@ -47,7 +47,7 @@ const PredictionsStats = ({
 	return (
 		<div>
 			{isGameStarted(game) && (
-				<div className='mt-6 flex flex-col gap-6'>
+				<div className='mt-6 flex flex-col items-center gap-6 xl:flex-row'>
 					<div className='text-xl font-bold'>Stats</div>
 					<div className='flex flex-row flex-wrap'>
 						<div className='flex flex-row flex-wrap items-center justify-start gap-4'>
