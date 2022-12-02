@@ -72,25 +72,25 @@ export const getResult = (prediction: Prediction, game: Fixture): Partial<UserRe
 
 	const isExactScore = predH === realH && predA === realA;
 
-	if (isExactScore) ret = joinResults(ret, { points: 5, exact: 1 });
+	if (isExactScore) ret = joinResults(ret, { exact: 1 });
 
 	const isCorrectResult =
 		!isExactScore && getOutcome(prediction) !== null && getOutcome(prediction) === getOutcome(result);
 
-	if (isCorrectResult) ret = joinResults(ret, { points: 3, result: 1 });
+	if (isCorrectResult) ret = joinResults(ret, { result: 1 });
 
 	const isCorrectGoal = !isExactScore && !isCorrectResult && (predH === realH || predA === realA);
 
-	if (isCorrectGoal) ret = joinResults(ret, { points: 1, onescore: 1 });
+	if (isCorrectGoal) ret = joinResults(ret, { onescore: 1 });
 
 	const isPenaltyWinner =
 		isPenaltyShootout(game) &&
 		getOutcome(prediction) !== null &&
 		getOutcome(prediction) === getOutcome(game.score.penalty);
 
-	if (isPenaltyWinner) ret = joinResults(ret, { points: 1, penalty: 1 });
+	if (isPenaltyWinner) ret = joinResults(ret, { penalty: 1 });
 
-	if (isEmpty(ret)) return { points: 0, fail: 1 };
+	if (isEmpty(ret)) return { fail: 1 };
 
 	return ret;
 };
