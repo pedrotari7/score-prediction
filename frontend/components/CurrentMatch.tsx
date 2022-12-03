@@ -16,7 +16,13 @@ import RouteContext, { Route } from '../context/RouteContext';
 import { classNames, formatScore, getCurrentDate, getStadiumImageURL } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { DEFAULT_USER_RESULT, getResult, isGameFinished, isGameStarted } from '../../shared/utils';
+import {
+	calculateUserResultPoints,
+	DEFAULT_USER_RESULT,
+	getResult,
+	isGameFinished,
+	isGameStarted,
+} from '../../shared/utils';
 import Loading from './Loading';
 import RefreshComp from './RefreshComp';
 import PredictionsStats from './PredictionsStats';
@@ -182,9 +188,13 @@ const CurrentMatch = ({
 		}))
 		.sort((a, b) => users[a.uid].displayName.localeCompare(users[b.uid].displayName));
 
+	console.log('noSpoilers', noSpoilers);
 	if (!noSpoilers) {
+		console.log('sort by points');
 		gamePredictionsAndResults = gamePredictionsAndResults.sort(
-			(a, b) => (b.result.points ?? 0) - (a.result.points ?? 0)
+			(a, b) =>
+				calculateUserResultPoints(b.result ?? {}) - calculateUserResultPoints(a.result ?? {}) ||
+				(b.result.onescore ?? 0) - (a.result.onescore ?? 0)
 		);
 	}
 	const resultsTally = isGameStarted(game)

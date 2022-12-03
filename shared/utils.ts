@@ -275,3 +275,6 @@ export const median = (values: number[]): number => {
 };
 
 export const average = (values: number[]): number => values.reduce((acc, v) => acc + v) / values.length;
+
+export const calculateUserResultPoints = (ur: Partial<UserResult>) =>
+	5 * (ur.exact ?? 0) + 3 * (ur.result ?? 0) + (ur.onescore ?? 0) + (ur.penalty ?? 0) + (ur.groups ?? 0);

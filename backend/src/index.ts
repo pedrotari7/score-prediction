@@ -26,6 +26,7 @@ import {
 import { joinResults } from './util';
 import {
   calculateResults,
+  calculateUserResultPoints,
   competitions,
   DEFAULT_USER_RESULT,
   getResult,
@@ -239,12 +240,7 @@ const updatePoints = async (competition: Competition, predictions: Predictions, 
 
   for (const user in groupPoints) {
     updatedScores[user].groups = groupPoints[user];
-    updatedScores[user].points =
-      5 * updatedScores[user].exact +
-      3 * updatedScores[user].result +
-      updatedScores[user].onescore +
-      updatedScores[user].penalty +
-      updatedScores[user].groups;
+    updatedScores[user].points = calculateUserResultPoints(updatedScores[user]);
   }
 
   await getDBScores(competition).set(updatedScores);
