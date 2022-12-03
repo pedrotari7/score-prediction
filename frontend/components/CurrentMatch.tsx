@@ -188,9 +188,7 @@ const CurrentMatch = ({
 		}))
 		.sort((a, b) => users[a.uid].displayName.localeCompare(users[b.uid].displayName));
 
-	console.log('noSpoilers', noSpoilers);
 	if (!noSpoilers) {
-		console.log('sort by points');
 		gamePredictionsAndResults = gamePredictionsAndResults.sort(
 			(a, b) =>
 				calculateUserResultPoints(b.result ?? {}) - calculateUserResultPoints(a.result ?? {}) ||
