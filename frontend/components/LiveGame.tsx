@@ -94,6 +94,7 @@ const LiveGame = ({
 							{game.score.penalty.home && !noSpoilers && (
 								<div className='text-sm'>
 									<span>(</span>
+									<span>{game.score.penalty.home}</span>
 									<span className='mx-2'>-</span>
 									<span>{game.score.penalty.away}</span>
 									<span> PEN)</span>
