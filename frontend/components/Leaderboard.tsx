@@ -145,7 +145,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 												className={classNames(
 													gcc('bg-light'),
 													gcc('text-dark'),
-													'p-2mr-1 flex h-full w-full items-center justify-center rounded-full'
+													'mr-1 flex h-full w-full items-center justify-center rounded-full px-6'
 												)}
 											>
 												{index + 1}
