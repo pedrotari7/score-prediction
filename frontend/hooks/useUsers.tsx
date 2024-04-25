@@ -3,9 +3,10 @@ import RouteContext, { Route } from '../context/RouteContext';
 import UserContext from '../context/UserContext';
 import { fetchUsers } from '../pages/api';
 import useCompetition from './useCompetition';
+import { AuthenticatedUser } from '../../interfaces/main';
 
 const useUsers = () => {
-	const [users, setUsers] = useState<any>();
+	const [users, setUsers] = useState<AuthenticatedUser[]>();
 	const [loading, setLoading] = useState<boolean>(true);
 	const userInfo = useContext(UserContext);
 	const { competition } = useCompetition();
@@ -22,7 +23,7 @@ const useUsers = () => {
 			setUsers(result.data);
 		}
 		setLoading(false);
-	}, [userInfo, competition]);
+	}, [userInfo, competition, routeInfo]);
 
 	useEffect(() => {
 		update();

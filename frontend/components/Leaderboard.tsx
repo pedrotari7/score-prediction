@@ -134,7 +134,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 								className={classNames(
 									'flex cursor-pointer flex-col items-center justify-between hover:bg-opacity-50 sm:flex-row',
 									gcc('bg-blue'),
-									`my-4 mx-1 rounded-md p-3 sm:mx-[5%] md:mx-[5%] lg:mx-[20%] `
+									`mx-1 my-4 rounded-md p-3 sm:mx-[5%] md:mx-[5%] lg:mx-[20%] `
 								)}
 								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 							>
@@ -157,7 +157,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 											className={classNames(
 												gcc('bg-light'),
 												gcc('text-dark'),
-												'absolute top-0 -left-0 w-12 rounded-md text-center font-bold'
+												'absolute -left-0 top-0 w-12 rounded-md text-center font-bold'
 											)}
 										>
 											<span className='p-3'>{index + 1}</span>

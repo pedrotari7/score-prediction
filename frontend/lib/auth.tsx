@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 				const token = await user.getIdToken();
 
-				const isAdmin = (await user.getIdTokenResult()).claims.admin;
+				const isAdmin = (await user.getIdTokenResult()).claims.admin as boolean;
 
 				setUser({ ...user, admin: isAdmin, token });
 			}),

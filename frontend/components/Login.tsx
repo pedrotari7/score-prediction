@@ -6,6 +6,7 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 const Login = () => {
 	const isFacebookApp = () => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const ua = (navigator.userAgent || navigator.vendor || (window as any)['opera']) ?? '';
 		return ua.indexOf('FBAN') > -1 || ua.indexOf('FBAV') > -1;
 	};

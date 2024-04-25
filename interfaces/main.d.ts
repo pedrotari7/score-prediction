@@ -215,6 +215,17 @@ export interface User extends Record<string, any> {
 	shouldOnboard: boolean;
 }
 
+export interface AuthenticatedUser {
+	creationTime: string;
+	lastSignInTime: string;
+	lastRefreshTime?: string | null | undefined;
+	displayName: string | undefined;
+	uid: string;
+	photoURL: string | undefined;
+	email: string | undefined;
+	userExtraInfo: FirebaseFirestore.DocumentData;
+}
+
 export interface Users {
 	[key: string]: User;
 }

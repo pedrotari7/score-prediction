@@ -170,7 +170,7 @@ const CurrentMatch = ({
 	const handlers = useSwipeable({
 		onSwipedLeft: () => nextGameId !== null && !isExtraInfoOpen && setGameID(nextGameId),
 		onSwipedRight: () => prevGameId !== null && !isExtraInfoOpen && setGameID(prevGameId),
-		preventDefaultTouchmoveEvent: true,
+		preventScrollOnSwipe: true,
 	});
 
 	if (!game || !userInfo) return <Loading message='Fetching tournament info...' />;
@@ -206,7 +206,7 @@ const CurrentMatch = ({
 					fail: acc.fail + (r.fail ?? 0),
 				}),
 				DEFAULT_USER_RESULT
-		  )
+			)
 		: {};
 
 	const findGame = (dir: -1 | 1) => {
@@ -288,7 +288,7 @@ const CurrentMatch = ({
 					resultsTally={resultsTally}
 				/>
 
-				<div className='z-10 mt-6 mb-20'>
+				<div className='z-10 mb-20 mt-6'>
 					<div className='mb-4 flex flex-row items-center justify-between text-xl'>
 						<div className='font-bold'>
 							Predictions <span className='opacity-50'>({gamePredictionsAndResults.length})</span>

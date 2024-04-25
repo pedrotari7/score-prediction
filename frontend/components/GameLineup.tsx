@@ -70,13 +70,16 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 		className: string;
 	}) => {
 		const createSections = (XI: LineupPlayers) => {
-			return XI.reduce((secs, { player }) => {
-				const [i, j] = player.grid.split(':').map(c => parseInt(c));
-				if (!(i in secs)) secs[i] = [];
-				secs[i].push([j, player]);
-				secs[i].sort();
-				return secs;
-			}, {} as Record<number, [number, LineupPlayer][]>);
+			return XI.reduce(
+				(secs, { player }) => {
+					const [i, j] = player.grid.split(':').map(c => parseInt(c));
+					if (!(i in secs)) secs[i] = [];
+					secs[i].push([j, player]);
+					secs[i].sort();
+					return secs;
+				},
+				{} as Record<number, [number, LineupPlayer][]>
+			);
 		};
 
 		const homeSections = createSections(homeXI);
@@ -94,7 +97,7 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 								className='my-1 h-6 w-6 rounded-full object-cover sm:h-8 sm:w-8 lg:h-12 lg:w-12 xl:h-16 xl:w-16'
 								src={url}
 							/>
-							<div className='absolute top-1/2 -left-4 w-3 text-center text-xs text-gray-400 lg:-left-6 lg:text-base'>
+							<div className='absolute -left-4 top-1/2 w-3 text-center text-xs text-gray-400 lg:-left-6 lg:text-base'>
 								{player.number}
 							</div>
 							<div className='absolute left-1/2 -translate-x-1/2 transform'>

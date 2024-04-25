@@ -11,6 +11,7 @@ import {
 	CreateLeaderboardResult,
 	Leaderboard,
 	ResponseStatus,
+	AuthenticatedUser,
 } from '../../../interfaces/main';
 import { competitions } from '../../../shared/utils';
 import fetcher from '../../lib/fetcher';
@@ -57,7 +58,10 @@ export const updatePredictions = async (
 export const fetchPredictions = async (token: string, competition: Competition) =>
 	await cFetch(`${backendUrl}/fetch-predictions`, token, competition);
 
-export const fetchUsers = async (token: string, competition: Competition) =>
+export const fetchUsers = async (
+	token: string,
+	competition: Competition
+): Promise<{ success: boolean; data: AuthenticatedUser[] }> =>
 	await cFetch(`${backendUrl}/fetch-users`, token, competition);
 
 export const fetchFixtureExtraInfo = async (gameID: number, token: string, competition: Competition) =>

@@ -43,7 +43,7 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 				className={classNames(
 					gcc('hover:bg-light'),
 					active ? gcc('bg-dark') : '',
-					'my-4 mx-2 rounded-md py-2 px-4 sm:mx-4',
+					'mx-2 my-4 rounded-md px-4 py-2 sm:mx-4',
 					'cursor-pointer hover:bg-opacity-50'
 				)}
 			>

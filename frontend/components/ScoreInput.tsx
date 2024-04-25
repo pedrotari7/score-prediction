@@ -33,7 +33,7 @@ const ScoreInput = ({
 				className,
 				gcc('text-dark'),
 				`block h-7 w-14 text-center font-bold hover:bg-gray-100`,
-				'rounded py-3 px-3 leading-tight focus:border-gray-500 focus:bg-white focus:outline-none',
+				'rounded px-3 py-3 leading-tight focus:border-gray-500 focus:bg-white focus:outline-none',
 				isNum(value) ? 'bg-green-200' : value === null ? 'bg-red-200' : 'bg-gray-100',
 				'border border-gray-200'
 			)}

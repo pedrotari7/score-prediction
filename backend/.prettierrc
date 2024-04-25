@@ -7,7 +7,6 @@
     "useTabs": false,
     "bracketSpacing": true,
     "jsxSingleQuote": false,
-    "jsxBracketSameLine": true,
     "arrowParens": "avoid",
     "htmlWhitespaceSensitivity": "ignore",
     "endOfLine": "lf",
