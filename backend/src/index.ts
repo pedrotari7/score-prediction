@@ -515,7 +515,7 @@ app.get('/tournament', async (req, res) => {
   const predictions = await getPredictions(decodedToken, competition, fixtures?.data, settings);
 
   if (fixturesTimeDiffSeconds > timeGuard) {
-    console.log('update points');
+    console.log('will update points');
     await updatePoints(competition, predictions, fixtures?.data);
   }
 
