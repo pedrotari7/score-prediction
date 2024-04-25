@@ -16,6 +16,7 @@ export default async function fetcher(url: string, token: string, options: Recor
 		// error.response = response;
 		// error.data = data;
 		throw error;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} catch (error: any) {
 		if (!error.data) {
 			error.data = { message: error.message };

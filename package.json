@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "firebase": "^8.5.0",
-    "firebase-tools": "^9.10.2",
-    "husky": "^8.0.2"
+    "firebase": "^10.11.0",
+    "firebase-tools": "^13.7.4",
+    "husky": "^9.0.11"
   }
 }

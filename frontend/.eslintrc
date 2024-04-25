@@ -10,14 +10,14 @@
 		"es2020": true,
 		"browser": true
 	},
-
 	"extends": [
 		"standard",
 		"prettier",
 		"next",
 		"plugin:react/recommended",
 		"eslint:recommended",
-		"plugin:@typescript-eslint/recommended"
+		"plugin:@typescript-eslint/recommended",
+		"plugin:prettier/recommended"
 	],
 	"plugins": ["react", "react-hooks"],
 	"rules": {

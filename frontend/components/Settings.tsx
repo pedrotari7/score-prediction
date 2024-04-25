@@ -155,62 +155,62 @@ const SettingsPage = () => {
 			<div className='flex flex-col flex-wrap items-center justify-center sm:flex-row'>
 				<button
 					onClick={async () => setResponse(await fetchTournament(userInfo.token, competition))}
-					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+					className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
 				>
 					Fetch Tournament
 				</button>
 
 				<button
 					onClick={async () => setResponse(await resetStandings(userInfo.token, competition))}
-					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+					className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
 				>
 					Fetch Leaderboard
 				</button>
 				<button
 					onClick={async () => setResponse(await resetFixtures(userInfo.token, competition))}
-					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+					className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
 				>
 					Fetch Fixtures
 				</button>
 
 				<button
 					onClick={async () => setResponse(await fetchPredictions(userInfo.token, competition))}
-					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+					className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
 				>
 					Fetch Predictions
 				</button>
 
 				<button
 					onClick={async () => setResponse(await fetchLeaderboards(userInfo.token))}
-					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+					className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
 				>
 					Fetch Leaderboards
 				</button>
 
 				<button
 					onClick={async () => setResponse(await fetchUsers(userInfo.token, competition))}
-					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+					className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
 				>
 					Fetch Users
 				</button>
 
 				<button
 					onClick={async () => setResponse(await updatePoints(userInfo.token, competition))}
-					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+					className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
 				>
 					Update Points
 				</button>
 
 				<button
 					onClick={async () => setResponse(await updateGroups(userInfo.token, competition))}
-					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+					className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
 				>
 					Update Groups
 				</button>
 
 				<button
 					onClick={() => cleanup(userInfo.token, competition)}
-					className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+					className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
 				>
 					Cleanup
 				</button>
@@ -226,7 +226,7 @@ const SettingsPage = () => {
 								`${competition.name}-backup-${new Date().toISOString()}.json`
 							)
 						}
-						className={`m-5 rounded bg-dark py-2 px-4 font-bold text-white`}
+						className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
 					>
 						Export
 					</button>

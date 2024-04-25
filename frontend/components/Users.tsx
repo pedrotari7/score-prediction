@@ -26,7 +26,7 @@ const UsersList = () => {
 				{loading && <Loading message='Fetching users...' />}
 				{!loading &&
 					users &&
-					users.map((user: any, index: number) => {
+					users.map((user, index) => {
 						if (!user) return <></>;
 						return (
 							<div
@@ -60,7 +60,7 @@ const UsersList = () => {
 											className={classNames(
 												gcc('bg-light'),
 												gcc('text-dark'),
-												'absolute -top-1 -left-0 w-12 rounded-md text-center font-bold'
+												'absolute -left-0 -top-1 w-12 rounded-md text-center font-bold'
 											)}
 										>
 											<span className='p-3'>{index + 1}</span>

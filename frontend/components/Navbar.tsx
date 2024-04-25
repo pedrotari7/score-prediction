@@ -249,7 +249,7 @@ export default function Navbar({
 					</div>
 
 					<Disclosure.Panel className={classNames(gcc('bg-blue'), 'sm:hidden')}>
-						<div className='flex flex-col space-y-1 px-2 pt-2 pb-3'>
+						<div className='flex flex-col space-y-1 px-2 pb-3 pt-2'>
 							{!loading &&
 								navigation.map(item => (
 									<Disclosure.Button key={item.name}>

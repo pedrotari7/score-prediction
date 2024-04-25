@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/indent */
-import * as functions from 'firebase-functions';
+
+import { setGlobalOptions } from 'firebase-functions/v2';
+import { onRequest } from 'firebase-functions/v2/https';
+import { defineSecret } from 'firebase-functions/params';
+
+import { beforeUserCreated } from 'firebase-functions/v2/identity';
+
 import { initializeApp } from 'firebase-admin/app';
 import { FieldValue, Timestamp, getFirestore } from 'firebase-admin/firestore';
 import { getAuth, DecodedIdToken } from 'firebase-admin/auth';
@@ -43,6 +49,7 @@ app.use(
   cors({
     origin: [
       'http://localhost:3000',
+      'http://localhost:3001',
       'https://score-prediction.com',
       'https://www.score-prediction.com',
       'https://score-prediction.vercel.app',
@@ -52,7 +59,9 @@ app.use(
 
 const isDevMode = process.env.ISDEV;
 
-const europe = functions.region('europe-west1');
+setGlobalOptions({ region: 'europe-west1' });
+
+const APISPORTSKEY = defineSecret('APISPORTS');
 
 const firebaseApp = initializeApp();
 
@@ -65,7 +74,7 @@ const ADMIN_USERS = ['pedrotari7@gmail.com'];
 
 const CURRENT_COMPETITION = competitions.wc2022;
 
-const logDev = (message?: any, ...optionalParams: any[]): void => {
+const logDev = (message?: unknown, ...optionalParams: unknown[]): void => {
   if (isDevMode) console.log(message, optionalParams);
 };
 
@@ -81,10 +90,11 @@ const get = async (url: string, opts: Record<string, unknown> = {}) => {
     return (await axios.get(buildUrl(`${API_SPORTS_URL}/${url}`, opts), {
       headers: {
         'x-rapidapi-host': 'v3.football.api-sports.io',
-        'x-rapidapi-key': process.env.APISPORTS,
+        'x-rapidapi-key': APISPORTSKEY.value(),
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     })) as any;
-  } catch (error: any) {
+  } catch (error: unknown) {
     return error;
   }
 };
@@ -225,6 +235,7 @@ const updateFixtures = async (competition: Competition, gamesToUpdate: number[],
 const updatePoints = async (competition: Competition, predictions: Predictions, fixtures: Fixtures) => {
   const groupPoints = (await getDBGroupPoints(competition).get()).data() as GroupPoints;
 
+  // prettier-ignore
   const updatedScores = Object.entries(predictions).reduce((users, [gameID, gamePredictions]) => {
     const game = fixtures[parseInt(gameID)];
 
@@ -406,6 +417,7 @@ app.get('/fetch-users', async (req, res) => {
 
   const allUsers = (
     await Promise.all(
+      // prettier-ignore
       (
         await getAuth(firebaseApp).listUsers()
       ).users.map(async ({ displayName, metadata, uid, photoURL, email }) => ({
@@ -754,11 +766,11 @@ app.get('/leaderboards', async (req, res) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-exports.api = europe.runWith({ secrets: ['APISPORTS'] }).https.onRequest(<any>app);
+exports.api = onRequest({ secrets: ['APISPORTS'] }, app);
 
-export const addUser = europe.auth.user().onCreate(async user => {
+export const beforecreated = beforeUserCreated(async event => {
+  const user = event.data;
   const isAdmin = ADMIN_USERS.includes(user.email ?? '');
-
   if (user.emailVerified) {
     await getAuth(firebaseApp).setCustomUserClaims(user.uid, { admin: isAdmin });
   }

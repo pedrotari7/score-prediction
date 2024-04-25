@@ -21,6 +21,8 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 
 	if (loading) return <Loading message='Fetching leaderboards' />;
 
+	console.log('users', users);
+
 	return (
 		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:m-6 sm:p-6')}>
 			<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
@@ -47,7 +49,7 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 									)}
 								>
 									<DeleteButton
-										className='absolute top-4 right-1 z-10'
+										className='absolute right-1 top-4 z-10'
 										onClick={async () => {
 											if (userInfo) {
 												await deleteLeaderboard(l.id, userInfo.token);
@@ -62,34 +64,38 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 										</div>
 										<div className='flex items-center gap-4'>
 											<span className={classNames('bg-gray-800', 'rounded-md p-2')}>
-												{users[l.creator].displayName}
+												{users[l.creator]?.displayName}
 											</span>
 											<span>{l.id}</span>
 										</div>
 
 										<div className='flex flex-row flex-wrap gap-4'>
-											{l.members.map(m => (
-												<div
-													key={m}
-													className={classNames(
-														gcc('bg-blue'),
-														gcc('hover:bg-dark'),
-														'flex flex-row items-center rounded-md p-2'
-													)}
-													onClick={e => {
-														e.stopPropagation();
-														setRoute({ page: Route.Predictions, data: m });
-													}}
-												>
-													{users[m]?.photoURL && (
-														<img
-															className='mr-2 h-8 w-8 rounded-full object-cover'
-															src={users[m]?.photoURL}
-														/>
-													)}
-													{users[m].displayName}
-												</div>
-											))}
+											{l.members.map(m =>
+												users[m] ? (
+													<div
+														key={m}
+														className={classNames(
+															gcc('bg-blue'),
+															gcc('hover:bg-dark'),
+															'flex flex-row items-center rounded-md p-2'
+														)}
+														onClick={e => {
+															e.stopPropagation();
+															setRoute({ page: Route.Predictions, data: m });
+														}}
+													>
+														{users[m]?.photoURL && (
+															<img
+																className='mr-2 h-8 w-8 rounded-full object-cover'
+																src={users[m]?.photoURL}
+															/>
+														)}
+														{users[m]?.displayName}
+													</div>
+												) : (
+													<> </>
+												)
+											)}
 										</div>
 									</div>
 								</div>

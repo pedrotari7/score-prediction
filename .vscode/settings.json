@@ -1,8 +1,15 @@
 {
-    "eslint.workingDirectories": [
-        "backend",
-        "frontend",
-        "interfaces",
-        "shared"
-    ]
+	"eslint.workingDirectories": ["backend", "frontend", "interfaces", "shared"],
+	"workbench.colorCustomizations": {
+		"statusBar.background": "#ffe600",
+		"statusBar.foreground": "#000000",
+		"statusBarItem.hoverBackground": "#2f7c47",
+		"statusBarItem.remoteBackground": "#ffe600",
+		"statusBarItem.remoteForeground": "#000000",
+		"titleBar.activeBackground": "#ffe600",
+		"titleBar.activeForeground": "#000000",
+		"titleBar.inactiveBackground": "#ffe60099",
+		"titleBar.inactiveForeground": "#00000099",
+		"activityBar.foreground": "#379154"
+	}
 }
