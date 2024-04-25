@@ -766,9 +766,9 @@ app.get('/leaderboards', async (req, res) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-exports.api = onRequest({ secrets: ['APISPORTS'] }, app);
+export const api = onRequest({ secrets: ['APISPORTS'] }, app);
 
-export const beforecreated = beforeUserCreated(async event => {
+export const addUser = beforeUserCreated(async event => {
   const user = event.data;
   const isAdmin = ADMIN_USERS.includes(user.email ?? '');
   if (user.emailVerified) {
