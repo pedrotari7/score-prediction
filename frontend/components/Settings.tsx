@@ -17,7 +17,7 @@ import {
 	fetchLeaderboards,
 } from '../pages/api';
 import { Competition } from '../../interfaces/main';
-import { competitions } from '../../shared/utils';
+import { competitions, currentCompetition } from '../../shared/utils';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
 import { getCompetitionClass } from '../lib/utils/reactHelper';
 import useSettings from '../hooks/useSettings';
@@ -27,7 +27,7 @@ import useStatus from '../hooks/useStatus';
 const SettingsPage = () => {
 	const userInfo = useContext(UserContext);
 	const [response, setResponse] = useState({});
-	const [competition, setCompetition] = useState<Competition>(competitions.euro2024);
+	const [competition, setCompetition] = useState<Competition>(currentCompetition);
 
 	const { settings, toggleSetting, loading: loadSettings } = useSettings();
 

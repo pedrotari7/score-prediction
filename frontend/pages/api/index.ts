@@ -13,14 +13,14 @@ import {
 	ResponseStatus,
 	AuthenticatedUser,
 } from '../../../interfaces/main';
-import { competitions } from '../../../shared/utils';
+import { currentCompetition } from '../../../shared/utils';
 import fetcher from '../../lib/fetcher';
 import { backendUrl } from '../../lib/utils/envHelper';
 
 const cFetch = async (
 	url: string,
 	token: string,
-	competition: Competition = competitions.euro2024,
+	competition: Competition = currentCompetition,
 	query: Record<string, unknown> = {},
 	options: Record<string, unknown> = {}
 ) => {

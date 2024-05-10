@@ -34,6 +34,7 @@ import {
   calculateResults,
   calculateUserResultPoints,
   competitions,
+  currentCompetition,
   DEFAULT_USER_RESULT,
   getResult,
   isGameOnGoing,
@@ -72,8 +73,6 @@ const API_SPORTS_URL = 'https://v3.football.api-sports.io';
 
 const ADMIN_USERS = ['pedrotari7@gmail.com'];
 
-const CURRENT_COMPETITION = competitions.euro2024;
-
 const logDev = (message?: unknown, ...optionalParams: unknown[]): void => {
   if (isDevMode) console.log(message, optionalParams);
 };
@@ -100,7 +99,7 @@ const get = async (url: string, opts: Record<string, unknown> = {}) => {
 };
 
 const parseCompetition = (req: Request) =>
-  competitions[req.query.competition as keyof typeof competitions] || CURRENT_COMPETITION;
+  competitions[req.query.competition as keyof typeof competitions] || currentCompetition;
 
 const getStandings = async (opts: Record<string, unknown> = {}) => await get('standings', opts);
 
@@ -350,7 +349,7 @@ const getUsers = async (competition: Competition) => {
 
       const OneMonth = 60 * 60 * 24 * 31;
 
-      const isCurrentCompetition = competition.name === CURRENT_COMPETITION.name;
+      const isCurrentCompetition = competition.name === currentCompetition.name;
 
       if (!(uid in scores) && !(isCurrentCompetition && lastSignInTimeDiff < OneMonth)) {
         return users;

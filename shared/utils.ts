@@ -26,6 +26,8 @@ export const competitions = {
 	},
 } as const;
 
+export const currentCompetition = competitions.euro2024;
+
 export const DEFAULT_USER_RESULT: UserResult = {
 	points: 0,
 	exact: 0,
