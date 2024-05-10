@@ -3,7 +3,6 @@ module.exports = {
 		externalDir: true,
 	},
 	async redirects() {
-		console.log('redirects');
 		return [
 			{
 				source: '/',
