@@ -5,6 +5,7 @@ text-dark-euro2016
 text-blue-euro2016
 text-light-euro2016
 
+euro2020
 bg-dark-euro2020
 bg-blue-euro2020
 bg-light-euro2020
@@ -18,6 +19,7 @@ hover:text-dark-euro2020
 hover:text-blue-euro2020
 hover:text-light-euro2020
 
+wc2022
 bg-dark-wc2022
 bg-blue-wc2022
 bg-light-wc2022
@@ -30,3 +32,17 @@ hover:bg-light-wc2022
 hover:text-dark-wc2022
 hover:text-blue-wc2022
 hover:text-light-wc2022
+
+euro2024
+bg-dark-euro2024
+bg-blue-euro2024
+bg-light-euro2024
+text-dark-euro2024
+text-blue-euro2024
+text-light-euro2024
+hover:bg-dark-euro2024
+hover:bg-blue-euro2024
+hover:bg-light-euro2024
+hover:text-dark-euro2024
+hover:text-blue-euro2024
+hover:text-light-euro2024

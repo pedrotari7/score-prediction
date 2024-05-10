@@ -49,7 +49,7 @@ const Home = () => {
 
 	const { id: competitionName, join: leaderboardId } = router.query;
 
-	const competition: Competition = competitions[competitionName as string];
+	const competition: Competition = competitions[competitionName as keyof typeof competitions];
 
 	const updateNoSpoilers = (ns: boolean) => {
 		if (auth.user) {

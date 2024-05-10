@@ -20,7 +20,7 @@ import { backendUrl } from '../../lib/utils/envHelper';
 const cFetch = async (
 	url: string,
 	token: string,
-	competition: Competition = competitions.wc2022,
+	competition: Competition = competitions.euro2024,
 	query: Record<string, unknown> = {},
 	options: Record<string, unknown> = {}
 ) => {

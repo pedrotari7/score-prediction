@@ -72,7 +72,7 @@ const API_SPORTS_URL = 'https://v3.football.api-sports.io';
 
 const ADMIN_USERS = ['pedrotari7@gmail.com'];
 
-const CURRENT_COMPETITION = competitions.wc2022;
+const CURRENT_COMPETITION = competitions.euro2024;
 
 const logDev = (message?: unknown, ...optionalParams: unknown[]): void => {
   if (isDevMode) console.log(message, optionalParams);
@@ -99,7 +99,8 @@ const get = async (url: string, opts: Record<string, unknown> = {}) => {
   }
 };
 
-const parseCompetition = (req: Request) => competitions[req.query.competition as string] || CURRENT_COMPETITION;
+const parseCompetition = (req: Request) =>
+  competitions[req.query.competition as keyof typeof competitions] || CURRENT_COMPETITION;
 
 const getStandings = async (opts: Record<string, unknown> = {}) => await get('standings', opts);
 
@@ -567,19 +568,7 @@ app.post('/update-predictions', async (req, res) => {
 
   if (!isInPast) return res.status(403).json({ error: 'Forbidden', result: false });
 
-  let change = {};
-
-  if (prediction.home !== null) {
-    change = { [`${gameId}.${uid}.home`]: prediction.home };
-  }
-
-  if (prediction.away !== null) {
-    change = { ...change, [`${gameId}.${uid}.away`]: prediction.away };
-  }
-
-  if (prediction.home === null && prediction.away === null) {
-    change = { [`${gameId}.${uid}`]: { home: null, away: null } };
-  }
+  const change = { [`${gameId}.${uid}`]: { home: prediction.home ?? null, away: prediction.away ?? null } };
 
   // TODO: Update this with the helper function
   const result = await getFirestore(firebaseApp).collection(competition.name).doc('predictions').update(change);
@@ -781,8 +770,6 @@ app.delete('/leaderboard', async (req, res) => {
   if (!authResult.success) return res.json(authResult.result);
 
   const { leaderboardId } = JSON.parse(req.body);
-
-  console.log('leaderboardId', leaderboardId);
 
   const leaderboardDoc = getFirestore(firebaseApp).collection('leaderboards').doc(leaderboardId);
 

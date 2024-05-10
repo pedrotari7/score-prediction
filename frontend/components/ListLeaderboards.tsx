@@ -21,8 +21,6 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 
 	if (loading) return <Loading message='Fetching leaderboards' />;
 
-	console.log('users', users);
-
 	return (
 		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:m-6 sm:p-6')}>
 			<div className={classNames('mb-4 flex flex-row items-center justify-between')}>

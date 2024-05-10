@@ -3,10 +3,11 @@ module.exports = {
 		externalDir: true,
 	},
 	async redirects() {
+		console.log('redirects');
 		return [
 			{
 				source: '/',
-				destination: '/wc2022',
+				destination: '/euro2024',
 				permanent: true,
 			},
 		];

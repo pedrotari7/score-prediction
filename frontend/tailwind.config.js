@@ -25,13 +25,20 @@ module.exports = {
 				'blue-euro2016': '#3292a4',
 				'light-euro2016': '#e1eded',
 
+				euro2020: '#3292a4',
 				'dark-euro2020': '#015E6C',
 				'blue-euro2020': '#3292a4',
 				'light-euro2020': '#e1eded',
 
+				wc2022: '#74122f',
 				'dark-wc2022': '#480c1d',
 				'blue-wc2022': '#74122f',
 				'light-wc2022': '#e1eded',
+
+				euro2024: '#002B93',
+				'dark-euro2024': '#143cd9',
+				'blue-euro2024': '#002B93',
+				'light-euro2024': '#e1eded',
 			},
 			boxShadow: {
 				pop: '0px 2px 40px rgba(0, 0, 0, 0.33)',

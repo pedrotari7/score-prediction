@@ -1,17 +1,16 @@
-import {
-	Competitions,
-	Fixture,
-	Fixtures,
-	Prediction,
-	Predictions,
-	PredResult,
-	Result,
-	UserResult,
-} from '../interfaces/main';
+import { Fixture, Fixtures, Prediction, Predictions, PredResult, Result, UserResult } from '../interfaces/main';
 
-export const competitions: Competitions = {
+export const competitions = {
 	euro2016: { name: 'euro2016', league: 4, season: 2016, start: '2016-06-10', end: '2016-07-10', logo: '/logo.svg' },
 	euro2020: { name: 'euro2020', league: 4, season: 2020, start: '2021-06-09', end: '2021-07-15', logo: '/logo.svg' },
+	euro2024: {
+		name: 'euro2024',
+		league: 4,
+		season: 2024,
+		start: '2024-06-14',
+		end: '2024-07-14',
+		logo: '/euro2024-logo.svg',
+	},
 
 	// wc2010: { name: 'wc2010', league: 1, season: 2010, start: '2010-06-10', end: '2010-07-12', logo: '/logo.svg' },
 	// wc2014: { name: 'wc2014', league: 1, season: 2014, start: '2014-06-11', end: '2014-07-15', logo: '/logo.svg' },
@@ -25,7 +24,7 @@ export const competitions: Competitions = {
 		end: '2022-12-18',
 		logo: '/wc2022-logo.svg',
 	},
-};
+} as const;
 
 export const DEFAULT_USER_RESULT: UserResult = {
 	points: 0,

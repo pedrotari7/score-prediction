@@ -301,7 +301,7 @@ const CurrentMatch = ({
 								setCurrentLeaderboard={setCurrentLeaderboard}
 								setMembers={setMembers}
 								className='!w-36 text-xs'
-								backgroundColor='#74122f'
+								backgroundColor={gcc()}
 							/>
 						)}
 					</div>

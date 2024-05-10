@@ -27,7 +27,7 @@ import useStatus from '../hooks/useStatus';
 const SettingsPage = () => {
 	const userInfo = useContext(UserContext);
 	const [response, setResponse] = useState({});
-	const [competition, setCompetition] = useState<Competition>(competitions.wc2022);
+	const [competition, setCompetition] = useState<Competition>(competitions.euro2024);
 
 	const { settings, toggleSetting, loading: loadSettings } = useSettings();
 
@@ -37,7 +37,7 @@ const SettingsPage = () => {
 
 	const formattedResponse = JSON.stringify(response, null, 2);
 
-	const gcc = (p: string) => getCompetitionClass(p, competition);
+	const gcc = (p: string) => getCompetitionClass(competition, p);
 
 	return (
 		<div className={gcc('text-light')}>

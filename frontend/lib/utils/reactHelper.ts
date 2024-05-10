@@ -64,10 +64,12 @@ export const getContrastYIQ = (hexcolor: string) => {
 
 export const zip = <T>(a: T[], b: T[]) => a.map((k, i) => [k, b[i]]);
 
-const VALID_COMPETITIONS: string[] = [competitions.euro2020.name, competitions.wc2022.name];
+const VALID_COMPETITIONS: string[] = [competitions.euro2020.name, competitions.wc2022.name, competitions.euro2024.name];
 
-export const getCompetitionClass = (primitive: string, competition: Competition) =>
-	VALID_COMPETITIONS.some(c => c === competition?.name) ? primitive + '-' + competition?.name : primitive;
+export const getCompetitionClass = (competition: Competition, primitive?: string) =>
+	VALID_COMPETITIONS.some(c => c === competition?.name) && primitive
+		? primitive + '-' + competition?.name
+		: competition?.name;
 
 export const GROUP_COLORS: Record<string, string> = {
 	A: 'bg-red-600',

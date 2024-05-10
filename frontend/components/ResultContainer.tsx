@@ -1,9 +1,9 @@
-import { ReactNode, MouseEventHandler, useContext } from 'react';
+import { ReactNode, MouseEventHandler } from 'react';
 import { Fixture, Prediction } from '../../interfaces/main';
 import { getExtraTimeResult, getOutcome, isNum, isPenaltyShootout } from '../../shared/utils';
-import CompetitionContext from '../context/CompetitionContext';
 import useNoSpoilers from '../hooks/useNoSpoilers';
-import { classNames, getCompetitionClass } from '../lib/utils/reactHelper';
+import { classNames } from '../lib/utils/reactHelper';
+import useCompetition from '../hooks/useCompetition';
 
 const ResultContainer = ({
 	children,
@@ -18,8 +18,7 @@ const ResultContainer = ({
 	game: Fixture;
 	onClick?: MouseEventHandler<HTMLDivElement>;
 }) => {
-	const competition = useContext(CompetitionContext);
-	const gcc = (p: string) => getCompetitionClass(p, competition);
+	const { gcc } = useCompetition();
 
 	const result = getExtraTimeResult(game);
 	const { noSpoilers } = useNoSpoilers();

@@ -17,9 +17,14 @@ const PageLayout = ({
 }) => {
 	const competition = useContext(CompetitionContext);
 
-	const isEuro2020 = competition?.name === competitions.euro2020.name;
+	const footerCompetitions = [competitions.euro2020, competitions.euro2024];
 
-	const style = isEuro2020 ? { backgroundImage: 'url(/background.webp)' } : { background: '#181a1b' };
+	const hasFooter = competition?.name && footerCompetitions.some(c => c.name === competition.name);
+
+	const style =
+		competition?.name === competitions.euro2020.name
+			? { backgroundImage: 'url(/background.webp)' }
+			: { background: '#181a1b' };
 	return (
 		<div className='flex h-screen w-screen flex-col overflow-x-hidden bg-cover bg-center bg-repeat-y' style={style}>
 			<Head>
@@ -32,9 +37,9 @@ const PageLayout = ({
 
 			<main className='relative top-16 z-10 flex h-[calc(100vh-4rem)] flex-col'>{children}</main>
 
-			{isEuro2020 && (
+			{hasFooter && (
 				<div className='fixed bottom-0 w-full select-none'>
-					<img src='/footer.png' alt='' className='w-full opacity-70' />
+					<img src={`/footer-${competition.name}.png`} alt='' className='w-full opacity-30' />
 				</div>
 			)}
 		</div>
