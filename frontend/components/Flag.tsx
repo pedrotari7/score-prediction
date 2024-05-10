@@ -61,4 +61,6 @@ const FLAGS: Record<number, string> = {
 	7: 'https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg',
 	1504: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Flag_of_Ghana.svg',
 	17: 'https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg',
+	1104: 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Flag_of_Georgia.svg',
+	1091: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Flag_of_Slovenia.svg',
 };
