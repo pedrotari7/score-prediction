@@ -64,8 +64,8 @@ export const FinalStages = () => (
 export const Deadlines = () => (
 	<div className=''>
 		<div className='mb-4 text-2xl font-bold'>Deadlines</div>
-		In the group stages the predictions for each game must be done before its start. For the final stages games, the
-		predictions will be available once the matchup is known and have to be submitted before the game starts.
+		In the group stages the predictions for each game must be done before their start. For the final stages games,
+		the predictions will be available once the matchup is known and have to be submitted before the game starts.
 	</div>
 );
 

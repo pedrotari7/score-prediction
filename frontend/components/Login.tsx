@@ -3,6 +3,7 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import Head from 'next/head';
 import { app } from '../lib/firebaseClient';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import useCompetition from '../hooks/useCompetition';
 
 const Login = () => {
 	const isFacebookApp = () => {
@@ -11,16 +12,18 @@ const Login = () => {
 		return ua.indexOf('FBAN') > -1 || ua.indexOf('FBAV') > -1;
 	};
 
+	const { competition } = useCompetition();
+
 	const isAllowedBrowser = !isFacebookApp();
 
 	return (
 		<div className='h-screen w-screen'>
 			<Head>
 				<title>Login</title>
-				<link rel='icon' href='/favicon.ico' />
+				<link rel='icon' href={`/favicon-${competition?.name}.ico`} />
 				<meta name='viewport' content='width=device-width, initial-scale=1.0' />
 			</Head>
-			<video className='absolute h-full object-cover' src='/sample.m4v' muted autoPlay></video>
+			<video className='absolute h-full w-full object-cover' src='/sample.mp4' muted autoPlay loop></video>
 			<div className='absolute flex h-full w-screen flex-col items-center justify-evenly bg-[#181a1b] bg-opacity-90'>
 				<div className='text-center text-4xl font-bold text-light md:text-8xl'>SCORE PREDICTION</div>
 				{isAllowedBrowser && (
