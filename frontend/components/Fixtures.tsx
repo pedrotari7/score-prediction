@@ -26,6 +26,13 @@ const FixturesPage = ({
 	const { RedactedSpoilers } = useNoSpoilers();
 	const { gcc } = useCompetition();
 
+	if (!user)
+		return (
+			<div className='flex h-full items-center justify-center text-3xl text-light'>
+				<div className='text-center'>User information not available for this competition</div>
+			</div>
+		);
+
 	const uid = currentUser?.uid;
 
 	const isGroupStage = (f: Fixture) => f.league.round.includes('Group');
