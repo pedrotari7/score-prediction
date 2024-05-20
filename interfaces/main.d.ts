@@ -276,6 +276,7 @@ export interface Settings {
 	adminHideScores: boolean;
 	allowUpdateFixtures: boolean;
 	allowUpdateStandings: boolean;
+	disableLiveScoresApi: boolean;
 }
 
 export interface Account {

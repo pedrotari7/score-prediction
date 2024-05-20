@@ -9,6 +9,7 @@ const useSettings = () => {
 		adminHideScores: false,
 		allowUpdateFixtures: false,
 		allowUpdateStandings: false,
+		disableLiveScoresApi: false,
 	});
 	const userInfo = useContext(UserContext);
 

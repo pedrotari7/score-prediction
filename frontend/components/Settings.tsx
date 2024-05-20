@@ -151,6 +151,15 @@ const SettingsPage = () => {
 					/>
 					<span className='ml-2'>Allow Update Standings</span>
 				</label>
+				<label className='mx-4 mt-3 inline-flex cursor-pointer select-none items-center'>
+					<input
+						type='checkbox'
+						className='form-checkbox h-5 w-5'
+						checked={settings.disableLiveScoresApi}
+						onChange={() => toggleSetting('disableLiveScoresApi')}
+					/>
+					<span className='ml-2'>Disable Live Scores Api</span>
+				</label>
 			</div>
 			<div className='flex flex-col flex-wrap items-center justify-center sm:flex-row'>
 				<button
