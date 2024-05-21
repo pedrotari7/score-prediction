@@ -29,6 +29,16 @@ const customJestConfig: Config = {
 		'<rootDir>/components/**/index.ts',
 	],
 	coveragePathIgnorePatterns: ['.*__snapshots__/.*'],
+	coverageReporters: ['json', 'lcov', 'text', 'clover'],
+	coverageDirectory: '<rootDir>/coverage',
+	coverageThreshold: {
+		global: {
+			statements: 1.4,
+			branches: 0.18,
+			functions: 1.3,
+			lines: 1.3,
+		},
+	},
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

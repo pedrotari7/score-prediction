@@ -1,0 +1,101 @@
+name: Frontend
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    changes:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./
+        # Required permissions
+        permissions:
+            pull-requests: read
+        # Set job outputs to values from filter step
+        outputs:
+            backend: ${{ steps.filter.outputs.backend }}
+            frontend: ${{ steps.filter.outputs.frontend }}
+        steps:
+            # For pull requests it's not necessary to checkout the code
+            - uses: actions/checkout@master
+            - uses: dorny/paths-filter@v3
+              id: filter
+              with:
+                  filters: |
+                      backend:
+                        - 'backend/**'
+                        - 'shared/**'
+                        - '.github/**'
+                      frontend:
+                        - 'frontend/**'
+                        - 'shared/**'
+                        - '.github/**'
+
+    frontend:
+        name: Fronted
+        needs: changes
+        if: ${{ needs.changes.outputs.frontend == 'true' }}
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./frontend
+        steps:
+            - name: Setup Node
+              uses: actions/setup-node@master
+              with:
+                  node-version: '20'
+            - name: Checkout Repo
+              uses: actions/checkout@master
+            - name: Install Dependencies
+              run: yarn ci
+            - name: Lint
+              run: yarn lint
+            - name: Test
+              run: yarn test
+
+    backend:
+        name: Backend
+        needs: changes
+        if: ${{ needs.changes.outputs.backend == 'true' }}
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./backend
+        steps:
+            - name: Setup Node
+              uses: actions/setup-node@master
+              with:
+                  node-version: '20'
+            - name: Checkout Repo
+              uses: actions/checkout@master
+            - name: Install Dependencies
+              run: yarn ci
+            - name: Lint
+              run: yarn lint
+
+    deploy:
+        name: Deploy
+        needs: [changes, backend, frontend]
+        if: ${{ needs.changes.outputs.backend == 'true' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup Node
+              uses: actions/setup-node@master
+              with:
+                  node-version: '20'
+            - name: Checkout Repo
+              uses: actions/checkout@master
+            - name: Install Dependencies
+              run: yarn ci
+              working-directory: ./backend
+            - name: Deploy functions to Firebase
+              uses: w9jds/firebase-action@master
+              with:
+                  args: deploy --only functions
+              env:
+                  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+                  PROJECT_ID: 'default'
+                  PROJECT_PATH: '.'
