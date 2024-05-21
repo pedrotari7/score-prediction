@@ -1,4 +1,4 @@
-name: CI - Cloud
+name: Backend
 
 on:
     push:

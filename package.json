@@ -6,7 +6,7 @@
   "scripts": {
     "firebase": "firebase",
     "ci": "yarn install --frozen-lockfile",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "author": "",
   "license": "ISC",

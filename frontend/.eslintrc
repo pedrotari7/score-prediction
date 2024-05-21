@@ -9,7 +9,8 @@
 	},
 	"env": {
 		"es2020": true,
-		"browser": true
+		"browser": true,
+		"jest/globals": true
 	},
 	"extends": [
 		"standard",
@@ -21,7 +22,7 @@
 		"plugin:prettier/recommended",
 		"plugin:react-hooks/recommended"
 	],
-	"plugins": ["react"],
+	"plugins": ["react", "jest"],
 	"rules": {
 		"no-undef": 1,
 		"no-unused-expressions": ["error", { "allowShortCircuit": true }],
@@ -37,7 +38,8 @@
 		"@next/next/no-img-element": "off",
 		"jsx-a11y/alt-text": "off",
 		"@typescript-eslint/explicit-module-boundary-types": "off",
-		"no-mixed-spaces-and-tabs": ["warn"]
+		"no-mixed-spaces-and-tabs": ["warn"],
+		"react/no-unknown-property": "off"
 	},
 	"settings": {
 		"react": {

@@ -3,42 +3,42 @@ import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';
 
-export const ExactScore = () => (
+const ExactScore = () => (
 	<div className='mb-4 flex flex-row flex-wrap rounded-md bg-green-600 p-2 text-lg'>
 		Exact Score (right outcome of the game and exact number of goals scored by both teams)
 		<span className='mt-2 w-full text-2xl font-bold'>+5 Points</span>
 	</div>
 );
 
-export const CorrectResult = () => (
+const CorrectResult = () => (
 	<div className='mb-4 flex flex-row flex-wrap rounded-md bg-yellow-600 p-2 text-lg'>
 		Correct Result (right outcome of the game, but wrong number of goals of at least one of the teams)
 		<span className='mt-2 w-full text-2xl font-bold'>+3 Points</span>
 	</div>
 );
 
-export const RightGoals = () => (
+const RightGoals = () => (
 	<div className='mb-4 flex flex-row flex-wrap rounded-md bg-pink-600 p-2 text-lg'>
 		Right number of goals from one of the teams
 		<span className='mt-2 w-full text-2xl font-bold'>+1 Point</span>
 	</div>
 );
 
-export const NoPoints = () => (
+const NoPoints = () => (
 	<div className='mb-4 flex flex-row flex-wrap rounded-md bg-red-600 p-2 text-lg'>
 		None of the above
 		<span className='mt-2 w-full text-2xl font-bold'>+0 Points</span>
 	</div>
 );
 
-export const ExtraInfo = () => (
+const ExtraInfo = () => (
 	<div className='mb-4'>
 		You are only awarded points once per game, so from the bullet points above you will receive the one that awards
 		you the highest number of points. Each game will be colored with the respective point color.
 	</div>
 );
 
-export const GroupsPoints = () => (
+const GroupsPoints = () => (
 	<div>
 		<div className='mb-4 text-2xl font-bold'>Groups</div>
 		<div className='mb-4 flex flex-row flex-wrap rounded-md bg-purple-700 p-2 text-lg'>
@@ -48,7 +48,7 @@ export const GroupsPoints = () => (
 	</div>
 );
 
-export const FinalStages = () => (
+const FinalStages = () => (
 	<div className='mb-4'>
 		<div className='mb-4 text-2xl font-bold'>Final Stages</div>
 		In the final stages of the tournament each game is similar to the group stage games, but in this case your
@@ -61,7 +61,7 @@ export const FinalStages = () => (
 	</div>
 );
 
-export const Deadlines = () => (
+const Deadlines = () => (
 	<div className=''>
 		<div className='mb-4 text-2xl font-bold'>Deadlines</div>
 		In the group stages the predictions for each game must be done before their start. For the final stages games,
@@ -86,7 +86,7 @@ const Rules = () => {
 				className={classNames(
 					gcc('text-light'),
 					gcc('bg-dark'),
-					`m-8 flex select-none flex-col  justify-center rounded-md p-8 shadow-pop`,
+					`m-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop`,
 					'mx-8 md:mx-24 lg:mx-48'
 				)}
 			>
@@ -104,11 +104,12 @@ const Rules = () => {
 			<div
 				className={classNames(
 					gcc('text-light'),
-					`m-8 flex select-none flex-col  justify-center rounded-md p-8`,
+					`m-8 flex select-none flex-col justify-center rounded-md p-8`,
 					'mx-8 mb-10 md:mx-24 lg:mx-48'
 				)}
 			></div>
 			<div
+				test-id='my-predictions-button'
 				className={classNames(
 					gcc('bg-light'),
 					'fixed bottom-4 right-4 cursor-pointer rounded-md p-4 font-bold shadow-pop'
