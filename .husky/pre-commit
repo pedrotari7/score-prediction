@@ -1,3 +1,11 @@
+## Shared
+
+# Install dependencies
+yarn install
+
+# Run tests
+yarn test
+
 ## Frontend
 
 cd frontend

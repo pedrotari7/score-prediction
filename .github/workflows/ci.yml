@@ -18,8 +18,8 @@ jobs:
         outputs:
             backend: ${{ steps.filter.outputs.backend }}
             frontend: ${{ steps.filter.outputs.frontend }}
+            shared: ${{ steps.filter.outputs.shared }}
         steps:
-            # For pull requests it's not necessary to checkout the code
             - uses: actions/checkout@master
             - uses: dorny/paths-filter@v3
               id: filter
@@ -33,6 +33,29 @@ jobs:
                         - 'frontend/**'
                         - 'shared/**'
                         - '.github/**'
+                      shared:
+                        - 'shared/**'
+                        - '.github/**'
+
+    shared:
+        name: Shared
+        needs: changes
+        if: ${{ needs.changes.outputs.shared == 'true' }}
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./shared
+        steps:
+            - name: Setup Node
+              uses: actions/setup-node@master
+              with:
+                  node-version: '20'
+            - name: Checkout Repo
+              uses: actions/checkout@master
+            - name: Install Dependencies
+              run: yarn ci
+            - name: Test
+              run: yarn test
 
     frontend:
         name: Fronted
@@ -79,7 +102,7 @@ jobs:
     deploy:
         name: Deploy
         needs: [changes, backend, frontend]
-        if: ${{ needs.changes.outputs.backend == 'true' }}
+        if: ${{ needs.changes.outputs.backend == 'true' }} && (needs.frontend.result == 'skipped' || needs.frontend.result == 'success')
         runs-on: ubuntu-latest
         steps:
             - name: Setup Node
