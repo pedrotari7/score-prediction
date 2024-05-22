@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loading renders loading spinner with message 1`] = `
+<div>
+  <div
+    class="flex h-full w-full flex-col items-center justify-center text-white"
+  >
+    <div
+      class="text-3xl"
+    >
+      test message
+    </div>
+    <img
+      class=""
+      src="loader.svg"
+    />
+  </div>
+</div>
+`;
+
+exports[`Loading renders loading spinner with no message 1`] = `
+<div>
+  <div
+    class="flex h-full w-full flex-col items-center justify-center text-white"
+  >
+    <div
+      class="text-3xl"
+    />
+    <img
+      class=""
+      src="loader.svg"
+    />
+  </div>
+</div>
+`;

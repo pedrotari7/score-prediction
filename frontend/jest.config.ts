@@ -25,6 +25,9 @@ const customJestConfig: Config = {
 	collectCoverageFrom: [
 		'<rootDir>/components/**/*.tsx',
 		'<rootDir>/pages/**',
+		'<rootDir>/context/**/*.{ts,tsx}',
+		'<rootDir>/hooks/**/*.{ts,tsx}',
+		'<rootDir>/lib/**/*.{ts,tsx}',
 		'<rootDir>/components/**/stories.tsx',
 		'<rootDir>/components/**/index.ts',
 	],
@@ -33,10 +36,10 @@ const customJestConfig: Config = {
 	coverageDirectory: '<rootDir>/coverage',
 	coverageThreshold: {
 		global: {
-			statements: 1.4,
-			branches: 0.18,
-			functions: 1.3,
-			lines: 1.3,
+			statements: 7,
+			branches: 2.2,
+			functions: 4.8,
+			lines: 6.4,
 		},
 	},
 };
