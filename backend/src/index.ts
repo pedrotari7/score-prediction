@@ -235,19 +235,21 @@ const updateFixtures = async (competition: Competition, gamesToUpdate: number[],
 const updatePoints = async (competition: Competition, predictions: Predictions, fixtures: Fixtures) => {
   const groupPoints = (await getDBGroupPoints(competition).get()).data() as GroupPoints;
 
-  // prettier-ignore
-  const updatedScores = Object.entries(predictions).reduce((users, [gameID, gamePredictions]) => {
-    const game = fixtures[parseInt(gameID)];
+  const updatedScores = Object.entries(predictions).reduce(
+    (users, [gameID, gamePredictions]) => {
+      const game = fixtures[parseInt(gameID)];
 
-    if (!game) return users;
+      if (!game) return users;
 
-    for (const user in gamePredictions) {
-      if (!(user in users)) users[user] = DEFAULT_USER_RESULT;
-      if (game?.fixture.status.short === 'NS') continue;
-      users[user] = joinResults(users[user], getResult(gamePredictions[user], game));
-    }
-    return users;
-  }, {} as Record<string, UserResult>);
+      for (const user in gamePredictions) {
+        if (!(user in users)) users[user] = DEFAULT_USER_RESULT;
+        if (game?.fixture.status.short === 'NS') continue;
+        users[user] = joinResults(users[user], getResult(gamePredictions[user], game));
+      }
+      return users;
+    },
+    {} as Record<string, UserResult>
+  );
 
   for (const user in groupPoints) {
     updatedScores[user].groups = groupPoints[user];
@@ -417,10 +419,7 @@ app.get('/fetch-users', async (req, res) => {
 
   const allUsers = (
     await Promise.all(
-      // prettier-ignore
-      (
-        await getAuth(firebaseApp).listUsers()
-      ).users.map(async ({ displayName, metadata, uid, photoURL, email }) => ({
+      (await getAuth(firebaseApp).listUsers()).users.map(async ({ displayName, metadata, uid, photoURL, email }) => ({
         displayName,
         uid,
         photoURL,
