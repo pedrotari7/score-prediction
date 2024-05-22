@@ -73,11 +73,11 @@ jobs:
             - name: Checkout Repo
               uses: actions/checkout@master
             - name: Install Dependencies
-              run: yarn ci
+              run: pnpm ci
             - name: Lint
-              run: yarn lint
+              run: pnpm lint
             - name: Test
-              run: yarn test
+              run: pnpm test
 
     backend:
         name: Backend

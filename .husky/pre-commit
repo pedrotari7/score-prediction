@@ -11,16 +11,16 @@ yarn test
 cd frontend
 
 # Install dependencies
-yarn install
+pnpm install
 
 # Lint
-yarn lint
+pnpm lint
 
 # Build
-yarn build
+pnpm build
 
 # Run tests
-yarn test
+pnpm test
 
 
 ## Backend

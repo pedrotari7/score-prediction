@@ -750,7 +750,6 @@ app.get('/leaderboards', async (req, res) => {
   return res.json({ success: true, data: snapshot.docs.map(doc => doc.data()) });
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const api = onRequest({ secrets: ['APISPORTS'] }, app);
 
 export const addUser = beforeUserCreated(async event => {

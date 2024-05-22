@@ -1,4 +1,4 @@
-import { RenderOptions, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { ReactNode, ContextType } from 'react';
 import RouteContext from '../../context/RouteContext';
 import NoSpoilersContext from '../../context/NoSpoilersContext';
@@ -8,7 +8,7 @@ export const customRender = (
 	options?: {
 		routeContextProps?: ContextType<typeof RouteContext>;
 		noSpoilersContextProps?: ContextType<typeof NoSpoilersContext>;
-		renderOptions?: RenderOptions<typeof import('@testing-library/dom/types/queries'), HTMLElement, HTMLElement>;
+		renderOptions?: Parameters<typeof render>[1];
 	}
 ) => {
 	return render(
