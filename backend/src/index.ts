@@ -123,12 +123,10 @@ const decodeToken = async (token: string | undefined) => {
   }
 };
 
-const success = (result: DecodedIdToken) => ({ success: true, result });
+const success = (result: DecodedIdToken) => ({ success: true, result }) as const;
 
-const fail = (result: Response<{ success: boolean; result: Record<string, Record<string, string>> }>) => ({
-  success: false,
-  result,
-});
+const fail = (result: Response<{ success: boolean; result: Record<string, Record<string, string>> }>) =>
+  ({ success: false, result }) as const;
 
 const authenticate = async (req: Request, res: Response, needsAdmin = false) => {
   if (!req.headers.authorization) {
@@ -450,7 +448,7 @@ app.get('/tournament', async (req, res) => {
 
   if (!authResult.result) return res.json({});
 
-  const decodedToken = authResult.result as DecodedIdToken;
+  const decodedToken = authResult.result;
 
   const competition = parseCompetition(req);
 
@@ -550,7 +548,7 @@ app.post('/update-predictions', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;
 
-  const { uid: callerUID } = authResult.result as DecodedIdToken;
+  const { uid: callerUID } = authResult.result;
 
   const { uid, gameId, prediction } = JSON.parse(req.body);
 
@@ -675,7 +673,7 @@ app.post('/create-leaderboard', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return res.json(authResult.result);
 
-  const { uid: callerUID } = authResult.result as DecodedIdToken;
+  const { uid: callerUID } = authResult.result;
 
   const { name } = JSON.parse(req.body);
 
@@ -718,7 +716,7 @@ app.post('/leaderboard', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;
 
-  const { uid: callerUID } = authResult.result as DecodedIdToken;
+  const { uid: callerUID } = authResult.result;
 
   const leaderboardId = req.query.leaderboardId as string;
 
@@ -790,7 +788,7 @@ app.post('/no-spoilers', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;
 
-  const { uid: callerUID } = authResult.result as DecodedIdToken;
+  const { uid: callerUID } = authResult.result;
 
   const { noSpoilers } = JSON.parse(req.body);
 

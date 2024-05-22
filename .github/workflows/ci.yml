@@ -101,7 +101,7 @@ jobs:
 
     deploy:
         name: Deploy
-        needs: [changes, backend, frontend, shared]
+        needs: [changes, backend]
         if: always() && !failure() && !cancelled() && ${{ needs.changes.outputs.backend == 'true' }}
 
         runs-on: ubuntu-latest
