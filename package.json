@@ -7,7 +7,8 @@
     "firebase": "firebase",
     "prepare": "husky",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "preinstall": "npx only-allow pnpm"
   },
   "author": "",
   "license": "ISC",

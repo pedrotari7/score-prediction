@@ -3,20 +3,21 @@
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
     "build": "tsc",
-    "dev": "npm run build && yarn firebase emulators:start --only functions",
-    "shell": "npm run build && yarn firebase functions:shell",
-    "start": "npm run shell",
-    "deploy": "yarn firebase deploy --only functions",
-    "login": "yarn firebase login",
-    "logs": "yarn firebase functions:log",
+    "dev": "pnpm build && pnpm firebase emulators:start --only functions",
+    "shell": "pnpm build && pnpm firebase functions:shell",
+    "start": "pnpm shell",
+    "deploy": "pnpm firebase deploy --only functions",
+    "login": "pnpm firebase login",
+    "logs": "pnpm firebase functions:log",
     "firebase": "firebase",
-    "ci": "yarn install --frozen-lockfile"
+    "preinstall": "npx only-allow pnpm"
   },
   "engines": {
     "node": "20"
   },
   "main": "lib/backend/src/index.js",
   "dependencies": {
+    "@google-cloud/functions-framework": "^3.4.0",
     "axios": "^1.7.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",

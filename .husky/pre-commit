@@ -28,13 +28,13 @@ pnpm test
 cd ../backend
 
 # Install dependencies
-yarn install
+pnpm install
 
 # Lint
-yarn lint
+pnpm lint
 
 # Build
-yarn build
+pnpm build
 
 
 

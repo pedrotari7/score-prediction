@@ -60,7 +60,7 @@ jobs:
                       args: [--frozen-lockfile, --strict-peer-dependencies]
                       cwd: ./
             - name: Test
-              run: yarn test
+              run: pnpm test
 
     frontend:
         name: Fronted
@@ -106,9 +106,14 @@ jobs:
             - name: Checkout Repo
               uses: actions/checkout@master
             - name: Install Dependencies
-              run: yarn ci
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 9
+                  run_install: |
+                      args: [--frozen-lockfile, --strict-peer-dependencies]
+                      cwd: ./backend
             - name: Lint
-              run: yarn lint
+              run: pnpm lint
 
     deploy:
         name: Deploy
@@ -124,8 +129,12 @@ jobs:
             - name: Checkout Repo
               uses: actions/checkout@master
             - name: Install Dependencies
-              run: yarn ci
-              working-directory: ./backend
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 9
+                  run_install: |
+                      args: [--frozen-lockfile, --strict-peer-dependencies]
+                      cwd: ./backend
             - name: Deploy functions to Firebase
               uses: w9jds/firebase-action@master
               with:
