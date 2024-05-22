@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "firebase": "firebase",
-    "ci": "yarn install --frozen-lockfile",
     "prepare": "husky",
     "test": "jest",
     "test:watch": "jest --watch"

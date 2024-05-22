@@ -1,10 +1,10 @@
 ## Shared
 
 # Install dependencies
-yarn install
+pnpm install
 
 # Run tests
-yarn test
+pnpm test
 
 ## Frontend
 
