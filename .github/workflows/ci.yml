@@ -101,7 +101,7 @@ jobs:
 
     deploy:
         name: Deploy
-        needs: [changes, backend, frontend]
+        needs: [changes, backend, frontend, shared]
         if: ${{ needs.changes.outputs.backend == 'true' }} && (needs.frontend.result == 'skipped' || needs.frontend.result == 'success')
         runs-on: ubuntu-latest
         steps:
