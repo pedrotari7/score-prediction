@@ -66,18 +66,23 @@ const UserGuess = ({
 		<ResultContainer
 			prediction={guess}
 			game={game}
-			className={classNames(
-				'my-2 flex w-full flex-row  items-center justify-between rounded p-4 sm:m-2 sm:w-max',
-				'cursor-pointer select-none gap-4 hover:bg-opacity-50'
-			)}
+			className={
+				classNames(
+					'my-2 flex w-full flex-row  items-center justify-between rounded p-4 sm:m-2 sm:w-max',
+					'cursor-pointer select-none gap-4'
+				) +
+				' ' +
+				// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
+				classNames('hover:bg-opacity-50')
+			}
 			onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 		>
 			<span className='flex flex-row items-center text-left text-xs'>
-				{user?.photoURL && <img className='mr-2 h-8 w-8 rounded-full object-cover' src={user?.photoURL} />}
+				{user?.photoURL && <img className='mr-2 size-8 rounded-full object-cover' src={user?.photoURL} />}
 				<span>{user?.displayName}</span>
 			</span>
 
-			{invalidScore && !emptyScore && <div className='font-sm font-bold '>Invalid</div>}
+			{invalidScore && !emptyScore && <div className='text-sm font-bold '>Invalid</div>}
 
 			{!hiddenScore && (
 				<div className='flex flex-row'>
@@ -241,11 +246,11 @@ const CurrentMatch = ({
 							className={classNames(
 								gcc('text-blue'),
 								gcc('hover:text-light'),
-								`absolute left-0   top-1/2 w-max -translate-y-1/2 transform cursor-pointer rounded-md sm:-translate-x-full`
+								`absolute left-0   top-1/2 w-max -translate-y-1/2 cursor-pointer rounded-md sm:-translate-x-full`
 							)}
 							onClick={() => setGameID(prevGameId)}
 						>
-							<ChevronLeftIcon className={classNames(gcc('text-light'), 'h-8 w-8')} />
+							<ChevronLeftIcon className={classNames(gcc('text-light'), 'size-8')} />
 						</div>
 					)}
 					<LiveGame
@@ -258,11 +263,11 @@ const CurrentMatch = ({
 							className={classNames(
 								gcc('text-blue'),
 								gcc('hover:text-light'),
-								`absolute right-0 top-1/2 w-max -translate-y-1/2 transform cursor-pointer rounded-md sm:translate-x-full`
+								`absolute right-0 top-1/2 w-max -translate-y-1/2 cursor-pointer rounded-md sm:translate-x-full`
 							)}
 							onClick={() => setGameID(nextGameId)}
 						>
-							<ChevronRightIcon className={classNames(gcc('text-light'), 'h-8 w-8')} />
+							<ChevronRightIcon className={classNames(gcc('text-light'), 'size-8')} />
 						</div>
 					)}
 				</div>
@@ -301,7 +306,7 @@ const CurrentMatch = ({
 								setCurrentLeaderboard={setCurrentLeaderboard}
 								setMembers={setMembers}
 								className='!w-36 text-xs'
-								backgroundColor={gcc()}
+								backgroundColor={gcc('')}
 							/>
 						)}
 					</div>

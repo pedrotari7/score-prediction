@@ -52,12 +52,12 @@ const ShowMore = ({
 									{!open && (
 										<div className='flex flex-col items-center opacity-60'>
 											<span>Show More</span>
-											<ChevronDownIcon className='block h-8 w-8' aria-hidden='true' />
+											<ChevronDownIcon className='block size-8' aria-hidden='true' />
 										</div>
 									)}
 									{open && (
 										<div className='flex flex-col items-center opacity-60'>
-											<ChevronUpIcon className='block h-8 w-8' aria-hidden='true' />
+											<ChevronUpIcon className='block size-8' aria-hidden='true' />
 											<span>Show Less</span>
 										</div>
 									)}

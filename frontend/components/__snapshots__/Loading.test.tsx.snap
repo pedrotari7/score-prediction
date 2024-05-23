@@ -3,7 +3,7 @@
 exports[`Loading renders loading spinner with message 1`] = `
 <div>
   <div
-    class="flex h-full w-full flex-col items-center justify-center text-white"
+    class="flex size-full flex-col items-center justify-center text-white"
   >
     <div
       class="text-3xl"
@@ -21,7 +21,7 @@ exports[`Loading renders loading spinner with message 1`] = `
 exports[`Loading renders loading spinner with no message 1`] = `
 <div>
   <div
-    class="flex h-full w-full flex-col items-center justify-center text-white"
+    class="flex size-full flex-col items-center justify-center text-white"
   >
     <div
       class="text-3xl"

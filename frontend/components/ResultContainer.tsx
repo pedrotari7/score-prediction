@@ -60,8 +60,8 @@ const ResultContainer = ({
 			)}
 		>
 			{isPenaltyWinner && (
-				<div className='absolute -right-3 -top-1 h-7 w-7 rounded-full bg-gray-500'>
-					<div className='flex h-full w-full items-center justify-center text-xs'>+1</div>
+				<div className='absolute -right-3 -top-1 size-7 rounded-full bg-gray-500'>
+					<div className='flex size-full items-center justify-center text-xs'>+1</div>
 				</div>
 			)}
 			{children}

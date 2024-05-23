@@ -68,7 +68,7 @@ const VALID_COMPETITIONS: string[] = [competitions.euro2020.name, competitions.w
 
 export const getCompetitionClass = (competition: Competition, primitive?: string) =>
 	VALID_COMPETITIONS.some(c => c === competition?.name) && primitive
-		? primitive + '-' + competition?.name
+		? `${primitive}-${competition?.name}`
 		: competition?.name;
 
 export const GROUP_COLORS: Record<string, string> = {

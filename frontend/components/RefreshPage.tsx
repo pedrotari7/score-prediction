@@ -35,7 +35,7 @@ const RefreshPage = () => {
 			>
 				{
 					<div className='flex items-center gap-2'>
-						<ArrowPathIcon className='h-8 w-8' />
+						<ArrowPathIcon className='size-8' />
 						<span>Refresh</span>
 					</div>
 				}

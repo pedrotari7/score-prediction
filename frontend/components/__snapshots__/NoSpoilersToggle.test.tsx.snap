@@ -17,11 +17,11 @@ exports[`NoSpoilersToggle renders no spoilers toggle turned off 1`] = `
           style="height: 28px; width: 30px; position: relative; opacity: 0; pointer-events: none; transition: opacity 0.25s;"
         >
           <div
-            class="flex  h-full w-full items-center justify-center"
+            class="flex  size-full items-center justify-center"
           >
             <svg
               aria-hidden="true"
-              class="h-4 w-4 text-white"
+              class="size-4 text-white"
               data-slot="icon"
               fill="none"
               stroke="currentColor"
@@ -41,11 +41,11 @@ exports[`NoSpoilersToggle renders no spoilers toggle turned off 1`] = `
           style="height: 28px; width: 30px; position: absolute; opacity: 1; right: 0px; top: 0px; pointer-events: none; transition: opacity 0.25s;"
         >
           <div
-            class="flex h-full w-full items-center justify-center"
+            class="flex size-full items-center justify-center"
           >
             <svg
               aria-hidden="true"
-              class="h-4 w-4 text-white"
+              class="size-4 text-white"
               data-slot="icon"
               fill="none"
               stroke="currentColor"
@@ -99,11 +99,11 @@ exports[`NoSpoilersToggle renders no spoilers toggle turned off if no context 1`
           style="height: 28px; width: 30px; position: relative; opacity: 0; pointer-events: none; transition: opacity 0.25s;"
         >
           <div
-            class="flex  h-full w-full items-center justify-center"
+            class="flex  size-full items-center justify-center"
           >
             <svg
               aria-hidden="true"
-              class="h-4 w-4 text-white"
+              class="size-4 text-white"
               data-slot="icon"
               fill="none"
               stroke="currentColor"
@@ -123,11 +123,11 @@ exports[`NoSpoilersToggle renders no spoilers toggle turned off if no context 1`
           style="height: 28px; width: 30px; position: absolute; opacity: 1; right: 0px; top: 0px; pointer-events: none; transition: opacity 0.25s;"
         >
           <div
-            class="flex h-full w-full items-center justify-center"
+            class="flex size-full items-center justify-center"
           >
             <svg
               aria-hidden="true"
-              class="h-4 w-4 text-white"
+              class="size-4 text-white"
               data-slot="icon"
               fill="none"
               stroke="currentColor"
@@ -181,11 +181,11 @@ exports[`NoSpoilersToggle renders no spoilers toggle turned on 1`] = `
           style="height: 28px; width: 30px; position: relative; opacity: 1; pointer-events: none; transition: opacity 0.25s;"
         >
           <div
-            class="flex  h-full w-full items-center justify-center"
+            class="flex  size-full items-center justify-center"
           >
             <svg
               aria-hidden="true"
-              class="h-4 w-4 text-white"
+              class="size-4 text-white"
               data-slot="icon"
               fill="none"
               stroke="currentColor"
@@ -205,11 +205,11 @@ exports[`NoSpoilersToggle renders no spoilers toggle turned on 1`] = `
           style="height: 28px; width: 30px; position: absolute; opacity: 0; right: 0px; top: 0px; pointer-events: none; transition: opacity 0.25s;"
         >
           <div
-            class="flex h-full w-full items-center justify-center"
+            class="flex size-full items-center justify-center"
           >
             <svg
               aria-hidden="true"
-              class="h-4 w-4 text-white"
+              class="size-4 text-white"
               data-slot="icon"
               fill="none"
               stroke="currentColor"
@@ -264,11 +264,11 @@ exports[`NoSpoilersToggle toggle switch and update context 1`] = `
           style="height: 28px; width: 30px; position: relative; opacity: 0; pointer-events: none; transition: opacity 0.25s;"
         >
           <div
-            class="flex  h-full w-full items-center justify-center"
+            class="flex  size-full items-center justify-center"
           >
             <svg
               aria-hidden="true"
-              class="h-4 w-4 text-white"
+              class="size-4 text-white"
               data-slot="icon"
               fill="none"
               stroke="currentColor"
@@ -288,11 +288,11 @@ exports[`NoSpoilersToggle toggle switch and update context 1`] = `
           style="height: 28px; width: 30px; position: absolute; opacity: 1; right: 0px; top: 0px; pointer-events: none; transition: opacity 0.25s;"
         >
           <div
-            class="flex h-full w-full items-center justify-center"
+            class="flex size-full items-center justify-center"
           >
             <svg
               aria-hidden="true"
-              class="h-4 w-4 text-white"
+              class="size-4 text-white"
               data-slot="icon"
               fill="none"
               stroke="currentColor"

@@ -31,7 +31,7 @@ const PredictionsStats = ({
 		{ winH: 0, winA: 0, draw: 0 }
 	);
 
-	const TickIcon = () => <CheckIcon className='h-6 w-6 text-green-500' />;
+	const TickIcon = () => <CheckIcon className='size-6 text-green-500' />;
 
 	const result = getOutcome(game.goals);
 	const finished = isGameFinished(game);

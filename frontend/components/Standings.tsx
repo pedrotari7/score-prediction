@@ -31,7 +31,7 @@ const Match = ({ game }: { game: Fixture }) => {
 			)}
 
 			{isGameFinished(game) && (
-				<span className='text-md w-6/12 font-bold sm:w-4/12'>
+				<span className='w-6/12 font-bold sm:w-4/12'>
 					<span>{game.goals.home}</span>
 					<span className='mx-2'>-</span>
 					<span>{game.goals.away}</span>
@@ -108,7 +108,7 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 
 									return (
 										<tr key={place.rank}>
-											<td className='mr'>
+											<td className=''>
 												<Flag team={place.team} />
 											</td>
 											<td className='md:w-52'>
@@ -129,8 +129,7 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 													className={classNames(
 														promotion ? 'bg-ok' : '',
 														bestThird ? 'bg-warn' : '',
-
-														'ml-2 h-3 w-3 rounded-full'
+														'ml-2 size-3 rounded-full'
 													)}
 												></div>
 											</td>

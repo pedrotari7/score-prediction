@@ -18,7 +18,7 @@ const RefreshButton = ({
 			className={classNames(
 				gcc('text-light'),
 				loading ? 'animate-spin' : '',
-				'h-6 w-6',
+				'size-6',
 				'cursor-pointer hover:opacity-80',
 				className
 			)}

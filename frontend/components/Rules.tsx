@@ -53,7 +53,7 @@ const FinalStages = () => (
 		<div className='mb-4 text-2xl font-bold'>Final Stages</div>
 		In the final stages of the tournament each game is similar to the group stage games, but in this case your
 		prediction will be compared with the result at the end of the 90 or 120 minutes.
-		<div className='bg- my-4 rounded-md bg-gray-500 p-2 '>
+		<div className='my-4 rounded-md bg-gray-500 p-2 '>
 			Nonetheless, in case of penalty shootout if you guessed correctly the team that ends up going through to the
 			next stage, you will be awarded 1 extra point that adds to the ones that you might have achieved during the
 			regular time.

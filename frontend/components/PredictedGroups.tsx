@@ -23,10 +23,10 @@ const PredictedGroups = ({
 	const teamsResults = calculateResults(Object.values(fixtures), predictions, userID);
 
 	const TickIcon = ({ disable }: { disable: boolean }) => (
-		<CheckIcon className={classNames('h-5 w-5', disable ? 'text-green-500' : 'text-yellow-500')} />
+		<CheckIcon className={classNames('size-5', disable ? 'text-green-500' : 'text-yellow-500')} />
 	);
 	const CloseIcon = ({ disable }: { disable: boolean }) => (
-		<XMarkIcon className={classNames('h-5 w-5', disable ? 'text-red-500' : 'text-yellow-500')} />
+		<XMarkIcon className={classNames('size-5', disable ? 'text-red-500' : 'text-yellow-500')} />
 	);
 
 	return (
@@ -91,7 +91,7 @@ const PredictedGroups = ({
 									const { wins, draws, loses, points, ga, gc } = teamsResults[place.team.id];
 									return (
 										<tr key={place.rank} className=''>
-											<td className='mr'>
+											<td className=''>
 												<Flag team={place.team} />
 											</td>
 

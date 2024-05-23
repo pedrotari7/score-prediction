@@ -19,16 +19,17 @@ const NoSpoilersToggle = () => {
 				onChange={setNoSpoilers}
 				onColor='#181a1b'
 				uncheckedIcon={
-					<div className='flex h-full w-full items-center justify-center'>
-						<EyeIcon strokeWidth={2} className='h-4 w-4 text-white' />
+					<div className='flex size-full items-center justify-center'>
+						<EyeIcon strokeWidth={2} className='size-4 text-white' />
 					</div>
 				}
 				checkedIcon={
-					<div className='flex  h-full w-full items-center justify-center'>
-						<EyeSlashIcon strokeWidth={2} className='h-4 w-4 text-white' />
+					<div className='flex  size-full items-center justify-center'>
+						<EyeSlashIcon strokeWidth={2} className='size-4 text-white' />
 					</div>
 				}
 				checked={noSpoilers ?? false}
+				// eslint-disable-next-line tailwindcss/no-custom-classname
 				className='react-switch'
 			/>
 		</label>

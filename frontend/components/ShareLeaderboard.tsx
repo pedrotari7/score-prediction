@@ -26,13 +26,13 @@ const ShareLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
 			<div className={(gcc('hover:bg-dark'), 'flex cursor-pointer flex-row items-center gap-2 font-bold')}>
 				{!copied && (
 					<>
-						<ShareIcon className={classNames(gcc('text-light'), 'h-8 w-8')} />
+						<ShareIcon className={classNames(gcc('text-light'), 'size-8')} />
 						<span>Share</span>
 					</>
 				)}
 				{copied && (
 					<>
-						<CheckIcon className={classNames(gcc('text-light'), 'h-8 w-8 text-green-600')} />
+						<CheckIcon className={classNames(gcc('text-light'), 'size-8 text-green-600')} />
 						<span>Link copied to clipboard</span>
 					</>
 				)}

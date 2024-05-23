@@ -22,7 +22,7 @@ const UsersList = () => {
 				<RefreshButton onClick={update} />
 			</div>
 
-			<div className='item-center flex w-full  flex-col justify-evenly'>
+			<div className='flex w-full flex-col justify-evenly'>
 				{loading && <Loading message='Fetching users...' />}
 				{!loading &&
 					users &&
@@ -35,20 +35,24 @@ const UsersList = () => {
 								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 							>
 								<div
-									className={classNames(
-										'w-full',
-										gcc('bg-dark'),
-										'my-2 flex flex-row items-center  gap-2 rounded p-4 sm:m-2',
-										'cursor-pointer select-none hover:bg-opacity-50'
-									)}
+									className={
+										classNames(
+											gcc('bg-dark'),
+											'my-2 flex w-full flex-row items-center  gap-2 rounded p-4 sm:m-2',
+											'cursor-pointer select-none'
+										) +
+										' ' +
+										// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
+										classNames('hover:bg-opacity-50')
+									}
 								>
 									<DesktopOnly>
-										<div className='m-2 flex h-8 w-8 flex-row items-center justify-center text-xl font-bold'>
+										<div className='m-2 flex size-8 flex-row items-center justify-center text-xl font-bold'>
 											<span
 												className={classNames(
 													gcc('bg-light'),
 													gcc('text-dark'),
-													'mr-1 flex h-full w-full items-center justify-center rounded-full p-2 px-6'
+													'mr-1 flex size-full items-center justify-center rounded-full p-2 px-6'
 												)}
 											>
 												{index + 1}
@@ -69,7 +73,7 @@ const UsersList = () => {
 									<div className='flex flex-row flex-wrap items-center gap-4 text-left text-xs'>
 										{user?.photoURL && (
 											<img
-												className='mr-2 h-8 w-8 rounded-full object-cover'
+												className='mr-2 size-8 rounded-full object-cover'
 												src={user?.photoURL}
 											/>
 										)}

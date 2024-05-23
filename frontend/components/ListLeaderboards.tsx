@@ -28,7 +28,7 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 				<RefreshButton onClick={update} />
 			</div>
 
-			<div className='item-center flex w-full  flex-col justify-evenly'>
+			<div className='flex w-full flex-col justify-evenly'>
 				{leaderboards &&
 					leaderboards.map(l => {
 						if (!l) return <></>;
@@ -39,12 +39,17 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 								onClick={() => setRoute({ page: Route.Leaderboard, data: l.id })}
 							>
 								<div
-									className={classNames(
-										'w-full',
-										gcc('bg-dark'),
-										'my-2 flex flex-row items-center  gap-2 rounded p-4 sm:m-2',
-										'cursor-pointer select-none hover:bg-opacity-50'
-									)}
+									className={
+										classNames(
+											'w-full',
+											gcc('bg-dark'),
+											'my-2 flex flex-row items-center  gap-2 rounded p-4 sm:m-2',
+											'cursor-pointer select-none '
+										) +
+										' ' +
+										// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
+										classNames('hover:bg-opacity-50')
+									}
 								>
 									<DeleteButton
 										className='absolute right-1 top-4 z-10'
@@ -84,7 +89,7 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 													>
 														{users[m]?.photoURL && (
 															<img
-																className='mr-2 h-8 w-8 rounded-full object-cover'
+																className='mr-2 size-8 rounded-full object-cover'
 																src={users[m]?.photoURL}
 															/>
 														)}

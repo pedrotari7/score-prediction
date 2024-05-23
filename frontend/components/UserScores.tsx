@@ -5,7 +5,7 @@ import { classNames } from '../lib/utils/reactHelper';
 export const Circle = ({ children, className }: { children: ReactNode; className: string }) => (
 	<div
 		className={classNames(
-			'mx-1 flex h-6 w-6 select-none flex-row items-center justify-center rounded-full p-4 text-center',
+			'mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center',
 			className
 		)}
 	>
@@ -22,7 +22,7 @@ export const UserScores = ({ user }: { user: User }) => {
 			<Circle className='bg-red-600'>{user.score.fail}</Circle>
 			<Circle className='bg-purple-700'>{user.score.groups}</Circle>
 			<Circle className='bg-gray-500'>{user.score.penalty}</Circle>
-			<Circle className='my-2 h-10 w-10 bg-gray-700 p-4'>{user.score.points}</Circle>
+			<Circle className='my-2 size-10 bg-gray-700 p-4'>{user.score.points}</Circle>
 		</div>
 	);
 };

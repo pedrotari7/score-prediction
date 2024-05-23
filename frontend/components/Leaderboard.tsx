@@ -56,12 +56,17 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 		return (
 			<div
 				onClick={onClick}
-				className={classNames(
-					'mx-2 my-2 cursor-pointer select-none rounded-md p-2 text-xs sm:text-lg',
-					'border-2 hover:border-2 hover:border-gray-400 hover:bg-opacity-50',
-					active ? 'border-white' : 'border-transparent',
-					className
-				)}
+				className={
+					classNames(
+						'm-2 cursor-pointer select-none rounded-md p-2 text-xs sm:text-lg',
+						'border-2 hover:border-2 hover:border-gray-400 ',
+						active ? 'border-white' : 'border-transparent',
+						className
+					) +
+					' ' +
+					// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
+					classNames('hover:bg-opacity-50')
+				}
 			>
 				{children}
 			</div>
@@ -126,26 +131,31 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 				</div>
 			</RedactedSpoilers>
 
-			<div className='item-center flex flex-col justify-center'>
+			<div className='flex flex-col justify-center'>
 				{sortedUsers.map((user, index) => {
 					return (
 						<div key={index} className='relative'>
 							<div
-								className={classNames(
-									'flex cursor-pointer flex-col items-center justify-between hover:bg-opacity-50 sm:flex-row',
-									gcc('bg-blue'),
-									`mx-1 my-4 rounded-md p-3 sm:mx-[5%] md:mx-[5%] lg:mx-[20%] `
-								)}
+								className={
+									classNames(
+										'flex cursor-pointer flex-col items-center justify-between sm:flex-row',
+										gcc('bg-blue'),
+										`mx-1 my-4 rounded-md p-3 sm:mx-[5%] md:mx-[5%] lg:mx-[20%]`
+									) +
+									' ' +
+									// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
+									classNames('hover:bg-opacity-50')
+								}
 								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 							>
 								<div className='mb-0 flex flex-col flex-wrap items-center justify-evenly sm:mr-4 sm:flex-row sm:justify-start'>
 									<DesktopOnly>
-										<div className='m-2 mr-6 flex h-8 w-8 flex-row items-center justify-center text-xl font-bold'>
+										<div className='m-2 mr-6 flex size-8 flex-row items-center justify-center text-xl font-bold'>
 											<span
 												className={classNames(
 													gcc('bg-light'),
 													gcc('text-dark'),
-													'mr-1 flex h-full w-full items-center justify-center rounded-full px-6'
+													'mr-1 flex size-full items-center justify-center rounded-full px-6'
 												)}
 											>
 												{index + 1}
@@ -165,7 +175,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 									</MobileOnly>
 									<div className='mb-2 flex flex-row flex-wrap items-center justify-center sm:mb-0'>
 										<img
-											className='mr-2 h-8 w-8 rounded-full object-cover sm:mr-6 sm:h-12 sm:w-12'
+											className='mr-2 size-8 rounded-full object-cover sm:mr-6 sm:size-12'
 											src={user.photoURL}
 										/>
 										<span className='text-center sm:text-2xl'>{user.displayName}</span>

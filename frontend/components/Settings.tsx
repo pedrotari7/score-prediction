@@ -47,7 +47,7 @@ const SettingsPage = () => {
 				<div className='m-10 flex flex-row flex-wrap rounded-md bg-gray-500 p-3'>
 					<a href='https://dashboard.api-football.com/' target='_blank' rel='noreferrer'>
 						<img
-							className='absolute right-12 mb-4 h-12 w-12'
+							className='absolute right-12 mb-4 size-12'
 							src='https://dashboard.api-football.com/public/img/api-sports-small-logo.png'
 						/>
 					</a>
@@ -79,10 +79,10 @@ const SettingsPage = () => {
 
 			<Listbox value={competition} onChange={setCompetition}>
 				<div className='relative m-10 mt-1 w-96'>
-					<Listbox.Button className='relative w-full cursor-default rounded-lg bg-gray-600 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm'>
+					<Listbox.Button className='relative w-full cursor-default rounded-lg bg-gray-600 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm'>
 						<span className='block truncate'>{competition.name}</span>
 						<span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2'>
-							<ChevronUpDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
+							<ChevronUpDownIcon className='size-5 text-gray-400' aria-hidden='true' />
 						</span>
 					</Listbox.Button>
 					<Transition
@@ -91,7 +91,7 @@ const SettingsPage = () => {
 						leaveFrom='opacity-100'
 						leaveTo='opacity-0'
 					>
-						<Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-gray-600 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
+						<Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-gray-600 py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm'>
 							{Object.values(competitions).map(comp => (
 								<Listbox.Option
 									key={comp.name}
@@ -111,7 +111,7 @@ const SettingsPage = () => {
 											</span>
 											{selected ? (
 												<span className='absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600'>
-													<CheckIcon className='h-5 w-5' aria-hidden='true' />
+													<CheckIcon className='size-5' aria-hidden='true' />
 												</span>
 											) : null}
 										</>
@@ -123,11 +123,11 @@ const SettingsPage = () => {
 				</div>
 			</Listbox>
 
-			<div className='myi-3 mx-10 rounded-md bg-gray-600 p-3'>
+			<div className='mx-10 my-3 rounded-md bg-gray-600 p-3'>
 				<label className='mx-4 mt-3 inline-flex cursor-pointer select-none items-center'>
 					<input
 						type='checkbox'
-						className='form-checkbox h-5 w-5'
+						className='size-5'
 						checked={settings.adminHideScores}
 						onChange={() => toggleSetting('adminHideScores')}
 					/>
@@ -136,7 +136,7 @@ const SettingsPage = () => {
 				<label className='mx-4 mt-3 inline-flex cursor-pointer select-none items-center'>
 					<input
 						type='checkbox'
-						className='form-checkbox h-5 w-5'
+						className='size-5'
 						checked={settings.allowUpdateFixtures}
 						onChange={() => toggleSetting('allowUpdateFixtures')}
 					/>
@@ -145,7 +145,7 @@ const SettingsPage = () => {
 				<label className='mx-4 mt-3 inline-flex cursor-pointer select-none items-center'>
 					<input
 						type='checkbox'
-						className='form-checkbox h-5 w-5'
+						className='size-5'
 						checked={settings.allowUpdateStandings}
 						onChange={() => toggleSetting('allowUpdateStandings')}
 					/>
@@ -154,7 +154,7 @@ const SettingsPage = () => {
 				<label className='mx-4 mt-3 inline-flex cursor-pointer select-none items-center'>
 					<input
 						type='checkbox'
-						className='form-checkbox h-5 w-5'
+						className='size-5'
 						checked={settings.disableLiveScoresApi}
 						onChange={() => toggleSetting('disableLiveScoresApi')}
 					/>

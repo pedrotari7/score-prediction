@@ -75,7 +75,7 @@ const JoinLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
 					!loading ? gcc('hover:bg-dark') : ''
 				)}
 			>
-				{!loading ? <span>Join</span> : <Loading className='h-6 w-6' />}
+				{!loading ? <span>Join</span> : <Loading className='size-6' />}
 			</div>
 		</div>
 	);

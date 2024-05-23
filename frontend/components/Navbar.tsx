@@ -73,16 +73,16 @@ export default function Navbar({
 									>
 										<span className='sr-only'>Open main menu</span>
 										{open ? (
-											<XMarkIcon className='block h-6 w-6' aria-hidden='true' />
+											<XMarkIcon className='block size-6' aria-hidden='true' />
 										) : (
-											<Bars3Icon className='block h-6 w-6' aria-hidden='true' />
+											<Bars3Icon className='block size-6' aria-hidden='true' />
 										)}
 									</Disclosure.Button>
 								)}
 							</div>
 							<div className='flex flex-1 items-center justify-center sm:items-stretch sm:justify-start'>
 								<div
-									className='flex flex-shrink-0 cursor-pointer items-center'
+									className='flex shrink-0 cursor-pointer items-center'
 									onClick={() => updateRoute({ page: Route.Home })}
 								>
 									<img className='block h-8 w-auto' src={competition.logo} alt='logo' />
@@ -95,11 +95,10 @@ export default function Navbar({
 													key={index}
 													onClick={() => updateRoute(item.info)}
 													className={classNames(
-														'text-lg font-bold hover:bg-gray-700 ',
+														'cursor-pointer select-none rounded-md px-3 py-2 text-sm font-bold hover:bg-gray-700',
 														isCurrent(item)
 															? `${gcc('bg-dark')} ${gcc('text-light')}`
-															: `text-gray-300 ${gcc('hover:text-light')}`,
-														'cursor-pointer select-none rounded-md px-3 py-2 text-sm'
+															: `text-gray-300 ${gcc('hover:text-light')}`
 													)}
 													aria-current={isCurrent(item) ? 'page' : undefined}
 												>
@@ -113,7 +112,7 @@ export default function Navbar({
 								{/* Profile dropdown */}
 								<Menu as='div' className='relative'>
 									{({ open }) => (
-										<div className='item-center flex flex-row gap-2'>
+										<div className='flex flex-row items-center gap-2'>
 											{noSpoilers !== null && <NoSpoilersToggle />}
 											<div className='flex items-center justify-center'>
 												{user && (
@@ -125,7 +124,7 @@ export default function Navbar({
 													>
 														<span className='sr-only'>Open user menu</span>
 														<img
-															className='border-6 h-10 w-10 rounded-full border-4 border-transparent bg-[#181a1b] hover:border-white'
+															className='size-10 rounded-full border-4 border-transparent bg-[#181a1b] hover:border-white'
 															src={user?.photoURL || ''}
 															alt=''
 														/>
@@ -145,8 +144,8 @@ export default function Navbar({
 												<Menu.Items
 													static
 													className={classNames(
-														gcc('bg-light'),
-														'absolute right-0 mt-2 w-48 origin-top-right rounded-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
+														'absolute right-0 mt-2 w-48 origin-top-right rounded-md py-1 shadow-lg ring-1 ring-black/5 focus:outline-none',
+														gcc('bg-light')
 													)}
 												>
 													{user?.admin && (

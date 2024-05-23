@@ -40,12 +40,16 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 		return (
 			<div
 				onClick={() => setPanelMode(option)}
-				className={classNames(
-					gcc('hover:bg-light'),
-					active ? gcc('bg-dark') : '',
-					'mx-2 my-4 rounded-md px-4 py-2 sm:mx-4',
-					'cursor-pointer hover:bg-opacity-50'
-				)}
+				className={
+					classNames(
+						gcc('hover:bg-light'),
+						active ? gcc('bg-dark') : '',
+						'mx-2 my-4 cursor-pointer rounded-md px-4 py-2 sm:mx-4'
+					) +
+					' ' +
+					// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
+					classNames('hover:bg-opacity-50')
+				}
 			>
 				{option}
 			</div>

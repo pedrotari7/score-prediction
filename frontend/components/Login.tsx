@@ -23,9 +23,11 @@ const Login = () => {
 				<link rel='icon' href={`/favicon-${competition?.name}.ico`} />
 				<meta name='viewport' content='width=device-width, initial-scale=1.0' />
 			</Head>
-			<video className='absolute h-full w-full object-cover' src='/sample.mp4' muted autoPlay loop></video>
-			<div className='absolute flex h-full w-screen flex-col items-center justify-evenly bg-[#181a1b] bg-opacity-90'>
-				<div className='text-center text-4xl font-bold text-light md:text-8xl'>SCORE PREDICTION</div>
+			<video className='absolute size-full object-cover' src='/sample.mp4' muted autoPlay loop></video>
+			<div className='absolute flex h-full w-screen flex-col items-center justify-evenly bg-[#181a1b]/90'>
+				<div className='select-none text-center text-4xl font-bold text-light md:text-8xl'>
+					SCORE PREDICTION
+				</div>
 				{isAllowedBrowser ? (
 					<StyledFirebaseAuth
 						uiConfig={{
@@ -40,7 +42,7 @@ const Login = () => {
 					/>
 				) : (
 					<div className='flex flex-row items-center gap-2 rounded-md bg-red-200 p-4 text-2xl'>
-						<ExclamationTriangleIcon className='h-10 w-10 font-bold text-red-800' />
+						<ExclamationTriangleIcon className='size-10 font-bold text-red-800' />
 						<span className='text-red-800'> Browser not supported </span>
 					</div>
 				)}

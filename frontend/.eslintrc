@@ -20,7 +20,8 @@
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
 		"plugin:prettier/recommended",
-		"plugin:react-hooks/recommended"
+		"plugin:react-hooks/recommended",
+		"plugin:tailwindcss/recommended"
 	],
 	"plugins": ["react", "jest"],
 	"rules": {
@@ -41,12 +42,24 @@
 		"no-mixed-spaces-and-tabs": ["warn"],
 		"react/no-unknown-property": "off"
 	},
+	"overrides": [
+		{
+			"files": ["*.test.ts", "*.test.tsx"],
+
+			"rules": {
+				"tailwindcss/no-custom-classname": 0
+			}
+		}
+	],
 	"settings": {
 		"react": {
 			"createClass": "createReactClass",
 			"pragma": "React",
 			"fragment": "Fragment",
 			"version": "detect"
+		},
+		"tailwindcss": {
+			"callees": ["classnames", "classNames"]
 		}
 	},
 	"globals": {

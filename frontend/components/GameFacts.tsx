@@ -24,7 +24,7 @@ const GameFacts = ({
 
 	const Referee = () => (
 		<div className='my-6 flex flex-row items-center justify-center'>
-			<img className='mx-3 h-8 w-8' src='whistle.svg' />
+			<img className='mx-3 size-8' src='whistle.svg' />
 			<div className='text-center text-sm'>{game.fixture.referee}</div>
 		</div>
 	);
@@ -56,7 +56,7 @@ const GameFacts = ({
 			const photo = playerPhoto ?? DEFAULT_IMAGE;
 			return (
 				<div className={classNames('flex items-center', isAwayTeam ? 'flex-row-reverse' : 'flex-row')}>
-					<img className='m-2 h-6 w-6 rounded-full object-cover sm:h-8 sm:w-8' src={photo} />
+					<img className='m-2 size-6 rounded-full object-cover sm:size-8' src={photo} />
 					<span className={classNames(color)}>{player.name}</span>
 				</div>
 			);
@@ -71,10 +71,10 @@ const GameFacts = ({
 			return (
 				<EventContainer>
 					<TimeElapsed />
-					{isNormalGoal && <img className='mx-2 h-5 w-5' src='/events/goal.svg' />}
-					{isOwnGoal && <img className='mx-2 h-5 w-5' src='/events/own_goal.svg' />}
-					{isMissedPenalty && <img className='mx-2 h-5 w-5' src='/events/missed_penalty.svg' />}
-					{isPenalty && <img className='mx-2 h-5 w-5' src='/events/penalty.svg' />}
+					{isNormalGoal && <img className='mx-2 size-5' src='/events/goal.svg' />}
+					{isOwnGoal && <img className='mx-2 size-5' src='/events/own_goal.svg' />}
+					{isMissedPenalty && <img className='mx-2 size-5' src='/events/missed_penalty.svg' />}
+					{isPenalty && <img className='mx-2 size-5' src='/events/penalty.svg' />}
 
 					<div className={classNames('flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
 						<PlayerWithPhoto player={event.player} />
@@ -87,7 +87,7 @@ const GameFacts = ({
 				<EventContainer>
 					<TimeElapsed />
 					<img
-						className='mx-2 h-5 w-5'
+						className='mx-2 size-5'
 						src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAATlBMVEVHcEzkXVoAl17kXVkAl1/kXVoAl1zkWlrkXlrlXVkAl18An18AmV8Al17kXFrlXVvkXFoAl14Al14Al17kXVoAmF3kXVoAmF7lXlsAmF/fU5yDAAAAGHRSTlMA76DgQPBgMH+AIBBQwGBwwO/wr7+Q37C91jpQAAAAk0lEQVQ4y+XU2Q4CIQyF4cKAuI+OW/v+L+qF0YSlyX9r5lx/obQ0iPx/0pG5g9mGHWhQJoMyGZQfOJD729VG6eTJnLTS3NATH+0dX8vQRdh1hOOJcI4RvkzlyvPubU/tgirZxxLUg9I5pU6p022d4rku5wZOjtNAYW5LZ1j6J3dV5jJoO7PxfKVQKVSyz6hMF1lR3lY7HudLRmFoAAAAAElFTkSuQmCC'
 					/>
 					<div className={classNames('flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
@@ -160,11 +160,11 @@ const GameFacts = ({
 		if (score.home === null || score.away == null) return <></>;
 		return (
 			<div className='flex flex-row items-center text-sm'>
-				<div className='flex h-0.5 flex-grow bg-gray-500 opacity-80 '></div>
+				<div className='flex h-0.5 grow bg-gray-500 opacity-80 '></div>
 				<div className='mx-8 w-max'>
 					{label} {score.home} - {score.away}
 				</div>
-				<div className='flex h-0.5 flex-grow bg-gray-500 opacity-80 '></div>
+				<div className='flex h-0.5 grow bg-gray-500 opacity-80 '></div>
 			</div>
 		);
 	};

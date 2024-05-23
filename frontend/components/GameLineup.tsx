@@ -31,7 +31,7 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 			>
 				<div className='mx-2 w-4 text-center'>{player.number}</div>
 				<div className='mx-2 w-4 text-center'>{player.pos}</div>
-				<img className='m-2 h-6 w-6 rounded-full object-cover sm:h-10 sm:w-10' src={url} />
+				<img className='m-2 size-6 rounded-full object-cover sm:size-10' src={url} />
 				<div className='mx-2'>{player.name}</div>
 			</div>
 		);
@@ -46,7 +46,7 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 
 				<div className='flex flex-col items-center rounded-md p-3'>
 					{/* <div className="text-center mb-2 font-bold">Coach</div> */}
-					<img className='my-2 h-8 w-8 rounded-full object-cover sm:h-10 sm:w-10' src={lineup.coach.photo} />
+					<img className='my-2 size-8 rounded-full object-cover sm:size-10' src={lineup.coach.photo} />
 					<div>{lineup.coach.name}</div>
 				</div>
 
@@ -94,13 +94,13 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 					<div className='flex flex-col items-center'>
 						<div className='relative'>
 							<img
-								className='my-1 h-6 w-6 rounded-full object-cover sm:h-8 sm:w-8 lg:h-12 lg:w-12 xl:h-16 xl:w-16'
+								className='my-1 size-6 rounded-full object-cover sm:size-8 lg:size-12 xl:size-16'
 								src={url}
 							/>
 							<div className='absolute -left-4 top-1/2 w-3 text-center text-xs text-gray-400 lg:-left-6 lg:text-base'>
 								{player.number}
 							</div>
-							<div className='absolute left-1/2 -translate-x-1/2 transform'>
+							<div className='absolute left-1/2 -translate-x-1/2'>
 								<div className='flex flex-row'>
 									<div className='xl:hidden'>{shortName}</div>
 									<div className='hidden w-max xl:block'>{player.name}</div>
@@ -113,7 +113,7 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 		};
 
 		const sectionXI = (section: [number, LineupPlayer][], idx: number) => (
-			<div key={idx} className='mx-1 flex flex-grow flex-row items-center justify-evenly sm:flex-col'>
+			<div key={idx} className='mx-1 flex grow flex-row items-center justify-evenly sm:flex-col'>
 				{section.map(([_, player]: [number, LineupPlayer]) => (
 					<PlayerPosition key={player.id} player={player} playerInfo={players?.[player.id]} />
 				))}
@@ -122,10 +122,10 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 
 		return (
 			<div className={classNames('relative flex flex-row justify-center', className)}>
-				<img src='/area_horizontal.svg' className=' hidden h-full w-full opacity-10 sm:block' />
-				<img src='/area.svg' className='h-full w-full opacity-10 sm:hidden' />
-				<div className='absolute h-full w-full'>
-					<div className='flex h-full w-full flex-col items-center justify-center sm:flex-row'>
+				<img src='/area_horizontal.svg' className=' hidden size-full opacity-10 sm:block' />
+				<img src='/area.svg' className='size-full opacity-10 sm:hidden' />
+				<div className='absolute size-full'>
+					<div className='flex size-full flex-col items-center justify-center sm:flex-row'>
 						<div className='flex h-1/2 w-full flex-col sm:h-full sm:w-1/2 sm:flex-row'>
 							{Object.values(homeSections).map((s, idx) => sectionXI(s, idx))}
 						</div>

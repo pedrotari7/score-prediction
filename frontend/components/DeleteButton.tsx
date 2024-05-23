@@ -11,7 +11,7 @@ const DeleteButton = ({ className, onClick }: { className: string; onClick: Mous
 		<div>
 			{!confirm && (
 				<TrashIcon
-					className={classNames('h-5 w-5 opacity-80 hover:opacity-100', className)}
+					className={classNames('size-5 opacity-80 hover:opacity-100', className)}
 					onClick={e => {
 						e.stopPropagation();
 						setConfirm(true);

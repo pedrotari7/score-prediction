@@ -102,7 +102,7 @@ const LiveGame = ({
 							)}
 							{!noSpoilers && (
 								<div className='mt-2'>
-									<span className='mm-1 text-xs'>{game.fixture.status.long}</span>
+									<span className='ml-1 text-xs'>{game.fixture.status.long}</span>
 									{!isGameFinished(game) && game.fixture.status.elapsed && (
 										<span className='mx-1 text-base'>{game.fixture.status.elapsed}&apos;</span>
 									)}

@@ -87,7 +87,7 @@ const Game = ({
 									<span>No prediction</span>
 								)}
 								{isValidScore(prediction.home) && isValidScore(prediction.away) && (
-									<div className=' py flex flex-row items-center justify-center'>
+									<div className=' flex flex-row items-center justify-center py-1'>
 										{prediction.home} - {prediction.away}
 									</div>
 								)}
