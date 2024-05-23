@@ -55,7 +55,6 @@ jobs:
             - name: Install Dependencies
               uses: pnpm/action-setup@v4
               with:
-                  version: 9
                   run_install: |
                       args: [--frozen-lockfile, --strict-peer-dependencies]
                       cwd: ./
@@ -80,7 +79,6 @@ jobs:
             - name: Install Dependencies
               uses: pnpm/action-setup@v4
               with:
-                  version: 9
                   run_install: |
                       args: [--frozen-lockfile, --strict-peer-dependencies]
                       cwd: ./frontend
@@ -108,7 +106,6 @@ jobs:
             - name: Install Dependencies
               uses: pnpm/action-setup@v4
               with:
-                  version: 9
                   run_install: |
                       args: [--frozen-lockfile, --strict-peer-dependencies]
                       cwd: ./backend
@@ -131,7 +128,6 @@ jobs:
             - name: Install Dependencies
               uses: pnpm/action-setup@v4
               with:
-                  version: 9
                   run_install: |
                       args: [--frozen-lockfile, --strict-peer-dependencies]
                       cwd: ./backend
