@@ -46,11 +46,10 @@ export const getOutcome = (g: Result): 'winH' | 'winA' | 'draw' | null => {
 	if (!isNum(g.home) || !isNum(g.away)) return null;
 	if (g.home > g.away) return 'winH';
 	if (g.home < g.away) return 'winA';
-	if (g.home === g.away) return 'draw';
-	return null;
+	return 'draw';
 };
 
-export const getExtraTimeResult = ({ score: { fulltime, extratime }, fixture, goals }: Fixture) => {
+export const getExtraTimeResult = ({ score: { fulltime, extratime }, fixture, goals }: Fixture): Result => {
 	if (['PEN', 'AET'].includes(fixture.status.short)) {
 		return { home: fulltime.home + extratime.home, away: fulltime.away + extratime.away };
 	}
