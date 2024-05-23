@@ -44,7 +44,18 @@ import {
   sortWorldCupGroup,
 } from '../../shared/utils';
 
+import { rateLimit } from 'express-rate-limit';
+
+// set up rate limiter: maximum of five requests per minute
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // max 100 requests per windowMs
+});
+
 const app = express();
+
+// apply rate limiter to all requests
+app.use(limiter);
 
 app.use(
   cors({
