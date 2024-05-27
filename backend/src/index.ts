@@ -500,7 +500,7 @@ app.get('/tournament', async (req, res) => {
 
   const timeGuard = hasGamesOngoing || hasNonStartedGames ? GAME_TIME : STALE_TIME;
 
-  if ((settings.allowUpdateStandings && !settings.disableLiveScoresApi) || standingsTimeDiffSeconds > timeGuard) {
+  if (!settings.disableLiveScoresApi && (settings.allowUpdateStandings || standingsTimeDiffSeconds > timeGuard)) {
     console.log('standings needs update');
     const newStandings = await updateStandings(competition);
     if (newStandings) {
@@ -508,7 +508,7 @@ app.get('/tournament', async (req, res) => {
     }
   }
 
-  if ((settings.allowUpdateFixtures && !settings.disableLiveScoresApi) || fixturesTimeDiffSeconds > timeGuard) {
+  if (!settings.disableLiveScoresApi && (settings.allowUpdateFixtures || fixturesTimeDiffSeconds > timeGuard)) {
     console.log('fixtures needs update');
 
     const gamesToUpdate = hasGamesOngoing
