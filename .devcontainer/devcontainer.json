@@ -1,6 +1,6 @@
 {
 	"name": "Node.js & TypeScript",
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:16",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:22",
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
