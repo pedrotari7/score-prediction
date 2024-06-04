@@ -59,7 +59,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 				className={
 					classNames(
 						'm-2 cursor-pointer select-none rounded-md p-2 text-xs sm:text-lg',
-						'border-2 hover:border-2 hover:border-gray-400 ',
+						'border-2 hover:border-2 hover:border-gray-400',
 						active ? 'border-white' : 'border-transparent',
 						className
 					) +

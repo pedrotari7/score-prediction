@@ -34,7 +34,7 @@ const GameStats = ({ stats, colors }: { stats: Statistic[] | undefined; colors: 
 
 			<div className='my-2 flex h-6 w-full flex-row items-center'>
 				<div
-					className='rounded-l-md py-2 text-left '
+					className='rounded-l-md py-2 text-left'
 					style={{
 						backgroundColor: `#${homeColor}`,
 						color: getContrastYIQ(homeColor),
@@ -44,7 +44,7 @@ const GameStats = ({ stats, colors }: { stats: Statistic[] | undefined; colors: 
 					<span className='my-2 h-6 w-12 px-2'>{ballPossession[1]}</span>
 				</div>
 				<div
-					className='rounded-r-md py-2 text-right '
+					className='rounded-r-md py-2 text-right'
 					style={{
 						backgroundColor: `#${awayColor}`,
 						color: getContrastYIQ(awayColor),
@@ -73,14 +73,14 @@ const GameStats = ({ stats, colors }: { stats: Statistic[] | undefined; colors: 
 					return (
 						<div key={idx} className='flex w-full flex-row items-center justify-between'>
 							<div
-								className='my-2 flex h-6 w-12 items-center  justify-center rounded-md px-2 text-center'
+								className='my-2 flex h-6 w-12 items-center justify-center rounded-md px-2 text-center'
 								style={homeStyle}
 							>
 								{homeValue ?? 0}
 							</div>
 							<div className='my-2 flex h-6 items-center text-center'>{type}</div>
 							<div
-								className='my-2 flex h-6 w-12  items-center justify-center rounded-md px-2 text-center'
+								className='my-2 flex h-6 w-12 items-center justify-center rounded-md px-2 text-center'
 								style={awayStyle}
 							>
 								{awayValue ?? 0}

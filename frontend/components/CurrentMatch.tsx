@@ -68,7 +68,7 @@ const UserGuess = ({
 			game={game}
 			className={
 				classNames(
-					'my-2 flex w-full flex-row  items-center justify-between rounded p-4 sm:m-2 sm:w-max',
+					'my-2 flex w-full flex-row items-center justify-between rounded p-4 sm:m-2 sm:w-max',
 					'cursor-pointer select-none gap-4'
 				) +
 				' ' +
@@ -82,7 +82,7 @@ const UserGuess = ({
 				<span>{user?.displayName}</span>
 			</span>
 
-			{invalidScore && !emptyScore && <div className='text-sm font-bold '>Invalid</div>}
+			{invalidScore && !emptyScore && <div className='text-sm font-bold'>Invalid</div>}
 
 			{!hiddenScore && (
 				<div className='flex flex-row'>
@@ -231,7 +231,7 @@ const CurrentMatch = ({
 				className={classNames(
 					gcc('text-light'),
 					gcc('bg-dark'),
-					'relative m-4 flex select-none  flex-col justify-center rounded-md p-4 shadow-pop sm:m-8 sm:p-8  md:mx-24'
+					'relative m-4 flex select-none flex-col justify-center rounded-md p-4 shadow-pop sm:m-8 sm:p-8 md:mx-24'
 				)}
 			>
 				<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
@@ -246,7 +246,7 @@ const CurrentMatch = ({
 							className={classNames(
 								gcc('text-blue'),
 								gcc('hover:text-light'),
-								`absolute left-0   top-1/2 w-max -translate-y-1/2 cursor-pointer rounded-md sm:-translate-x-full`
+								`absolute left-0 top-1/2 w-max -translate-y-1/2 cursor-pointer rounded-md sm:-translate-x-full`
 							)}
 							onClick={() => setGameID(prevGameId)}
 						>

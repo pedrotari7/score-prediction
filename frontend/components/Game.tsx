@@ -60,7 +60,7 @@ const Game = ({
 			)}
 			onClick={() => handleContainerClick(isMyPredictions)}
 		>
-			<span className='flex w-full items-center justify-between text-left text-xs lg:w-3/12 '>
+			<span className='flex w-full items-center justify-between text-left text-xs lg:w-3/12'>
 				<Round game={game} />
 				<span className='text-xs'>{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm ccc')}</span>
 			</span>
@@ -87,7 +87,7 @@ const Game = ({
 									<span>No prediction</span>
 								)}
 								{isValidScore(prediction.home) && isValidScore(prediction.away) && (
-									<div className=' flex flex-row items-center justify-center py-1'>
+									<div className='flex flex-row items-center justify-center py-1'>
 										{prediction.home} - {prediction.away}
 									</div>
 								)}

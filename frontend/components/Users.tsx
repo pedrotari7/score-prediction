@@ -31,14 +31,14 @@ const UsersList = () => {
 						return (
 							<div
 								key={index}
-								className='relative w-full '
+								className='relative w-full'
 								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 							>
 								<div
 									className={
 										classNames(
 											gcc('bg-dark'),
-											'my-2 flex w-full flex-row items-center  gap-2 rounded p-4 sm:m-2',
+											'my-2 flex w-full flex-row items-center gap-2 rounded p-4 sm:m-2',
 											'cursor-pointer select-none'
 										) +
 										' ' +

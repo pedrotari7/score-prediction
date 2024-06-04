@@ -122,7 +122,7 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 
 		return (
 			<div className={classNames('relative flex flex-row justify-center', className)}>
-				<img src='/area_horizontal.svg' className=' hidden size-full opacity-10 sm:block' />
+				<img src='/area_horizontal.svg' className='hidden size-full opacity-10 sm:block' />
 				<img src='/area.svg' className='size-full opacity-10 sm:hidden' />
 				<div className='absolute size-full'>
 					<div className='flex size-full flex-col items-center justify-center sm:flex-row'>
@@ -141,7 +141,7 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 	};
 
 	return (
-		<div className='flex flex-col rounded-md bg-gray-700 p-2 text-sm sm:text-base '>
+		<div className='flex flex-col rounded-md bg-gray-700 p-2 text-sm sm:text-base'>
 			<LineupField className='' homeXI={homeLineup.startXI} awayXI={awayLineup.startXI} />
 			<div className='flex flex-col justify-evenly sm:flex-row'>
 				<Lineup lineup={homeLineup} isHomeTeam />

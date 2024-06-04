@@ -17,7 +17,7 @@ exports[`NoSpoilersToggle renders no spoilers toggle turned off 1`] = `
           style="height: 28px; width: 30px; position: relative; opacity: 0; pointer-events: none; transition: opacity 0.25s;"
         >
           <div
-            class="flex  size-full items-center justify-center"
+            class="flex size-full items-center justify-center"
           >
             <svg
               aria-hidden="true"
@@ -99,7 +99,7 @@ exports[`NoSpoilersToggle renders no spoilers toggle turned off if no context 1`
           style="height: 28px; width: 30px; position: relative; opacity: 0; pointer-events: none; transition: opacity 0.25s;"
         >
           <div
-            class="flex  size-full items-center justify-center"
+            class="flex size-full items-center justify-center"
           >
             <svg
               aria-hidden="true"
@@ -181,7 +181,7 @@ exports[`NoSpoilersToggle renders no spoilers toggle turned on 1`] = `
           style="height: 28px; width: 30px; position: relative; opacity: 1; pointer-events: none; transition: opacity 0.25s;"
         >
           <div
-            class="flex  size-full items-center justify-center"
+            class="flex size-full items-center justify-center"
           >
             <svg
               aria-hidden="true"
@@ -264,7 +264,7 @@ exports[`NoSpoilersToggle toggle switch and update context 1`] = `
           style="height: 28px; width: 30px; position: relative; opacity: 0; pointer-events: none; transition: opacity 0.25s;"
         >
           <div
-            class="flex  size-full items-center justify-center"
+            class="flex size-full items-center justify-center"
           >
             <svg
               aria-hidden="true"

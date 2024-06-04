@@ -109,7 +109,7 @@ export default function Navbar({
 									</div>
 								</div>
 							</div>
-							<div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto  sm:pr-0'>
+							<div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:pr-0'>
 								{/* Profile dropdown */}
 								<Menu as='div' className='relative'>
 									{({ open }) => (
@@ -261,9 +261,9 @@ export default function Navbar({
 											className={classNames(
 												'text-lg font-bold',
 												isCurrent(item)
-													? `${gcc('bg-dark')}  ${gcc('text-light')}`
+													? `${gcc('bg-dark')} ${gcc('text-light')}`
 													: `text-gray-300 hover:bg-gray-700 ${gcc('hover:text-light')}`,
-												'block cursor-pointer rounded-md px-3  py-2'
+												'block cursor-pointer rounded-md px-3 py-2'
 											)}
 											aria-current={isCurrent(item) ? 'page' : undefined}
 										>

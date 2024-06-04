@@ -35,7 +35,7 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 						return (
 							<div
 								key={l.id}
-								className='relative w-full '
+								className='relative w-full'
 								onClick={() => setRoute({ page: Route.Leaderboard, data: l.id })}
 							>
 								<div
@@ -43,8 +43,8 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 										classNames(
 											'w-full',
 											gcc('bg-dark'),
-											'my-2 flex flex-row items-center  gap-2 rounded p-4 sm:m-2',
-											'cursor-pointer select-none '
+											'my-2 flex flex-row items-center gap-2 rounded p-4 sm:m-2',
+											'cursor-pointer select-none'
 										) +
 										' ' +
 										// eslint-disable-next-line tailwindcss/migration-from-tailwind-2

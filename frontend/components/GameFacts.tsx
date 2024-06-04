@@ -45,7 +45,7 @@ const GameFacts = ({
 
 		const EventContainer = ({ children }: { children: ReactNode }) => {
 			return (
-				<div className={classNames('my-2 flex  items-center', isAwayTeam ? 'flex-row-reverse' : 'flex-row')}>
+				<div className={classNames('my-2 flex items-center', isAwayTeam ? 'flex-row-reverse' : 'flex-row')}>
 					{children}
 				</div>
 			);
@@ -160,11 +160,11 @@ const GameFacts = ({
 		if (score.home === null || score.away == null) return <></>;
 		return (
 			<div className='flex flex-row items-center text-sm'>
-				<div className='flex h-0.5 grow bg-gray-500 opacity-80 '></div>
+				<div className='flex h-0.5 grow bg-gray-500 opacity-80'></div>
 				<div className='mx-8 w-max'>
 					{label} {score.home} - {score.away}
 				</div>
-				<div className='flex h-0.5 grow bg-gray-500 opacity-80 '></div>
+				<div className='flex h-0.5 grow bg-gray-500 opacity-80'></div>
 			</div>
 		);
 	};

@@ -42,7 +42,7 @@ const ShowMore = ({
 							{open && <div>{more}</div>}
 						</Transition>
 						{more && (
-							<div onClick={() => executeScroll(open)} className='mt-4 flex justify-center '>
+							<div onClick={() => executeScroll(open)} className='mt-4 flex justify-center'>
 								<Disclosure.Button
 									className={classNames(
 										gcc('hover:bg-blue'),

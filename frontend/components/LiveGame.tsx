@@ -43,10 +43,10 @@ const LiveGame = ({
 		<ShowMore
 			setIsOpen={setIsExtraInfoOpen}
 			more={game.fixture.status.short !== 'NS' && !noSpoilers && <GameExtraInfo game={game} />}
-			className={classNames(gcc('text-light'), gcc('bg-blue'), 'my-2 flex  flex-col rounded p-2 shadow-pop')}
+			className={classNames(gcc('text-light'), gcc('bg-blue'), 'my-2 flex flex-col rounded p-2 shadow-pop')}
 		>
 			<div className='flex flex-col items-center sm:flex-row sm:justify-evenly'>
-				<span className='flex text-left text-sm sm:w-2/12 '>
+				<span className='flex text-left text-sm sm:w-2/12'>
 					<div className='flex items-center justify-center'>
 						<Round game={game} />
 					</div>
