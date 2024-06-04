@@ -3,26 +3,35 @@ import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';
 
-const ExactScore = () => (
-	<div className='mb-4 flex flex-row flex-wrap rounded-md bg-green-600 p-2 text-lg'>
-		Exact Score (right outcome of the game and exact number of goals scored by both teams)
-		<span className='mt-2 w-full text-2xl font-bold'>+5 Points</span>
-	</div>
-);
+const ExactScore = () => {
+	const { competition } = useCompetition();
+	return (
+		<div className='mb-4 flex flex-row flex-wrap rounded-md bg-green-600 p-2 text-lg'>
+			Exact Score (right outcome of the game and exact number of goals scored by both teams)
+			<span className='mt-2 w-full text-2xl font-bold'>+{competition.points.exact} Points</span>
+		</div>
+	);
+};
 
-const CorrectResult = () => (
-	<div className='mb-4 flex flex-row flex-wrap rounded-md bg-yellow-600 p-2 text-lg'>
-		Correct Result (right outcome of the game, but wrong number of goals of at least one of the teams)
-		<span className='mt-2 w-full text-2xl font-bold'>+3 Points</span>
-	</div>
-);
+const CorrectResult = () => {
+	const { competition } = useCompetition();
+	return (
+		<div className='mb-4 flex flex-row flex-wrap rounded-md bg-yellow-600 p-2 text-lg'>
+			Correct Result (right outcome of the game, but wrong number of goals of at least one of the teams)
+			<span className='mt-2 w-full text-2xl font-bold'>+{competition.points.result} Points</span>
+		</div>
+	);
+};
 
-const RightGoals = () => (
-	<div className='mb-4 flex flex-row flex-wrap rounded-md bg-pink-600 p-2 text-lg'>
-		Right number of goals from one of the teams
-		<span className='mt-2 w-full text-2xl font-bold'>+1 Point</span>
-	</div>
-);
+const RightGoals = () => {
+	const { competition } = useCompetition();
+	return (
+		<div className='mb-4 flex flex-row flex-wrap rounded-md bg-pink-600 p-2 text-lg'>
+			Right number of goals from one of the teams
+			<span className='mt-2 w-full text-2xl font-bold'>+{competition.points.onescore} Point</span>
+		</div>
+	);
+};
 
 const NoPoints = () => (
 	<div className='mb-4 flex flex-row flex-wrap rounded-md bg-red-600 p-2 text-lg'>
@@ -38,28 +47,36 @@ const ExtraInfo = () => (
 	</div>
 );
 
-const GroupsPoints = () => (
-	<div>
-		<div className='mb-4 text-2xl font-bold'>Groups</div>
-		<div className='mb-4 flex flex-row flex-wrap rounded-md bg-purple-700 p-2 text-lg'>
-			You will be awarded 1 point per each successful guess on a team&apos;s final position in the group stage.
-			<span className='mt-2 w-full text-2xl font-bold'>+1 Point</span>
+const GroupsPoints = () => {
+	const { competition } = useCompetition();
+	return (
+		<div>
+			<div className='mb-4 text-2xl font-bold'>Groups</div>
+			<div className='mb-4 flex flex-row flex-wrap rounded-md bg-purple-700 p-2 text-lg'>
+				You will be awarded 1 point per each successful guess on a team&apos;s final position in the group
+				stage.
+				<span className='mt-2 w-full text-2xl font-bold'>+{competition.points.groups} Point</span>
+			</div>
 		</div>
-	</div>
-);
+	);
+};
 
-const FinalStages = () => (
-	<div className='mb-4'>
-		<div className='mb-4 text-2xl font-bold'>Final Stages</div>
-		In the final stages of the tournament each game is similar to the group stage games, but in this case your
-		prediction will be compared with the result at the end of the 90 or 120 minutes.
-		<div className='my-4 rounded-md bg-gray-500 p-2'>
-			Nonetheless, in case of penalty shootout if you guessed correctly the team that ends up going through to the
-			next stage, you will be awarded 1 extra point that adds to the ones that you might have achieved during the
-			regular time.
+const FinalStages = () => {
+	const { competition } = useCompetition();
+	return (
+		<div className='mb-4'>
+			<div className='mb-4 text-2xl font-bold'>Final Stages</div>
+			In the final stages of the tournament each game is similar to the group stage games, but in this case your
+			prediction will be compared with the result at the end of the 90 or 120 minutes.
+			<div className='my-4 rounded-md bg-gray-500 p-2'>
+				Nonetheless, in case of penalty shootout if you guessed correctly the team that ends up going through to
+				the next stage, you will be awarded{' '}
+				<span className='font-bold'>{competition.points.penalty} extra point</span> that adds to the ones that
+				you might have achieved during the regular time.
+			</div>
 		</div>
-	</div>
-);
+	);
+};
 
 const Deadlines = () => (
 	<div className=''>

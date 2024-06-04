@@ -246,6 +246,13 @@ export interface Competition {
 	start: string;
 	end: string;
 	logo: string;
+	points: {
+		exact: number;
+		result: number;
+		onescore: number;
+		penalty: number;
+		groups: number;
+	};
 }
 
 export type Competitions = Record<string, Competition>;

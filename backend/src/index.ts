@@ -262,7 +262,7 @@ const updatePoints = async (competition: Competition, predictions: Predictions, 
 
   for (const user in groupPoints) {
     updatedScores[user].groups = groupPoints[user];
-    updatedScores[user].points = calculateUserResultPoints(updatedScores[user]);
+    updatedScores[user].points = calculateUserResultPoints(updatedScores[user], competition);
   }
 
   await getDBScores(competition).set(updatedScores);

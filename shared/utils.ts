@@ -1,8 +1,33 @@
-import { Fixture, Fixtures, Prediction, Predictions, PredResult, Result, UserResult } from '../interfaces/main';
+import {
+	Competition,
+	Fixture,
+	Fixtures,
+	Prediction,
+	Predictions,
+	PredResult,
+	Result,
+	UserResult,
+} from '../interfaces/main';
 
 export const competitions = {
-	euro2016: { name: 'euro2016', league: 4, season: 2016, start: '2016-06-10', end: '2016-07-10', logo: '/logo.svg' },
-	euro2020: { name: 'euro2020', league: 4, season: 2020, start: '2021-06-09', end: '2021-07-15', logo: '/logo.svg' },
+	euro2016: {
+		name: 'euro2016',
+		league: 4,
+		season: 2016,
+		start: '2016-06-10',
+		end: '2016-07-10',
+		logo: '/logo.svg',
+		points: { exact: 5, result: 3, onescore: 1, penalty: 1, groups: 1 },
+	},
+	euro2020: {
+		name: 'euro2020',
+		league: 4,
+		season: 2020,
+		start: '2021-06-09',
+		end: '2021-07-15',
+		logo: '/logo.svg',
+		points: { exact: 5, result: 3, onescore: 1, penalty: 1, groups: 1 },
+	},
 	euro2024: {
 		name: 'euro2024',
 		league: 4,
@@ -10,6 +35,7 @@ export const competitions = {
 		start: '2024-06-14',
 		end: '2024-07-14',
 		logo: '/euro2024-logo.svg',
+		points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1 },
 	},
 
 	// wc2010: { name: 'wc2010', league: 1, season: 2010, start: '2010-06-10', end: '2010-07-12', logo: '/logo.svg' },
@@ -23,6 +49,7 @@ export const competitions = {
 		start: '2022-11-20',
 		end: '2022-12-18',
 		logo: '/wc2022-logo.svg',
+		points: { exact: 5, result: 3, onescore: 1, penalty: 1, groups: 1 },
 	},
 } as const;
 
@@ -276,5 +303,9 @@ export const median = (values: number[]): number => {
 
 export const average = (values: number[]): number => values.reduce((acc, v) => acc + v) / values.length;
 
-export const calculateUserResultPoints = (ur: Partial<UserResult>) =>
-	5 * (ur.exact ?? 0) + 3 * (ur.result ?? 0) + (ur.onescore ?? 0) + (ur.penalty ?? 0) + (ur.groups ?? 0);
+export const calculateUserResultPoints = (ur: Partial<UserResult>, competition: Competition) =>
+	competition.points.exact * (ur.exact ?? 0) +
+	competition.points.result * (ur.result ?? 0) +
+	competition.points.onescore * (ur.onescore ?? 0) +
+	competition.points.penalty * (ur.penalty ?? 0) +
+	competition.points.groups * (ur.groups ?? 0);

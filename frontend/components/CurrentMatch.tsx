@@ -10,6 +10,7 @@ import {
 	Predictions,
 	UpdatePrediction,
 	User,
+	UserResult,
 	Users,
 } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
@@ -155,12 +156,14 @@ const CurrentMatch = ({
 }) => {
 	const userInfo = useContext(UserContext);
 
-	const { gcc } = useCompetition();
+	const { gcc, competition } = useCompetition();
 	const { noSpoilers } = useNoSpoilers();
 
 	const [id, setGameID] = useState(gameID);
 	const [currentLeaderboard, setCurrentLeaderboard] = useState('global');
 	const [members, setMembers] = useState<string[]>(Object.keys(users));
+
+	const calculatePoints = (ur: Partial<UserResult>) => calculateUserResultPoints(ur, competition);
 
 	const sortedFixtures = Object.values(fixtures).sort(
 		(a, b) => a.fixture.timestamp - b.fixture.timestamp
@@ -196,7 +199,7 @@ const CurrentMatch = ({
 	if (!noSpoilers) {
 		gamePredictionsAndResults = gamePredictionsAndResults.sort(
 			(a, b) =>
-				calculateUserResultPoints(b.result ?? {}) - calculateUserResultPoints(a.result ?? {}) ||
+				calculatePoints(b.result ?? {}) - calculatePoints(a.result ?? {}) ||
 				(b.result.onescore ?? 0) - (a.result.onescore ?? 0)
 		);
 	}

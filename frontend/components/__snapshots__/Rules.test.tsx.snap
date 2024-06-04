@@ -22,7 +22,9 @@ exports[`Rules render rules page 1`] = `
       <span
         class="mt-2 w-full text-2xl font-bold"
       >
-        +5 Points
+        +
+        3
+         Points
       </span>
     </div>
     <div
@@ -32,7 +34,9 @@ exports[`Rules render rules page 1`] = `
       <span
         class="mt-2 w-full text-2xl font-bold"
       >
-        +3 Points
+        +
+        2
+         Points
       </span>
     </div>
     <div
@@ -42,7 +46,9 @@ exports[`Rules render rules page 1`] = `
       <span
         class="mt-2 w-full text-2xl font-bold"
       >
-        +1 Point
+        +
+        1
+         Point
       </span>
     </div>
     <div
@@ -73,7 +79,9 @@ exports[`Rules render rules page 1`] = `
         <span
           class="mt-2 w-full text-2xl font-bold"
         >
-          +1 Point
+          +
+          1
+           Point
         </span>
       </div>
     </div>
@@ -89,7 +97,15 @@ exports[`Rules render rules page 1`] = `
       <div
         class="my-4 rounded-md bg-gray-500 p-2"
       >
-        Nonetheless, in case of penalty shootout if you guessed correctly the team that ends up going through to the next stage, you will be awarded 1 extra point that adds to the ones that you might have achieved during the regular time.
+        Nonetheless, in case of penalty shootout if you guessed correctly the team that ends up going through to the next stage, you will be awarded
+         
+        <span
+          class="font-bold"
+        >
+          1
+           extra point
+        </span>
+         that adds to the ones that you might have achieved during the regular time.
       </div>
     </div>
     <div
