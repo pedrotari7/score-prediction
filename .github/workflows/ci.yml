@@ -7,110 +7,25 @@ on:
 
 jobs:
     changes:
-        runs-on: ubuntu-latest
-        defaults:
-            run:
-                working-directory: ./
-        # Required permissions
-        permissions:
-            pull-requests: read
-        # Set job outputs to values from filter step
-        outputs:
-            backend: ${{ steps.filter.outputs.backend }}
-            frontend: ${{ steps.filter.outputs.frontend }}
-            shared: ${{ steps.filter.outputs.shared }}
-        steps:
-            - uses: actions/checkout@master
-            - uses: dorny/paths-filter@v3
-              id: filter
-              with:
-                  filters: |
-                      backend:
-                        - 'backend/**'
-                        - 'shared/**'
-                        - '.github/**'
-                      frontend:
-                        - 'frontend/**'
-                        - 'shared/**'
-                        - '.github/**'
-                      shared:
-                        - 'shared/**'
-                        - '.github/**'
+        uses: ./.github/workflows/changes.yml
 
     shared:
-        name: Shared
         needs: changes
-        if: ${{ needs.changes.outputs.shared == 'true' }}
-        runs-on: ubuntu-latest
-        defaults:
-            run:
-                working-directory: ./shared
-        steps:
-            - name: Setup Node
-              uses: actions/setup-node@master
-              with:
-                  node-version: '20'
-            - name: Checkout Repo
-              uses: actions/checkout@master
-            - name: Install Dependencies
-              uses: pnpm/action-setup@v4
-              with:
-                  run_install: |
-                      args: [--frozen-lockfile, --strict-peer-dependencies]
-                      cwd: ./
-            - name: Test
-              run: pnpm test
+        uses: ./.github/workflows/shared.yml
+        with:
+            isShared: ${{ needs.changes.outputs.shared == 'true' }}
 
     frontend:
-        name: Fronted
         needs: changes
-        if: ${{ needs.changes.outputs.frontend == 'true' }}
-        runs-on: ubuntu-latest
-        defaults:
-            run:
-                working-directory: ./frontend
-        steps:
-            - name: Setup Node
-              uses: actions/setup-node@master
-              with:
-                  node-version: '20'
-            - name: Checkout Repo
-              uses: actions/checkout@master
-            - name: Install Dependencies
-              uses: pnpm/action-setup@v4
-              with:
-                  run_install: |
-                      args: [--frozen-lockfile, --strict-peer-dependencies]
-                      cwd: ./frontend
-
-            - name: Lint
-              run: pnpm lint
-            - name: Test
-              run: pnpm test
+        uses: ./.github/workflows/frontend.yml
+        with:
+            isFrontend: ${{ needs.changes.outputs.frontend == 'true' }}
 
     backend:
-        name: Backend
         needs: changes
-        if: ${{ needs.changes.outputs.backend == 'true' }}
-        runs-on: ubuntu-latest
-        defaults:
-            run:
-                working-directory: ./backend
-        steps:
-            - name: Setup Node
-              uses: actions/setup-node@master
-              with:
-                  node-version: '20'
-            - name: Checkout Repo
-              uses: actions/checkout@master
-            - name: Install Dependencies
-              uses: pnpm/action-setup@v4
-              with:
-                  run_install: |
-                      args: [--frozen-lockfile, --strict-peer-dependencies]
-                      cwd: ./backend
-            - name: Lint
-              run: pnpm lint
+        uses: ./.github/workflows/backend.yml
+        with:
+            isBackend: ${{ needs.changes.outputs.backend == 'true' }}
 
     deploy:
         name: Deploy

@@ -1,0 +1,32 @@
+on:
+    workflow_call:
+        inputs:
+            isFrontend:
+                required: true
+                type: boolean
+
+jobs:
+    frontend:
+        if: ${{ inputs.isFrontend }}
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./frontend
+        steps:
+            - name: Setup Node
+              uses: actions/setup-node@master
+              with:
+                  node-version: '20'
+            - name: Checkout Repo
+              uses: actions/checkout@master
+            - name: Install Dependencies
+              uses: pnpm/action-setup@v4
+              with:
+                  run_install: |
+                      args: [--frozen-lockfile, --strict-peer-dependencies]
+                      cwd: ./frontend
+
+            - name: Lint
+              run: pnpm lint
+            - name: Test
+              run: pnpm test
