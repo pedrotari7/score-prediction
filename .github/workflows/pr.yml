@@ -1,0 +1,26 @@
+on:
+    pull_request:
+        types: [opened, synchronize, reopened]
+        branches: 'main'
+
+jobs:
+    changes:
+        uses: ./.github/workflows/changes.yml
+
+    shared:
+        needs: changes
+        uses: ./.github/workflows/shared.yml
+        with:
+            isShared: ${{ needs.changes.outputs.shared == 'true' }}
+
+    frontend:
+        needs: changes
+        uses: ./.github/workflows/frontend.yml
+        with:
+            isFrontend: ${{ needs.changes.outputs.frontend == 'true' }}
+
+    backend:
+        needs: changes
+        uses: ./.github/workflows/backend.yml
+        with:
+            isBackend: ${{ needs.changes.outputs.backend == 'true' }}

@@ -1,0 +1,29 @@
+on:
+    workflow_call:
+        inputs:
+            isShared:
+                required: true
+                type: boolean
+
+jobs:
+    shared:
+        if: ${{ inputs.isShared }}
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./shared
+        steps:
+            - name: Setup Node
+              uses: actions/setup-node@master
+              with:
+                  node-version: '20'
+            - name: Checkout Repo
+              uses: actions/checkout@master
+            - name: Install Dependencies
+              uses: pnpm/action-setup@v4
+              with:
+                  run_install: |
+                      args: [--frozen-lockfile, --strict-peer-dependencies]
+                      cwd: ./
+            - name: Test
+              run: pnpm test
