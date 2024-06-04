@@ -2,6 +2,8 @@ import { User } from '../../interfaces/main';
 import { customRender } from '../lib/utils/testUtils';
 import { Circle, UserScores } from './UserScores';
 
+jest.mock('react-tooltip');
+
 describe('UserScores', () => {
 	it('renders user scores', () => {
 		const { container } = customRender(
