@@ -41,7 +41,7 @@
     "firebase": "10.12.2",
     "firebase-functions-test": "3.3.0",
     "firebase-tools": "13.10.2",
-    "prettier": "3.3.0",
+    "prettier": "3.3.1",
     "typescript": "5.4.5"
   },
   "license": "ISC",
