@@ -1,5 +1,5 @@
 import { Dispatch, Fragment, SetStateAction, useContext } from 'react';
-import { Disclosure, Menu, Transition } from '@headlessui/react';
+import { Disclosure, DisclosureButton, Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { classNames } from '../lib/utils/reactHelper';
 import { getAuth } from 'firebase/auth';
@@ -65,7 +65,7 @@ export default function Navbar({
 							<div className='absolute inset-y-0 left-0 flex items-center sm:hidden'>
 								{/* Mobile menu button */}
 								{!loading && (
-									<Disclosure.Button
+									<DisclosureButton
 										className={classNames(
 											gcc('text-light'),
 											'inline-flex items-center justify-center rounded-md p-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'
@@ -77,7 +77,7 @@ export default function Navbar({
 										) : (
 											<Bars3Icon className='block size-6' aria-hidden='true' />
 										)}
-									</Disclosure.Button>
+									</DisclosureButton>
 								)}
 							</div>
 							<div className='flex flex-1 items-center justify-center sm:items-stretch sm:justify-start'>
@@ -117,7 +117,7 @@ export default function Navbar({
 											{noSpoilers !== null && <NoSpoilersToggle />}
 											<div className='flex items-center justify-center'>
 												{user && (
-													<Menu.Button
+													<MenuButton
 														className={classNames(
 															'flex items-center rounded-full bg-gray-800 text-sm',
 															'focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-2 focus:ring-offset-gray-800'
@@ -129,7 +129,7 @@ export default function Navbar({
 															src={user?.photoURL || ''}
 															alt=''
 														/>
-													</Menu.Button>
+													</MenuButton>
 												)}
 											</div>
 											<Transition
@@ -142,7 +142,7 @@ export default function Navbar({
 												leaveFrom='transform opacity-100 scale-100'
 												leaveTo='transform opacity-0 scale-95'
 											>
-												<Menu.Items
+												<MenuItems
 													static
 													className={classNames(
 														gcc('bg-light'),
@@ -151,7 +151,7 @@ export default function Navbar({
 												>
 													{user?.admin && (
 														<>
-															<Menu.Item>
+															<MenuItem>
 																{({ active }) => (
 																	<div
 																		onClick={() =>
@@ -165,8 +165,8 @@ export default function Navbar({
 																		Users
 																	</div>
 																)}
-															</Menu.Item>
-															<Menu.Item>
+															</MenuItem>
+															<MenuItem>
 																{({ active }) => (
 																	<div
 																		onClick={() =>
@@ -182,8 +182,8 @@ export default function Navbar({
 																		Leaderboards
 																	</div>
 																)}
-															</Menu.Item>
-															<Menu.Item>
+															</MenuItem>
+															<MenuItem>
 																{({ active }) => (
 																	<div
 																		onClick={() =>
@@ -197,12 +197,12 @@ export default function Navbar({
 																		Settings
 																	</div>
 																)}
-															</Menu.Item>
+															</MenuItem>
 														</>
 													)}
 
 													{otherCompetitions.map(comp => (
-														<Menu.Item key={comp}>
+														<MenuItem key={comp}>
 															{({ active }) => (
 																<a
 																	href=''
@@ -219,10 +219,10 @@ export default function Navbar({
 																	{comp.toUpperCase()}
 																</a>
 															)}
-														</Menu.Item>
+														</MenuItem>
 													))}
 
-													<Menu.Item>
+													<MenuItem>
 														{({ active }) => (
 															<a
 																href=''
@@ -238,8 +238,8 @@ export default function Navbar({
 																Sign out
 															</a>
 														)}
-													</Menu.Item>
-												</Menu.Items>
+													</MenuItem>
+												</MenuItems>
 											</Transition>
 										</div>
 									)}
@@ -252,7 +252,7 @@ export default function Navbar({
 						<div className='flex flex-col space-y-1 px-2 pb-3 pt-2'>
 							{!loading &&
 								navigation.map(item => (
-									<Disclosure.Button key={item.name}>
+									<DisclosureButton key={item.name}>
 										<div
 											onClick={() => {
 												updateRoute(item.info);
@@ -269,7 +269,7 @@ export default function Navbar({
 										>
 											{item.name}
 										</div>
-									</Disclosure.Button>
+									</DisclosureButton>
 								))}
 						</div>
 					</Disclosure.Panel>

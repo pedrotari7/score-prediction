@@ -1,4 +1,4 @@
-import { Disclosure, Transition } from '@headlessui/react';
+import { Disclosure, DisclosureButton, Transition } from '@headlessui/react';
 import { Dispatch, ReactNode, SetStateAction, useRef } from 'react';
 import { classNames } from '../lib/utils/reactHelper';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
@@ -43,7 +43,7 @@ const ShowMore = ({
 						</Transition>
 						{more && (
 							<div onClick={() => executeScroll(open)} className='mt-4 flex justify-center'>
-								<Disclosure.Button
+								<DisclosureButton
 									className={classNames(
 										gcc('hover:bg-blue'),
 										'flex w-full justify-center rounded-md p-2 focus:outline-none'
@@ -61,7 +61,7 @@ const ShowMore = ({
 											<span>Show Less</span>
 										</div>
 									)}
-								</Disclosure.Button>
+								</DisclosureButton>
 							</div>
 						)}
 					</>
