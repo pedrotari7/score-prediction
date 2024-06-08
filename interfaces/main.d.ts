@@ -253,6 +253,7 @@ export interface Competition {
 		penalty: number;
 		groups: number;
 	};
+	color: string;
 }
 
 export type Competitions = Record<string, Competition>;

@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { Leaderboard, Users } from '../../interfaces/main';
 import Select from 'react-select';
 import { classNames } from '../lib/utils/reactHelper';
+import useCompetition from '../hooks/useCompetition';
 
 const SelectLeaderboard = ({
 	users,
@@ -10,7 +11,6 @@ const SelectLeaderboard = ({
 	currentLeaderboard,
 	setCurrentLeaderboard,
 	className,
-	backgroundColor = '#181a1b',
 }: {
 	users: Users;
 	leaderboards: Record<string, Leaderboard>;
@@ -18,13 +18,15 @@ const SelectLeaderboard = ({
 	currentLeaderboard: string;
 	setCurrentLeaderboard: Dispatch<SetStateAction<string>>;
 	className?: string;
-	backgroundColor?: string;
 }) => {
 	const allLeaderboards: Record<string, Leaderboard> = {
 		global: { id: 'global', name: 'Global', members: Object.keys(users), creator: 'global' },
 		...leaderboards,
 	};
 
+	const { competition } = useCompetition();
+
+	const backgroundColor = competition.color;
 	return (
 		<Select
 			className={classNames('w-96 max-w-full', className ?? '')}

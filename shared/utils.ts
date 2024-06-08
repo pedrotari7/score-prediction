@@ -18,6 +18,7 @@ export const competitions = {
 		end: '2016-07-10',
 		logo: '/logo.svg',
 		points: { exact: 5, result: 3, onescore: 1, penalty: 1, groups: 1 },
+		color: '#3292a4',
 	},
 	euro2020: {
 		name: 'euro2020',
@@ -27,6 +28,7 @@ export const competitions = {
 		end: '2021-07-15',
 		logo: '/logo.svg',
 		points: { exact: 5, result: 3, onescore: 1, penalty: 1, groups: 1 },
+		color: '#015E6C',
 	},
 	euro2024: {
 		name: 'euro2024',
@@ -36,6 +38,7 @@ export const competitions = {
 		end: '2024-07-14',
 		logo: '/euro2024-logo.svg',
 		points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1 },
+		color: '#002B93',
 	},
 
 	// wc2010: { name: 'wc2010', league: 1, season: 2010, start: '2010-06-10', end: '2010-07-12', logo: '/logo.svg' },
@@ -50,6 +53,7 @@ export const competitions = {
 		end: '2022-12-18',
 		logo: '/wc2022-logo.svg',
 		points: { exact: 5, result: 3, onescore: 1, penalty: 1, groups: 1 },
+		color: '#480c1d',
 	},
 } as const;
 
