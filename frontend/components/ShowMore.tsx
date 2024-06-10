@@ -1,4 +1,4 @@
-import { Disclosure, DisclosureButton, Transition } from '@headlessui/react';
+import { Disclosure, DisclosureButton, DisclosurePanel, Transition } from '@headlessui/react';
 import { Dispatch, ReactNode, SetStateAction, useRef } from 'react';
 import { classNames } from '../lib/utils/reactHelper';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
@@ -28,7 +28,7 @@ const ShowMore = ({
 		<div ref={disclosureRef}>
 			<Disclosure as='div' className={classNames(className)}>
 				{({ open }) => (
-					<>
+					<div>
 						{children}
 
 						<Transition
@@ -39,7 +39,7 @@ const ShowMore = ({
 							leaveFrom='transform scale-100 opacity-100'
 							leaveTo='transform scale-95 opacity-0'
 						>
-							{open && <div>{more}</div>}
+							<DisclosurePanel>{open ? <div>{more}</div> : null}</DisclosurePanel>
 						</Transition>
 						{more && (
 							<div onClick={() => executeScroll(open)} className='mt-4 flex justify-center'>
@@ -51,20 +51,20 @@ const ShowMore = ({
 								>
 									{!open && (
 										<div className='flex flex-col items-center opacity-60'>
-											<span>Show More</span>
+											<span>Show Game Extra Info</span>
 											<ChevronDownIcon className='block size-8' aria-hidden='true' />
 										</div>
 									)}
 									{open && (
 										<div className='flex flex-col items-center opacity-60'>
 											<ChevronUpIcon className='block size-8' aria-hidden='true' />
-											<span>Show Less</span>
+											<span>Hide Game Extra Info</span>
 										</div>
 									)}
 								</DisclosureButton>
 							</div>
 						)}
-					</>
+					</div>
 				)}
 			</Disclosure>
 		</div>
