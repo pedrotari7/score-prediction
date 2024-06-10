@@ -6,6 +6,7 @@ import GroupMapContext from '../context/GroupMapContext';
 import useCompetition from '../hooks/useCompetition';
 import { classNames, GROUP_COLORS } from '../lib/utils/reactHelper';
 import Flag from './Flag';
+import Panel from './Panel';
 
 const Match = ({ game }: { game: Fixture }) => {
 	const { gcc } = useCompetition();
@@ -53,7 +54,7 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 	const { gcc } = useCompetition();
 
 	return (
-		<div className='flex select-none flex-row flex-wrap justify-center'>
+		<Panel className='flex select-none flex-row flex-wrap justify-center bg-transparent'>
 			{standings.map(([title, standing]) => {
 				const group = title.split(' ').pop();
 
@@ -146,7 +147,7 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 					</div>
 				);
 			})}
-		</div>
+		</Panel>
 	);
 };
 

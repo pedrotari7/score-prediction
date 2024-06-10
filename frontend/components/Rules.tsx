@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';
+import Panel from './Panel';
 
 const ExactScore = () => {
 	const { competition } = useCompetition();
@@ -98,15 +99,14 @@ const Rules = () => {
 	const updateRoute = (info: RouteInfo) => setRoute(info);
 
 	return (
-		<>
-			<div
-				className={classNames(
-					gcc('text-light'),
-					gcc('bg-dark'),
-					`m-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop`,
-					'mx-8 md:mx-24 lg:mx-48'
-				)}
-			>
+		<Panel
+			className={classNames(
+				gcc('bg-dark'),
+				`m-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop`,
+				'mx-8 md:mx-24 lg:mx-48'
+			)}
+		>
+			<div>
 				<div className='mb-4 text-4xl font-bold'>Rules</div>
 				<div className='mb-4 text-2xl font-bold'>Points in each game</div>
 				<ExactScore />
@@ -129,13 +129,15 @@ const Rules = () => {
 				test-id='my-predictions-button'
 				className={classNames(
 					gcc('bg-light'),
+					gcc('text-dark'),
+
 					'fixed bottom-4 right-4 cursor-pointer rounded-md p-4 font-bold shadow-pop'
 				)}
 				onClick={() => updateRoute({ page: Route.Predictions, data: route.data })}
 			>
 				My Predictions
 			</div>
-		</>
+		</Panel>
 	);
 };
 

@@ -11,6 +11,7 @@ import SelectLeaderboard from './SelectLeaderboard';
 import ShareLeaderboard from './ShareLeaderboard';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import useCompetition from '../hooks/useCompetition';
+import Panel from './Panel';
 
 interface SortOption {
 	key: string;
@@ -91,7 +92,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 		);
 
 	return (
-		<div className={classNames(gcc('text-light'), 'm-3 select-none rounded-md p-3 shadow-pop sm:mx-[5%] sm:p-6')}>
+		<Panel className={classNames('m-3 select-none rounded-md p-3 shadow-pop sm:mx-[5%] sm:p-6')}>
 			<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
 				<div className='text-2xl font-bold'>Leaderboards</div>
 				<RefreshComp />
@@ -189,7 +190,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 					);
 				})}
 			</div>
-		</div>
+		</Panel>
 	);
 };
 

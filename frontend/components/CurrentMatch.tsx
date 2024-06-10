@@ -32,6 +32,7 @@ import useNoSpoilers from '../hooks/useNoSpoilers';
 import useCompetition from '../hooks/useCompetition';
 import { userInputPrediction } from '../hooks/userInputPrediction';
 import { DateTime } from 'luxon';
+import Panel from './Panel';
 
 const UserGuess = ({
 	gameID,
@@ -229,7 +230,7 @@ const CurrentMatch = ({
 
 	return (
 		<KeyboardHandle prevGameId={prevGameId} nextGameId={nextGameId} setGameID={setGameID}>
-			<main
+			<Panel
 				{...handlers}
 				className={classNames(
 					gcc('text-light'),
@@ -247,8 +248,6 @@ const CurrentMatch = ({
 					{!isExtraInfoOpen && prevGameId !== null && (
 						<div
 							className={classNames(
-								gcc('text-blue'),
-								gcc('hover:text-light'),
 								`absolute left-0 top-1/2 w-max -translate-y-1/2 cursor-pointer rounded-md sm:-translate-x-full`
 							)}
 							onClick={() => setGameID(prevGameId)}
@@ -330,7 +329,7 @@ const CurrentMatch = ({
 					<div></div>
 					// <img className="object-cover absolute bottom-0 right-6 opacity-50 z-0 w-48" src={stadiumImage} />
 				)}
-			</main>
+			</Panel>
 		</KeyboardHandle>
 	);
 };

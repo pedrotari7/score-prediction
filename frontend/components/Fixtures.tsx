@@ -1,10 +1,10 @@
 import { Fixture, Fixtures, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
-import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { useAuth } from '../lib/auth';
 import { classNames } from '../lib/utils/reactHelper';
 import Game from './Game';
+import Panel from './Panel';
 import PredictedGroups from './PredictedGroups';
 import RefreshComp from './RefreshComp';
 import { UserScores } from './UserScores';
@@ -24,7 +24,6 @@ const FixturesPage = ({
 }) => {
 	const { user: currentUser } = useAuth();
 	const { RedactedSpoilers } = useNoSpoilers();
-	const { gcc } = useCompetition();
 
 	if (!user)
 		return (
@@ -71,13 +70,7 @@ const FixturesPage = ({
 	);
 
 	return (
-		<div
-			className={classNames(
-				gcc('text-light'),
-				'm-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop',
-				'mx-2 md:mx-24 lg:mx-48'
-			)}
-		>
+		<Panel className={classNames('m-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop')}>
 			<div className='mb-6 flex flex-col items-center gap-2 text-3xl sm:flex-row'>
 				<div className='flex flex-row items-center justify-center'>
 					<img className='mr-2 size-8 rounded-full object-cover' src={user?.photoURL} />
@@ -125,7 +118,7 @@ const FixturesPage = ({
 					<div className='flex flex-col'>{sortedGroupStageFixtures.map(GameFilled)}</div>
 				</div>
 			</div>
-		</div>
+		</Panel>
 	);
 };
 
