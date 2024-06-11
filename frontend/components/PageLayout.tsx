@@ -39,7 +39,7 @@ const PageLayout = ({
 
 			{hasFooter && (
 				<div className='fixed bottom-0 w-full select-none'>
-					<img src={`/footer-${competition.name}.png`} alt='' className='w-full opacity-30' />
+					<img src={`/footer-${competition.name}.png`} alt='' className='w-full opacity-15' />
 				</div>
 			)}
 		</div>

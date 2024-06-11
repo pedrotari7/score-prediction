@@ -23,11 +23,12 @@ const Login = () => {
 				<link rel='icon' href={`/favicon-${competition?.name}.ico`} />
 				<meta name='viewport' content='width=device-width, initial-scale=1.0' />
 			</Head>
-			<video className='absolute size-full object-cover' src='/sample.mp4' muted autoPlay loop></video>
-			<div className='absolute flex h-full w-screen flex-col items-center justify-evenly bg-[#181a1b]/90'>
+			<img className='absolute size-full object-cover' src='/sample.gif' alt='background' />
+			<div className='absolute flex h-full w-screen flex-col items-center justify-evenly bg-[#181a1b]/95'>
 				<div className='select-none text-center text-4xl font-bold text-light md:text-8xl'>
 					SCORE PREDICTION
 				</div>
+				<img className='block h-16 w-auto sm:h-48' src={competition.logo} alt='logo' />
 				{isAllowedBrowser ? (
 					<StyledFirebaseAuth
 						uiConfig={{
