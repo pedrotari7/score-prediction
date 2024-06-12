@@ -57,16 +57,17 @@ const app = express();
 // apply rate limiter to all requests
 app.use(limiter);
 
+const corsOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://score-prediction.com',
+  'https://www.score-prediction.com',
+  'https://score-prediction.vercel.app',
+];
+
 app.use(
   cors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'https://score-prediction.com',
-      'https://www.score-prediction.com',
-      'https://score-prediction.vercel.app',
-      'https://europe-west1-score-prediciton.cloudfunctions.net',
-    ],
+    origin: corsOrigins,
   })
 );
 
@@ -762,7 +763,7 @@ app.get('/leaderboards', async (req, res) => {
   return res.json({ success: true, data: snapshot.docs.map(doc => doc.data()) });
 });
 
-export const api = onRequest({ secrets: ['APISPORTS'] }, app);
+export const api = onRequest({ secrets: ['APISPORTS'], cors: corsOrigins }, app);
 
 // export const addUser = beforeUserCreated(async event => {
 //   const user = event.data;
