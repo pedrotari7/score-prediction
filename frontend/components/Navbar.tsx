@@ -1,5 +1,14 @@
 import { Dispatch, Fragment, SetStateAction, useContext } from 'react';
-import { Disclosure, DisclosureButton, Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react';
+import {
+	Disclosure,
+	DisclosureButton,
+	DisclosurePanel,
+	Menu,
+	MenuButton,
+	MenuItem,
+	MenuItems,
+	Transition,
+} from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { classNames } from '../lib/utils/reactHelper';
 import { getAuth } from 'firebase/auth';
@@ -152,13 +161,13 @@ export default function Navbar({
 													{user?.admin && (
 														<>
 															<MenuItem>
-																{({ active }) => (
+																{({ focus }) => (
 																	<div
 																		onClick={() =>
 																			updateRoute({ page: Route.Users })
 																		}
 																		className={classNames(
-																			active ? 'bg-gray-100' : '',
+																			focus ? 'bg-gray-100' : '',
 																			'block cursor-pointer px-4 py-2 text-sm text-gray-700'
 																		)}
 																	>
@@ -167,7 +176,7 @@ export default function Navbar({
 																)}
 															</MenuItem>
 															<MenuItem>
-																{({ active }) => (
+																{({ focus }) => (
 																	<div
 																		onClick={() =>
 																			updateRoute({
@@ -175,7 +184,7 @@ export default function Navbar({
 																			})
 																		}
 																		className={classNames(
-																			active ? 'bg-gray-100' : '',
+																			focus ? 'bg-gray-100' : '',
 																			'block cursor-pointer px-4 py-2 text-sm text-gray-700'
 																		)}
 																	>
@@ -184,13 +193,13 @@ export default function Navbar({
 																)}
 															</MenuItem>
 															<MenuItem>
-																{({ active }) => (
+																{({ focus }) => (
 																	<div
 																		onClick={() =>
 																			updateRoute({ page: Route.Settings })
 																		}
 																		className={classNames(
-																			active ? 'bg-gray-100' : '',
+																			focus ? 'bg-gray-100' : '',
 																			'block cursor-pointer px-4 py-2 text-sm text-gray-700'
 																		)}
 																	>
@@ -203,7 +212,7 @@ export default function Navbar({
 
 													{otherCompetitions.map(comp => (
 														<MenuItem key={comp}>
-															{({ active }) => (
+															{({ focus }) => (
 																<a
 																	href=''
 																	onClick={e => {
@@ -212,7 +221,7 @@ export default function Navbar({
 																		router.push(`/${comp}`);
 																	}}
 																	className={classNames(
-																		active ? 'bg-gray-100' : '',
+																		focus ? 'bg-gray-100' : '',
 																		'block px-4 py-2 text-sm text-gray-700'
 																	)}
 																>
@@ -223,7 +232,7 @@ export default function Navbar({
 													))}
 
 													<MenuItem>
-														{({ active }) => (
+														{({ focus }) => (
 															<a
 																href=''
 																onClick={async e => {
@@ -231,7 +240,7 @@ export default function Navbar({
 																	await getAuth(app).signOut();
 																}}
 																className={classNames(
-																	active ? 'bg-gray-100' : '',
+																	focus ? 'bg-gray-100' : '',
 																	'block px-4 py-2 text-sm text-gray-700'
 																)}
 															>
@@ -248,7 +257,7 @@ export default function Navbar({
 						</div>
 					</div>
 
-					<Disclosure.Panel className={classNames(gcc('bg-blue'), 'sm:hidden')}>
+					<DisclosurePanel className={classNames(gcc('bg-blue'), 'sm:hidden')}>
 						<div className='flex flex-col space-y-1 px-2 pb-3 pt-2'>
 							{!loading &&
 								navigation.map(item => (
@@ -272,7 +281,7 @@ export default function Navbar({
 									</DisclosureButton>
 								))}
 						</div>
-					</Disclosure.Panel>
+					</DisclosurePanel>
 				</>
 			)}
 		</Disclosure>

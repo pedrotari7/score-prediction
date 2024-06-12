@@ -30,11 +30,11 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 
 			<div className='flex w-full flex-col justify-evenly'>
 				{leaderboards &&
-					leaderboards.map(l => {
+					leaderboards.map((l, index) => {
 						if (!l) return <></>;
 						return (
 							<div
-								key={l.id}
+								key={index}
 								className='relative w-full'
 								onClick={() => setRoute({ page: Route.Leaderboard, data: l.id })}
 							>
@@ -73,10 +73,10 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 										</div>
 
 										<div className='flex flex-row flex-wrap gap-4'>
-											{l.members.map(m =>
+											{l.members.map((m, index) =>
 												users[m] ? (
 													<div
-														key={m}
+														key={index}
 														className={classNames(
 															gcc('bg-blue'),
 															gcc('hover:bg-dark'),
