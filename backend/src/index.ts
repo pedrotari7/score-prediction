@@ -65,6 +65,7 @@ app.use(
       'https://score-prediction.com',
       'https://www.score-prediction.com',
       'https://score-prediction.vercel.app',
+      'https://europe-west1-score-prediciton.cloudfunctions.net',
     ],
   })
 );
