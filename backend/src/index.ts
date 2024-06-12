@@ -4,7 +4,7 @@ import { setGlobalOptions } from 'firebase-functions/v2';
 import { onRequest } from 'firebase-functions/v2/https';
 import { defineSecret } from 'firebase-functions/params';
 
-// import { beforeUserCreated } from 'firebase-functions/v2/identity';
+import { beforeUserCreated } from 'firebase-functions/v2/identity';
 
 import { initializeApp } from 'firebase-admin/app';
 import { FieldValue, Timestamp, getFirestore } from 'firebase-admin/firestore';
@@ -85,7 +85,7 @@ const GAME_TIME = 60 * 1;
 
 const API_SPORTS_URL = 'https://v3.football.api-sports.io';
 
-// const ADMIN_USERS = ['pedrotari7@gmail.com'];
+const ADMIN_USERS = ['pedrotari7@gmail.com'];
 
 const logDev = (message?: unknown, ...optionalParams: unknown[]): void => {
   if (isDevMode) console.log(message, optionalParams);
@@ -766,13 +766,13 @@ app.get('/leaderboards', async (req, res) => {
 
 export const api = onRequest({ secrets: ['APISPORTS'], cors: corsOrigins }, app);
 
-// export const addUser = beforeUserCreated(async event => {
-//   const user = event.data;
-//   const isAdmin = ADMIN_USERS.includes(user.email ?? '');
-//   if (user.emailVerified) {
-//     await getAuth(firebaseApp).setCustomUserClaims(user.uid, { admin: isAdmin });
-//   }
-// });
+export const addUser = beforeUserCreated(async event => {
+  const user = event.data;
+  const isAdmin = ADMIN_USERS.includes(user.email ?? '');
+  if (user.emailVerified) {
+    await getAuth(firebaseApp).setCustomUserClaims(user.uid, { admin: isAdmin });
+  }
+});
 
 app.delete('/leaderboard', async (req, res) => {
   const authResult = await authenticate(req, res, true);
