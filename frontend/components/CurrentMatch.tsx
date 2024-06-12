@@ -231,104 +231,105 @@ const CurrentMatch = ({
 	return (
 		<KeyboardHandle prevGameId={prevGameId} nextGameId={nextGameId} setGameID={setGameID}>
 			<Panel
-				{...handlers}
 				className={classNames(
 					gcc('text-light'),
 					gcc('bg-dark'),
 					'relative m-4 flex select-none flex-col justify-center rounded-md p-4 shadow-pop sm:m-8 sm:p-8 md:mx-24'
 				)}
 			>
-				<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
-					{!id && <p className='text-3xl'>Next Game</p>}
-					{id && <p className='text-3xl'>{game.league?.round}</p>}
-					<RefreshComp />
-				</div>
-
-				<div className='relative'>
-					{!isExtraInfoOpen && prevGameId !== null && (
-						<div
-							className={classNames(
-								`absolute left-0 top-1/2 w-max -translate-y-1/2 cursor-pointer rounded-md sm:-translate-x-full`
-							)}
-							onClick={() => setGameID(prevGameId)}
-						>
-							<ChevronLeftIcon className={classNames(gcc('text-light'), 'size-8')} />
-						</div>
-					)}
-					<LiveGame
-						gameID={game.fixture?.id}
-						key={game.fixture?.id}
-						setIsExtraInfoOpen={setIsExtraInfoOpen}
-					/>
-					{!isExtraInfoOpen && nextGameId !== null && (
-						<div
-							className={classNames(
-								gcc('text-blue'),
-								gcc('hover:text-light'),
-								`absolute right-0 top-1/2 w-max -translate-y-1/2 cursor-pointer rounded-md sm:translate-x-full`
-							)}
-							onClick={() => setGameID(nextGameId)}
-						>
-							<ChevronRightIcon className={classNames(gcc('text-light'), 'size-8')} />
-						</div>
-					)}
-				</div>
-
-				<div className='mt-6'>
-					<div className='mb-4 text-xl font-bold'>My Prediction</div>
-					<div className='flex flex-row flex-wrap'>
-						<UserGuess
-							gameID={game.fixture.id}
-							user={users[userInfo.uid]}
-							guess={gamePredictions[userInfo.uid] ?? { home: undefined, away: undefined }}
-							key={userInfo.uid}
-							game={game}
-							updatePrediction={updatePrediction}
-							myGuess
-						/>
+				<div {...handlers}>
+					<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
+						{!id && <p className='text-3xl'>Next Game</p>}
+						{id && <p className='text-3xl'>{game.league?.round}</p>}
+						<RefreshComp />
 					</div>
-				</div>
 
-				<PredictionsStats
-					game={game}
-					gamePredictions={currentLeaderboardPredictions.map(([_, p]) => p)}
-					resultsTally={resultsTally}
-				/>
-
-				<div className='z-10 mb-20 mt-6'>
-					<div className='mb-4 flex flex-row items-center justify-between text-xl'>
-						<div className='font-bold'>
-							Predictions <span className='opacity-50'>({gamePredictionsAndResults.length})</span>
-						</div>
-						{Object.keys(leaderboards).length > 0 && (
-							<SelectLeaderboard
-								users={users}
-								leaderboards={leaderboards}
-								currentLeaderboard={currentLeaderboard}
-								setCurrentLeaderboard={setCurrentLeaderboard}
-								setMembers={setMembers}
-								className='!w-36 text-xs'
-							/>
+					<div className='relative'>
+						{!isExtraInfoOpen && prevGameId !== null && (
+							<div
+								className={classNames(
+									`absolute left-0 top-1/2 w-max -translate-y-1/2 cursor-pointer rounded-md sm:-translate-x-full`
+								)}
+								onClick={() => setGameID(prevGameId)}
+							>
+								<ChevronLeftIcon className={classNames(gcc('text-light'), 'size-8')} />
+							</div>
+						)}
+						<LiveGame
+							gameID={game.fixture?.id}
+							key={game.fixture?.id}
+							setIsExtraInfoOpen={setIsExtraInfoOpen}
+						/>
+						{!isExtraInfoOpen && nextGameId !== null && (
+							<div
+								className={classNames(
+									gcc('text-blue'),
+									gcc('hover:text-light'),
+									`absolute right-0 top-1/2 w-max -translate-y-1/2 cursor-pointer rounded-md sm:translate-x-full`
+								)}
+								onClick={() => setGameID(nextGameId)}
+							>
+								<ChevronRightIcon className={classNames(gcc('text-light'), 'size-8')} />
+							</div>
 						)}
 					</div>
-					<div className='flex flex-row flex-wrap'>
-						{gamePredictionsAndResults.map(({ uid, prediction }) => (
+
+					<div className='mt-6'>
+						<div className='mb-4 text-xl font-bold'>My Prediction</div>
+						<div className='flex flex-row flex-wrap'>
 							<UserGuess
 								gameID={game.fixture.id}
-								user={users[uid]}
-								guess={prediction}
-								key={uid}
+								user={users[userInfo.uid]}
+								guess={gamePredictions[userInfo.uid] ?? { home: undefined, away: undefined }}
+								key={userInfo.uid}
 								game={game}
 								updatePrediction={updatePrediction}
+								myGuess
 							/>
-						))}
+						</div>
 					</div>
-				</div>
 
-				{stadiumImage && (
-					<div></div>
-					// <img className="object-cover absolute bottom-0 right-6 opacity-50 z-0 w-48" src={stadiumImage} />
-				)}
+					<PredictionsStats
+						game={game}
+						gamePredictions={currentLeaderboardPredictions.map(([_, p]) => p)}
+						resultsTally={resultsTally}
+					/>
+
+					<div className='z-10 mb-20 mt-6'>
+						<div className='mb-4 flex flex-row items-center justify-between text-xl'>
+							<div className='font-bold'>
+								Predictions <span className='opacity-50'>({gamePredictionsAndResults.length})</span>
+							</div>
+							{Object.keys(leaderboards).length > 0 && (
+								<SelectLeaderboard
+									users={users}
+									leaderboards={leaderboards}
+									currentLeaderboard={currentLeaderboard}
+									setCurrentLeaderboard={setCurrentLeaderboard}
+									setMembers={setMembers}
+									className='!w-36 text-xs'
+								/>
+							)}
+						</div>
+						<div className='flex flex-row flex-wrap'>
+							{gamePredictionsAndResults.map(({ uid, prediction }) => (
+								<UserGuess
+									gameID={game.fixture.id}
+									user={users[uid]}
+									guess={prediction}
+									key={uid}
+									game={game}
+									updatePrediction={updatePrediction}
+								/>
+							))}
+						</div>
+					</div>
+
+					{stadiumImage && (
+						<div></div>
+						// <img className="object-cover absolute bottom-0 right-6 opacity-50 z-0 w-48" src={stadiumImage} />
+					)}
+				</div>
 			</Panel>
 		</KeyboardHandle>
 	);
