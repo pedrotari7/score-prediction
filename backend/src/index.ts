@@ -769,6 +769,7 @@ export const api = onRequest({ secrets: ['APISPORTS'], cors: corsOrigins }, app)
 export const addUser = beforeUserCreated(async event => {
   const user = event.data;
   const isAdmin = ADMIN_USERS.includes(user.email ?? '');
+  console.log('addUser:', user);
   if (user.emailVerified) {
     await getAuth(firebaseApp).setCustomUserClaims(user.uid, { admin: isAdmin });
   }
