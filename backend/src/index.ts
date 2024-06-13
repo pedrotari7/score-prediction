@@ -373,7 +373,9 @@ const getUsers = async (competition: Competition) => {
 
       const shouldOnboard = isNewUser || lastSignInTimeDiff > OneMonth;
 
-      return { ...users, [uid]: { uid, displayName, photoURL, admin, score, isNewUser, shouldOnboard } };
+      const name = displayName?.split(' ').shift() ?? 'Unknown User';
+
+      return { ...users, [uid]: { uid, displayName: name, photoURL, admin, score, isNewUser, shouldOnboard } };
     },
     {}
   );
