@@ -180,6 +180,14 @@ const getDBGroupPoints = (competition: Competition) => getDbDoc(competition, 'gr
 const getDBSettings = () => getDoc('admin', 'settings');
 const getDBUser = (uid: string) => getDoc('users', uid);
 
+const updateLastCheckIn = async (uid: string): Promise<void> => {
+  const userExtraInfo = (await getDBUser(uid).get()).data() ?? { leaderboards: [] };
+
+  const updatedUserExtraInfo = { ...userExtraInfo, lastCheckIn: FieldValue.serverTimestamp() };
+
+  await getDBUser(uid).set(updatedUserExtraInfo);
+};
+
 const updateStandings = async (competition: Competition) => {
   const response = await getStandings({ league: competition.league, season: competition.season });
 
@@ -562,7 +570,12 @@ app.get('/tournament', async (req, res) => {
 
 app.post('/update-predictions', async (req, res) => {
   const authResult = await authenticate(req, res);
+
   if (!authResult.success) return authResult.result;
+
+  const decodedToken = authResult.result;
+
+  updateLastCheckIn(decodedToken.uid);
 
   const { uid: callerUID } = authResult.result;
 
