@@ -31,7 +31,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		const handle = setInterval(
 			async () => {
 				const user = getAuth(app).currentUser;
-				console.log('refresh', user);
 				if (user) {
 					const token = await user.getIdToken(true);
 					const isAdmin = (await user.getIdTokenResult()).claims.admin as boolean;
