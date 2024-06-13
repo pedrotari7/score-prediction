@@ -81,13 +81,13 @@ const UserGuess = ({
 		>
 			<span className='flex flex-row items-center text-left text-xs'>
 				{user?.photoURL && <img className='mr-2 size-8 rounded-full object-cover' src={user?.photoURL} />}
-				<span>{user?.displayName}</span>
 			</span>
+			<span className='text-xl'>{user?.displayName}</span>
 
 			{invalidScore && !emptyScore && <div className='text-sm font-bold'>Invalid</div>}
 
 			{!hiddenScore && (
-				<div className='flex flex-row'>
+				<div className='flex flex-row text-xl'>
 					{(isInPast || !myGuess) && !invalidScore && (
 						<>
 							<div className='flex flex-row items-center justify-end font-bold'>
