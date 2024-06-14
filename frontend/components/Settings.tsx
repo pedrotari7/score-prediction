@@ -23,6 +23,7 @@ import { getCompetitionClass } from '../lib/utils/reactHelper';
 import useSettings from '../hooks/useSettings';
 import Loading from './Loading';
 import useStatus from '../hooks/useStatus';
+import RefreshButton from './RefreshButton';
 
 const SettingsPage = () => {
 	const userInfo = useContext(UserContext);
@@ -31,7 +32,7 @@ const SettingsPage = () => {
 
 	const { settings, toggleSetting, loading: loadSettings } = useSettings();
 
-	const { status, loading: loadingStatus } = useStatus();
+	const { status, loading: loadingStatus, updateStatus } = useStatus();
 
 	if (!userInfo || loadSettings) return <Loading message='Loading settings' />;
 
@@ -44,7 +45,8 @@ const SettingsPage = () => {
 			{loadingStatus || !status ? (
 				<Loading message='Loading Status' />
 			) : (
-				<div className='m-10 flex flex-row flex-wrap rounded-md bg-gray-500 p-3'>
+				<div className='relative m-10 flex flex-row flex-wrap rounded-md bg-gray-500 p-3'>
+					<RefreshButton className='absolute bottom-12 right-12 mb-4 size-12' onClick={updateStatus} />
 					<a href='https://dashboard.api-football.com/' target='_blank' rel='noreferrer'>
 						<img
 							className='absolute right-12 mb-4 size-12'

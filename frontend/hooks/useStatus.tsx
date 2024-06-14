@@ -8,6 +8,12 @@ const useStatus = () => {
 	const [status, setStatus] = useState<Status>();
 	const userInfo = useContext(UserContext);
 
+	const [trigger, setTrigger] = useState(false);
+
+	const updateStatus = useCallback(() => {
+		setTrigger(v => !v);
+	}, [setTrigger]);
+
 	const update = useCallback(async () => {
 		setLoading(true);
 		if (userInfo) {
@@ -18,9 +24,9 @@ const useStatus = () => {
 
 	useEffect(() => {
 		update();
-	}, [update]);
+	}, [update, trigger]);
 
-	return { update, status, loading };
+	return { update, status, loading, updateStatus };
 };
 
 export default useStatus;
