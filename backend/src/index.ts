@@ -271,8 +271,8 @@ const updatePoints = async (competition: Competition, predictions: Predictions, 
     {} as Record<string, UserResult>
   );
 
-  for (const user in groupPoints) {
-    updatedScores[user].groups = groupPoints[user];
+  for (const user in updatedScores) {
+    updatedScores[user].groups = groupPoints[user] ?? 0;
     updatedScores[user].points = calculateUserResultPoints(updatedScores[user], competition);
   }
 
