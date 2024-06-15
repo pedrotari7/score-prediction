@@ -82,7 +82,10 @@ const UserGuess = ({
 			<span className='flex flex-row items-center text-left text-xs'>
 				{user?.photoURL && <img className='mr-2 size-8 rounded-full object-cover' src={user?.photoURL} />}
 			</span>
-			<span className='text-xl'>{user?.displayName}</span>
+			<div className='flex items-center justify-center gap-4'>
+				<span className='text-xl'>{user?.displayName}</span>
+				<span className='text-sm text-light'>{user?.score.points} pts</span>
+			</div>
 
 			{invalidScore && !emptyScore && <div className='text-sm font-bold'>Invalid</div>}
 
@@ -195,7 +198,11 @@ const CurrentMatch = ({
 			prediction,
 			result: getResult(prediction, game),
 		}))
-		.sort((a, b) => users[a.uid].displayName.localeCompare(users[b.uid].displayName));
+		.sort(
+			(a, b) =>
+				users[b.uid].score.points - users[a.uid].score.points ||
+				users[a.uid].displayName.localeCompare(users[b.uid].displayName)
+		);
 
 	if (!noSpoilers) {
 		gamePredictionsAndResults = gamePredictionsAndResults.sort(
