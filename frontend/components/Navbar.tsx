@@ -123,7 +123,6 @@ export default function Navbar({
 								<Menu as='div' className='relative'>
 									{({ open }) => (
 										<div className='flex flex-row gap-2'>
-											{noSpoilers !== null && <NoSpoilersToggle />}
 											<div className='flex items-center justify-center'>
 												{user && (
 													<MenuButton
@@ -160,6 +159,8 @@ export default function Navbar({
 												>
 													{user?.admin && (
 														<>
+															{noSpoilers !== null && <NoSpoilersToggle />}
+
 															<MenuItem>
 																{({ focus }) => (
 																	<div

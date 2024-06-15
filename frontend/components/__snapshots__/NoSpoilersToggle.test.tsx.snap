@@ -78,6 +78,9 @@ exports[`NoSpoilersToggle renders no spoilers toggle turned off 1`] = `
         type="checkbox"
       />
     </div>
+    <span>
+      No Spoilers
+    </span>
   </label>
 </div>
 `;
@@ -160,6 +163,9 @@ exports[`NoSpoilersToggle renders no spoilers toggle turned off if no context 1`
         type="checkbox"
       />
     </div>
+    <span>
+      No Spoilers
+    </span>
   </label>
 </div>
 `;
@@ -243,6 +249,9 @@ exports[`NoSpoilersToggle renders no spoilers toggle turned on 1`] = `
         type="checkbox"
       />
     </div>
+    <span>
+      No Spoilers
+    </span>
   </label>
 </div>
 `;
@@ -325,6 +334,9 @@ exports[`NoSpoilersToggle toggle switch and update context 1`] = `
         type="checkbox"
       />
     </div>
+    <span>
+      No Spoilers
+    </span>
   </label>
 </div>
 `;

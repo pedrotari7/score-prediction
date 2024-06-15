@@ -32,6 +32,7 @@ const NoSpoilersToggle = () => {
 				// eslint-disable-next-line tailwindcss/no-custom-classname
 				className='react-switch'
 			/>
+			<span>No Spoilers</span>
 		</label>
 	);
 };
