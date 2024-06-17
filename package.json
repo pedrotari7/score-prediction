@@ -15,7 +15,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "29.5.12",
-    "@types/node": "20.14.3",
+    "@types/node": "20.14.4",
     "firebase": "10.12.2",
     "firebase-tools": "13.11.2",
     "husky": "9.0.11",
