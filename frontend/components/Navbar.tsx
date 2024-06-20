@@ -16,7 +16,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth';
 import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
 import { app } from '../lib/firebaseClient';
-import { competitions } from '../../shared/utils';
+import { competitions, currentCompetitions } from '../../shared/utils';
 import NoSpoilersToggle from './NoSpoilersToggle';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import useCompetition from '../hooks/useCompetition';
@@ -60,6 +60,8 @@ export default function Navbar({
 			? route.data === user?.uid
 			: page === route.page;
 	};
+
+	const concurrentCompetition = currentCompetitions.find(c => c.name !== competition.name);
 
 	const otherCompetitions = [competitions.euro2020, competitions.wc2022, competitions.euro2024, competitions.ca2024]
 		.map(c => c.name)
@@ -115,6 +117,21 @@ export default function Navbar({
 													{item.name}
 												</div>
 											))}
+										{concurrentCompetition && !loading ? (
+											<div
+												onClick={() => {
+													setLoading(true);
+													router.push(`/${concurrentCompetition?.name}`);
+												}}
+												className={classNames(
+													'text-lg font-bold hover:bg-gray-700',
+													`text-gray-300 ${gcc('hover:text-light')}`,
+													'cursor-pointer select-none rounded-md px-3 py-2'
+												)}
+											>
+												{concurrentCompetition.name}
+											</div>
+										) : null}
 									</div>
 								</div>
 							</div>
