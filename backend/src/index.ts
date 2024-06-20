@@ -35,6 +35,7 @@ import {
   calculateUserResultPoints,
   competitions,
   currentCompetition,
+  currentCompetitions,
   DEFAULT_USER_RESULT,
   getResult,
   isGameOnGoing,
@@ -165,7 +166,7 @@ const getCurrentTime = () => {
 };
 
 const getTimeDiff = (timestamp: Timestamp) => {
-  return (getCurrentTime().getTime() - timestamp.toMillis()) / 1000;
+  return (getCurrentTime().getTime() - timestamp?.toMillis()) / 1000;
 };
 
 const getDbDoc = (comp: Competition, name: string) => getFirestore(firebaseApp).collection(comp.name).doc(name);
@@ -371,7 +372,7 @@ const getUsers = async (competition: Competition) => {
 
       const OneMonth = 60 * 60 * 24 * 31;
 
-      const isCurrentCompetition = competition.name === currentCompetition.name;
+      const isCurrentCompetition = currentCompetitions.some(current => competition.name === current.name);
 
       if (!(uid in scores) && !(isCurrentCompetition && lastSignInTimeDiff < OneMonth)) {
         return users;
@@ -482,7 +483,7 @@ app.get('/tournament', async (req, res) => {
 
   let fixtures = fixturesDocument.data();
 
-  if (!fixtures && settings.allowUpdateFixtures && !settings.disableLiveScoresApi) {
+  if (!fixtures?.data && !settings.disableLiveScoresApi) {
     console.log('There are no current fixtures');
     fixtures = await updateFixtures(competition, [], {});
   }
@@ -493,7 +494,7 @@ app.get('/tournament', async (req, res) => {
 
   const standings = standingsDocument.data();
 
-  if (!standings && settings.allowUpdateStandings && !settings.disableLiveScoresApi) {
+  if (!standings && !settings.disableLiveScoresApi) {
     console.log('There are no current standings');
     const newStandings = await updateStandings(competition);
     if (newStandings) {

@@ -40,6 +40,16 @@ export const competitions = {
 		points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1 },
 		color: '#002B93',
 	},
+	ca2024: {
+		name: 'ca2024',
+		league: 9,
+		season: 2024,
+		start: '2024-06-21',
+		end: '2024-07-14',
+		logo: '/ca2024-logo.png',
+		points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1 },
+		color: '#242525',
+	},
 
 	// wc2010: { name: 'wc2010', league: 1, season: 2010, start: '2010-06-10', end: '2010-07-12', logo: '/logo.svg' },
 	// wc2014: { name: 'wc2014', league: 1, season: 2014, start: '2014-06-11', end: '2014-07-15', logo: '/logo.svg' },
@@ -58,6 +68,8 @@ export const competitions = {
 } as const;
 
 export const currentCompetition = competitions.euro2024;
+
+export const currentCompetitions = [competitions.euro2024, competitions.ca2024];
 
 export const DEFAULT_USER_RESULT: UserResult = {
 	points: 0,

@@ -21,10 +21,16 @@ const PageLayout = ({
 
 	const hasFooter = competition?.name && footerCompetitions.some(c => c.name === competition.name);
 
-	const style =
+	let style =
 		competition?.name === competitions.euro2020.name
 			? { backgroundImage: 'url(/background.webp)' }
 			: { background: '#181a1b' };
+
+	if (competition?.name === competitions.ca2024.name) {
+		style = {
+			backgroundImage: 'url(/footer-ca2024.png)',
+		};
+	}
 	return (
 		<div className='flex h-screen w-screen flex-col overflow-x-hidden bg-cover bg-center bg-repeat-y' style={style}>
 			<Head>

@@ -63,4 +63,12 @@ const FLAGS: Record<number, string> = {
 	17: 'https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg',
 	1104: 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Flag_of_Georgia.svg',
 	1091: 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Flag_of_Slovenia.svg',
+	30: 'https://upload.wikimedia.org/wikipedia/commons/d/df/Flag_of_Peru_%28state%29.svg',
+	2383: 'https://upload.wikimedia.org/wikipedia/commons/7/78/Flag_of_Chile.svg',
+	8: 'https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg',
+	2380: 'https://upload.wikimedia.org/wikipedia/commons/2/27/Flag_of_Paraguay.svg',
+	2381: 'https://upload.wikimedia.org/wikipedia/commons/4/48/Flag_of_Bolivia.svg',
+	11: 'https://upload.wikimedia.org/wikipedia/commons/a/ab/Flag_of_Panama.svg',
+	2385: 'https://upload.wikimedia.org/wikipedia/commons/0/0a/Flag_of_Jamaica.svg',
+	2379: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Flag_of_Venezuela_%28state%29.svg',
 };

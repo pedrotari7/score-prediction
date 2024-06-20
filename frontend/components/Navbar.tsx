@@ -61,7 +61,7 @@ export default function Navbar({
 			: page === route.page;
 	};
 
-	const otherCompetitions = [competitions.euro2020, competitions.wc2022, competitions.euro2024]
+	const otherCompetitions = [competitions.euro2020, competitions.wc2022, competitions.euro2024, competitions.ca2024]
 		.map(c => c.name)
 		.filter(comp => comp !== competition.name);
 
