@@ -104,7 +104,7 @@ const FixturesPage = ({
 			<div className='flex flex-col'>
 				<div className={classNames('mb-6 flex flex-row items-center justify-between')}>
 					<div className='text-3xl'>Group Stage</div>
-					{!otherStageFixtures && <RefreshComp />}
+					{Object.keys(otherStageFixtures).length === 0 && <RefreshComp />}
 				</div>
 
 				<div className='flex flex-col-reverse md:flex-col'>
