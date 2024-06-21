@@ -298,6 +298,21 @@ export default function Navbar({
 										</div>
 									</DisclosureButton>
 								))}
+							{concurrentCompetition && !loading ? (
+								<div
+									onClick={() => {
+										setLoading(true);
+										router.push(`/${concurrentCompetition?.name}`);
+									}}
+									className={classNames(
+										'text-lg font-bold',
+										`text-gray-300 hover:bg-gray-700 ${gcc('hover:text-light')}`,
+										'flex cursor-pointer items-center justify-start gap-2 rounded-md px-3 py-8'
+									)}
+								>
+									<img className='h-10' src={concurrentCompetition.logo} alt='' />
+								</div>
+							) : null}
 						</div>
 					</DisclosurePanel>
 				</>
