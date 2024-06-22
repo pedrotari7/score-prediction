@@ -12,6 +12,7 @@ import ShareLeaderboard from './ShareLeaderboard';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import useCompetition from '../hooks/useCompetition';
 import Panel from './Panel';
+import { useAuth } from '../lib/auth';
 
 interface SortOption {
 	key: string;
@@ -30,6 +31,7 @@ const SortOptions: Record<string, SortOption> = {
 };
 
 const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Record<string, Leaderboard> }) => {
+	const auth = useAuth();
 	const { RedactedSpoilers } = useNoSpoilers();
 	const { route, setRoute } = useContext(RouteContext)!;
 	const { gcc } = useCompetition();
@@ -42,6 +44,8 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 		initialLeaderboard === 'global' ? Object.keys(users) : leaderboards[initialLeaderboard]?.members ?? [];
 
 	const [members, setMembers] = useState<string[]>(initialMembers);
+
+	const currentUser = auth.user?.uid;
 
 	const FilterOption = ({
 		children,
@@ -139,7 +143,8 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 							<div
 								className={
 									classNames(
-										'flex cursor-pointer flex-col items-center justify-between sm:flex-row',
+										currentUser === user.uid ? 'border-white' : 'border-transparent',
+										'flex cursor-pointer flex-col items-center justify-between border-8 sm:flex-row',
 										gcc('bg-blue'),
 										`mx-1 my-4 rounded-md p-3 sm:mx-[5%] md:mx-[5%] lg:mx-[20%]`
 									) +
@@ -179,7 +184,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 											className='mr-2 size-8 rounded-full object-cover sm:mr-6 sm:size-12'
 											src={user.photoURL}
 										/>
-										<span className='text-center sm:text-2xl'>{user.displayName}</span>
+										<span className='text-center font-bold sm:text-2xl'>{user.displayName}</span>
 									</div>
 								</div>
 								<RedactedSpoilers>
