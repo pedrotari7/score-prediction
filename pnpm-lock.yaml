@@ -420,8 +420,8 @@ packages:
   '@firebase/webchannel-wrapper@1.0.0':
     resolution: {integrity: sha512-zuWxyfXNbsKbm96HhXzainONPFqRcoZblQ++e9cAIGUuHfl2cFSBzW01jtesqWG/lqaUyX3H8O1y9oWboGNQBA==}
 
-  '@google-cloud/cloud-sql-connector@1.3.1':
-    resolution: {integrity: sha512-lF52gnTeO3bf1Yt0DGkCJ8j/+Q9w9bK4Oa99hE6irR1k8WFYOMhwpg+rcMlYL8B1T2niUEFbS+u2gqwX+Krv/w==}
+  '@google-cloud/cloud-sql-connector@1.3.2':
+    resolution: {integrity: sha512-TED47jIwE/HHMZk1RGzXohYsBh3gjQE1uTu5RF27+6H11W5C6QhbUJPfZ3/aEkBpmtv5xrZha1UID9kSPi0JWA==}
     engines: {node: '>=14'}
 
   '@google-cloud/paginator@5.0.2':
@@ -1323,8 +1323,8 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  electron-to-chromium@1.4.803:
-    resolution: {integrity: sha512-61H9mLzGOCLLVsnLiRzCbc63uldP0AniRYPV3hbGVtONA1pI7qSGILdbofR7A8TMbOypDocEAjH/e+9k1QIe3g==}
+  electron-to-chromium@1.4.810:
+    resolution: {integrity: sha512-Kaxhu4T7SJGpRQx99tq216gCq2nMxJo+uuT6uzz9l8TVN2stL7M06MIIXAtr9jsrLs2Glflgf2vMQRepxawOdQ==}
 
   emittery@0.13.1:
     resolution: {integrity: sha512-DeWwawk6r5yR9jFgnDKYt4sLS0LmHJJi3ZOnb5/JdbYwj3nW+FxQnHIjhBKz8YLC7oRNPVM9NQ47I3CVx34eqQ==}
@@ -1607,8 +1607,8 @@ packages:
   glob-slasher@1.0.1:
     resolution: {integrity: sha512-5MUzqFiycIKLMD1B0dYOE4hGgLLUZUNGGYO4BExdwT32wUwW3DBOE7lMQars7vB1q43Fb3Tyt+HmgLKsJhDYdg==}
 
-  glob@10.4.1:
-    resolution: {integrity: sha512-2jelhlq3E4ho74ZyVLN03oKdAZVUa6UDZzFLVH1H7dnoax+y9qyaq8zBkfDIggjniU19z0wU18y16jMB2eyVIw==}
+  glob@10.4.2:
+    resolution: {integrity: sha512-GwMlUF6PkPo3Gk21UxkCohOv0PLcIXVtKyLlpEI28R/cO/4eNOdmLk3CMW1wROV/WR/EsZOWAfBbBOqYvs88/w==}
     engines: {node: '>=16 || 14 >=14.18'}
     hasBin: true
 
@@ -1628,8 +1628,8 @@ packages:
     resolution: {integrity: sha512-epX3ww/mNnhl6tL45EQ/oixsY8JLEgUFoT4A5E/5iAR4esld9Kqv6IJGk7EmGuOgDvaarwF95hU2+v7Irql9lw==}
     engines: {node: '>=14'}
 
-  google-gax@4.3.6:
-    resolution: {integrity: sha512-z3MR+pE6WqU+tnKtkJl4c723EYY7Il4fcSNgEbehzUJpcNWkca9AyoC2pdBWmEa0cda21VRpUBb4s6VSATiUKg==}
+  google-gax@4.3.7:
+    resolution: {integrity: sha512-3bnD8RASQyaxOYTdWLgwpQco/aytTxFavoI/UN5QN5txDLp8QRrBHNtCUJ5+Ago+551GD92jG8jJduwvmaneUw==}
     engines: {node: '>=14'}
 
   googleapis-common@7.2.0:
@@ -1803,8 +1803,9 @@ packages:
     resolution: {integrity: sha512-YfJT7rkpQB0updsdHLGWrvhBJfcfzNNawYDNIyQXJz0IViGf75O8EBPKSdvw2rF+LGCsX4FZ8tcr3b19LcZq4w==}
     hasBin: true
 
-  is-core-module@2.13.1:
-    resolution: {integrity: sha512-hHrIjvZsftOsvKSn2TRYl63zvxsgE0K+0mYMoH6gD4omR5IWB2KynivBQczo3+wF1cCkjzvptnI9Q0sPU66ilw==}
+  is-core-module@2.14.0:
+    resolution: {integrity: sha512-a5dFJih5ZLYlRtDc0dZWP7RiKr6xIKzmn/oAYCDvdLThadVgyJwlaoQPmRtMSpz+rk0OGAgIu+TcM9HUF0fk1A==}
+    engines: {node: '>= 0.4'}
 
   is-extglob@2.1.1:
     resolution: {integrity: sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ==}
@@ -2425,8 +2426,9 @@ packages:
     resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
     engines: {node: '>= 6'}
 
-  object-inspect@1.13.1:
-    resolution: {integrity: sha512-5qoj1RUiKOMsCCNLV1CBiPYE10sziTsnmNxkAI/rZhiD63CF7IqdFGC/XzjWjpSgLf0LxXX3bDFIh0E18f6UhQ==}
+  object-inspect@1.13.2:
+    resolution: {integrity: sha512-IRZSRuzJiynemAXPYtPe5BoI/RESNYR7TYm50MC5Mqbd3Jmw5y790sErYw3V6SryFJD64b74qQQs9wn5Bg/k3g==}
+    engines: {node: '>= 0.4'}
 
   on-finished@2.3.0:
     resolution: {integrity: sha512-ikqdkGAAyf/X/gPhXGvfgAytDZtDbr+bkNUJ0N9h5MI/dmdgCs3l6hoHrcUv41sRKew3jIwrp4qQDXiK99Utww==}
@@ -2500,6 +2502,9 @@ packages:
   pac-resolver@7.0.1:
     resolution: {integrity: sha512-5NPgf87AT2STgwa2ntRMr45jTKrYBGkVU36yT0ig/n/GMAa3oPqhZfIQ2kMEimReg0+t9kZViDVZ83qfVUlckg==}
     engines: {node: '>= 14'}
+
+  package-json-from-dist@1.0.0:
+    resolution: {integrity: sha512-dATvCeZN/8wQsGywez1mzHtTlP22H8OEfPrVMLNr4/eGa+ijtLn/6M5f0dY8UKNrC2O9UCU6SSoG3qRKnt7STw==}
 
   parse-json@5.2.0:
     resolution: {integrity: sha512-ayCKvm/phCGxOkYRSCM82iDwct8/EonSEgCSxWxD7ve6jHggsFl4fZVQBPRNgQoKiuV/odhFrGzQXZwbifC8Rg==}
@@ -2647,10 +2652,6 @@ packages:
   proto3-json-serializer@2.0.2:
     resolution: {integrity: sha512-SAzp/O4Yh02jGdRc+uIrGoe87dkN/XtwxfZ4ZyafJHymd79ozp5VG5nyZ7ygqPM5+cpLDjjGnYFUkngonyDPOQ==}
     engines: {node: '>=14.0.0'}
-
-  protobufjs@7.3.0:
-    resolution: {integrity: sha512-YWD03n3shzV9ImZRX3ccbjqLxj7NokGN0V/ESiBV5xWqrommYHYiihuIyavq03pWSGqlyvYUFmfoMKd+1rPA/g==}
-    engines: {node: '>=12.0.0'}
 
   protobufjs@7.3.2:
     resolution: {integrity: sha512-RXyHaACeqXeqAKGLDl68rQKbmObRsTIn4TYVUUug1KfS47YWCo5MacGITEryugIgZqORCvJWEk4l449POg5Txg==}
@@ -2923,8 +2924,8 @@ packages:
   sprintf-js@1.1.3:
     resolution: {integrity: sha512-Oo+0REFV59/rz3gfJNKQiBlwfHaSESl1pcGyABQsnnIfWOFt6JNj5gCog2U6MLZ//IGYD+nA8nI+mTShREReaA==}
 
-  sql-formatter@15.3.1:
-    resolution: {integrity: sha512-L/dqan+Hrt0PpPdCbHcI9bdfOvqaQZR7v5c5SWMJ3bUGQSezK09Mm9q2I3B4iObjaq7FyoldIM+fDSmfzGRXCA==}
+  sql-formatter@15.3.2:
+    resolution: {integrity: sha512-pNxSMf5DtwhpZ8gUcOGCGZIWtCcyAUx9oLgAtlO4ag7DvlfnETL0BGqXaISc84pNrXvTWmt8Wal1FWKxdTsL3Q==}
     hasBin: true
 
   ssri@10.0.6:
@@ -3224,8 +3225,8 @@ packages:
   v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
 
-  v8-to-istanbul@9.2.0:
-    resolution: {integrity: sha512-/EH/sDgxU2eGxajKdwLCDmQ4FWq+kpi3uCmBGpw1xJtnAxEjlD8j8PEiGWpCIMIs3ciNAgH0d3TTJiUkYzyZjA==}
+  v8-to-istanbul@9.3.0:
+    resolution: {integrity: sha512-kiGUalWN+rgBJ/1OHZsBtU4rXZOfj/7rKQxULKlIzwzQSvMJUUNgPwJEEh7gU6xEVxC0ahoOBvN2YI8GH6FNgA==}
     engines: {node: '>=10.12.0'}
 
   valid-url@1.0.9:
@@ -3912,7 +3913,7 @@ snapshots:
 
   '@firebase/webchannel-wrapper@1.0.0': {}
 
-  '@google-cloud/cloud-sql-connector@1.3.1(encoding@0.1.13)':
+  '@google-cloud/cloud-sql-connector@1.3.2(encoding@0.1.13)':
     dependencies:
       '@googleapis/sqladmin': 18.0.0(encoding@0.1.13)
       gaxios: 6.6.0(encoding@0.1.13)
@@ -3944,7 +3945,7 @@ snapshots:
       arrify: 2.0.1
       extend: 3.0.2
       google-auth-library: 9.11.0(encoding@0.1.13)
-      google-gax: 4.3.6(encoding@0.1.13)
+      google-gax: 4.3.7(encoding@0.1.13)
       heap-js: 2.5.0
       is-stream-ended: 0.1.4
       lodash.snakecase: 4.1.1
@@ -4101,7 +4102,7 @@ snapshots:
       slash: 3.0.0
       string-length: 4.0.2
       strip-ansi: 6.0.1
-      v8-to-istanbul: 9.2.0
+      v8-to-istanbul: 9.3.0
     transitivePeerDependencies:
       - supports-color
 
@@ -4422,7 +4423,7 @@ snapshots:
 
   archiver-utils@5.0.2:
     dependencies:
-      glob: 10.4.1
+      glob: 10.4.2
       graceful-fs: 4.2.11
       is-stream: 2.0.1
       lazystream: 1.0.1
@@ -4593,7 +4594,7 @@ snapshots:
   browserslist@4.23.1:
     dependencies:
       caniuse-lite: 1.0.30001636
-      electron-to-chromium: 1.4.803
+      electron-to-chromium: 1.4.810
       node-releases: 2.0.14
       update-browserslist-db: 1.0.16(browserslist@4.23.1)
 
@@ -4629,7 +4630,7 @@ snapshots:
     dependencies:
       '@npmcli/fs': 3.1.1
       fs-minipass: 3.0.3
-      glob: 10.4.1
+      glob: 10.4.2
       lru-cache: 10.2.2
       minipass: 7.1.2
       minipass-collect: 2.0.1
@@ -4977,7 +4978,7 @@ snapshots:
 
   ee-first@1.1.1: {}
 
-  electron-to-chromium@1.4.803: {}
+  electron-to-chromium@1.4.810: {}
 
   emittery@0.13.1: {}
 
@@ -5073,7 +5074,7 @@ snapshots:
       content-type: 1.0.5
       deep-freeze: 0.0.1
       events-listener: 1.1.0
-      glob: 10.4.1
+      glob: 10.4.2
       json-ptr: 3.1.1
       json-schema-traverse: 1.0.0
       lodash: 4.17.21
@@ -5204,7 +5205,7 @@ snapshots:
 
   firebase-tools@13.11.4(encoding@0.1.13):
     dependencies:
-      '@google-cloud/cloud-sql-connector': 1.3.1(encoding@0.1.13)
+      '@google-cloud/cloud-sql-connector': 1.3.2(encoding@0.1.13)
       '@google-cloud/pubsub': 4.5.0(encoding@0.1.13)
       abort-controller: 3.0.0
       ajv: 6.12.6
@@ -5230,7 +5231,7 @@ snapshots:
       fs-extra: 10.1.0
       fuzzy: 0.1.3
       gaxios: 6.6.0(encoding@0.1.13)
-      glob: 10.4.1
+      glob: 10.4.2
       google-auth-library: 9.11.0(encoding@0.1.13)
       inquirer: 8.2.6
       inquirer-autocomplete-prompt: 2.0.1(inquirer@8.2.6)
@@ -5254,7 +5255,7 @@ snapshots:
       retry: 0.13.1
       rimraf: 5.0.7
       semver: 7.6.2
-      sql-formatter: 15.3.1
+      sql-formatter: 15.3.2
       stream-chain: 2.2.5
       stream-json: 1.8.0
       strip-ansi: 6.0.1
@@ -5420,12 +5421,13 @@ snapshots:
       lodash.isobject: 2.4.1
       toxic: 1.0.1
 
-  glob@10.4.1:
+  glob@10.4.2:
     dependencies:
       foreground-child: 3.2.1
       jackspeak: 3.4.0
       minimatch: 9.0.4
       minipass: 7.1.2
+      package-json-from-dist: 1.0.0
       path-scurry: 1.11.1
 
   glob@7.2.3:
@@ -5455,7 +5457,7 @@ snapshots:
       - encoding
       - supports-color
 
-  google-gax@4.3.6(encoding@0.1.13):
+  google-gax@4.3.7(encoding@0.1.13):
     dependencies:
       '@grpc/grpc-js': 1.10.9
       '@grpc/proto-loader': 0.7.13
@@ -5466,7 +5468,7 @@ snapshots:
       node-fetch: 2.7.0(encoding@0.1.13)
       object-hash: 3.0.0
       proto3-json-serializer: 2.0.2
-      protobufjs: 7.3.0
+      protobufjs: 7.3.2
       retry-request: 7.0.2(encoding@0.1.13)
       uuid: 9.0.1
     transitivePeerDependencies:
@@ -5656,7 +5658,7 @@ snapshots:
     dependencies:
       ci-info: 2.0.0
 
-  is-core-module@2.13.1:
+  is-core-module@2.14.0:
     dependencies:
       hasown: 2.0.2
 
@@ -6425,7 +6427,7 @@ snapshots:
     dependencies:
       env-paths: 2.2.1
       exponential-backoff: 3.1.1
-      glob: 10.4.1
+      glob: 10.4.2
       graceful-fs: 4.2.11
       make-fetch-happen: 13.0.1
       nopt: 7.2.1
@@ -6456,7 +6458,7 @@ snapshots:
 
   object-hash@3.0.0: {}
 
-  object-inspect@1.13.1: {}
+  object-inspect@1.13.2: {}
 
   on-finished@2.3.0:
     dependencies:
@@ -6542,6 +6544,8 @@ snapshots:
     dependencies:
       degenerator: 5.0.1
       netmask: 2.0.2
+
+  package-json-from-dist@1.0.0: {}
 
   parse-json@5.2.0:
     dependencies:
@@ -6672,21 +6676,6 @@ snapshots:
   proto3-json-serializer@2.0.2:
     dependencies:
       protobufjs: 7.3.2
-
-  protobufjs@7.3.0:
-    dependencies:
-      '@protobufjs/aspromise': 1.1.2
-      '@protobufjs/base64': 1.1.2
-      '@protobufjs/codegen': 2.0.4
-      '@protobufjs/eventemitter': 1.1.0
-      '@protobufjs/fetch': 1.1.0
-      '@protobufjs/float': 1.0.2
-      '@protobufjs/inquire': 1.1.0
-      '@protobufjs/path': 1.1.2
-      '@protobufjs/pool': 1.1.0
-      '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.14.8
-      long: 5.2.3
 
   protobufjs@7.3.2:
     dependencies:
@@ -6840,7 +6829,7 @@ snapshots:
 
   resolve@1.22.8:
     dependencies:
-      is-core-module: 2.13.1
+      is-core-module: 2.14.0
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
 
@@ -6867,7 +6856,7 @@ snapshots:
 
   rimraf@5.0.7:
     dependencies:
-      glob: 10.4.1
+      glob: 10.4.2
 
   router@1.3.8:
     dependencies:
@@ -6960,7 +6949,7 @@ snapshots:
       call-bind: 1.0.7
       es-errors: 1.3.0
       get-intrinsic: 1.2.4
-      object-inspect: 1.13.1
+      object-inspect: 1.13.2
 
   signal-exit@3.0.7: {}
 
@@ -7006,7 +6995,7 @@ snapshots:
 
   sprintf-js@1.1.3: {}
 
-  sql-formatter@15.3.1:
+  sql-formatter@15.3.2:
     dependencies:
       argparse: 2.0.1
       get-stdin: 8.0.0
@@ -7337,7 +7326,7 @@ snapshots:
 
   v8-compile-cache-lib@3.0.1: {}
 
-  v8-to-istanbul@9.2.0:
+  v8-to-istanbul@9.3.0:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       '@types/istanbul-lib-coverage': 2.0.6
