@@ -162,6 +162,15 @@ const SettingsPage = () => {
 					/>
 					<span className='ml-2'>Disable Live Scores Api</span>
 				</label>
+				<label className='mx-4 mt-3 inline-flex cursor-pointer select-none items-center'>
+					<input
+						type='checkbox'
+						className='size-5'
+						checked={settings.allowUpdatePoints}
+						onChange={() => toggleSetting('allowUpdatePoints')}
+					/>
+					<span className='ml-2'>Allow Update Points</span>
+				</label>
 			</div>
 			<div className='flex flex-col flex-wrap items-center justify-center sm:flex-row'>
 				<button

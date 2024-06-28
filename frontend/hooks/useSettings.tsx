@@ -10,6 +10,7 @@ const useSettings = () => {
 		allowUpdateFixtures: false,
 		allowUpdateStandings: false,
 		disableLiveScoresApi: false,
+		allowUpdatePoints: false,
 	});
 	const userInfo = useContext(UserContext);
 

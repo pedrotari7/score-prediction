@@ -12,7 +12,7 @@ exports[`Circle renders circle with children  1`] = `
 </div>
 `;
 
-exports[`UserScores renders user scores 1`] = `
+exports[`UserScores renders user scores with a stage all 1`] = `
 <div>
   <div
     class="flex flex-row flex-wrap items-center justify-center"
@@ -92,6 +92,92 @@ exports[`UserScores renders user scores 1`] = `
         class="mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center my-2 size-10 bg-gray-700 p-4"
       >
         3
+      </div>
+    </a>
+  </div>
+</div>
+`;
+
+exports[`UserScores renders user scores with a stage groups 1`] = `
+<div>
+  <div
+    class="flex flex-row flex-wrap items-center justify-center"
+  >
+    <a
+      data-tooltip-content="exact"
+      data-tooltip-id="my-tooltip"
+      data-tooltip-place="bottom"
+    >
+      <div
+        class="mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center bg-green-600"
+      >
+        8
+      </div>
+    </a>
+    <a
+      data-tooltip-content="result"
+      data-tooltip-id="my-tooltip"
+      data-tooltip-place="bottom"
+    >
+      <div
+        class="mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center bg-yellow-600"
+      >
+        11
+      </div>
+    </a>
+    <a
+      data-tooltip-content="onescore"
+      data-tooltip-id="my-tooltip"
+      data-tooltip-place="bottom"
+    >
+      <div
+        class="mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center bg-pink-600"
+      >
+        9
+      </div>
+    </a>
+    <a
+      data-tooltip-content="fail"
+      data-tooltip-id="my-tooltip"
+      data-tooltip-place="bottom"
+    >
+      <div
+        class="mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center bg-red-600"
+      >
+        13
+      </div>
+    </a>
+    <a
+      data-tooltip-content="groups"
+      data-tooltip-id="my-tooltip"
+      data-tooltip-place="bottom"
+    >
+      <div
+        class="mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center bg-purple-700"
+      >
+        14
+      </div>
+    </a>
+    <a
+      data-tooltip-content="penalty"
+      data-tooltip-id="my-tooltip"
+      data-tooltip-place="bottom"
+    >
+      <div
+        class="mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center bg-gray-500"
+      >
+        12
+      </div>
+    </a>
+    <a
+      data-tooltip-content="points"
+      data-tooltip-id="my-tooltip"
+      data-tooltip-place="bottom"
+    >
+      <div
+        class="mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center my-2 size-10 bg-gray-700 p-4"
+      >
+        10
       </div>
     </a>
   </div>

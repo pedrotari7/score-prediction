@@ -80,7 +80,7 @@ const FixturesPage = ({
 
 				<RedactedSpoilers>
 					<div className='text-sm'>
-						<UserScores user={user} />
+						<UserScores user={user} stage='all' />
 					</div>
 				</RedactedSpoilers>
 			</div>

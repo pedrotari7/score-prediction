@@ -155,11 +155,11 @@ export const initializeTeamResult = (): PredResult => ({
 	gc: 0,
 });
 
+export const isGroupStage = (f: Fixture) => f.league.round.includes('Group');
+
 export const calculatePoints = ({ wins, draws }: PredResult) => 3 * wins + draws;
 
 export const calculateResults = (fixtures: Fixture[], predictions: Predictions, uid: string) => {
-	const isGroupStage = (f: Fixture) => f.league.round.includes('Group');
-
 	return fixtures.filter(isGroupStage).reduce((teams, game) => {
 		const homeTeam = game.teams.home.id;
 		const awayTeam = game.teams.away.id;

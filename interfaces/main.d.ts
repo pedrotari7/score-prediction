@@ -209,7 +209,7 @@ export interface User extends Record<string, any> {
 	admin: boolean;
 	displayName: string;
 	photoURL: string;
-	score: UserResult;
+	score: Record<string, UserResult>;
 	uid: string;
 	isNewUser: boolean;
 	shouldOnboard: boolean;
@@ -285,6 +285,7 @@ export interface Settings {
 	allowUpdateFixtures: boolean;
 	allowUpdateStandings: boolean;
 	disableLiveScoresApi: boolean;
+	allowUpdatePoints: boolean;
 }
 
 export interface Account {

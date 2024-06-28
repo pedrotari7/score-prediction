@@ -13,6 +13,7 @@ import useNoSpoilers from '../hooks/useNoSpoilers';
 import useCompetition from '../hooks/useCompetition';
 import Panel from './Panel';
 import { useAuth } from '../lib/auth';
+import SelectStage from './SelectStage';
 
 interface SortOption {
 	key: string;
@@ -44,6 +45,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 		initialLeaderboard === 'global' ? Object.keys(users) : leaderboards[initialLeaderboard]?.members ?? [];
 
 	const [members, setMembers] = useState<string[]>(initialMembers);
+	const [stage, setCurrentStage] = useState<string>('all');
 
 	const currentUser = auth.user?.uid;
 
@@ -81,18 +83,25 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 	const hasLeaderboards = Object.keys(leaderboards).length > 0;
 	const isGlobalLeaderboard = currentLeaderboard === 'global';
 
+	const stages = Object.values(users).reduce((stages, user) => {
+		if (user.score) {
+			Object.keys(user.score).forEach(stage => stages.add(stage));
+		}
+		return stages;
+	}, new Set<string>());
+
 	const sortedUsers = Object.values(users)
-		.filter(user => user.score && members.includes(user.uid))
+		.filter(user => user.score && user.score[stage] && members.includes(user.uid))
 		.sort(
 			(a, b) =>
-				b.score[sortOption.key] - a.score[sortOption.key] ||
-				b.score.points - a.score.points ||
-				b.score.exact - a.score.exact ||
-				b.score.result - a.score.result ||
-				b.score.onescore - a.score.onescore ||
-				b.score.groups - a.score.groups ||
-				b.score.penalty - a.score.penalty ||
-				b.score.fail - a.score.fail
+				b.score[stage][sortOption.key] - a.score[stage][sortOption.key] ||
+				b.score[stage].points - a.score[stage].points ||
+				b.score[stage].exact - a.score[stage].exact ||
+				b.score[stage].result - a.score[stage].result ||
+				b.score[stage].onescore - a.score[stage].onescore ||
+				b.score[stage].groups - a.score[stage].groups ||
+				b.score[stage].penalty - a.score[stage].penalty ||
+				b.score[stage].fail - a.score[stage].fail
 		);
 
 	return (
@@ -122,17 +131,20 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 			</div>
 
 			<RedactedSpoilers>
-				<div className='mb-6 flex flex-row flex-wrap items-center justify-center font-bold sm:justify-center'>
-					{Object.values(SortOptions).map(option => (
-						<FilterOption
-							key={option.key}
-							active={option.text === sortOption.text}
-							className={option.color}
-							onClick={() => setSortOption(option)}
-						>
-							{option.text}
-						</FilterOption>
-					))}
+				<div className='flex flex-col items-center'>
+					<div className='mb-6 flex flex-row flex-wrap items-center justify-center font-bold sm:justify-center'>
+						{Object.values(SortOptions).map(option => (
+							<FilterOption
+								key={option.key}
+								active={option.text === sortOption.text}
+								className={option.color}
+								onClick={() => setSortOption(option)}
+							>
+								{option.text}
+							</FilterOption>
+						))}
+					</div>
+					<SelectStage setCurrentStage={setCurrentStage} currentStage={stage} stages={[...stages.values()]} />
 				</div>
 			</RedactedSpoilers>
 
@@ -188,7 +200,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 									</div>
 								</div>
 								<RedactedSpoilers>
-									<UserScores user={user} />
+									<UserScores user={user} stage={stage} />
 								</RedactedSpoilers>
 							</div>
 						</div>

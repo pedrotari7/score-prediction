@@ -40,6 +40,7 @@ import {
   getResult,
   isGameOnGoing,
   isGameStarted,
+  isGroupStage,
   isNum,
   sortGroup,
   sortWorldCupGroup,
@@ -262,19 +263,37 @@ const updatePoints = async (competition: Competition, predictions: Predictions, 
 
       if (!game) return users;
 
+      const stage = isGroupStage(game) ? 'Groups' : game.league.round;
+
       for (const user in gamePredictions) {
-        if (!(user in users)) users[user] = DEFAULT_USER_RESULT;
+        if (!(user in users)) {
+          users[user] = {};
+        }
+        if (!(stage in users[user])) {
+          users[user][stage] = DEFAULT_USER_RESULT;
+        }
         if (game?.fixture.status.short === 'NS') continue;
-        users[user] = joinResults(users[user], getResult(gamePredictions[user], game));
+        users[user][stage] = joinResults(users[user][stage], getResult(gamePredictions[user], game));
+        users[user]['all'] = joinResults(users[user]['all'], getResult(gamePredictions[user], game));
       }
       return users;
     },
-    {} as Record<string, UserResult>
+    {} as Record<string, Record<string, UserResult>>
   );
 
   for (const user in updatedScores) {
-    updatedScores[user].groups = groupPoints[user] ?? 0;
-    updatedScores[user].points = calculateUserResultPoints(updatedScores[user], competition);
+    updatedScores[user]['all'].groups = 0;
+    updatedScores[user]['all'].points = 0;
+
+    for (const stage in updatedScores[user]) {
+      if (stage.includes('Group')) {
+        updatedScores[user][stage].groups = groupPoints[user] ?? 0;
+        updatedScores[user]['all'].groups += groupPoints[user] ?? 0;
+      }
+
+      updatedScores[user][stage].points = calculateUserResultPoints(updatedScores[user][stage], competition);
+    }
+    updatedScores[user]['all'].points = calculateUserResultPoints(updatedScores[user]['all'], competition);
   }
 
   await getDBScores(competition).set(updatedScores);
@@ -361,8 +380,12 @@ const getPredictions = async (
   return censoredPredictions;
 };
 
-const getUsers = async (competition: Competition) => {
-  const scores = (await getDBScores(competition).get()).data() as Record<string, UserResult>;
+const getUsers = async (
+  competition: Competition,
+  cachedPoints: Record<string, Record<string, UserResult>> | undefined
+) => {
+  const scores =
+    cachedPoints ?? ((await getDBScores(competition).get()).data() as Record<string, Record<string, UserResult>>);
 
   const allUsers = (await getAuth(firebaseApp).listUsers()).users.reduce(
     (users, { uid, displayName, photoURL, customClaims, metadata }) => {
@@ -377,7 +400,7 @@ const getUsers = async (competition: Competition) => {
       if (!(uid in scores) && !(isCurrentCompetition && lastSignInTimeDiff < OneMonth)) {
         return users;
       }
-      const score = (scores && scores[uid]) ?? DEFAULT_USER_RESULT;
+      const score = (scores && scores[uid]) ?? {};
       const admin = customClaims?.admin as boolean;
 
       const shouldOnboard = isNewUser || lastSignInTimeDiff > OneMonth;
@@ -536,12 +559,14 @@ app.get('/tournament', async (req, res) => {
 
   const predictions = await getPredictions(decodedToken, competition, fixtures?.data, settings);
 
-  if (fixturesTimeDiffSeconds > timeGuard) {
+  let cachedPoints: Record<string, Record<string, UserResult>> | undefined = undefined;
+
+  if (fixturesTimeDiffSeconds > timeGuard || settings.allowUpdatePoints) {
     console.log('will update points');
-    await updatePoints(competition, predictions, fixtures?.data);
+    cachedPoints = await updatePoints(competition, predictions, fixtures?.data);
   }
 
-  const users = await getUsers(competition);
+  const users = await getUsers(competition, cachedPoints);
 
   const userExtraInfo = (await getDBUser(decodedToken.uid).get()).data() ?? { leaderboards: [] };
 

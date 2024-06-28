@@ -84,7 +84,7 @@ const UserGuess = ({
 			</span>
 			<div className='flex items-center justify-center gap-4'>
 				<span className='text-xl'>{user?.displayName}</span>
-				<span className='text-sm text-light'>{user?.score.points} pts</span>
+				<span className='text-sm text-light'>{user?.score['all'].points} pts</span>
 			</div>
 
 			{invalidScore && !emptyScore && <div className='text-sm font-bold'>Invalid</div>}
@@ -200,7 +200,7 @@ const CurrentMatch = ({
 		}))
 		.sort(
 			(a, b) =>
-				users[b.uid].score.points - users[a.uid].score.points ||
+				users[b.uid].score['all'].points - users[a.uid].score['all'].points ||
 				users[a.uid].displayName.localeCompare(users[b.uid].displayName)
 		);
 
