@@ -174,10 +174,9 @@ export default function Navbar({
 														'absolute right-0 mt-2 w-48 origin-top-right rounded-md py-1 shadow-lg ring-1 ring-black/5 focus:outline-none'
 													)}
 												>
+													{noSpoilers !== null && <NoSpoilersToggle />}
 													{user?.admin && (
 														<>
-															{noSpoilers !== null && <NoSpoilersToggle />}
-
 															<MenuItem>
 																{({ focus }) => (
 																	<div
