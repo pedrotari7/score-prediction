@@ -131,7 +131,7 @@ const Home = () => {
 		?.map(s => s?.[1])
 		?.flat()
 		?.reduce((acc, val) => {
-			if (!val.group.startsWith('Group')) return acc;
+			if (!val.group?.startsWith('Group')) return acc;
 			return { ...acc, [val.team.id]: val.group.split(' ').pop() };
 		}, {});
 
