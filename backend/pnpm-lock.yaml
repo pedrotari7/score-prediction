@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@google-cloud/functions-framework':
-        specifier: 3.4.0
-        version: 3.4.0
+        specifier: 3.4.1
+        version: 3.4.1
       axios:
         specifier: 1.7.2
         version: 1.7.2
@@ -485,8 +485,8 @@ packages:
     resolution: {integrity: sha512-c4ALHT3G08rV7Zwv8Z2KG63gZh66iKdhCBeDfCpIkLrjX6EAjTD/szMdj14M+FnQuClZLFfW5bAgoOjfNmLtJg==}
     engines: {node: '>=14.0.0'}
 
-  '@google-cloud/functions-framework@3.4.0':
-    resolution: {integrity: sha512-TAh4h8bspgWkZBgFEUfali5C1NQBgqEGIIKdBjrAeG3vaPtI4CjV4AzGNA6TrEBidLIXXqHb3naO2lI1eqT7+A==}
+  '@google-cloud/functions-framework@3.4.1':
+    resolution: {integrity: sha512-+u0mtgL8OchRNcuQbON4dXDPWFb+ZdSmJTn5Ltue1dI4gSoBjknW/vYJL5v6aXLDlNdgGeSwy1q5j5GtPQMEiw==}
     engines: {node: '>=10.0.0'}
     hasBin: true
 
@@ -4726,7 +4726,7 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google-cloud/functions-framework@3.4.0':
+  '@google-cloud/functions-framework@3.4.1':
     dependencies:
       '@types/express': 4.17.21
       body-parser: 1.20.2
