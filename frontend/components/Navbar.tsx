@@ -44,6 +44,7 @@ export default function Navbar({
 		{ name: 'MyPredictions', info: { page: Route.Predictions, data: user?.uid } },
 		{ name: 'Leaderboard', info: { page: Route.Leaderboard } },
 		{ name: 'Standings', info: { page: Route.Standings } },
+		{ name: 'Stats', info: { page: Route.Stats } },
 		{ name: 'Rules', info: { page: Route.Rules, data: user?.uid } },
 	].filter(it => !noSpoilers || (noSpoilers && it.info.page !== Route.Standings));
 
