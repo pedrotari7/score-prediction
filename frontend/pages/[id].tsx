@@ -26,6 +26,7 @@ import JoinLeaderboard from '../components/JoinLeaderboard';
 import ListLeaderboards from '../components/ListLeaderboards';
 import NoSpoilersContext from '../context/NoSpoilersContext';
 import RefreshPage from '../components/RefreshPage';
+import Stats from '../components/Stats';
 
 const Home = () => {
 	const auth = useAuth();
@@ -175,6 +176,8 @@ const Home = () => {
 				return <RefreshPage />;
 			case Route.ListLeaderboards:
 				return <ListLeaderboards users={users} />;
+			case Route.Stats:
+				return <Stats fixtures={fixtures} predictions={predictions} />;
 			default:
 				return <></>;
 		}

@@ -5,23 +5,8 @@ import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames } from '../lib/utils/reactHelper';
 import useCompetition from '../hooks/useCompetition';
 
-const ResultContainer = ({
-	children,
-	prediction,
-	game,
-	className = '',
-	onClick = () => {},
-}: {
-	className?: string;
-	children: ReactNode;
-	prediction: Prediction;
-	game: Fixture;
-	onClick?: MouseEventHandler<HTMLDivElement>;
-}) => {
-	const { gcc } = useCompetition();
-
+export const getPredictionResult = (prediction: Prediction, game: Fixture) => {
 	const result = getExtraTimeResult(game);
-	const { noSpoilers } = useNoSpoilers();
 
 	const { home: predH, away: predA } = prediction;
 	const { home: realH, away: realA } = result;
@@ -43,6 +28,29 @@ const ResultContainer = ({
 		getOutcome(prediction) === getOutcome(game.score.penalty);
 
 	const isWrong = isResultValid && !isExactScore && !isCorrectResult && !isCorrectGoal;
+
+	return { isExactScore, isCorrectResult, isCorrectGoal, isPenaltyWinner, isWrong, isPredictValid };
+};
+
+const ResultContainer = ({
+	children,
+	prediction,
+	game,
+	className = '',
+	onClick = () => {},
+}: {
+	className?: string;
+	children: ReactNode;
+	prediction: Prediction;
+	game: Fixture;
+	onClick?: MouseEventHandler<HTMLDivElement>;
+}) => {
+	const { gcc } = useCompetition();
+
+	const { noSpoilers } = useNoSpoilers();
+
+	const { isExactScore, isCorrectResult, isCorrectGoal, isPenaltyWinner, isWrong, isPredictValid } =
+		getPredictionResult(prediction, game);
 
 	return (
 		<div
