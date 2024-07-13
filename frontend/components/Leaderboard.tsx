@@ -42,7 +42,7 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 	const [currentLeaderboard, setCurrentLeaderboard] = useState(initialLeaderboard);
 
 	const initialMembers =
-		initialLeaderboard === 'global' ? Object.keys(users) : leaderboards[initialLeaderboard]?.members ?? [];
+		initialLeaderboard === 'global' ? Object.keys(users) : (leaderboards[initialLeaderboard]?.members ?? []);
 
 	const [members, setMembers] = useState<string[]>(initialMembers);
 	const [stage, setCurrentStage] = useState<string>('all');

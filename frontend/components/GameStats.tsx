@@ -19,8 +19,8 @@ const GameStats = ({ stats, colors }: { stats: Statistic[] | undefined; colors: 
 	);
 
 	const isBigger = (a: string | number | null, b: string | number | null) => {
-		a = typeof a === 'string' ? parseInt(a.replace('%', '')) : a ?? 0;
-		b = typeof b === 'string' ? parseInt(b.replace('%', '')) : b ?? 0;
+		a = typeof a === 'string' ? parseInt(a.replace('%', '')) : (a ?? 0);
+		b = typeof b === 'string' ? parseInt(b.replace('%', '')) : (b ?? 0);
 
 		return a > b;
 	};
