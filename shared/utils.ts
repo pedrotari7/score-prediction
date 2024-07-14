@@ -45,7 +45,7 @@ export const competitions = {
 		league: 9,
 		season: 2024,
 		start: '2024-06-21',
-		end: '2024-07-14',
+		end: '2024-07-15',
 		logo: '/ca2024-logo.png',
 		points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1 },
 		color: '#242525',
