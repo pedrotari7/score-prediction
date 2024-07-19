@@ -22,7 +22,7 @@
 		"@opentelemetry/sdk-trace-node": "1.25.1",
 		"@opentelemetry/semantic-conventions": "1.25.1",
 		"add": "2.0.6",
-		"firebase": "10.12.3",
+		"firebase": "10.12.4",
 		"luxon": "3.4.4",
 		"next": "14.2.5",
 		"react": "18.3.1",
