@@ -18,8 +18,8 @@ importers:
         specifier: 10.12.4
         version: 10.12.4
       firebase-tools:
-        specifier: 13.13.3
-        version: 13.13.3(encoding@0.1.13)
+        specifier: 13.14.0
+        version: 13.14.0(encoding@0.1.13)
       husky:
         specifier: 9.1.1
         version: 9.1.1
@@ -836,8 +836,8 @@ packages:
     resolution: {integrity: sha512-x1FCFnFifvYDDzTaLII71vG5uvDwgtmDTEVWAxrgeiR8VjMONcCXJx7E+USjDtHlwFmt9MysbqgF9b9Vjr6w+w==}
     engines: {node: '>=4'}
 
-  async-lock@1.3.2:
-    resolution: {integrity: sha512-phnXdS3RP7PPcmP6NWWzWMU0sLTeyvtZCxBPpZdkYE3seGLKSQZs9FrmVO/qwypq98FUtWWUEYxziLkdGk5nnA==}
+  async-lock@1.4.1:
+    resolution: {integrity: sha512-Az2ZTpuytrtqENulXwO3GGv1Bztugx6TT37NIo7imr/Qo0gsYiGtSdBa2B6fsXhTpVZDNfu1Qn3pk531e3q+nQ==}
 
   async@2.6.4:
     resolution: {integrity: sha512-mzo5dfJYwAn29PeiJ0zvwTo04zj8HDJj0Mn8TD7sno7q12prdbnasKJHhkm2c1LgrhlJ0teaea8860oxi51mGA==}
@@ -1510,8 +1510,8 @@ packages:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
     engines: {node: '>=8'}
 
-  firebase-tools@13.13.3:
-    resolution: {integrity: sha512-xTlaEhIGkfsMPsJkvjir/AeOQryuRTcoXSlqJO2CZR+IzZCoYPMHO8zMKwEIc1ZEb6nYdRl14gjM8DpGCRpm2A==}
+  firebase-tools@13.14.0:
+    resolution: {integrity: sha512-W1682Rl9WpEI20ustis7mO/jxW3uhQD6LcoXcdp5v8u8l490s3XRI7mGx3PJUgJi1RrnBwTyM8Hm5Q1xXvS/Og==}
     engines: {node: '>=18.0.0 || >=20.0.0'}
     hasBin: true
 
@@ -4483,7 +4483,7 @@ snapshots:
     dependencies:
       tslib: 2.6.3
 
-  async-lock@1.3.2: {}
+  async-lock@1.4.1: {}
 
   async@2.6.4:
     dependencies:
@@ -5235,14 +5235,14 @@ snapshots:
       locate-path: 5.0.0
       path-exists: 4.0.0
 
-  firebase-tools@13.13.3(encoding@0.1.13):
+  firebase-tools@13.14.0(encoding@0.1.13):
     dependencies:
       '@google-cloud/cloud-sql-connector': 1.3.3(encoding@0.1.13)
       '@google-cloud/pubsub': 4.5.0(encoding@0.1.13)
       abort-controller: 3.0.0
       ajv: 6.12.6
       archiver: 7.0.1
-      async-lock: 1.3.2
+      async-lock: 1.4.1
       body-parser: 1.20.2
       chokidar: 3.6.0
       cjson: 0.3.3
