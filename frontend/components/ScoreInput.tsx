@@ -1,4 +1,4 @@
-import { ChangeEvent, MutableRefObject } from 'react';
+import type { ChangeEvent, MutableRefObject } from 'react';
 import { isNum } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';

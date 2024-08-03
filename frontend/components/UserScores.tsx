@@ -1,5 +1,6 @@
-import React, { ReactNode } from 'react';
-import { User } from '../../interfaces/main';
+import type { ReactNode } from 'react';
+import React from 'react';
+import type { User } from '../../interfaces/main';
 import { classNames } from '../lib/utils/reactHelper';
 import { Tooltip } from 'react-tooltip';
 

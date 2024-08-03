@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Users } from '../../interfaces/main';
+import type { Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
 import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UserContext from '../context/UserContext';

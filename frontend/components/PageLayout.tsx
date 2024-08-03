@@ -1,5 +1,6 @@
 import Head from 'next/head';
-import { Dispatch, ReactNode, SetStateAction, useContext } from 'react';
+import type { Dispatch, ReactNode, SetStateAction } from 'react';
+import { useContext } from 'react';
 import { competitions } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import Navbar from './Navbar';

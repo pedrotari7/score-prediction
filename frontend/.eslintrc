@@ -23,7 +23,7 @@
 		"plugin:react-hooks/recommended",
 		"plugin:tailwindcss/recommended"
 	],
-	"plugins": ["react", "jest"],
+	"plugins": ["react", "jest", "@stylistic/ts"],
 	"rules": {
 		"no-undef": 1,
 		"no-unused-expressions": ["error", { "allowShortCircuit": true }],
@@ -40,7 +40,8 @@
 		"jsx-a11y/alt-text": "off",
 		"@typescript-eslint/explicit-module-boundary-types": "off",
 		"no-mixed-spaces-and-tabs": ["warn"],
-		"react/no-unknown-property": "off"
+		"react/no-unknown-property": "off",
+		"@typescript-eslint/consistent-type-imports": "error"
 	},
 	"overrides": [
 		{

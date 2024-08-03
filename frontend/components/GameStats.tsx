@@ -1,4 +1,4 @@
-import { Stat, Statistic } from '../../interfaces/main';
+import type { Stat, Statistic } from '../../interfaces/main';
 import { getContrastYIQ, zip } from '../lib/utils/reactHelper';
 
 const GameStats = ({ stats, colors }: { stats: Statistic[] | undefined; colors: string[] }) => {

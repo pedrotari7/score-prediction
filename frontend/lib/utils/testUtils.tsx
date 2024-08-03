@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { ReactNode, ContextType } from 'react';
+import type { ReactNode, ContextType } from 'react';
 import RouteContext from '../../context/RouteContext';
 import NoSpoilersContext from '../../context/NoSpoilersContext';
 

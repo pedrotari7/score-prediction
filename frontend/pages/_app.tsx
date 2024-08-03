@@ -1,4 +1,4 @@
-import { AppProps } from 'next/app';
+import type { AppProps } from 'next/app';
 import { AuthProvider } from '../lib/auth';
 import '../styles/globals.css';
 

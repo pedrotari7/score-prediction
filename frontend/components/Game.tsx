@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { useContext } from 'react';
-import { Predictions, UpdatePrediction } from '../../interfaces/main';
+import type { Predictions, UpdatePrediction } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
 import FixturesContext from '../context/FixturesContext';
 import RouteContext from '../context/RouteContext';

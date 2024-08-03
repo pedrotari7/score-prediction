@@ -1,5 +1,5 @@
-import { ReactNode, MouseEventHandler } from 'react';
-import { Fixture, Prediction } from '../../interfaces/main';
+import type { ReactNode, MouseEventHandler } from 'react';
+import type { Fixture, Prediction } from '../../interfaces/main';
 import { getExtraTimeResult, getOutcome, isNum, isPenaltyShootout } from '../../shared/utils';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames } from '../lib/utils/reactHelper';

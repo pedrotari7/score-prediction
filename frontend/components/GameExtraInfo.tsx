@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Fixture, PlayersMap } from '../../interfaces/main';
+import type { Fixture, PlayersMap } from '../../interfaces/main';
 import useCompetition from '../hooks/useCompetition';
 import useFixtureExtraInfo from '../hooks/useFixtureExtraInfo';
 import { classNames } from '../lib/utils/reactHelper';

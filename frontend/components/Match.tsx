@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { Fixture } from '../../interfaces/main';
+import type { Fixture } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';

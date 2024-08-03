@@ -2,7 +2,7 @@ import React from 'react';
 import Panel from './Panel';
 import { classNames } from '../lib/utils/reactHelper';
 import useCompetition from '../hooks/useCompetition';
-import { Fixtures, Predictions } from '../../interfaces/main';
+import type { Fixtures, Predictions } from '../../interfaces/main';
 import Match from './Match';
 import { getPredictionResult } from './ResultContainer';
 

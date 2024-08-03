@@ -1,4 +1,5 @@
-import { Dispatch, Fragment, SetStateAction, useContext } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
+import { Fragment, useContext } from 'react';
 import {
 	Disclosure,
 	DisclosureButton,
@@ -14,7 +15,8 @@ import { classNames } from '../lib/utils/reactHelper';
 import { getAuth } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth';
-import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
+import type { RouteInfo } from '../context/RouteContext';
+import RouteContext, { Route } from '../context/RouteContext';
 import { app } from '../lib/firebaseClient';
 import { competitions, currentCompetitions } from '../../shared/utils';
 import NoSpoilersToggle from './NoSpoilersToggle';

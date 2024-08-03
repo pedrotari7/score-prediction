@@ -1,4 +1,4 @@
-import { Lineup, LineupPlayer, LineupPlayers, Player, PlayersMap } from '../../interfaces/main';
+import type { Lineup, LineupPlayer, LineupPlayers, Player, PlayersMap } from '../../interfaces/main';
 import { classNames, DEFAULT_IMAGE } from '../lib/utils/reactHelper';
 
 const LineupUnavailable = () => (

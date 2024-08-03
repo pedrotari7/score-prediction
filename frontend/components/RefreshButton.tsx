@@ -1,5 +1,6 @@
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
-import React, { MouseEventHandler, useState } from 'react';
+import type { MouseEventHandler } from 'react';
+import React, { useState } from 'react';
 import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';
 

@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { Event, Fixture, FixtureExtraInfo, Player, PlayersMap, Result } from '../../interfaces/main';
+import type { ReactNode } from 'react';
+import type { Event, Fixture, FixtureExtraInfo, Player, PlayersMap, Result } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import { classNames, DEFAULT_IMAGE } from '../lib/utils/reactHelper';

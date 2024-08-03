@@ -1,5 +1,6 @@
-import { MouseEventHandler, ReactNode, useContext, useState } from 'react';
-import { Leaderboard, Users } from '../../interfaces/main';
+import type { MouseEventHandler, ReactNode } from 'react';
+import { useContext, useState } from 'react';
+import type { Leaderboard, Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
 import { classNames } from '../lib/utils/reactHelper';
 import DesktopOnly from './DesktopOnly';

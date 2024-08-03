@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/indent */
+/* eslint-disable @stylistic/ts/indent */
 
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { onRequest } from 'firebase-functions/v2/https';
@@ -8,13 +8,15 @@ import { defineSecret } from 'firebase-functions/params';
 
 import { initializeApp } from 'firebase-admin/app';
 import { FieldValue, Timestamp, getFirestore } from 'firebase-admin/firestore';
-import { getAuth, DecodedIdToken } from 'firebase-admin/auth';
+import type { DecodedIdToken } from 'firebase-admin/auth';
+import { getAuth } from 'firebase-admin/auth';
 
 import cors from 'cors';
-import express, { Request, Response } from 'express';
+import type { Request, Response } from 'express';
+import express from 'express';
 import axios from 'axios';
 
-import {
+import type {
   Competition,
   CreateLeaderboardResult,
   Fixture,
@@ -134,6 +136,7 @@ const decodeToken = async (token: string | undefined) => {
   if (!token) return;
   try {
     return await getAuth(firebaseApp).verifyIdToken(token);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return;
   }

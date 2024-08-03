@@ -1,5 +1,7 @@
-import { useState, useEffect, useContext, createContext, ReactNode } from 'react';
-import { User as FirebaseUser, getAuth } from 'firebase/auth';
+import type { ReactNode } from 'react';
+import { useState, useEffect, useContext, createContext } from 'react';
+import type { User as FirebaseUser } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { app } from './firebaseClient';
 
 type User = (FirebaseUser & { token: string; admin?: boolean }) | null | undefined;

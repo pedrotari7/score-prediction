@@ -8,10 +8,19 @@ import StandingsPage from '../components/Standings';
 import { updatePredictions, fetchTournament, postNoSpoilers } from './api';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
-import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
+import type { RouteInfo } from '../context/RouteContext';
+import RouteContext, { Route } from '../context/RouteContext';
 import FixturesPage from '../components/Fixtures';
 import CurrentMatch from '../components/CurrentMatch';
-import { Competition, Fixtures, Leaderboard, Prediction, Predictions, Standings, Users } from '../../interfaces/main';
+import type {
+	Competition,
+	Fixtures,
+	Leaderboard,
+	Prediction,
+	Predictions,
+	Standings,
+	Users,
+} from '../../interfaces/main';
 import Rules from '../components/Rules';
 import { useRouter } from 'next/router';
 import Loading from '../components/Loading';
