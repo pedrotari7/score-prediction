@@ -1,4 +1,4 @@
-import { UserResult } from '../../interfaces/main';
+import type { UserResult } from '../../interfaces/main';
 import { DEFAULT_USER_RESULT } from '../../shared/utils';
 
 export const joinResults = (a: Partial<UserResult>, b: Partial<UserResult>): UserResult => {

@@ -1,4 +1,4 @@
-import { Team } from '../../interfaces/main';
+import type { Team } from '../../interfaces/main';
 import { classNames } from '../lib/utils/reactHelper';
 
 const Flag = ({ className = '', team }: { team: Team; className?: string }) => {

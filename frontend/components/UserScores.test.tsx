@@ -1,4 +1,4 @@
-import { User } from '../../interfaces/main';
+import type { User } from '../../interfaces/main';
 import { customRender } from '../lib/utils/testUtils';
 import { Circle, UserScores } from './UserScores';
 

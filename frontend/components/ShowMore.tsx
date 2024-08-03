@@ -1,5 +1,6 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Transition } from '@headlessui/react';
-import { Dispatch, ReactNode, SetStateAction, useRef } from 'react';
+import type { Dispatch, ReactNode, SetStateAction } from 'react';
+import { useRef } from 'react';
 import { classNames } from '../lib/utils/reactHelper';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import useCompetition from '../hooks/useCompetition';

@@ -1,8 +1,8 @@
 import { act } from '@testing-library/react';
 import { customRender } from '../lib/utils/testUtils';
 import NoSpoilersToggle from './NoSpoilersToggle';
-import { ContextType } from 'react';
-import NoSpoilersContext from '../context/NoSpoilersContext';
+import type { ContextType } from 'react';
+import type NoSpoilersContext from '../context/NoSpoilersContext';
 
 describe('NoSpoilersToggle', () => {
 	it('renders no spoilers toggle turned off if no context', () => {

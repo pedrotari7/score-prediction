@@ -18,15 +18,16 @@ module.exports = {
   ignorePatterns: [
     '/lib/**/*', // Ignore built files.
   ],
-  plugins: ['@typescript-eslint', 'import'],
+  plugins: ['@typescript-eslint', 'import', '@stylistic/ts'],
   rules: {
-    '@typescript-eslint/indent': ['error', 2],
+    '@stylistic/ts/indent': ['error', 2],
     '@typescript-eslint/no-non-null-assertion': 0,
     quotes: ['error', 'single'],
     'object-curly-spacing': 0,
     'max-len': ['error', { code: 120 }],
     'quote-props': ['error', 'as-needed'],
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '_' }],
+    '@typescript-eslint/consistent-type-imports': 'error',
   },
   settings: {
     'import/resolver': {

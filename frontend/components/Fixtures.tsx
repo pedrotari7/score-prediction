@@ -1,4 +1,4 @@
-import { Fixture, Fixtures, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
+import type { Fixture, Fixtures, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { useAuth } from '../lib/auth';

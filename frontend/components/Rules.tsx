@@ -1,5 +1,6 @@
 import { useContext } from 'react';
-import RouteContext, { Route, RouteInfo } from '../context/RouteContext';
+import type { RouteInfo } from '../context/RouteContext';
+import RouteContext, { Route } from '../context/RouteContext';
 import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';
 import Panel from './Panel';

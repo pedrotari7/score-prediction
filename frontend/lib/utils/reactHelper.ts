@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { Competition, Venue } from '../../../interfaces/main';
+import type { Competition, Venue } from '../../../interfaces/main';
 import { competitions } from '../../../shared/utils';
 
 export const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');

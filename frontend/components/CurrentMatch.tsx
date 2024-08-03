@@ -1,8 +1,9 @@
-import { Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
+import type { Dispatch, ReactNode, SetStateAction } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import UserContext from '../context/UserContext';
 import { useSwipeable } from 'react-swipeable';
 import LiveGame from './LiveGame';
-import {
+import type {
 	Fixture,
 	Fixtures,
 	Leaderboard,

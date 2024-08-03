@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Fixture, Fixtures, Standing, Standings } from '../../interfaces/main';
+import type { Fixture, Fixtures, Standing, Standings } from '../../interfaces/main';
 import GroupMapContext from '../context/GroupMapContext';
 import useCompetition from '../hooks/useCompetition';
 import { classNames, GROUP_COLORS } from '../lib/utils/reactHelper';

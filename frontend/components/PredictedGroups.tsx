@@ -1,5 +1,5 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Fixtures, Standing, Standings, Predictions } from '../../interfaces/main';
+import type { Fixtures, Standing, Standings, Predictions } from '../../interfaces/main';
 import { calculateResults, competitions, sortGroup, sortWorldCupGroup } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';

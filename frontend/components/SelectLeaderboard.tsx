@@ -1,5 +1,6 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import { Leaderboard, Users } from '../../interfaces/main';
+import type { Dispatch, SetStateAction } from 'react';
+import React from 'react';
+import type { Leaderboard, Users } from '../../interfaces/main';
 import Select from 'react-select';
 import { classNames } from '../lib/utils/reactHelper';
 import useCompetition from '../hooks/useCompetition';

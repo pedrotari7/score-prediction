@@ -1,4 +1,5 @@
-import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
+import type { FirebaseApp } from 'firebase/app';
+import { getApps, initializeApp } from 'firebase/app';
 import 'firebase/auth';
 
 const CLIENT_CONFIG = {

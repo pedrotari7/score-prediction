@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useState } from 'react';
-import { Leaderboard } from '../../interfaces/main';
+import type { Leaderboard } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
 import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UserContext from '../context/UserContext';

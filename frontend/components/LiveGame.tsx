@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
-import { Dispatch, SetStateAction, useContext } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
+import { useContext } from 'react';
 import Countdown, { zeroPad } from 'react-countdown';
 import { isGameFinished } from '../../shared/utils';
 import FixturesContext from '../context/FixturesContext';
