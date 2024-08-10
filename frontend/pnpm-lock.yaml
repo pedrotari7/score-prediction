@@ -160,8 +160,8 @@ importers:
         specifier: 0.6.6
         version: 0.6.6(prettier@3.3.3)
       react-countdown:
-        specifier: 2.3.5
-        version: 2.3.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 2.3.6
+        version: 2.3.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tailwindcss:
         specifier: 3.4.9
         version: 3.4.9(ts-node@10.9.2(@types/node@20.14.15)(typescript@5.5.4))
@@ -3068,8 +3068,8 @@ packages:
     peerDependencies:
       react: ^15.3.0 || 16 || 17 || 18
 
-  react-countdown@2.3.5:
-    resolution: {integrity: sha512-K26ENYEesMfPxhRRtm1r+Pf70SErrvW3g4CArLi/x6MPFjgfDFYePT4UghEj8p2nI0cqVV7/JjDgjyr//U60Og==}
+  react-countdown@2.3.6:
+    resolution: {integrity: sha512-ZfX6S08Hb6x6W6eCn1hMDvxPICI/T30fd+gaeVTCR/2cGZ2WJ3f26e4ImNIMX1fHkopJrUdnRpWXP13/D39+gg==}
     peerDependencies:
       react: '>= 15'
       react-dom: '>= 15'
@@ -7321,7 +7321,7 @@ snapshots:
       prop-types: 15.8.1
       react: 18.3.1
 
-  react-countdown@2.3.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-countdown@2.3.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       prop-types: 15.8.1
       react: 18.3.1
