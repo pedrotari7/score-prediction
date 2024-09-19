@@ -57,8 +57,8 @@ importers:
         specifier: 6.0.0
         version: 6.0.0(firebase@10.13.2)(react@18.3.1)
       react-select:
-        specifier: 5.8.0
-        version: 5.8.0(@types/react@18.3.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 5.8.1
+        version: 5.8.1(@types/react@18.3.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-swipeable:
         specifier: 7.0.1
         version: 7.0.1(react@18.3.1)
@@ -3091,8 +3091,8 @@ packages:
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
-  react-select@5.8.0:
-    resolution: {integrity: sha512-TfjLDo58XrhP6VG5M/Mi56Us0Yt8X7xD6cDybC7yoRMUNm7BGO7qk8J0TLQOua/prb8vUOtsfnXZwfm30HGsAA==}
+  react-select@5.8.1:
+    resolution: {integrity: sha512-RT1CJmuc+ejqm5MPgzyZujqDskdvB9a9ZqrdnVLsvAHjJ3Tj0hELnLeVPQlmYdVKCdCpxanepl6z7R5KhXhWzg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -7292,7 +7292,7 @@ snapshots:
 
   react-is@18.3.1: {}
 
-  react-select@5.8.0(@types/react@18.3.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-select@5.8.1(@types/react@18.3.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.25.6
       '@emotion/cache': 11.13.1
