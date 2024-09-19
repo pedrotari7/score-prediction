@@ -43,7 +43,7 @@
 		"@types/jest": "29.5.13",
 		"@types/luxon": "3.4.2",
 		"@types/node": "20.16.5",
-		"@types/react": "18.3.7",
+		"@types/react": "18.3.8",
 		"@types/react-copy-to-clipboard": "5.0.7",
 		"@types/react-toggle": "4.0.5",
 		"@typescript-eslint/eslint-plugin": "8.6.0",
