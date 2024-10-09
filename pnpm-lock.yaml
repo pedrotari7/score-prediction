@@ -18,8 +18,8 @@ importers:
         specifier: 10.14.0
         version: 10.14.0
       firebase-tools:
-        specifier: 13.21.0
-        version: 13.21.0(encoding@0.1.13)
+        specifier: 13.22.0
+        version: 13.22.0(encoding@0.1.13)
       husky:
         specifier: 9.1.6
         version: 9.1.6
@@ -1535,8 +1535,8 @@ packages:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
     engines: {node: '>=8'}
 
-  firebase-tools@13.21.0:
-    resolution: {integrity: sha512-erAK52lfHN6hxEczX4Rk4pDFx8caG1wpEvHIWUKoCA++3WtDG4eqWPpAHm4F8XI5Ed30XWlfRbg64aGSjZDRfg==}
+  firebase-tools@13.22.0:
+    resolution: {integrity: sha512-oZ5ylhSL+FvhrAL51y5p3O7OS2hS/Qj4Yb7RfsfuVGyxVZu7veZSrjJkKNWLtUXFSC16yzCpsbbQvMpEm5bxiQ==}
     engines: {node: '>=18.0.0 || >=20.0.0'}
     hasBin: true
 
@@ -5334,7 +5334,7 @@ snapshots:
       locate-path: 5.0.0
       path-exists: 4.0.0
 
-  firebase-tools@13.21.0(encoding@0.1.13):
+  firebase-tools@13.22.0(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.2.10
       '@google-cloud/cloud-sql-connector': 1.4.0(encoding@0.1.13)
