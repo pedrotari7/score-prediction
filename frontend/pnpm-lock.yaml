@@ -60,8 +60,8 @@ importers:
         specifier: 5.8.2
         version: 5.8.2(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-swipeable:
-        specifier: 7.0.1
-        version: 7.0.1(react@18.3.1)
+        specifier: 7.0.2
+        version: 7.0.2(react@18.3.1)
       react-switch:
         specifier: 7.0.0
         version: 7.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3029,10 +3029,10 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
 
-  react-swipeable@7.0.1:
-    resolution: {integrity: sha512-RKB17JdQzvECfnVj9yDZsiYn3vH0eyva/ZbrCZXZR0qp66PBRhtg4F9yJcJTWYT5Adadi+x4NoG53BxKHwIYLQ==}
+  react-swipeable@7.0.2:
+    resolution: {integrity: sha512-v1Qx1l+aC2fdxKa9aKJiaU/ZxmJ5o98RMoFwUqAAzVWUcxgfHFXDDruCKXhw6zIYXm6V64JiHgP9f6mlME5l8w==}
     peerDependencies:
-      react: ^16.8.3 || ^17 || ^18
+      react: ^16.8.3 || ^17 || ^18 || ^19.0.0 || ^19.0.0-rc
 
   react-switch@7.0.0:
     resolution: {integrity: sha512-KkDeW+cozZXI6knDPyUt3KBN1rmhoVYgAdCJqAh7st7tk8YE6N0iR89zjCWO8T8dUTeJGTR0KU+5CHCRMRffiA==}
@@ -7121,7 +7121,7 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  react-swipeable@7.0.1(react@18.3.1):
+  react-swipeable@7.0.2(react@18.3.1):
     dependencies:
       react: 18.3.1
 
