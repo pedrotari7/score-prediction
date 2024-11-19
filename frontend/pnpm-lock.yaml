@@ -73,8 +73,8 @@ importers:
         version: 5.28.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@stylistic/eslint-plugin-ts':
-        specifier: 2.10.1
-        version: 2.10.1(eslint@8.57.1)(typescript@5.6.3)
+        specifier: 2.11.0
+        version: 2.11.0(eslint@8.57.1)(typescript@5.6.3)
       '@testing-library/jest-dom':
         specifier: 6.6.3
         version: 6.6.3
@@ -981,8 +981,8 @@ packages:
   '@sinonjs/fake-timers@10.3.0':
     resolution: {integrity: sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==}
 
-  '@stylistic/eslint-plugin-ts@2.10.1':
-    resolution: {integrity: sha512-XmXcixLPYfW0Z4Nf2ChnQ7CnfALNy/5gwNh22POiy64xreVYtiag4+yxN2SBEalEfoOAwDnqwDKam7e7XeoKTA==}
+  '@stylistic/eslint-plugin-ts@2.11.0':
+    resolution: {integrity: sha512-ZBxnfSjzxUiwCibbVCeYCYwZw+P5xaQw+pNA8B8uR42fdMQIOhUstXjJuS2nTHoW5CF4+vGSxbL4gklI8WxhyA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: '>=8.40.0'
@@ -4709,9 +4709,9 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.1
 
-  '@stylistic/eslint-plugin-ts@2.10.1(eslint@8.57.1)(typescript@5.6.3)':
+  '@stylistic/eslint-plugin-ts@2.11.0(eslint@8.57.1)(typescript@5.6.3)':
     dependencies:
-      '@typescript-eslint/utils': 8.14.0(eslint@8.57.1)(typescript@5.6.3)
+      '@typescript-eslint/utils': 8.15.0(eslint@8.57.1)(typescript@5.6.3)
       eslint: 8.57.1
       eslint-visitor-keys: 4.2.0
       espree: 10.3.0
