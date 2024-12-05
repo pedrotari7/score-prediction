@@ -73,8 +73,8 @@ importers:
         specifier: 3.3.0
         version: 3.3.0(firebase-admin@12.7.0(encoding@0.1.13))(firebase-functions@5.1.1(firebase-admin@12.7.0(encoding@0.1.13)))(jest@29.7.0(@types/node@22.10.1))
       firebase-tools:
-        specifier: 13.27.0
-        version: 13.27.0(encoding@0.1.13)
+        specifier: 13.28.0
+        version: 13.28.0(encoding@0.1.13)
       prettier:
         specifier: 3.4.2
         version: 3.4.2
@@ -1994,8 +1994,8 @@ packages:
     peerDependencies:
       firebase-admin: ^11.10.0 || ^12.0.0
 
-  firebase-tools@13.27.0:
-    resolution: {integrity: sha512-/G6Ga+vEByYV2NnEBwfg2jvh7IgQiwy00fxxkZzXRvMAsx/2CpxoDByYVXsA/Q95k3VuUwi02nrm8qEgJaJrMA==}
+  firebase-tools@13.28.0:
+    resolution: {integrity: sha512-5s5G54tTQADw4Wf+OwIbcUmCubHbHJjM6MmfnEyDYQLYkWW5YwFTGiLkeFKAy/6WYkIR5YYPlPyFKoNAy1E/5g==}
     engines: {node: '>=18.0.0 || >=20.0.0'}
     hasBin: true
 
@@ -6821,7 +6821,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@13.27.0(encoding@0.1.13):
+  firebase-tools@13.28.0(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.2.14
       '@google-cloud/cloud-sql-connector': 1.4.0(encoding@0.1.13)
@@ -6854,6 +6854,7 @@ snapshots:
       google-auth-library: 9.15.0(encoding@0.1.13)
       inquirer: 8.2.6
       inquirer-autocomplete-prompt: 2.0.1(inquirer@8.2.6)
+      js-yaml: 3.14.1
       jsonwebtoken: 9.0.2
       leven: 3.1.0
       libsodium-wrappers: 0.7.15
