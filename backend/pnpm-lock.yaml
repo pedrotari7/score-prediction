@@ -27,8 +27,8 @@ importers:
         specifier: 12.7.0
         version: 12.7.0(encoding@0.1.13)
       firebase-functions:
-        specifier: 5.1.1
-        version: 5.1.1(firebase-admin@12.7.0(encoding@0.1.13))
+        specifier: 6.1.2
+        version: 6.1.2(firebase-admin@12.7.0(encoding@0.1.13))
     devDependencies:
       '@firebase/app-types':
         specifier: 0.9.3
@@ -71,7 +71,7 @@ importers:
         version: 10.14.1
       firebase-functions-test:
         specifier: 3.3.0
-        version: 3.3.0(firebase-admin@12.7.0(encoding@0.1.13))(firebase-functions@5.1.1(firebase-admin@12.7.0(encoding@0.1.13)))(jest@29.7.0(@types/node@22.10.1))
+        version: 3.3.0(firebase-admin@12.7.0(encoding@0.1.13))(firebase-functions@6.1.2(firebase-admin@12.7.0(encoding@0.1.13)))(jest@29.7.0(@types/node@22.10.1))
       firebase-tools:
         specifier: 13.28.0
         version: 13.28.0(encoding@0.1.13)
@@ -791,14 +791,8 @@ packages:
   '@types/express-serve-static-core@4.19.6':
     resolution: {integrity: sha512-N4LZ2xG7DatVqhCZzOGb1Yi5lMbXSZcmdLDe9EzSndPV2HpWYWzRbaerl2n27irrm94EPpprqa8KpskPT085+A==}
 
-  '@types/express-serve-static-core@5.0.2':
-    resolution: {integrity: sha512-vluaspfvWEtE4vcSDlKRNer52DvOGrB2xv6diXy6UKyKW0lqZiWHGNApSyxOv+8DE5Z27IzVvE7hNkxg7EXIcg==}
-
   '@types/express@4.17.21':
     resolution: {integrity: sha512-ejlPM315qwLpaQlQDTjPdsUFSc6ZsP4AN6AlWnogPjQ7CVi7PYF3YVz+CY3jE2pwYf7E/7HlDAN0rV2GxTG0HQ==}
-
-  '@types/express@4.17.3':
-    resolution: {integrity: sha512-I8cGRJj3pyOLs/HndoP+25vOqhqWkAZsWMEmq1qXy/b/M3ppufecUwaK2/TVDVxcV61/iSdhykUjQQ2DLSrTdg==}
 
   '@types/graceful-fs@4.1.9':
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
@@ -1980,12 +1974,12 @@ packages:
       firebase-functions: '>=4.9.0'
       jest: '>=28.0.0'
 
-  firebase-functions@5.1.1:
-    resolution: {integrity: sha512-KkyKZE98Leg/C73oRyuUYox04PQeeBThdygMfeX+7t1cmKWYKa/ZieYa89U8GHgED+0mF7m7wfNZOfbURYxIKg==}
+  firebase-functions@6.1.2:
+    resolution: {integrity: sha512-1ZKLLOs4YhpzfWOZo0wsqNBusy9113GUfRs89BF6yOlmkxlcJxdJzZEs/ygWeXVJKquZhW2K1Gm10Gir4RJxGQ==}
     engines: {node: '>=14.10.0'}
     hasBin: true
     peerDependencies:
-      firebase-admin: ^11.10.0 || ^12.0.0
+      firebase-admin: ^11.10.0 || ^12.0.0 || ^13.0.0
 
   firebase-tools@13.28.0:
     resolution: {integrity: sha512-5s5G54tTQADw4Wf+OwIbcUmCubHbHJjM6MmfnEyDYQLYkWW5YwFTGiLkeFKAy/6WYkIR5YYPlPyFKoNAy1E/5g==}
@@ -5318,24 +5312,11 @@ snapshots:
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
 
-  '@types/express-serve-static-core@5.0.2':
-    dependencies:
-      '@types/node': 22.10.1
-      '@types/qs': 6.9.17
-      '@types/range-parser': 1.2.7
-      '@types/send': 0.17.4
-
   '@types/express@4.17.21':
     dependencies:
       '@types/body-parser': 1.19.5
       '@types/express-serve-static-core': 4.19.6
       '@types/qs': 6.9.17
-      '@types/serve-static': 1.15.7
-
-  '@types/express@4.17.3':
-    dependencies:
-      '@types/body-parser': 1.19.5
-      '@types/express-serve-static-core': 5.0.2
       '@types/serve-static': 1.15.7
 
   '@types/graceful-fs@4.1.9':
@@ -6791,19 +6772,19 @@ snapshots:
       - encoding
       - supports-color
 
-  firebase-functions-test@3.3.0(firebase-admin@12.7.0(encoding@0.1.13))(firebase-functions@5.1.1(firebase-admin@12.7.0(encoding@0.1.13)))(jest@29.7.0(@types/node@22.10.1)):
+  firebase-functions-test@3.3.0(firebase-admin@12.7.0(encoding@0.1.13))(firebase-functions@6.1.2(firebase-admin@12.7.0(encoding@0.1.13)))(jest@29.7.0(@types/node@22.10.1)):
     dependencies:
       '@types/lodash': 4.17.13
       firebase-admin: 12.7.0(encoding@0.1.13)
-      firebase-functions: 5.1.1(firebase-admin@12.7.0(encoding@0.1.13))
+      firebase-functions: 6.1.2(firebase-admin@12.7.0(encoding@0.1.13))
       jest: 29.7.0(@types/node@22.10.1)
       lodash: 4.17.21
       ts-deepmerge: 2.0.7
 
-  firebase-functions@5.1.1(firebase-admin@12.7.0(encoding@0.1.13)):
+  firebase-functions@6.1.2(firebase-admin@12.7.0(encoding@0.1.13)):
     dependencies:
       '@types/cors': 2.8.17
-      '@types/express': 4.17.3
+      '@types/express': 4.17.21
       cors: 2.8.5
       express: 4.21.2
       firebase-admin: 12.7.0(encoding@0.1.13)
