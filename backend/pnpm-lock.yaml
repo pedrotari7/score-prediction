@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@google-cloud/functions-framework':
-        specifier: 3.4.2
-        version: 3.4.2
+        specifier: 3.4.3
+        version: 3.4.3
       axios:
         specifier: 1.7.9
         version: 1.7.9
@@ -492,8 +492,8 @@ packages:
     resolution: {integrity: sha512-88uZ+jLsp1aVMj7gh3EKYH1aulTAMFAp8sH/v5a9w8q8iqSG27RiWLoxSAFr/XocZ9hGiWH1kEnBw+zl3xAgNA==}
     engines: {node: '>=14.0.0'}
 
-  '@google-cloud/functions-framework@3.4.2':
-    resolution: {integrity: sha512-yJcxfVgjLoKFO3p6Wy6Fc+Gi6l3PFSwJg4m0mjebx/UHdLeXLYYxgKMP8RCODaApXEWXbSITIjXO0m5kSv2Ilw==}
+  '@google-cloud/functions-framework@3.4.3':
+    resolution: {integrity: sha512-NR9r3cAcuE35bW+23jRrYXWY7QFwK4UlLtmf6y+JgKzplt7s50gPrROuD2yqB9JKXynXfdRAC0EwwHZ+4Q0jsQ==}
     engines: {node: '>=10.0.0'}
     hasBin: true
 
@@ -799,6 +799,9 @@ packages:
 
   '@types/express@4.17.3':
     resolution: {integrity: sha512-I8cGRJj3pyOLs/HndoP+25vOqhqWkAZsWMEmq1qXy/b/M3ppufecUwaK2/TVDVxcV61/iSdhykUjQQ2DLSrTdg==}
+
+  '@types/express@5.0.0':
+    resolution: {integrity: sha512-DvZriSMehGHL1ZNLzi6MidnsDhUZM/x2pRdDIKdwbUNqqwHxMlRdkxtn6/EPKyqKpHqTl/4nRZsRNLpZxZRpPQ==}
 
   '@types/graceful-fs@4.1.9':
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
@@ -4838,9 +4841,9 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google-cloud/functions-framework@3.4.2':
+  '@google-cloud/functions-framework@3.4.3':
     dependencies:
-      '@types/express': 4.17.21
+      '@types/express': 5.0.0
       body-parser: 1.20.3
       cloudevents: 8.0.2
       express: 4.21.2
@@ -5305,6 +5308,13 @@ snapshots:
     dependencies:
       '@types/body-parser': 1.19.5
       '@types/express-serve-static-core': 5.0.2
+      '@types/serve-static': 1.15.7
+
+  '@types/express@5.0.0':
+    dependencies:
+      '@types/body-parser': 1.19.5
+      '@types/express-serve-static-core': 5.0.2
+      '@types/qs': 6.9.17
       '@types/serve-static': 1.15.7
 
   '@types/graceful-fs@4.1.9':
