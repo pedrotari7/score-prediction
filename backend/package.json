@@ -43,7 +43,7 @@
     "firebase-functions-test": "3.4.0",
     "firebase-tools": "13.29.1",
     "prettier": "3.4.2",
-    "typescript": "5.7.2"
+    "typescript": "5.7.3"
   },
   "license": "ISC",
   "private": true
