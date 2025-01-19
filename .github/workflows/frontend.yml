@@ -26,6 +26,8 @@ jobs:
                       args: [--frozen-lockfile, --strict-peer-dependencies]
                       cwd: ./frontend
 
+            - name: Build
+              run: pnpm build
             - name: Lint
               run: pnpm lint
             - name: Test
