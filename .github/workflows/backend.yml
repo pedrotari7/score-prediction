@@ -25,5 +25,7 @@ jobs:
                   run_install: |
                       args: [--frozen-lockfile, --strict-peer-dependencies]
                       cwd: ./backend
+            - name: Build
+              run: pnpm build
             - name: Lint
               run: pnpm lint
