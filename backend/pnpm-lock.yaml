@@ -73,8 +73,8 @@ importers:
         specifier: 3.4.0
         version: 3.4.0(firebase-admin@13.1.0(encoding@0.1.13))(firebase-functions@6.3.2(firebase-admin@13.1.0(encoding@0.1.13)))(jest@29.7.0(@types/node@22.13.5))
       firebase-tools:
-        specifier: 13.31.2
-        version: 13.31.2(encoding@0.1.13)
+        specifier: 13.32.0
+        version: 13.32.0(encoding@0.1.13)
       prettier:
         specifier: 3.5.2
         version: 3.5.2
@@ -2004,8 +2004,8 @@ packages:
     peerDependencies:
       firebase-admin: ^11.10.0 || ^12.0.0 || ^13.0.0
 
-  firebase-tools@13.31.2:
-    resolution: {integrity: sha512-y88vAQ8L2Bm5kkYKUyiXmUlvOs/kikE7pbVgEsoX/0CiwFqqoN8+TAi7ZwsOkB/dRlNlR4WztAa7Od6LQ0GhuQ==}
+  firebase-tools@13.32.0:
+    resolution: {integrity: sha512-KkrZ4+Mlj4aV81cJsgXmabWfbanmYSiSONv2B0m/bVpMcVhKCcT0DupBYcD7WOTyNA6f6M8m6E8yPOO/acwchA==}
     engines: {node: '>=18.0.0 || >=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -6840,7 +6840,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@13.31.2(encoding@0.1.13):
+  firebase-tools@13.32.0(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.2.17
       '@google-cloud/cloud-sql-connector': 1.6.1(encoding@0.1.13)
