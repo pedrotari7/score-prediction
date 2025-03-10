@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "packageManager": "pnpm@9.15.7",
+  "packageManager": "pnpm@9.15.8",
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
     "build": "tsc",
