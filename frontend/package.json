@@ -23,7 +23,7 @@
 		"@opentelemetry/semantic-conventions": "1.30.0",
 		"add": "2.0.6",
 		"firebase": "11.5.0",
-		"luxon": "3.6.0",
+		"luxon": "3.6.1",
 		"next": "15.2.4",
 		"react": "19.1.0",
 		"react-circular-progressbar": "2.2.0",
