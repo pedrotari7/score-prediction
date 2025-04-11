@@ -18,8 +18,8 @@ importers:
         specifier: 11.6.0
         version: 11.6.0
       firebase-tools:
-        specifier: 13.35.1
-        version: 13.35.1(encoding@0.1.13)
+        specifier: 14.1.0
+        version: 14.1.0(encoding@0.1.13)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -911,6 +911,7 @@ packages:
 
   bignumber.js@9.2.0:
     resolution: {integrity: sha512-JocpCSOixzy5XFJi2ub6IMmV/G9i8Lrm2lZvwBv9xPdglmZM0ufDVBbjbrfU/zuLvBfD7Bv2eYxz9i+OHTgkew==}
+    deprecated: pkg version number incorrect
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -1519,9 +1520,9 @@ packages:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
     engines: {node: '>=8'}
 
-  firebase-tools@13.35.1:
-    resolution: {integrity: sha512-QmMy4hnd0Q+V+7GFhZUV80+kG0WC1+UOtuaaQWx+cstt+XepUcpju/KW4cBknnyql521BghfuAhveckQQ1g+HA==}
-    engines: {node: '>=18.0.0 || >=20.0.0 || >=22.0.0'}
+  firebase-tools@14.1.0:
+    resolution: {integrity: sha512-tPSjoZBZNPfcHQwHLo5rjvlB2oniTDjKhqBb+BWs87O4NgqZRL92I2aFLycZoCOVgXLyLjDg+QoK6p9iasYIdQ==}
+    engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
   firebase@11.6.0:
@@ -5227,7 +5228,7 @@ snapshots:
       locate-path: 5.0.0
       path-exists: 4.0.0
 
-  firebase-tools@13.35.1(encoding@0.1.13):
+  firebase-tools@14.1.0(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.2.17
       '@google-cloud/cloud-sql-connector': 1.7.0(encoding@0.1.13)
