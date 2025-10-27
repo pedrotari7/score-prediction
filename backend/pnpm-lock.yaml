@@ -40,8 +40,8 @@ importers:
         specifier: 2.8.19
         version: 2.8.19
       '@types/express':
-        specifier: 4.17.24
-        version: 4.17.24
+        specifier: 4.17.25
+        version: 4.17.25
       '@typescript-eslint/eslint-plugin':
         specifier: 8.46.2
         version: 8.46.2(@typescript-eslint/parser@8.46.2(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
@@ -877,8 +877,8 @@ packages:
   '@types/express-serve-static-core@4.19.7':
     resolution: {integrity: sha512-FvPtiIf1LfhzsaIXhv/PHan/2FeQBbtBDtfX2QfvPxdUelMDEckK08SM6nqo1MIZY3RUlfA+HV8+hFUSio78qg==}
 
-  '@types/express@4.17.24':
-    resolution: {integrity: sha512-Mbrt4SRlXSTWryOnHAh2d4UQ/E7n9lZyGSi6KgX+4hkuL9soYbLOVXVhnk/ODp12YsGc95f4pOvqywJ6kngUwg==}
+  '@types/express@4.17.25':
+    resolution: {integrity: sha512-dVd04UKsfpINUnK0yBoYHDF3xu7xVH4BuDotC/xGuycx4CgbP48X/KF/586bcObxT0HENHXEU8Nqtu6NR+eKhw==}
 
   '@types/http-errors@2.0.5':
     resolution: {integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==}
@@ -5123,7 +5123,7 @@ snapshots:
 
   '@google-cloud/functions-framework@3.5.1':
     dependencies:
-      '@types/express': 4.17.24
+      '@types/express': 4.17.25
       body-parser: 1.20.3
       cloudevents: 8.0.3
       express: 4.21.2
@@ -5624,7 +5624,7 @@ snapshots:
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
 
-  '@types/express@4.17.24':
+  '@types/express@4.17.25':
     dependencies:
       '@types/body-parser': 1.19.6
       '@types/express-serve-static-core': 4.19.7
@@ -5650,7 +5650,7 @@ snapshots:
   '@types/jsonwebtoken@9.0.10':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 22.18.12
+      '@types/node': 24.9.1
 
   '@types/lodash@4.17.20': {}
 
@@ -5677,7 +5677,7 @@ snapshots:
   '@types/request@2.48.13':
     dependencies:
       '@types/caseless': 0.12.5
-      '@types/node': 22.18.12
+      '@types/node': 24.9.1
       '@types/tough-cookie': 4.0.5
       form-data: 2.5.5
 
@@ -7117,7 +7117,7 @@ snapshots:
   firebase-functions@6.6.0(firebase-admin@13.5.0(encoding@0.1.13)):
     dependencies:
       '@types/cors': 2.8.19
-      '@types/express': 4.17.24
+      '@types/express': 4.17.25
       cors: 2.8.5
       express: 4.21.2
       firebase-admin: 13.5.0(encoding@0.1.13)
@@ -8319,7 +8319,7 @@ snapshots:
 
   jwks-rsa@3.2.0:
     dependencies:
-      '@types/express': 4.17.24
+      '@types/express': 4.17.25
       '@types/jsonwebtoken': 9.0.10
       debug: 4.4.3
       jose: 4.15.9
