@@ -21,8 +21,8 @@ importers:
         specifier: 4.21.2
         version: 4.21.2
       express-rate-limit:
-        specifier: 7.5.1
-        version: 7.5.1(express@4.21.2)
+        specifier: 8.2.1
+        version: 8.2.1(express@4.21.2)
       firebase-admin:
         specifier: 13.5.0
         version: 13.5.0(encoding@0.1.13)
@@ -2039,8 +2039,8 @@ packages:
   exponential-backoff@3.1.3:
     resolution: {integrity: sha512-ZgEeZXj30q+I0EN+CbSSpIyPaJ5HVQD18Z1m+u1FXbAeT94mr1zw50q4q6jiiC447Nl/YTcIYSAftiGqetwXCA==}
 
-  express-rate-limit@7.5.1:
-    resolution: {integrity: sha512-7iN8iPMDzOMHPUYllBEsQdWVB6fPDMPqwjBaFrgr4Jgr/+okjvzAy+UHlYYL/Vs0OsOrMkwS6PJDkFlJwoxUnw==}
+  express-rate-limit@8.2.1:
+    resolution: {integrity: sha512-PCZEIEIxqwhzw4KF0n7QF4QqruVTcF73O5kFKUnGOyjbCCgizBBiFaYpd/fnBLUMPw/BWw9OsiN7GgrNYr7j6g==}
     engines: {node: '>= 16'}
     peerDependencies:
       express: '>= 4.11'
@@ -6945,9 +6945,10 @@ snapshots:
   exponential-backoff@3.1.3:
     optional: true
 
-  express-rate-limit@7.5.1(express@4.21.2):
+  express-rate-limit@8.2.1(express@4.21.2):
     dependencies:
       express: 4.21.2
+      ip-address: 10.0.1
 
   express@4.21.2:
     dependencies:
