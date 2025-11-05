@@ -24,11 +24,11 @@ importers:
         specifier: 7.5.1
         version: 7.5.1(express@4.21.2)
       firebase-admin:
-        specifier: 13.5.0
-        version: 13.5.0(encoding@0.1.13)
+        specifier: 13.6.0
+        version: 13.6.0(encoding@0.1.13)
       firebase-functions:
         specifier: 6.6.0
-        version: 6.6.0(firebase-admin@13.5.0(encoding@0.1.13))
+        version: 6.6.0(firebase-admin@13.6.0(encoding@0.1.13))
     devDependencies:
       '@firebase/app-types':
         specifier: 0.9.3
@@ -71,7 +71,7 @@ importers:
         version: 11.10.0
       firebase-functions-test:
         specifier: 3.4.1
-        version: 3.4.1(firebase-admin@13.5.0(encoding@0.1.13))(firebase-functions@6.6.0(firebase-admin@13.5.0(encoding@0.1.13)))(jest@30.2.0(@types/node@24.9.2))
+        version: 3.4.1(firebase-admin@13.6.0(encoding@0.1.13))(firebase-functions@6.6.0(firebase-admin@13.6.0(encoding@0.1.13)))(jest@30.2.0(@types/node@24.9.2))
       firebase-tools:
         specifier: 13.35.1
         version: 13.35.1(@types/node@24.9.2)(encoding@0.1.13)
@@ -2177,8 +2177,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-admin@13.5.0:
-    resolution: {integrity: sha512-QZOpv1DJRJpH8NcWiL1xXE10tw3L/bdPFlgjcWrqU3ufyOJDYfxB1MMtxiVTwxK16NlybQbEM6ciSich2uWEIQ==}
+  firebase-admin@13.6.0:
+    resolution: {integrity: sha512-GdPA/t0+Cq8p1JnjFRBmxRxAGvF/kl2yfdhALl38PrRp325YxyQ5aNaHui0XmaKcKiGRFIJ/EgBNWFoDP0onjw==}
     engines: {node: '>=18'}
 
   firebase-functions-test@3.4.1:
@@ -5691,7 +5691,7 @@ snapshots:
   '@types/jsonwebtoken@9.0.10':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 22.18.13
+      '@types/node': 24.9.2
 
   '@types/lodash@4.17.20': {}
 
@@ -5718,7 +5718,7 @@ snapshots:
   '@types/request@2.48.13':
     dependencies:
       '@types/caseless': 0.12.5
-      '@types/node': 22.18.13
+      '@types/node': 24.9.2
       '@types/tough-cookie': 4.0.5
       form-data: 2.5.5
 
@@ -7178,7 +7178,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-admin@13.5.0(encoding@0.1.13):
+  firebase-admin@13.6.0(encoding@0.1.13):
     dependencies:
       '@fastify/busboy': 3.2.0
       '@firebase/database-compat': 2.1.0
@@ -7198,22 +7198,22 @@ snapshots:
       - encoding
       - supports-color
 
-  firebase-functions-test@3.4.1(firebase-admin@13.5.0(encoding@0.1.13))(firebase-functions@6.6.0(firebase-admin@13.5.0(encoding@0.1.13)))(jest@30.2.0(@types/node@24.9.2)):
+  firebase-functions-test@3.4.1(firebase-admin@13.6.0(encoding@0.1.13))(firebase-functions@6.6.0(firebase-admin@13.6.0(encoding@0.1.13)))(jest@30.2.0(@types/node@24.9.2)):
     dependencies:
       '@types/lodash': 4.17.20
-      firebase-admin: 13.5.0(encoding@0.1.13)
-      firebase-functions: 6.6.0(firebase-admin@13.5.0(encoding@0.1.13))
+      firebase-admin: 13.6.0(encoding@0.1.13)
+      firebase-functions: 6.6.0(firebase-admin@13.6.0(encoding@0.1.13))
       jest: 30.2.0(@types/node@24.9.2)
       lodash: 4.17.21
       ts-deepmerge: 2.0.7
 
-  firebase-functions@6.6.0(firebase-admin@13.5.0(encoding@0.1.13)):
+  firebase-functions@6.6.0(firebase-admin@13.6.0(encoding@0.1.13)):
     dependencies:
       '@types/cors': 2.8.19
       '@types/express': 4.17.25
       cors: 2.8.5
       express: 4.21.2
-      firebase-admin: 13.5.0(encoding@0.1.13)
+      firebase-admin: 13.6.0(encoding@0.1.13)
       protobufjs: 7.5.4
     transitivePeerDependencies:
       - supports-color
