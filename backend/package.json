@@ -18,7 +18,7 @@
   },
   "main": "lib/backend/src/index.js",
   "dependencies": {
-    "@google-cloud/functions-framework": "3.5.1",
+    "@google-cloud/functions-framework": "4.0.1",
     "axios": "1.13.2",
     "cors": "2.8.5",
     "express": "4.22.1",
