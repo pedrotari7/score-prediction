@@ -58,7 +58,7 @@ importers:
         version: 6.0.0(firebase@11.10.0)(react@19.2.4)
       react-select:
         specifier: 5.10.2
-        version: 5.10.2(@types/react@19.2.11)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 5.10.2(@types/react@19.2.12)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react-swipeable:
         specifier: 7.0.2
         version: 7.0.2(react@19.2.4)
@@ -80,7 +80,7 @@ importers:
         version: 6.9.1
       '@testing-library/react':
         specifier: 16.3.2
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react@19.2.11)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react@19.2.12)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@types/jest':
         specifier: 29.5.14
         version: 29.5.14
@@ -91,8 +91,8 @@ importers:
         specifier: 22.19.8
         version: 22.19.8
       '@types/react':
-        specifier: 19.2.11
-        version: 19.2.11
+        specifier: 19.2.12
+        version: 19.2.12
       '@types/react-copy-to-clipboard':
         specifier: 5.0.7
         version: 5.0.7
@@ -1259,8 +1259,8 @@ packages:
     peerDependencies:
       '@types/react': '*'
 
-  '@types/react@19.2.11':
-    resolution: {integrity: sha512-tORuanb01iEzWvMGVGv2ZDhYZVeRMrw453DCSAIn/5yvcSVnMoUMTyf33nQJLahYEnv9xqrTNbgz4qY5EfSh0g==}
+  '@types/react@19.2.12':
+    resolution: {integrity: sha512-22v4srzdW0RP/o1SSBaDEoid99oodPAY6zx9xYj0GnJQP0YXgBpwi2zrEN6iamB6EijL9H9QsgsNeSK8rFBJtA==}
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
@@ -4144,7 +4144,7 @@ snapshots:
 
   '@emotion/memoize@0.9.0': {}
 
-  '@emotion/react@11.14.0(@types/react@19.2.11)(react@19.2.4)':
+  '@emotion/react@11.14.0(@types/react@19.2.12)(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.28.6
       '@emotion/babel-plugin': 11.13.5
@@ -4156,7 +4156,7 @@ snapshots:
       hoist-non-react-statics: 3.3.2
       react: 19.2.4
     optionalDependencies:
-      '@types/react': 19.2.11
+      '@types/react': 19.2.12
     transitivePeerDependencies:
       - supports-color
 
@@ -5123,14 +5123,14 @@ snapshots:
       picocolors: 1.1.1
       redent: 3.0.0
 
-  '@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react@19.2.11)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react@19.2.12)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.28.6
       '@testing-library/dom': 10.4.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
     optionalDependencies:
-      '@types/react': 19.2.11
+      '@types/react': 19.2.12
 
   '@tootallnate/once@2.0.0': {}
 
@@ -5207,17 +5207,17 @@ snapshots:
 
   '@types/react-copy-to-clipboard@5.0.7':
     dependencies:
-      '@types/react': 19.2.11
+      '@types/react': 19.2.12
 
   '@types/react-toggle@4.0.5':
     dependencies:
-      '@types/react': 19.2.11
+      '@types/react': 19.2.12
 
-  '@types/react-transition-group@4.4.12(@types/react@19.2.11)':
+  '@types/react-transition-group@4.4.12(@types/react@19.2.12)':
     dependencies:
-      '@types/react': 19.2.11
+      '@types/react': 19.2.12
 
-  '@types/react@19.2.11':
+  '@types/react@19.2.12':
     dependencies:
       csstype: 3.2.3
 
@@ -7601,19 +7601,19 @@ snapshots:
 
   react-is@18.3.1: {}
 
-  react-select@5.10.2(@types/react@19.2.11)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  react-select@5.10.2(@types/react@19.2.12)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
       '@babel/runtime': 7.28.6
       '@emotion/cache': 11.14.0
-      '@emotion/react': 11.14.0(@types/react@19.2.11)(react@19.2.4)
+      '@emotion/react': 11.14.0(@types/react@19.2.12)(react@19.2.4)
       '@floating-ui/dom': 1.7.5
-      '@types/react-transition-group': 4.4.12(@types/react@19.2.11)
+      '@types/react-transition-group': 4.4.12(@types/react@19.2.12)
       memoize-one: 6.0.0
       prop-types: 15.8.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
       react-transition-group: 4.4.5(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      use-isomorphic-layout-effect: 1.2.1(@types/react@19.2.11)(react@19.2.4)
+      use-isomorphic-layout-effect: 1.2.1(@types/react@19.2.12)(react@19.2.4)
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
@@ -8200,11 +8200,11 @@ snapshots:
       querystringify: 2.2.0
       requires-port: 1.0.0
 
-  use-isomorphic-layout-effect@1.2.1(@types/react@19.2.11)(react@19.2.4):
+  use-isomorphic-layout-effect@1.2.1(@types/react@19.2.12)(react@19.2.4):
     dependencies:
       react: 19.2.4
     optionalDependencies:
-      '@types/react': 19.2.11
+      '@types/react': 19.2.12
 
   use-sync-external-store@1.6.0(react@19.2.4):
     dependencies:
