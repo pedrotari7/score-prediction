@@ -24,11 +24,11 @@ importers:
         specifier: 7.5.1
         version: 7.5.1(express@4.22.1)
       firebase-admin:
-        specifier: 13.6.0
-        version: 13.6.0(encoding@0.1.13)
+        specifier: 13.6.1
+        version: 13.6.1(encoding@0.1.13)
       firebase-functions:
         specifier: 6.6.0
-        version: 6.6.0(firebase-admin@13.6.0(encoding@0.1.13))
+        version: 6.6.0(firebase-admin@13.6.1(encoding@0.1.13))
     devDependencies:
       '@firebase/app-types':
         specifier: 0.9.3
@@ -71,7 +71,7 @@ importers:
         version: 11.10.0
       firebase-functions-test:
         specifier: 3.4.1
-        version: 3.4.1(firebase-admin@13.6.0(encoding@0.1.13))(firebase-functions@6.6.0(firebase-admin@13.6.0(encoding@0.1.13)))(jest@30.2.0(@types/node@25.2.0))
+        version: 3.4.1(firebase-admin@13.6.1(encoding@0.1.13))(firebase-functions@6.6.0(firebase-admin@13.6.1(encoding@0.1.13)))(jest@30.2.0(@types/node@25.2.0))
       firebase-tools:
         specifier: 13.35.1
         version: 13.35.1(@types/node@25.2.0)(encoding@0.1.13)
@@ -2144,8 +2144,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-admin@13.6.0:
-    resolution: {integrity: sha512-GdPA/t0+Cq8p1JnjFRBmxRxAGvF/kl2yfdhALl38PrRp325YxyQ5aNaHui0XmaKcKiGRFIJ/EgBNWFoDP0onjw==}
+  firebase-admin@13.6.1:
+    resolution: {integrity: sha512-Zgc6yPtmPxAZo+FoK6LMG6zpSEsoSK8ifIR+IqF4oWuC3uWZU40OjxgfLTSFcsRlj/k/wD66zNv2UiTRreCNSw==}
     engines: {node: '>=18'}
 
   firebase-functions-test@3.4.1:
@@ -2326,6 +2326,7 @@ packages:
 
   glob@10.5.0:
     resolution: {integrity: sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@13.0.0:
@@ -2334,7 +2335,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-dirs@3.0.1:
     resolution: {integrity: sha512-NBcGGFbBA9s1VzD41QXDG+3++t9Mn5t1FpLdhESY6oKY4gYTFpX4wO3sqGUa0Srjtbfj3szX0RnemmrVRUdULA==}
@@ -4113,7 +4114,7 @@ packages:
   tar@6.2.1:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
-    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   tar@7.5.7:
     resolution: {integrity: sha512-fov56fJiRuThVFXD6o6/Q354S7pnWMJIVlDBYijsTNx6jKSE4pvrDTs6lUnmGvNyfJwFQQwWy3owKz1ucIhveQ==}
@@ -5670,7 +5671,7 @@ snapshots:
   '@types/jsonwebtoken@9.0.10':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 22.19.7
+      '@types/node': 25.2.0
 
   '@types/lodash@4.17.23': {}
 
@@ -5697,7 +5698,7 @@ snapshots:
   '@types/request@2.48.13':
     dependencies:
       '@types/caseless': 0.12.5
-      '@types/node': 22.19.7
+      '@types/node': 25.2.0
       '@types/tough-cookie': 4.0.5
       form-data: 2.5.5
 
@@ -7094,7 +7095,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-admin@13.6.0(encoding@0.1.13):
+  firebase-admin@13.6.1(encoding@0.1.13):
     dependencies:
       '@fastify/busboy': 3.2.0
       '@firebase/database-compat': 2.1.0
@@ -7114,22 +7115,22 @@ snapshots:
       - encoding
       - supports-color
 
-  firebase-functions-test@3.4.1(firebase-admin@13.6.0(encoding@0.1.13))(firebase-functions@6.6.0(firebase-admin@13.6.0(encoding@0.1.13)))(jest@30.2.0(@types/node@25.2.0)):
+  firebase-functions-test@3.4.1(firebase-admin@13.6.1(encoding@0.1.13))(firebase-functions@6.6.0(firebase-admin@13.6.1(encoding@0.1.13)))(jest@30.2.0(@types/node@25.2.0)):
     dependencies:
       '@types/lodash': 4.17.23
-      firebase-admin: 13.6.0(encoding@0.1.13)
-      firebase-functions: 6.6.0(firebase-admin@13.6.0(encoding@0.1.13))
+      firebase-admin: 13.6.1(encoding@0.1.13)
+      firebase-functions: 6.6.0(firebase-admin@13.6.1(encoding@0.1.13))
       jest: 30.2.0(@types/node@25.2.0)
       lodash: 4.17.23
       ts-deepmerge: 2.0.7
 
-  firebase-functions@6.6.0(firebase-admin@13.6.0(encoding@0.1.13)):
+  firebase-functions@6.6.0(firebase-admin@13.6.1(encoding@0.1.13)):
     dependencies:
       '@types/cors': 2.8.19
       '@types/express': 4.17.25
       cors: 2.8.6
       express: 4.22.1
-      firebase-admin: 13.6.0(encoding@0.1.13)
+      firebase-admin: 13.6.1(encoding@0.1.13)
       protobufjs: 7.5.4
     transitivePeerDependencies:
       - supports-color
