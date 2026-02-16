@@ -14,7 +14,7 @@
     "preinstall": "npx only-allow pnpm"
   },
   "engines": {
-    "node": "22"
+    "node": "24"
   },
   "main": "lib/backend/src/index.js",
   "dependencies": {

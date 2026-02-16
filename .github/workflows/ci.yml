@@ -37,7 +37,7 @@ jobs:
             - name: Setup Node
               uses: actions/setup-node@master
               with:
-                  node-version: '20'
+                  node-version: '24'
             - name: Checkout Repo
               uses: actions/checkout@master
             - name: Install Dependencies
