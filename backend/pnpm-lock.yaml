@@ -27,8 +27,8 @@ importers:
         specifier: 13.6.1
         version: 13.6.1(encoding@0.1.13)
       firebase-functions:
-        specifier: 6.6.0
-        version: 6.6.0(firebase-admin@13.6.1(encoding@0.1.13))
+        specifier: 7.0.5
+        version: 7.0.5(firebase-admin@13.6.1(encoding@0.1.13))
     devDependencies:
       '@firebase/app-types':
         specifier: 0.9.3
@@ -71,7 +71,7 @@ importers:
         version: 11.10.0
       firebase-functions-test:
         specifier: 3.4.1
-        version: 3.4.1(firebase-admin@13.6.1(encoding@0.1.13))(firebase-functions@6.6.0(firebase-admin@13.6.1(encoding@0.1.13)))(jest@30.2.0(@types/node@25.2.3))
+        version: 3.4.1(firebase-admin@13.6.1(encoding@0.1.13))(firebase-functions@7.0.5(firebase-admin@13.6.1(encoding@0.1.13)))(jest@30.2.0(@types/node@25.2.3))
       firebase-tools:
         specifier: 13.35.1
         version: 13.35.1(@types/node@25.2.3)(encoding@0.1.13)
@@ -2201,12 +2201,22 @@ packages:
       firebase-functions: '>=4.9.0'
       jest: '>=28.0.0'
 
-  firebase-functions@6.6.0:
-    resolution: {integrity: sha512-wwfo6JF+N7HUExVs5gUFgkgVGHDEog9O+qtouh7IuJWk8TBQ+KwXEgRiXbatSj7EbTu3/yYnHuzh3XExbfF6wQ==}
-    engines: {node: '>=14.10.0'}
+  firebase-functions@7.0.5:
+    resolution: {integrity: sha512-uG2dR5AObLuUrWWjj/de5XxNHCVi+Ehths0DSRcLjHJdgw1TSejwoZZ5na6gVrl3znNjRdBRy5Br5UlhaIU3Ww==}
+    engines: {node: '>=18.0.0'}
     hasBin: true
     peerDependencies:
+      '@apollo/server': ^5.2.0
+      '@as-integrations/express4': ^1.1.2
       firebase-admin: ^11.10.0 || ^12.0.0 || ^13.0.0
+      graphql: ^16.12.0
+    peerDependenciesMeta:
+      '@apollo/server':
+        optional: true
+      '@as-integrations/express4':
+        optional: true
+      graphql:
+        optional: true
 
   firebase-tools@13.35.1:
     resolution: {integrity: sha512-QmMy4hnd0Q+V+7GFhZUV80+kG0WC1+UOtuaaQWx+cstt+XepUcpju/KW4cBknnyql521BghfuAhveckQQ1g+HA==}
@@ -7226,16 +7236,16 @@ snapshots:
       - encoding
       - supports-color
 
-  firebase-functions-test@3.4.1(firebase-admin@13.6.1(encoding@0.1.13))(firebase-functions@6.6.0(firebase-admin@13.6.1(encoding@0.1.13)))(jest@30.2.0(@types/node@25.2.3)):
+  firebase-functions-test@3.4.1(firebase-admin@13.6.1(encoding@0.1.13))(firebase-functions@7.0.5(firebase-admin@13.6.1(encoding@0.1.13)))(jest@30.2.0(@types/node@25.2.3)):
     dependencies:
       '@types/lodash': 4.17.23
       firebase-admin: 13.6.1(encoding@0.1.13)
-      firebase-functions: 6.6.0(firebase-admin@13.6.1(encoding@0.1.13))
+      firebase-functions: 7.0.5(firebase-admin@13.6.1(encoding@0.1.13))
       jest: 30.2.0(@types/node@25.2.3)
       lodash: 4.17.23
       ts-deepmerge: 2.0.7
 
-  firebase-functions@6.6.0(firebase-admin@13.6.1(encoding@0.1.13)):
+  firebase-functions@7.0.5(firebase-admin@13.6.1(encoding@0.1.13)):
     dependencies:
       '@types/cors': 2.8.19
       '@types/express': 4.17.25
