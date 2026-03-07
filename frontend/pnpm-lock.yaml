@@ -48,8 +48,8 @@ importers:
         specifier: 2.2.0
         version: 2.2.0(react@19.2.4)
       react-copy-to-clipboard:
-        specifier: 5.1.0
-        version: 5.1.0(react@19.2.4)
+        specifier: 5.1.1
+        version: 5.1.1(react@19.2.4)
       react-dom:
         specifier: 19.2.4
         version: 19.2.4(react@19.2.4)
@@ -3279,10 +3279,10 @@ packages:
     peerDependencies:
       react: '>=0.14.0'
 
-  react-copy-to-clipboard@5.1.0:
-    resolution: {integrity: sha512-k61RsNgAayIJNoy9yDsYzDe/yAZAzEbEgcz3DZMhF686LEyukcE1hzurxe85JandPUG+yTfGVFzuEw3xt8WP/A==}
+  react-copy-to-clipboard@5.1.1:
+    resolution: {integrity: sha512-s+HrzLyJBxrpGTYXF15dTgMjAJpEPZT/Yp6NytAtZMRngejxt6Pt5WrfFxLAcsqUDU6sY1Jz6tyHwIicE1U2Xg==}
     peerDependencies:
-      react: ^15.3.0 || 16 || 17 || 18
+      react: '>=15.3.0'
 
   react-countdown@2.3.6:
     resolution: {integrity: sha512-ZfX6S08Hb6x6W6eCn1hMDvxPICI/T30fd+gaeVTCR/2cGZ2WJ3f26e4ImNIMX1fHkopJrUdnRpWXP13/D39+gg==}
@@ -7599,7 +7599,7 @@ snapshots:
     dependencies:
       react: 19.2.4
 
-  react-copy-to-clipboard@5.1.0(react@19.2.4):
+  react-copy-to-clipboard@5.1.1(react@19.2.4):
     dependencies:
       copy-to-clipboard: 3.3.3
       prop-types: 15.8.1
