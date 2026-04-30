@@ -69,8 +69,8 @@ importers:
         specifier: 4.1.3
         version: 4.1.3(prop-types@15.8.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       react-tooltip:
-        specifier: 5.30.1
-        version: 5.30.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: 6.0.0
+        version: 6.0.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
     devDependencies:
       '@stylistic/eslint-plugin-ts':
         specifier: 2.13.0
@@ -3407,8 +3407,8 @@ packages:
       react: '>= 15.3.0 < 19'
       react-dom: '>= 15.3.0 < 19'
 
-  react-tooltip@5.30.1:
-    resolution: {integrity: sha512-1lSPLQXuVooePxadUpmcwLgOsF1mIty7UZTJ9XnyfX4drOzStYs4JMXnazcDLguQr41W5OUZddOp9kfvArdpEQ==}
+  react-tooltip@6.0.0:
+    resolution: {integrity: sha512-J7m56tmdmhpjHz8YsQXGNaJdsYtrByKQvKj/Vcd0GBru1fcGRP2yv0ehCEuJbKTirlt3iBg9W5gcMWnM1dj67w==}
     peerDependencies:
       react: '>=16.14.0'
       react-dom: '>=16.14.0'
@@ -7843,10 +7843,10 @@ snapshots:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
 
-  react-tooltip@5.30.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+  react-tooltip@6.0.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       '@floating-ui/dom': 1.7.6
-      classnames: 2.5.1
+      clsx: 2.1.1
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
 
