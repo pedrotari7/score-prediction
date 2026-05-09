@@ -70,8 +70,8 @@ importers:
         specifier: 11.10.0
         version: 11.10.0
       firebase-functions-test:
-        specifier: 3.4.1
-        version: 3.4.1(firebase-admin@13.9.0)(firebase-functions@6.6.0(firebase-admin@13.9.0))(jest@30.3.0(@types/node@25.6.0))
+        specifier: 3.5.0
+        version: 3.5.0(firebase-admin@13.9.0)(firebase-functions@6.6.0(firebase-admin@13.9.0))(jest@30.3.0(@types/node@25.6.0))
       firebase-tools:
         specifier: 13.35.1
         version: 13.35.1(@types/node@25.6.0)
@@ -2219,8 +2219,8 @@ packages:
     resolution: {integrity: sha512-qiCVBBFH+kfLiCXuuE9eAbBQSckPuA43fbQ/MNvQfd9nZcHFQExmQICD/N0sZrNZDNy8FSywhjFzJJGVQzG5UA==}
     engines: {node: '>=18'}
 
-  firebase-functions-test@3.4.1:
-    resolution: {integrity: sha512-qAq0oszrBGdf4bnCF6t4FoSgMsepeIXh0Pi/FhikSE6e+TvKKGpfrfUP/5pFjJZxFcLsweoau88KydCql4xSeg==}
+  firebase-functions-test@3.5.0:
+    resolution: {integrity: sha512-Jg+f9GeWkWpgYRY9s+Oxst/b9kEnOJ6pU/XNFthOFYs2Ax2fU2Zxc7ckfTozYKEH/mzptSDxV5JYiPTvR+RhKA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       firebase-admin: ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0
@@ -7187,7 +7187,7 @@ snapshots:
       - encoding
       - supports-color
 
-  firebase-functions-test@3.4.1(firebase-admin@13.9.0)(firebase-functions@6.6.0(firebase-admin@13.9.0))(jest@30.3.0(@types/node@25.6.0)):
+  firebase-functions-test@3.5.0(firebase-admin@13.9.0)(firebase-functions@6.6.0(firebase-admin@13.9.0))(jest@30.3.0(@types/node@25.6.0)):
     dependencies:
       '@types/lodash': 4.17.24
       firebase-admin: 13.9.0
