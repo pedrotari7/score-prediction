@@ -24,11 +24,11 @@ importers:
         specifier: 7.5.1
         version: 7.5.1(express@4.22.2)
       firebase-admin:
-        specifier: 13.9.0
-        version: 13.9.0
+        specifier: 13.10.0
+        version: 13.10.0
       firebase-functions:
         specifier: 6.6.0
-        version: 6.6.0(firebase-admin@13.9.0)
+        version: 6.6.0(firebase-admin@13.10.0)
     devDependencies:
       '@firebase/app-types':
         specifier: 0.9.5
@@ -71,7 +71,7 @@ importers:
         version: 11.10.0
       firebase-functions-test:
         specifier: 3.5.0
-        version: 3.5.0(firebase-admin@13.9.0)(firebase-functions@6.6.0(firebase-admin@13.9.0))(jest@30.4.2(@types/node@25.6.2))
+        version: 3.5.0(firebase-admin@13.10.0)(firebase-functions@6.6.0(firebase-admin@13.10.0))(jest@30.4.2(@types/node@25.6.2))
       firebase-tools:
         specifier: 13.35.1
         version: 13.35.1(@types/node@25.6.2)
@@ -2213,8 +2213,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-admin@13.9.0:
-    resolution: {integrity: sha512-qiCVBBFH+kfLiCXuuE9eAbBQSckPuA43fbQ/MNvQfd9nZcHFQExmQICD/N0sZrNZDNy8FSywhjFzJJGVQzG5UA==}
+  firebase-admin@13.10.0:
+    resolution: {integrity: sha512-rbuCrJvYRwqBqvbccMS8fj/x2zsaMisdf5RQbRzQzr14Rbq9r2UlpuBHqWAwrO6c9dIRF56xF/xoepXsD5yDuQ==}
     engines: {node: '>=18'}
 
   firebase-functions-test@3.5.0:
@@ -3347,10 +3347,6 @@ packages:
     resolution: {integrity: sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  node-forge@1.4.0:
-    resolution: {integrity: sha512-LarFH0+6VfriEhqMMcLX2F7SwSXeWwnEAJEsYm5QKWchiVYVvJyV9v7UDvUv+w5HO23ZpQTXDv/GxdDdMyOuoQ==}
-    engines: {node: '>= 6.13.0'}
-
   node-gyp@12.3.0:
     resolution: {integrity: sha512-QNcUWM+HgJplcPzBvFBZ9VXacyGZ4+VTOb80PwWR+TlVzoHbRKULNEzpRsnaoxG3Wzr7Qh7BYxGDU3CbKib2Yg==}
     engines: {node: ^20.17.0 || >=22.9.0}
@@ -4331,10 +4327,6 @@ packages:
   utils-merge@1.0.1:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
-
-  uuid@11.1.1:
-    resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
-    hasBin: true
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
@@ -7169,7 +7161,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-admin@13.9.0:
+  firebase-admin@13.10.0:
     dependencies:
       '@fastify/busboy': 3.2.0
       '@firebase/database-compat': 2.1.4
@@ -7179,8 +7171,6 @@ snapshots:
       google-auth-library: 10.6.2
       jsonwebtoken: 9.0.3
       jwks-rsa: 3.2.2
-      node-forge: 1.4.0
-      uuid: 11.1.1
     optionalDependencies:
       '@google-cloud/firestore': 7.11.6
       '@google-cloud/storage': 7.19.0
@@ -7188,22 +7178,22 @@ snapshots:
       - encoding
       - supports-color
 
-  firebase-functions-test@3.5.0(firebase-admin@13.9.0)(firebase-functions@6.6.0(firebase-admin@13.9.0))(jest@30.4.2(@types/node@25.6.2)):
+  firebase-functions-test@3.5.0(firebase-admin@13.10.0)(firebase-functions@6.6.0(firebase-admin@13.10.0))(jest@30.4.2(@types/node@25.6.2)):
     dependencies:
       '@types/lodash': 4.17.24
-      firebase-admin: 13.9.0
-      firebase-functions: 6.6.0(firebase-admin@13.9.0)
+      firebase-admin: 13.10.0
+      firebase-functions: 6.6.0(firebase-admin@13.10.0)
       jest: 30.4.2(@types/node@25.6.2)
       lodash: 4.18.1
       ts-deepmerge: 2.0.7
 
-  firebase-functions@6.6.0(firebase-admin@13.9.0):
+  firebase-functions@6.6.0(firebase-admin@13.10.0):
     dependencies:
       '@types/cors': 2.8.19
       '@types/express': 4.17.25
       cors: 2.8.6
       express: 4.22.2
-      firebase-admin: 13.9.0
+      firebase-admin: 13.10.0
       protobufjs: 7.5.7
     transitivePeerDependencies:
       - supports-color
@@ -8662,8 +8652,6 @@ snapshots:
       fetch-blob: 3.2.0
       formdata-polyfill: 4.0.10
 
-  node-forge@1.4.0: {}
-
   node-gyp@12.3.0:
     dependencies:
       env-paths: 2.2.1
@@ -9832,8 +9820,6 @@ snapshots:
       which-typed-array: 1.1.20
 
   utils-merge@1.0.1: {}
-
-  uuid@11.1.1: {}
 
   uuid@8.3.2: {}
 
