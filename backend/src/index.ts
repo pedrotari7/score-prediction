@@ -329,7 +329,7 @@ const updateGroups = async (
       if (isGroupFinished) {
         const teamsIDs = group.map(t => t.team.id);
 
-        const sortFn = competition.name === competitions.wc2022.name ? sortWorldCupGroup : sortGroup;
+        const sortFn = competition.league === 1 ? sortWorldCupGroup : sortGroup;
         const sortedGroup = sortFn(teamsIDs, teamsResults, fixtures, predictions, user);
 
         groupPoints[user] += sortedGroup.reduce((total, teamId, idx) => total + (teamId === teamsIDs[idx] ? 1 : 0), 0);
@@ -388,7 +388,7 @@ const getUsers = async (
   cachedPoints: Record<string, Record<string, UserResult>> | undefined
 ) => {
   const scores =
-    cachedPoints ?? ((await getDBScores(competition).get()).data() as Record<string, Record<string, UserResult>>);
+    cachedPoints ?? ((await getDBScores(competition).get()).data() as Record<string, Record<string, UserResult>>) ?? {};
 
   const allUsers = (await getAuth(firebaseApp).listUsers()).users.reduce(
     (users, { uid, displayName, photoURL, customClaims, metadata }) => {
@@ -858,4 +858,27 @@ app.post('/no-spoilers', async (req, res) => {
   });
 
   return res.json({ success: true });
+});
+
+app.post('/init-competition', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
+
+  const competition = parseCompetition(req);
+
+  const docs = ['predictions', 'scores', 'groupPoints'];
+  const results: Record<string, string> = {};
+
+  for (const doc of docs) {
+    const ref = getDbDoc(competition, doc);
+    const snapshot = await ref.get();
+    if (snapshot.exists) {
+      results[doc] = 'already exists';
+    } else {
+      await ref.set({});
+      results[doc] = 'created';
+    }
+  }
+
+  return res.json({ success: true, competition: competition.name, results });
 });

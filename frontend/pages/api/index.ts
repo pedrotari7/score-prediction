@@ -128,6 +128,9 @@ export const deleteLeaderboard = async (leaderboardId: string, token: string) =>
 		}
 	);
 
+export const initCompetition = async (token: string, competition: Competition) =>
+	await cFetch(`${backendUrl}/init-competition`, token, competition, {}, { method: 'POST' });
+
 export const postNoSpoilers = async (noSpoilers: boolean, token: string): Promise<{ success: boolean }> =>
 	await cFetch(
 		`${backendUrl}/no-spoilers`,

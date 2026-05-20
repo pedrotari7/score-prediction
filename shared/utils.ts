@@ -65,11 +65,22 @@ export const competitions = {
 		points: { exact: 5, result: 3, onescore: 1, penalty: 1, groups: 1 },
 		color: '#480c1d',
 	},
+
+	wc2026: {
+		name: 'wc2026',
+		league: 1,
+		season: 2026,
+		start: '2026-06-11',
+		end: '2026-07-19',
+		logo: '/wc2026-logo.svg',
+		points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1 },
+		color: '#3a0a5e',
+	},
 } as const;
 
-export const currentCompetition = competitions.euro2024;
+export const currentCompetition = competitions.wc2026;
 
-export const currentCompetitions = [competitions.euro2024, competitions.ca2024];
+export const currentCompetitions = [competitions.wc2026];
 
 export const DEFAULT_USER_RESULT: UserResult = {
 	points: 0,

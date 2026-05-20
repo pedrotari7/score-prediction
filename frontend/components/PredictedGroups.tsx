@@ -1,6 +1,6 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import type { Fixtures, Standing, Standings, Predictions } from '../../interfaces/main';
-import { calculateResults, competitions, sortGroup, sortWorldCupGroup } from '../../shared/utils';
+import { calculateResults, sortGroup, sortWorldCupGroup } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames, GROUP_COLORS } from '../lib/utils/reactHelper';
@@ -38,7 +38,8 @@ const PredictedGroups = ({
 
 				const teamsIDs = standing.map(t => t.team.id);
 
-				const sortFn = competition.name === competitions.wc2022.name ? sortWorldCupGroup : sortGroup;
+				const isWorldCup = competition.league === 1;
+				const sortFn = isWorldCup ? sortWorldCupGroup : sortGroup;
 
 				const sortedGroup = sortFn(teamsIDs, teamsResults, fixtures, predictions, userID).map(
 					teamID => standing.find(el => el.team.id === teamID)!

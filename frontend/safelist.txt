@@ -61,3 +61,17 @@ hover:bg-light-ca2024
 hover:text-dark-ca2024
 hover:text-blue-ca2024
 hover:text-light-ca2024
+
+wc2026
+bg-dark-wc2026
+bg-blue-wc2026
+bg-light-wc2026
+text-dark-wc2026
+text-blue-wc2026
+text-light-wc2026
+hover:bg-dark-wc2026
+hover:bg-blue-wc2026
+hover:bg-light-wc2026
+hover:text-dark-wc2026
+hover:text-blue-wc2026
+hover:text-light-wc2026

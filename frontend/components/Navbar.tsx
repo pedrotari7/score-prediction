@@ -66,7 +66,13 @@ export default function Navbar({
 
 	const concurrentCompetition = currentCompetitions.find(c => c.name !== competition.name);
 
-	const otherCompetitions = [competitions.euro2020, competitions.wc2022, competitions.euro2024, competitions.ca2024]
+	const otherCompetitions = [
+		competitions.euro2020,
+		competitions.wc2022,
+		competitions.euro2024,
+		competitions.ca2024,
+		competitions.wc2026,
+	]
 		.map(c => c.name)
 		.filter(comp => comp !== competition.name);
 

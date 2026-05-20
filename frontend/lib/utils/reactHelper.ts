@@ -69,6 +69,7 @@ const VALID_COMPETITIONS: string[] = [
 	competitions.wc2022.name,
 	competitions.euro2024.name,
 	competitions.ca2024.name,
+	competitions.wc2026.name,
 ];
 
 export const getCompetitionClass = (competition: Competition, primitive?: string) =>
@@ -85,4 +86,8 @@ export const GROUP_COLORS: Record<string, string> = {
 	F: 'bg-teal-600',
 	G: 'bg-indigo-600',
 	H: 'bg-pink-600',
+	I: 'bg-cyan-600',
+	J: 'bg-violet-600',
+	K: 'bg-amber-600',
+	L: 'bg-emerald-600',
 };

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import React from 'react';
 import type { User } from '../../interfaces/main';
+import { DEFAULT_USER_RESULT } from '../../shared/utils';
 import { classNames } from '../lib/utils/reactHelper';
 import { Tooltip } from 'react-tooltip';
 
@@ -22,34 +23,35 @@ const TooltipInto = ({ children, content }: { children: ReactNode; content: stri
 );
 
 export const UserScores = ({ user, stage }: { user: User; stage: string }) => {
+	const stageScore = user.score[stage] ?? DEFAULT_USER_RESULT;
 	return (
 		<div className='flex flex-row flex-wrap items-center justify-center'>
 			<Tooltip id='my-tooltip' />
 			<TooltipInto content='exact'>
-				<Circle className='bg-green-600'>{user.score[stage].exact}</Circle>
+				<Circle className='bg-green-600'>{stageScore.exact}</Circle>
 			</TooltipInto>
 			<TooltipInto content='result'>
-				<Circle className='bg-yellow-600'>{user.score[stage].result}</Circle>
+				<Circle className='bg-yellow-600'>{stageScore.result}</Circle>
 			</TooltipInto>
 
 			<TooltipInto content='onescore'>
-				<Circle className='bg-pink-600'>{user.score[stage].onescore}</Circle>
+				<Circle className='bg-pink-600'>{stageScore.onescore}</Circle>
 			</TooltipInto>
 
 			<TooltipInto content='fail'>
-				<Circle className='bg-red-600'>{user.score[stage].fail}</Circle>
+				<Circle className='bg-red-600'>{stageScore.fail}</Circle>
 			</TooltipInto>
 
 			<TooltipInto content='groups'>
-				<Circle className='bg-purple-700'>{user.score[stage].groups}</Circle>
+				<Circle className='bg-purple-700'>{stageScore.groups}</Circle>
 			</TooltipInto>
 
 			<TooltipInto content='penalty'>
-				<Circle className='bg-gray-500'>{user.score[stage].penalty}</Circle>
+				<Circle className='bg-gray-500'>{stageScore.penalty}</Circle>
 			</TooltipInto>
 
 			<TooltipInto content='points'>
-				<Circle className='my-2 size-10 bg-gray-700 p-4'>{user.score[stage].points}</Circle>
+				<Circle className='my-2 size-10 bg-gray-700 p-4'>{stageScore.points}</Circle>
 			</TooltipInto>
 		</div>
 	);

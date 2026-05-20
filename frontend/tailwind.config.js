@@ -44,6 +44,11 @@ module.exports = {
 				'dark-ca2024': '#404343',
 				'blue-ca2024': '#242525',
 				'light-ca2024': '#e1eded',
+
+				wc2026: '#3a0a5e',
+				'dark-wc2026': '#2a0745',
+				'blue-wc2026': '#3a0a5e',
+				'light-wc2026': '#e1eded',
 			},
 			boxShadow: {
 				pop: '0px 2px 40px rgba(0, 0, 0, 0.33)',
