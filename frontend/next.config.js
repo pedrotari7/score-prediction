@@ -6,7 +6,7 @@ module.exports = {
 		return [
 			{
 				source: '/',
-				destination: '/euro2024',
+				destination: '/wc2026',
 				permanent: true,
 			},
 		];
