@@ -119,7 +119,7 @@ const LiveGame = ({
 				</div>
 
 				<span className='text-right text-sm sm:w-2/12'>
-					{game?.fixture.venue.name}, {game?.fixture.venue.city}
+					{[game?.fixture.venue.name, game?.fixture.venue.city].filter(Boolean).join(', ')}
 				</span>
 			</div>
 		</ShowMore>

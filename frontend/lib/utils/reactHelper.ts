@@ -44,10 +44,9 @@ const STADIUMS: Record<string, string> = {
 };
 
 export const getStadiumImageURL = (venue: Venue) => {
-	const nameUrl = STADIUMS[venue.name.toLocaleLowerCase().replace(/\s/g, '')];
-	const cityUrl = STADIUMS[venue.city.toLocaleLowerCase().replace(/\s/g, '')];
-	const stadiumUrl = nameUrl || cityUrl;
-	return stadiumUrl ?? undefined;
+	const nameUrl = venue.name ? STADIUMS[venue.name.toLocaleLowerCase().replace(/\s/g, '')] : undefined;
+	const cityUrl = venue.city ? STADIUMS[venue.city.toLocaleLowerCase().replace(/\s/g, '')] : undefined;
+	return nameUrl || cityUrl;
 };
 
 export const DEFAULT_IMAGE =

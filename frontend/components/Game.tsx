@@ -118,7 +118,7 @@ const Game = ({
 			</div>
 
 			<span className='my-2 text-right text-xs lg:my-0 lg:w-2/12'>
-				{game?.fixture.venue.name}, {game?.fixture.venue.city}
+				{[game?.fixture.venue.name, game?.fixture.venue.city].filter(Boolean).join(', ')}
 			</span>
 		</div>
 	);
