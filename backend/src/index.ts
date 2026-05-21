@@ -273,10 +273,10 @@ const updatePoints = async (competition: Competition, predictions: Predictions, 
 
       for (const user in gamePredictions) {
         if (!(user in users)) {
-          users[user] = {};
+          users[user] = { all: { ...DEFAULT_USER_RESULT } };
         }
         if (!(stage in users[user])) {
-          users[user][stage] = DEFAULT_USER_RESULT;
+          users[user][stage] = { ...DEFAULT_USER_RESULT };
         }
         if (game?.fixture.status.short === 'NS') continue;
         users[user][stage] = joinResults(users[user][stage], getResult(gamePredictions[user], game));
