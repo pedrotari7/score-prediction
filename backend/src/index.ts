@@ -743,7 +743,13 @@ app.post('/create-leaderboard', async (req, res) => {
 
   const { uid: callerUID } = authResult.result;
 
-  const { name } = JSON.parse(req.body);
+  const { name: rawName } = JSON.parse(req.body);
+
+  const name = typeof rawName === 'string' ? rawName.trim() : '';
+
+  if (!name || name.length > 50) {
+    return res.status(400).json({ error: 'Name must be 1-50 characters', result: false });
+  }
 
   const leaderboardDoc = getFirestore(firebaseApp).collection('leaderboards').doc();
 
