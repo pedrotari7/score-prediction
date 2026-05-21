@@ -740,7 +740,7 @@ app.post('/update-settings', async (req, res) => {
 
 app.post('/create-leaderboard', async (req, res) => {
   const authResult = await authenticate(req, res);
-  if (!authResult.success) return res.json(authResult.result);
+  if (!authResult.success) return authResult.result;
 
   const { uid: callerUID } = authResult.result;
 
@@ -827,6 +827,8 @@ app.get('/leaderboards', async (req, res) => {
 
 export const api = onRequest({ secrets: ['APISPORTS'], cors: corsOrigins }, app);
 
+export { app };
+
 // export const addUser = beforeUserCreated(async event => {
 //   const user = event.data;
 //   const isAdmin = ADMIN_USERS.includes(user.email ?? '');
@@ -838,7 +840,7 @@ export const api = onRequest({ secrets: ['APISPORTS'], cors: corsOrigins }, app)
 
 app.delete('/leaderboard', async (req, res) => {
   const authResult = await authenticate(req, res, true);
-  if (!authResult.success) return res.json(authResult.result);
+  if (!authResult.success) return authResult.result;
 
   const { leaderboardId } = parseBody(req.body);
 

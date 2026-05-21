@@ -11,6 +11,8 @@
     "login": "pnpm firebase login",
     "logs": "pnpm firebase functions:log",
     "firebase": "firebase",
+    "test": "jest --config jest.config.ts --runInBand",
+    "test:emulator": "firebase emulators:exec --only firestore,auth --project demo-test-project 'pnpm test'",
     "preinstall": "npx only-allow pnpm"
   },
   "engines": {
@@ -40,10 +42,16 @@
     "eslint-import-resolver-typescript": "3.10.1",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-prettier": "5.5.5",
+    "@types/jest": "29.5.14",
+    "@types/supertest": "6.0.2",
     "firebase": "11.10.0",
     "firebase-functions-test": "3.5.0",
     "firebase-tools": "15.18.0",
+    "jest": "29.7.0",
     "prettier": "3.8.3",
+    "supertest": "7.1.0",
+    "ts-jest": "29.4.10",
+    "ts-node": "10.9.2",
     "typescript": "5.9.3"
   },
   "license": "ISC",
