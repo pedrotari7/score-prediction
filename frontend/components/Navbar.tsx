@@ -10,7 +10,7 @@ import {
 	MenuItems,
 	Transition,
 } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, EyeIcon, EyeSlashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { classNames } from '../lib/utils/reactHelper';
 import { getAuth } from 'firebase/auth';
 import { useRouter } from 'next/router';
@@ -38,7 +38,7 @@ export default function Navbar({
 	const router = useRouter();
 	const { user } = useAuth();
 
-	const { noSpoilers } = useNoSpoilers();
+	const { noSpoilers, setNoSpoilers } = useNoSpoilers();
 	const { gcc, competition } = useCompetition();
 
 	const navigation: NavItem[] = [
@@ -144,7 +144,20 @@ export default function Navbar({
 									</div>
 								</div>
 							</div>
-							<div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:pr-0'>
+							<div className='absolute inset-y-0 right-0 flex items-center gap-2 pr-2 sm:static sm:inset-auto sm:pr-0'>
+								{noSpoilers !== null && user && (
+									<button
+										onClick={() => setNoSpoilers(!noSpoilers)}
+										title={noSpoilers ? 'Show results' : 'Hide results'}
+										className={classNames(gcc('text-light'), 'rounded-md p-2 hover:bg-gray-700')}
+									>
+										{noSpoilers ? (
+											<EyeSlashIcon className='size-5' aria-hidden='true' />
+										) : (
+											<EyeIcon className='size-5' aria-hidden='true' />
+										)}
+									</button>
+								)}
 								{/* Profile dropdown */}
 								<Menu as='div' className='relative'>
 									{({ open }) => (
