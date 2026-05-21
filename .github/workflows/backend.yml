@@ -16,7 +16,7 @@ jobs:
             - name: Setup Node
               uses: actions/setup-node@v4
               with:
-                  node-version: '20'
+                  node-version: '22'
             - name: Checkout Repo
               uses: actions/checkout@v4
             - name: Install Dependencies
@@ -29,3 +29,15 @@ jobs:
               run: pnpm build
             - name: Lint
               run: pnpm lint
+            - name: Setup Java
+              uses: actions/setup-java@v4
+              with:
+                  distribution: temurin
+                  java-version: 21
+            - name: Cache Firebase Emulators
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/firebase/emulators
+                  key: firebase-emulators-${{ runner.os }}
+            - name: Test
+              run: pnpm test:emulator
