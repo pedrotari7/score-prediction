@@ -4,7 +4,7 @@
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
     "build": "tsc",
-    "dev": "pnpm build && pnpm firebase emulators:start --only functions",
+    "dev": "concurrently --kill-others \"tsc --watch --preserveWatchOutput\" \"pnpm firebase emulators:start --only functions\"",
     "shell": "pnpm build && pnpm firebase functions:shell",
     "start": "pnpm shell",
     "deploy": "pnpm firebase deploy --only functions",
@@ -33,6 +33,7 @@
     "@types/express": "4.17.25",
     "@typescript-eslint/eslint-plugin": "8.59.4",
     "@typescript-eslint/parser": "8.59.4",
+    "concurrently": "^9.2.1",
     "eslint": "8.57.1",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "10.1.8",

@@ -95,6 +95,8 @@ const logDev = (message?: unknown, ...optionalParams: unknown[]): void => {
   if (isDevMode) console.log(message, optionalParams);
 };
 
+console.log('[hot-reload-test] Backend functions loaded at', new Date().toISOString());
+
 const buildUrl = (url: string, opts: Record<string, unknown>) =>
   url +
   '?' +
