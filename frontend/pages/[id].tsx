@@ -128,7 +128,7 @@ const Home = () => {
 
 	const updatePrediction = async (prediction: Prediction, gameId: number) => {
 		if (!auth.user) return;
-		setPredictions({ ...predictions, [gameId]: { ...predictions?.[gameId], [uid]: prediction } });
+		setPredictions(prev => ({ ...prev, [gameId]: { ...prev?.[gameId], [uid]: prediction } }));
 
 		const result = await updatePredictions(auth.user.token, uid, gameId, prediction, competition);
 
