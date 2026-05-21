@@ -242,6 +242,15 @@ const SettingsPage = () => {
 				>
 					Init Competition
 				</button>
+
+				<button
+					onClick={() => {
+						throw new Error('Test error boundary');
+					}}
+					className={`m-5 rounded bg-red-700 px-4 py-2 font-bold text-white`}
+				>
+					Test Error Boundary
+				</button>
 			</div>
 
 			<div className='m-10 rounded-md bg-gray-700 p-5'>
