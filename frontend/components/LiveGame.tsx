@@ -55,7 +55,9 @@ const LiveGame = ({
 
 				<div className='my-4 flex w-10/12 flex-row items-center justify-evenly sm:justify-center'>
 					<div className='flex flex-row items-center justify-end sm:w-4/12'>
-						<span className='mr-2 hidden text-xl sm:block'>{game?.teams.home.name}</span>
+						<span className='mr-1 block max-w-20 truncate text-xs sm:mr-2 sm:max-w-none sm:text-xl'>
+							{game?.teams.home.name}
+						</span>
 						<Flag team={game?.teams.home} />
 					</div>
 
@@ -114,7 +116,9 @@ const LiveGame = ({
 
 					<div className='flex flex-row items-center justify-start sm:w-4/12'>
 						<Flag team={game?.teams.away} />
-						<span className='ml-2 hidden text-xl sm:block'>{game?.teams.away.name}</span>
+						<span className='ml-1 block max-w-20 truncate text-xs sm:ml-2 sm:max-w-none sm:text-xl'>
+							{game?.teams.away.name}
+						</span>
 					</div>
 				</div>
 

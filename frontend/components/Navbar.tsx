@@ -82,7 +82,7 @@ export default function Navbar({
 				<>
 					<div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8'>
 						<div className='relative flex h-16 items-center justify-between'>
-							<div className='absolute inset-y-0 left-0 flex items-center sm:hidden'>
+							<div className='absolute inset-y-0 left-0 flex items-center lg:hidden'>
 								{/* Mobile menu button */}
 								{!loading && (
 									<DisclosureButton
@@ -105,14 +105,14 @@ export default function Navbar({
 									</span>
 								)}
 							</div>
-							<div className='flex flex-1 items-center justify-center sm:items-stretch sm:justify-start'>
+							<div className='flex flex-1 items-center justify-center lg:items-stretch lg:justify-start'>
 								<div
 									className='flex shrink-0 cursor-pointer items-center'
 									onClick={() => updateRoute({ page: Route.Home })}
 								>
 									<img className='block h-8 w-auto' src={competition.logo} alt='logo' />
 								</div>
-								<div className='hidden sm:ml-6 sm:block'>
+								<div className='hidden lg:ml-6 lg:block'>
 									<div className='flex space-x-4'>
 										{!loading &&
 											navigation.map((item, index) => (
@@ -149,7 +149,7 @@ export default function Navbar({
 									</div>
 								</div>
 							</div>
-							<div className='absolute inset-y-0 right-0 flex items-center gap-2 pr-2 sm:static sm:inset-auto sm:pr-0'>
+							<div className='absolute inset-y-0 right-0 flex items-center gap-2 pr-2 lg:static lg:inset-auto lg:pr-0'>
 								{noSpoilers !== null && user && (
 									<button
 										onClick={() => setNoSpoilers(!noSpoilers)}
@@ -301,7 +301,7 @@ export default function Navbar({
 						</div>
 					</div>
 
-					<DisclosurePanel className={classNames(gcc('bg-blue'), 'sm:hidden')}>
+					<DisclosurePanel className={classNames(gcc('bg-blue'), 'lg:hidden')}>
 						<div className='flex flex-col space-y-1 px-2 pb-3 pt-2'>
 							{!loading &&
 								navigation.map(item => (
