@@ -1,10 +1,11 @@
 export default async function fetcher(url: string, token: string, options: Record<string, unknown> = {}) {
 	try {
 		const response = await fetch(url, {
+			...options,
 			headers: {
 				Authorization: `${token}`,
+				'Content-Type': 'application/json',
 			},
-			...options,
 		});
 		const data = await response.json();
 
