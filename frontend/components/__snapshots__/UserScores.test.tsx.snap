@@ -18,7 +18,7 @@ exports[`UserScores renders user scores with a stage all 1`] = `
     class="flex flex-row flex-wrap items-center justify-center"
   >
     <a
-      data-tooltip-content="exact"
+      data-tooltip-content="Exact Score"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >
@@ -29,7 +29,7 @@ exports[`UserScores renders user scores with a stage all 1`] = `
       </div>
     </a>
     <a
-      data-tooltip-content="result"
+      data-tooltip-content="Correct Result"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >
@@ -40,7 +40,7 @@ exports[`UserScores renders user scores with a stage all 1`] = `
       </div>
     </a>
     <a
-      data-tooltip-content="onescore"
+      data-tooltip-content="One Team's Score"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >
@@ -51,7 +51,7 @@ exports[`UserScores renders user scores with a stage all 1`] = `
       </div>
     </a>
     <a
-      data-tooltip-content="fail"
+      data-tooltip-content="No Points"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >
@@ -62,7 +62,7 @@ exports[`UserScores renders user scores with a stage all 1`] = `
       </div>
     </a>
     <a
-      data-tooltip-content="groups"
+      data-tooltip-content="Groups"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >
@@ -73,7 +73,7 @@ exports[`UserScores renders user scores with a stage all 1`] = `
       </div>
     </a>
     <a
-      data-tooltip-content="penalty"
+      data-tooltip-content="Penalty Bonus"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >
@@ -84,7 +84,7 @@ exports[`UserScores renders user scores with a stage all 1`] = `
       </div>
     </a>
     <a
-      data-tooltip-content="points"
+      data-tooltip-content="Total Points"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >
@@ -104,7 +104,7 @@ exports[`UserScores renders user scores with a stage groups 1`] = `
     class="flex flex-row flex-wrap items-center justify-center"
   >
     <a
-      data-tooltip-content="exact"
+      data-tooltip-content="Exact Score"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >
@@ -115,7 +115,7 @@ exports[`UserScores renders user scores with a stage groups 1`] = `
       </div>
     </a>
     <a
-      data-tooltip-content="result"
+      data-tooltip-content="Correct Result"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >
@@ -126,7 +126,7 @@ exports[`UserScores renders user scores with a stage groups 1`] = `
       </div>
     </a>
     <a
-      data-tooltip-content="onescore"
+      data-tooltip-content="One Team's Score"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >
@@ -137,7 +137,7 @@ exports[`UserScores renders user scores with a stage groups 1`] = `
       </div>
     </a>
     <a
-      data-tooltip-content="fail"
+      data-tooltip-content="No Points"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >
@@ -148,7 +148,7 @@ exports[`UserScores renders user scores with a stage groups 1`] = `
       </div>
     </a>
     <a
-      data-tooltip-content="groups"
+      data-tooltip-content="Groups"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >
@@ -159,7 +159,7 @@ exports[`UserScores renders user scores with a stage groups 1`] = `
       </div>
     </a>
     <a
-      data-tooltip-content="penalty"
+      data-tooltip-content="Penalty Bonus"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >
@@ -170,7 +170,7 @@ exports[`UserScores renders user scores with a stage groups 1`] = `
       </div>
     </a>
     <a
-      data-tooltip-content="points"
+      data-tooltip-content="Total Points"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
     >

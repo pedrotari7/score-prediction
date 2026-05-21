@@ -27,30 +27,30 @@ export const UserScores = ({ user, stage }: { user: User; stage: string }) => {
 	return (
 		<div className='flex flex-row flex-wrap items-center justify-center'>
 			<Tooltip id='my-tooltip' />
-			<TooltipInto content='exact'>
+			<TooltipInto content='Exact Score'>
 				<Circle className='bg-green-600'>{stageScore.exact}</Circle>
 			</TooltipInto>
-			<TooltipInto content='result'>
+			<TooltipInto content='Correct Result'>
 				<Circle className='bg-yellow-600'>{stageScore.result}</Circle>
 			</TooltipInto>
 
-			<TooltipInto content='onescore'>
+			<TooltipInto content="One Team's Score">
 				<Circle className='bg-pink-600'>{stageScore.onescore}</Circle>
 			</TooltipInto>
 
-			<TooltipInto content='fail'>
+			<TooltipInto content='No Points'>
 				<Circle className='bg-red-600'>{stageScore.fail}</Circle>
 			</TooltipInto>
 
-			<TooltipInto content='groups'>
+			<TooltipInto content='Groups'>
 				<Circle className='bg-purple-700'>{stageScore.groups}</Circle>
 			</TooltipInto>
 
-			<TooltipInto content='penalty'>
+			<TooltipInto content='Penalty Bonus'>
 				<Circle className='bg-gray-500'>{stageScore.penalty}</Circle>
 			</TooltipInto>
 
-			<TooltipInto content='points'>
+			<TooltipInto content='Total Points'>
 				<Circle className='my-2 size-10 bg-gray-700 p-4'>{stageScore.points}</Circle>
 			</TooltipInto>
 		</div>
