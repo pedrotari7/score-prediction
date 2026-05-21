@@ -100,7 +100,7 @@ const buildUrl = (url: string, opts: Record<string, unknown>) =>
   url +
   '?' +
   Object.entries(opts)
-    .map(([key, value]) => `${key}=${value}`)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
     .join('&');
 
 const get = async (url: string, opts: Record<string, unknown> = {}) => {
