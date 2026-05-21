@@ -23,7 +23,10 @@ const Login = () => {
 				<link rel='icon' href={`/favicon-${competition?.name}.ico`} />
 				<meta name='viewport' content='width=device-width, initial-scale=1.0' />
 			</Head>
-			<img className='absolute size-full object-cover' src='/sample.gif' alt='background' />
+			<video className='absolute size-full object-cover' autoPlay loop muted playsInline>
+				<source src='/sample.mp4' type='video/mp4' />
+				<source src='/sample.m4v' type='video/x-m4v' />
+			</video>
 			<div className='absolute flex h-full w-screen flex-col items-center justify-evenly bg-[#181a1b]/95'>
 				<div className='select-none text-center text-4xl font-bold text-light md:text-8xl'>
 					SCORE PREDICTION
