@@ -47,7 +47,7 @@ jobs:
                       args: [--frozen-lockfile, --strict-peer-dependencies]
                       cwd: ./backend
             - name: Deploy functions to Firebase
-              uses: w9jds/firebase-action@v13
+              uses: w9jds/firebase-action@v15.18.0
               with:
                   args: deploy --only functions
               env:
