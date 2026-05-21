@@ -51,9 +51,9 @@ const SelectStage = ({
 				}}
 				value={{
 					value: currentStage,
-					label: currentStage,
+					label: currentStage.charAt(0).toUpperCase() + currentStage.slice(1),
 				}}
-				options={stages.map(s => ({ value: s, label: s }))}
+				options={stages.map(s => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) }))}
 			/>
 		</div>
 	);
