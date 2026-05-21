@@ -1,4 +1,3 @@
-import React from 'react';
 import Panel from './Panel';
 import { classNames } from '../lib/utils/reactHelper';
 import useCompetition from '../hooks/useCompetition';
@@ -14,15 +13,9 @@ interface Props {
 const Stats = ({ fixtures, predictions }: Props) => {
 	const { gcc } = useCompetition();
 
-	console.log('fixtures', fixtures);
-
-	console.log('predictions', predictions);
-
 	const maxPredictions = Object.values(predictions).reduce((acc, val) => {
 		return Math.max(acc, Object.keys(val).length);
 	}, 0);
-
-	console.log('maxPredictions', maxPredictions);
 
 	return (
 		<Panel
