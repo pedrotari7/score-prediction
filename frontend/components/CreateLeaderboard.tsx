@@ -19,8 +19,8 @@ const CreateLeaderboard = () => {
 
 	const { gcc } = useCompetition();
 	useEffect(() => {
-		inputRef.current?.focus();
-	}, [inputRef]);
+		if (open) inputRef.current?.focus();
+	}, [open]);
 
 	return (
 		<div
@@ -31,14 +31,17 @@ const CreateLeaderboard = () => {
 			)}
 			onClick={async () => setOpen(true)}
 		>
-			<div className=''>
-				<PlusCircleIcon className={classNames(gcc('text-light'), 'size-8 cursor-pointer')} />
-			</div>
+			{!open && (
+				<div className=''>
+					<PlusCircleIcon className={classNames(gcc('text-light'), 'size-8 cursor-pointer')} />
+				</div>
+			)}
 			{open && (
 				<>
 					<input
 						placeholder='leaderboard name'
 						type='text'
+						maxLength={50}
 						className='w-48 bg-white px-3 py-2 text-black focus:outline-none'
 						ref={inputRef}
 					/>
