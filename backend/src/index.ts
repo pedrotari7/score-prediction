@@ -506,53 +506,50 @@ app.get('/tournament', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const settings = (await getDBSettings().get()).data() as Settings;
+  // Fetch all initial data in parallel instead of sequentially
+  const [settingsDoc, fixturesDocument, standingsDocument] = await Promise.all([
+    getDBSettings().get(),
+    getDBFixtures(competition).get(),
+    getDBStandings(competition).get(),
+  ]);
 
-  const fixturesDocument = await getDBFixtures(competition).get();
-
+  const settings = settingsDoc.data() as Settings;
   let fixtures = fixturesDocument.data();
+  let standings = standingsDocument.data();
 
+  // Must await when data is completely absent — no cache to serve
   if (!fixtures?.data && !settings.disableLiveScoresApi) {
     console.log('There are no current fixtures');
     fixtures = await updateFixtures(competition, [], {});
   }
 
-  const fixturesTimeDiffSeconds = getTimeDiff(fixtures?.timestamp);
-
-  const standingsDocument = await getDBStandings(competition).get();
-
-  const standings = standingsDocument.data();
-
   if (!standings && !settings.disableLiveScoresApi) {
     console.log('There are no current standings');
     const newStandings = await updateStandings(competition);
-    if (newStandings) {
-      standings!.data = newStandings;
-    }
+    if (newStandings) standings = { data: newStandings } as typeof standings;
   }
 
+  const fixturesTimeDiffSeconds = getTimeDiff(fixtures?.timestamp);
   const standingsTimeDiffSeconds = getTimeDiff(standings?.timestamp);
 
-  const hasGamesOngoing = Object.values<Fixture>(fixtures?.data).some(g => isGameOnGoing(g));
+  const hasGamesOngoing = Object.values<Fixture>(fixtures?.data ?? {}).some(g => isGameOnGoing(g));
 
   const currentDate = getCurrentTime().getTime();
 
-  const hasNonStartedGames = Object.values<Fixture>(fixtures?.data)
+  const hasNonStartedGames = Object.values<Fixture>(fixtures?.data ?? {})
     .filter(g => !isGameStarted(g))
     .some(g => (currentDate - new Date(g?.fixture?.date).getTime()) / 1000 > 0);
 
   const timeGuard = hasGamesOngoing || hasNonStartedGames ? GAME_TIME : STALE_TIME;
 
+  // Fire stale updates in the background — serve cached data now, next visit gets fresh data
   if (!settings.disableLiveScoresApi && (settings.allowUpdateStandings || standingsTimeDiffSeconds > timeGuard)) {
-    console.log('standings needs update');
-    const newStandings = await updateStandings(competition);
-    if (newStandings) {
-      standings!.data = newStandings;
-    }
+    console.log('standings needs update (background)');
+    void updateStandings(competition);
   }
 
   if (!settings.disableLiveScoresApi && (settings.allowUpdateFixtures || fixturesTimeDiffSeconds > timeGuard)) {
-    console.log('fixtures needs update');
+    console.log('fixtures needs update (background)');
 
     const gamesToUpdate = hasGamesOngoing
       ? Object.values(fixtures?.data as Fixtures)
@@ -560,21 +557,23 @@ app.get('/tournament', async (req, res) => {
           .map(f => f.fixture.id)
       : [];
 
-    fixtures!.data = { ...fixtures?.data, ...(await updateFixtures(competition, gamesToUpdate, fixtures?.data)) };
+    void updateFixtures(competition, gamesToUpdate, fixtures?.data);
   }
 
-  const predictions = await getPredictions(decodedToken, competition, fixtures?.data, settings);
+  // Parallelize the three independent fetches: predictions, user profile, and all users
+  const [predictions, userExtraInfoDoc, users] = await Promise.all([
+    getPredictions(decodedToken, competition, fixtures?.data, settings),
+    getDBUser(decodedToken.uid).get(),
+    getUsers(competition, undefined),
+  ]);
 
-  let cachedPoints: Record<string, Record<string, UserResult>> | undefined = undefined;
-
+  // Fire points recalculation in background — getUsers already read cached scores above
   if (fixturesTimeDiffSeconds > timeGuard || settings.allowUpdatePoints) {
-    console.log('will update points');
-    cachedPoints = await updatePoints(competition, predictions, fixtures?.data);
+    console.log('will update points (background)');
+    void updatePoints(competition, predictions, fixtures?.data);
   }
 
-  const users = await getUsers(competition, cachedPoints);
-
-  const userExtraInfo = (await getDBUser(decodedToken.uid).get()).data() ?? { leaderboards: [] };
+  const userExtraInfo = userExtraInfoDoc.data() ?? { leaderboards: [] };
 
   const leaderboards: Record<string, Leaderboard> =
     (
@@ -593,9 +592,7 @@ app.get('/tournament', async (req, res) => {
     userExtraInfo: { noSpoilers: false, ...userExtraInfo, leaderboards },
   };
 
-  const updatedUserExtraInfo = { ...userExtraInfo, lastCheckIn: FieldValue.serverTimestamp() };
-
-  await getDBUser(decodedToken.uid).set(updatedUserExtraInfo);
+  void getDBUser(decodedToken.uid).set({ ...userExtraInfo, lastCheckIn: FieldValue.serverTimestamp() });
 
   return res.json(tournament);
 });
