@@ -51,7 +51,6 @@ const JoinLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
 		>
 			<div className={classNames('text-3xl font-bold sm:text-4xl md:text-7xl')}>Join Leaderboard</div>
 			<div className={classNames('text-2xl font-bold sm:text-3xl md:text-6xl')}>{leaderboard.name}</div>
-			<div className={classNames('text-xl')}>{leaderboard.id}</div>
 			<div
 				onClick={async () => {
 					if (userInfo && routeInfo && !loading) {
