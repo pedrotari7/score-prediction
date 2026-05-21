@@ -250,6 +250,9 @@ const CurrentMatch = ({
 						{!id && <p className='text-3xl'>Next Game</p>}
 						{id && <p className='text-3xl'>{game.league?.round}</p>}
 						<div className='flex items-center gap-3'>
+							<span className='flex items-center gap-1 text-xs opacity-40 sm:hidden'>
+								<span>← swipe →</span>
+							</span>
 							<span className='hidden items-center gap-1 text-xs opacity-40 sm:flex'>
 								<kbd className='rounded border border-current px-1.5 py-0.5'>←</kbd>
 								<kbd className='rounded border border-current px-1.5 py-0.5'>→</kbd>
