@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 import { Competition } from '../../interfaces/main';
-import { competitions } from '../../shared/utils';
+import { currentCompetition } from '../../shared/utils';
 
-const CompetitionContext = createContext<Competition>(competitions.euro2024);
+const CompetitionContext = createContext<Competition>(currentCompetition);
 
 export default CompetitionContext;

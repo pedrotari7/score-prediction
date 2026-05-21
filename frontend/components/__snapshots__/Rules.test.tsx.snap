@@ -3,7 +3,7 @@
 exports[`Rules render rules page 1`] = `
 <div>
   <div
-    class="mx-2 md:mx-24 lg:mx-48 text-light-euro2024 bg-dark-euro2024 bg-dark-euro2024 m-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop mx-8 md:mx-24 lg:mx-48"
+    class="mx-2 md:mx-24 lg:mx-48 text-light-wc2026 bg-dark-wc2026 bg-dark-wc2026 m-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop mx-8 md:mx-24 lg:mx-48"
   >
     <div>
       <div
@@ -121,10 +121,10 @@ exports[`Rules render rules page 1`] = `
       </div>
     </div>
     <div
-      class="text-light-euro2024 m-8 flex select-none flex-col justify-center rounded-md p-8 mx-8 mb-10 md:mx-24 lg:mx-48"
+      class="text-light-wc2026 m-8 flex select-none flex-col justify-center rounded-md p-8 mx-8 mb-10 md:mx-24 lg:mx-48"
     />
     <div
-      class="bg-light-euro2024 text-dark-euro2024 fixed bottom-4 right-4 cursor-pointer rounded-md p-4 font-bold shadow-pop"
+      class="bg-light-wc2026 text-dark-wc2026 fixed bottom-4 right-4 cursor-pointer rounded-md p-4 font-bold shadow-pop"
       test-id="my-predictions-button"
     >
       My Predictions
