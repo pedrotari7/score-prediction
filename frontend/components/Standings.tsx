@@ -6,6 +6,18 @@ import { classNames, GROUP_COLORS } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import Panel from './Panel';
 import Match from './Match';
+import { Tooltip } from 'react-tooltip';
+
+const STANDINGS_HEADERS: { abbr: string; label: string }[] = [
+	{ abbr: 'G', label: 'Games Played' },
+	{ abbr: 'W', label: 'Won' },
+	{ abbr: 'D', label: 'Drawn' },
+	{ abbr: 'L', label: 'Lost' },
+	{ abbr: 'GF', label: 'Goals For' },
+	{ abbr: 'GA', label: 'Goals Against' },
+	{ abbr: 'GD', label: 'Goal Difference' },
+	{ abbr: 'P', label: 'Points' },
+];
 
 const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures: Fixtures }) => {
 	const groupMap = useContext(GroupMapContext);
@@ -42,20 +54,23 @@ const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures
 						>
 							{title}
 						</h2>
+						<Tooltip id='standings-tooltip' />
 						<table className={classNames(gcc('text-light'))}>
 							<thead>
 								<tr className='text-center'>
 									<th></th>
 									<th></th>
-
-									<th>G</th>
-									<th>W</th>
-									<th>D</th>
-									<th>L</th>
-									<th>GF</th>
-									<th>GA</th>
-									<th>GD</th>
-									<th>P</th>
+									{STANDINGS_HEADERS.map(({ abbr, label }) => (
+										<th
+											key={abbr}
+											data-tooltip-id='standings-tooltip'
+											data-tooltip-content={label}
+											data-tooltip-place='top'
+											className='cursor-default'
+										>
+											{abbr}
+										</th>
+									))}
 									<th></th>
 								</tr>
 							</thead>
