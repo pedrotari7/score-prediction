@@ -328,7 +328,7 @@ export const median = (values: number[]): number => {
 	return sorted.length % 2 ? sorted[half] : Math.round((sorted[half - 1] + sorted[half]) / 2.0);
 };
 
-export const average = (values: number[]): number => values.reduce((acc, v) => acc + v) / values.length;
+export const average = (values: number[]): number => (values.length === 0 ? 0 : values.reduce((acc, v) => acc + v, 0) / values.length);
 
 export const calculateUserResultPoints = (ur: Partial<UserResult>, competition: Competition) =>
 	competition.points.exact * (ur.exact ?? 0) +
