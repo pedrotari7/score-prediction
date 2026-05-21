@@ -99,6 +99,11 @@ export default function Navbar({
 										)}
 									</DisclosureButton>
 								)}
+								{!open && !loading && (
+									<span className={classNames(gcc('text-light'), 'ml-1 text-sm font-bold')}>
+										{navigation.find(item => isCurrent(item))?.name}
+									</span>
+								)}
 							</div>
 							<div className='flex flex-1 items-center justify-center sm:items-stretch sm:justify-start'>
 								<div
