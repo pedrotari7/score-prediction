@@ -25,7 +25,7 @@ import {
 	isGameFinished,
 	isGameStarted,
 } from '../../shared/utils';
-import Loading from './Loading';
+import LoadingSkeleton from './LoadingSkeleton';
 import RefreshComp from './RefreshComp';
 import PredictionsStats from './PredictionsStats';
 import SelectLeaderboard from './SelectLeaderboard';
@@ -186,7 +186,7 @@ const CurrentMatch = ({
 		preventScrollOnSwipe: true,
 	});
 
-	if (!game || !userInfo) return <Loading message='Fetching tournament info...' />;
+	if (!game || !userInfo) return <LoadingSkeleton />;
 
 	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
 

@@ -13,7 +13,7 @@ interface Props {
 const Stats = ({ fixtures, predictions }: Props) => {
 	const { gcc } = useCompetition();
 
-	const maxPredictions = Object.values(predictions).reduce((acc, val) => {
+	const maxPredictions = Object.values(predictions ?? {}).reduce((acc, val) => {
 		return Math.max(acc, Object.keys(val).length);
 	}, 0);
 
@@ -32,7 +32,7 @@ const Stats = ({ fixtures, predictions }: Props) => {
 					const fixture = fixtures[parseInt(fixtureID)];
 					const gamePredictions = predictions[parseInt(fixtureID)];
 
-					const predictionsTally = Object.values(gamePredictions).reduce(
+					const predictionsTally = Object.values(gamePredictions ?? {}).reduce(
 						(acc, val) => {
 							const { isExactScore, isCorrectResult, isCorrectGoal, isWrong } = getPredictionResult(
 								val,

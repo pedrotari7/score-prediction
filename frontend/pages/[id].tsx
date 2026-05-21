@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import PageLayout from '../components/PageLayout';
 import SettingsPage from '../components/Settings';
@@ -23,7 +23,7 @@ import type {
 } from '../../interfaces/main';
 import Rules from '../components/Rules';
 import { useRouter } from 'next/router';
-import Loading from '../components/Loading';
+import LoadingSkeleton from '../components/LoadingSkeleton';
 import { competitions, isGameFinished } from '../../shared/utils';
 import CompetitionContext from '../context/CompetitionContext';
 import GroupMapContext from '../context/GroupMapContext';
@@ -36,6 +36,27 @@ import ListLeaderboards from '../components/ListLeaderboards';
 import NoSpoilersContext from '../context/NoSpoilersContext';
 import RefreshPage from '../components/RefreshPage';
 import Stats from '../components/Stats';
+
+type QueryParams = Record<string, string | string[] | undefined>;
+
+const routeToQuery = (info: RouteInfo): Record<string, string> => {
+	const params: Record<string, string> = {};
+	if (info.page !== Route.Home) params.page = info.page;
+	if (info.page === Route.Match && info.data) params.gameId = String(info.data);
+	if (info.page === Route.Predictions && info.data) params.uid = String(info.data);
+	if (info.page === Route.Leaderboard && info.data) params.leaderboardId = String(info.data);
+	return params;
+};
+
+const queryToRoute = (query: QueryParams): RouteInfo => {
+	if (query.join) return { page: Route.JoinLeaderboard, data: query.join as string };
+	const page = query.page as Route | undefined;
+	if (!page || page === Route.Home) return { page: Route.Home };
+	if (page === Route.Match) return { page: Route.Match, data: query.gameId ? Number(query.gameId) : undefined };
+	if (page === Route.Predictions) return { page: Route.Predictions, data: query.uid as string | undefined };
+	if (page === Route.Leaderboard) return { page: Route.Leaderboard, data: query.leaderboardId as string | undefined };
+	return { page };
+};
 
 const Home = () => {
 	const auth = useAuth();
@@ -56,10 +77,40 @@ const Home = () => {
 	const [noSpoilers, setNoSpoilers] = useState<boolean | null>(null);
 
 	const router = useRouter();
+	const isNavigatingRef = useRef(false);
+	const navigateToRef = useRef<(info: RouteInfo) => void>(() => {});
 
 	const { id: competitionName, join: leaderboardId } = router.query;
 
 	const competition: Competition = competitions[competitionName as keyof typeof competitions];
+
+	const navigateTo = useCallback(
+		(info: RouteInfo) => {
+			setRoute(info);
+			isNavigatingRef.current = true;
+			router.push(
+				{ pathname: router.pathname, query: { id: router.query.id, ...routeToQuery(info) } },
+				undefined,
+				{
+					shallow: true,
+				}
+			);
+		},
+		[router]
+	);
+
+	useEffect(() => {
+		navigateToRef.current = navigateTo;
+	});
+
+	useEffect(() => {
+		if (isNavigatingRef.current) {
+			isNavigatingRef.current = false;
+			return;
+		}
+		setRoute(queryToRoute(router.query));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [router.query.page, router.query.gameId, router.query.uid, router.query.leaderboardId, router.query.join]);
 
 	const updateNoSpoilers = (ns: boolean) => {
 		if (auth.user) {
@@ -105,6 +156,11 @@ const Home = () => {
 			return;
 		}
 
+		if (router.query.page) {
+			setRoute(queryToRoute(router.query));
+			return;
+		}
+
 		const nextGame = sortedFixtures.find(game => !isGameFinished(game));
 
 		// if (uid in users && users[uid].shouldOnboard) {
@@ -115,16 +171,18 @@ const Home = () => {
 		if (nextGame) {
 			const nextGamePrediction = predictions[nextGame.fixture.id];
 			if (!nextGamePrediction || !(uid in nextGamePrediction)) {
-				setRoute({ page: Route.Predictions, data: uid });
+				navigateToRef.current({ page: Route.Predictions, data: uid });
 			}
 		} else {
-			setRoute({ page: Route.Leaderboard });
+			navigateToRef.current({ page: Route.Leaderboard });
 		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- router.query omitted intentionally: including it would re-run the full data fetch on every URL change
 	}, [competition, auth, leaderboardId]);
 
 	useEffect(() => {
 		updateTournament();
-	}, [router, updateTournament]);
+	}, [updateTournament]);
 
 	const updatePrediction = async (prediction: Prediction, gameId: number) => {
 		if (!auth.user) return;
@@ -133,7 +191,7 @@ const Home = () => {
 		const result = await updatePredictions(auth.user.token, uid, gameId, prediction, competition);
 
 		if (!result.success) {
-			setRoute({ page: Route.RefreshPage });
+			navigateToRef.current({ page: Route.RefreshPage });
 		}
 	};
 
@@ -166,7 +224,7 @@ const Home = () => {
 						predictions={predictions}
 						updatePrediction={updatePrediction}
 						standings={standings}
-						user={users[route.data!]}
+						user={users[(route.data as string) ?? uid]}
 					/>
 				);
 			case Route.Leaderboard:
@@ -195,7 +253,7 @@ const Home = () => {
 	const showLogin = (!isAuthenticated && !loading && triedToValidateToken) || auth.user === undefined;
 
 	return (
-		<RouteContext.Provider value={{ route, setRoute }}>
+		<RouteContext.Provider value={{ route, setRoute: navigateTo }}>
 			<NoSpoilersContext.Provider value={{ noSpoilers, setNoSpoilers: updateNoSpoilers }}>
 				<UserContext.Provider value={{ uid, token: auth.user?.token ?? '' }}>
 					<CompetitionContext.Provider value={competition}>
@@ -210,11 +268,7 @@ const Home = () => {
 											loading={loading}
 											setLoading={setLoading}
 										>
-											{loading || !triedToValidateToken ? (
-												<Loading message='Logging in...' />
-											) : (
-												<MainComponent />
-											)}
+											{loading || !triedToValidateToken ? <LoadingSkeleton /> : <MainComponent />}
 										</PageLayout>
 									)}
 								</UpdateTournamentContext.Provider>

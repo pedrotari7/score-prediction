@@ -526,7 +526,7 @@ app.get('/tournament', async (req, res) => {
   if (!standings && !settings.disableLiveScoresApi) {
     console.log('There are no current standings');
     const newStandings = await updateStandings(competition);
-    if (newStandings) standings = { data: newStandings } as typeof standings;
+    if (newStandings) standings = { data: newStandings };
   }
 
   const fixturesTimeDiffSeconds = getTimeDiff(fixtures?.timestamp);
