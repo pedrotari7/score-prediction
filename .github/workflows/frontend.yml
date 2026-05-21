@@ -14,11 +14,11 @@ jobs:
                 working-directory: ./frontend
         steps:
             - name: Setup Node
-              uses: actions/setup-node@master
+              uses: actions/setup-node@v4
               with:
                   node-version: '20'
             - name: Checkout Repo
-              uses: actions/checkout@master
+              uses: actions/checkout@v4
             - name: Install Dependencies
               uses: pnpm/action-setup@v4
               with:
