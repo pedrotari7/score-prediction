@@ -741,7 +741,7 @@ app.post('/create-leaderboard', async (req, res) => {
 
   const leaderboard: Leaderboard = { id: leaderboardDoc.id, name, members: [callerUID], creator: callerUID };
 
-  leaderboardDoc.set(leaderboard);
+  await leaderboardDoc.set(leaderboard);
 
   const currentUser = (await getDBUser(callerUID).get()).data() as { leaderboards: string[] };
 
@@ -785,7 +785,7 @@ app.post('/leaderboard', async (req, res) => {
   ).data() as Leaderboard;
 
   if (!leaderboard.members.includes(callerUID)) {
-    getFirestore(firebaseApp)
+    await getFirestore(firebaseApp)
       .collection('leaderboards')
       .doc(leaderboardId)
       .set({ ...leaderboard, members: [...leaderboard.members, callerUID] });
@@ -831,7 +831,7 @@ app.delete('/leaderboard', async (req, res) => {
 
   const leaderboard = (await leaderboardDoc.get()).data() as Leaderboard;
 
-  leaderboardDoc.delete();
+  await leaderboardDoc.delete();
 
   for (const member of leaderboard.members) {
     const currentUser = (await getDBUser(member).get()).data() as { leaderboards: string[] };
