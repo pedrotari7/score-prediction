@@ -54,7 +54,7 @@ import { rateLimit } from 'express-rate-limit';
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100000,
-  validate: { xForwardedForHeader: false },
+  validate: { xForwardedForHeader: false, ip: false },
 });
 
 const app = express();
@@ -63,11 +63,10 @@ const app = express();
 app.use(limiter);
 
 const corsOrigins = [
-  'http://localhost:3000',
-  'http://localhost:3001',
   'https://score-prediction.com',
   'https://www.score-prediction.com',
   'https://score-prediction.vercel.app',
+  ...(process.env.ISDEV ? ['http://localhost:3000', 'http://localhost:3001'] : []),
 ];
 
 app.use(
