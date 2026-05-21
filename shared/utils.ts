@@ -321,11 +321,11 @@ export const sortWorldCupGroup = (
 };
 
 export const median = (values: number[]): number => {
-	values.sort();
+	const sorted = [...values].sort((a, b) => a - b);
 
-	const half = Math.floor(values.length / 2);
+	const half = Math.floor(sorted.length / 2);
 
-	return values.length % 2 ? values[half] : Math.round((values[half - 1] + values[half]) / 2.0);
+	return sorted.length % 2 ? sorted[half] : Math.round((sorted[half - 1] + sorted[half]) / 2.0);
 };
 
 export const average = (values: number[]): number => values.reduce((acc, v) => acc + v) / values.length;
