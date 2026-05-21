@@ -96,6 +96,8 @@ const logDev = (message?: unknown, ...optionalParams: unknown[]): void => {
 
 console.log('[hot-reload-test] Backend functions loaded at', new Date().toISOString());
 
+const parseBody = (body: unknown) => (typeof body === 'string' ? JSON.parse(body) : body);
+
 const buildUrl = (url: string, opts: Record<string, unknown>) =>
   url +
   '?' +
@@ -609,7 +611,7 @@ app.post('/update-predictions', async (req, res) => {
 
   const { uid: callerUID } = authResult.result;
 
-  const { uid, gameId, prediction } = JSON.parse(req.body);
+  const { uid, gameId, prediction } = parseBody(req.body);
 
   if (uid !== callerUID) return res.status(403).json({ error: 'Forbidden', result: false });
 
@@ -729,7 +731,7 @@ app.post('/update-settings', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
-  const { settings } = JSON.parse(req.body);
+  const { settings } = parseBody(req.body);
 
   const result = await getDBSettings().set(settings);
 
@@ -742,7 +744,7 @@ app.post('/create-leaderboard', async (req, res) => {
 
   const { uid: callerUID } = authResult.result;
 
-  const { name: rawName } = JSON.parse(req.body);
+  const { name: rawName } = parseBody(req.body);
 
   const name = typeof rawName === 'string' ? rawName.trim() : '';
 
@@ -838,7 +840,7 @@ app.delete('/leaderboard', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return res.json(authResult.result);
 
-  const { leaderboardId } = JSON.parse(req.body);
+  const { leaderboardId } = parseBody(req.body);
 
   const leaderboardDoc = getFirestore(firebaseApp).collection('leaderboards').doc(leaderboardId);
 
@@ -863,7 +865,7 @@ app.post('/no-spoilers', async (req, res) => {
 
   const { uid: callerUID } = authResult.result;
 
-  const { noSpoilers } = JSON.parse(req.body);
+  const { noSpoilers } = parseBody(req.body);
 
   const userExtraInfo = (await getDBUser(callerUID).get()).data();
 
