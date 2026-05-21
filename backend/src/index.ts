@@ -484,7 +484,7 @@ app.get('/fetch-users', async (req, res) => {
       const ta = new Timestamp(a.userExtraInfo?.lastCheckIn._seconds, a.userExtraInfo?.lastCheckIn._nanoseconds);
       const tb = new Timestamp(b.userExtraInfo?.lastCheckIn._seconds, b.userExtraInfo?.lastCheckIn._nanoseconds);
       return tb.toMillis() - ta.toMillis();
-    } else if (a.userExtraInfo.lastCheckIn && a.userExtraInfo.lastCheckIn) {
+    } else if (a.userExtraInfo.lastCheckIn && !b.userExtraInfo.lastCheckIn) {
       return -1;
     } else if (!a.userExtraInfo.lastCheckIn && b.userExtraInfo.lastCheckIn) {
       return 1;
