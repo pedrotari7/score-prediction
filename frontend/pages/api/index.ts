@@ -38,7 +38,6 @@ export const resetStandings = async (token: string, competition: Competition): P
 
 export const updatePredictions = async (
 	token: string,
-	uid: string,
 	gameId: number,
 	prediction: Prediction,
 	competition: Competition
@@ -49,7 +48,7 @@ export const updatePredictions = async (
 		competition,
 		{},
 		{
-			body: JSON.stringify({ uid, gameId, prediction }),
+			body: JSON.stringify({ gameId, prediction }),
 			method: 'POST',
 		}
 	);

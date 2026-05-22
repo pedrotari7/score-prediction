@@ -614,9 +614,7 @@ app.post('/update-predictions', async (req, res) => {
 
   const { uid: callerUID } = authResult.result;
 
-  const { uid, gameId, prediction } = parseBody(req.body);
-
-  if (uid !== callerUID) return res.status(403).json({ error: 'Forbidden', result: false });
+  const { gameId, prediction } = parseBody(req.body);
 
   const isValidScore = (v: unknown): v is number => typeof v === 'number' && Number.isInteger(v) && v >= 0 && v <= 99;
 
@@ -636,7 +634,7 @@ app.post('/update-predictions', async (req, res) => {
 
   if (!isInPast) return res.status(403).json({ error: 'Forbidden', result: false });
 
-  const change = { [`${gameId}.${uid}`]: { home, away } };
+  const change = { [`${gameId}.${callerUID}`]: { home, away } };
 
   // TODO: Update this with the helper function
   const result = await getFirestore(firebaseApp).collection(competition.name).doc('predictions').update(change);

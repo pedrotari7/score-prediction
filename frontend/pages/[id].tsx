@@ -258,7 +258,7 @@ const Home = () => {
 			if (!auth.user) return;
 			setPredictions(prev => ({ ...prev, [gameId]: { ...prev?.[gameId], [uid]: prediction } }));
 
-			const result = await updatePredictions(auth.user.token, uid, gameId, prediction, competition);
+			const result = await updatePredictions(auth.user.token, gameId, prediction, competition);
 
 			if (!result.success) {
 				navigateToRef.current({ page: Route.RefreshPage });
