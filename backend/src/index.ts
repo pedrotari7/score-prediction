@@ -776,11 +776,18 @@ app.get('/leaderboard', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;
 
+  const { uid: callerUID, admin: isAdmin } = authResult.result;
   const leaderboardId = req.query.leaderboardId as string;
 
   const leaderboard = (
     await getFirestore(firebaseApp).collection('leaderboards').doc(leaderboardId).get()
   ).data() as Leaderboard;
+
+  if (!leaderboard) return res.status(404).json({ error: 'Leaderboard not found' });
+
+  if (!isAdmin && (!Array.isArray(leaderboard.members) || !leaderboard.members.includes(callerUID))) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
 
   return res.json(leaderboard);
 });
