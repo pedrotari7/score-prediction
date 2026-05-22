@@ -49,8 +49,6 @@ const Stats = ({ fixtures, predictions }: Props) => {
 						{ exact: 0, result: 0, onescore: 0, fail: 0, total: 0 }
 					);
 
-					console.log('predictionsTally', predictionsTally);
-
 					return (
 						<div key={fixtureID} className='flex flex-col items-center justify-start lg:flex-row'>
 							<Match game={fixture} className='lg:w-1/3' />
