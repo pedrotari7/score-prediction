@@ -590,6 +590,7 @@ app.get('/tournament', async (req, res) => {
 
   void getDBUser(decodedToken.uid).set({ lastCheckIn: FieldValue.serverTimestamp() }, { merge: true });
 
+  res.set('Cache-Control', hasGamesOngoing ? 'no-store' : 'private, max-age=60');
   return res.json(tournament);
 });
 
