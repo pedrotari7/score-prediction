@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, memo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react';
 
 import PageLayout from '../components/PageLayout';
 import SettingsPage from '../components/Settings';
@@ -267,13 +267,17 @@ const Home = () => {
 		[auth.user, uid, competition]
 	);
 
-	const groupMap = Object.values(standings)
-		?.map(s => s?.[1])
-		?.flat()
-		?.reduce((acc, val) => {
-			if (!val.group?.startsWith('Group')) return acc;
-			return { ...acc, [val.team.id]: val.group.split(' ').pop() };
-		}, {});
+	const groupMap = useMemo(
+		() =>
+			Object.values(standings)
+				?.map(s => s?.[1])
+				?.flat()
+				?.reduce((acc, val) => {
+					if (!val.group?.startsWith('Group')) return acc;
+					return { ...acc, [val.team.id]: val.group.split(' ').pop() };
+				}, {}),
+		[standings]
+	);
 
 	const showLogin = (!isAuthenticated && !loading && triedToValidateToken) || auth.user === undefined;
 

@@ -1,5 +1,5 @@
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import UserContext from '../context/UserContext';
 import { useSwipeable } from 'react-swipeable';
 import LiveGame from './LiveGame';
@@ -178,15 +178,28 @@ const CurrentMatch = ({
 
 	const calculatePoints = (ur: Partial<UserResult>) => calculateUserResultPoints(ur, competition);
 
-	const sortedFixtures = Object.values(fixtures).sort(
-		(a, b) => a.fixture.timestamp - b.fixture.timestamp
-	) as Fixture[];
+	const sortedFixtures = useMemo(
+		() => Object.values(fixtures).sort((a, b) => a.fixture.timestamp - b.fixture.timestamp) as Fixture[],
+		[fixtures]
+	);
 
 	const nextGame = sortedFixtures.findIndex(game => !isGameFinished(game));
 
 	const game = id ? fixtures[id] : sortedFixtures[nextGame === -1 ? sortedFixtures.length - 1 : nextGame];
 
 	const [isExtraInfoOpen, setIsExtraInfoOpen] = useState(false);
+
+	const prevGameId = useMemo(() => {
+		if (!game) return null;
+		const idx = sortedFixtures.findIndex(g => g.fixture.id === game.fixture.id);
+		return sortedFixtures[idx - 1]?.fixture.id ?? null;
+	}, [sortedFixtures, game]);
+
+	const nextGameId = useMemo(() => {
+		if (!game) return null;
+		const idx = sortedFixtures.findIndex(g => g.fixture.id === game.fixture.id);
+		return sortedFixtures[idx + 1]?.fixture.id ?? null;
+	}, [sortedFixtures, game]);
 
 	const handlers = useSwipeable({
 		onSwipedLeft: () => nextGameId !== null && !isExtraInfoOpen && setGameID(nextGameId),
@@ -233,14 +246,6 @@ const CurrentMatch = ({
 				DEFAULT_USER_RESULT
 			)
 		: {};
-
-	const findGame = (dir: -1 | 1) => {
-		const prevGameIdx = sortedFixtures.findIndex(g => g.fixture.id === game.fixture.id) + dir;
-		return sortedFixtures[prevGameIdx] ? sortedFixtures[prevGameIdx].fixture.id : null;
-	};
-
-	const prevGameId = findGame(-1);
-	const nextGameId = findGame(1);
 
 	const stadiumImage = getStadiumImageURL(game?.fixture.venue);
 

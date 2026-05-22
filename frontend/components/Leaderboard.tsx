@@ -1,5 +1,5 @@
 import type { MouseEventHandler, ReactNode } from 'react';
-import { useContext, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import type { Leaderboard, Users } from '../../interfaces/main';
 import RouteContext, { Route } from '../context/RouteContext';
 import { classNames } from '../lib/utils/reactHelper';
@@ -84,26 +84,34 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 	const hasLeaderboards = Object.keys(leaderboards).length > 0;
 	const isGlobalLeaderboard = currentLeaderboard === 'global';
 
-	const stages = Object.values(users).reduce((stages, user) => {
-		if (user.score) {
-			Object.keys(user.score).forEach(stage => stages.add(stage));
-		}
-		return stages;
-	}, new Set<string>());
+	const stages = useMemo(
+		() =>
+			Object.values(users).reduce((stages, user) => {
+				if (user.score) {
+					Object.keys(user.score).forEach(stage => stages.add(stage));
+				}
+				return stages;
+			}, new Set<string>()),
+		[users]
+	);
 
-	const sortedUsers = Object.values(users)
-		.filter(user => user.score && user.score[stage] && members.includes(user.uid))
-		.sort(
-			(a, b) =>
-				b.score[stage][sortOption.key] - a.score[stage][sortOption.key] ||
-				b.score[stage].points - a.score[stage].points ||
-				b.score[stage].exact - a.score[stage].exact ||
-				b.score[stage].result - a.score[stage].result ||
-				b.score[stage].onescore - a.score[stage].onescore ||
-				b.score[stage].groups - a.score[stage].groups ||
-				b.score[stage].penalty - a.score[stage].penalty ||
-				b.score[stage].fail - a.score[stage].fail
-		);
+	const sortedUsers = useMemo(
+		() =>
+			Object.values(users)
+				.filter(user => user.score && user.score[stage] && members.includes(user.uid))
+				.sort(
+					(a, b) =>
+						b.score[stage][sortOption.key] - a.score[stage][sortOption.key] ||
+						b.score[stage].points - a.score[stage].points ||
+						b.score[stage].exact - a.score[stage].exact ||
+						b.score[stage].result - a.score[stage].result ||
+						b.score[stage].onescore - a.score[stage].onescore ||
+						b.score[stage].groups - a.score[stage].groups ||
+						b.score[stage].penalty - a.score[stage].penalty ||
+						b.score[stage].fail - a.score[stage].fail
+				),
+		[users, members, stage, sortOption]
+	);
 
 	return (
 		<Panel className={classNames('m-3 select-none rounded-md p-3 shadow-pop sm:mx-[5%] sm:p-6')}>
