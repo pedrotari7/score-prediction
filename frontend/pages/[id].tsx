@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, memo } from 'react';
 
 import PageLayout from '../components/PageLayout';
 import SettingsPage from '../components/Settings';
@@ -38,6 +38,75 @@ import RefreshPage from '../components/RefreshPage';
 import Stats from '../components/Stats';
 
 type QueryParams = Record<string, string | string[] | undefined>;
+
+interface MainComponentProps {
+	route: RouteInfo;
+	fixtures: Fixtures;
+	predictions: Predictions;
+	users: Users;
+	leaderboards: Record<string, Leaderboard>;
+	standings: Standings;
+	uid: string;
+	leaderboardId: string | string[] | undefined;
+	updatePrediction: (prediction: Prediction, gameId: number) => Promise<void>;
+}
+
+const MainComponent = memo(function MainComponent({
+	route,
+	fixtures,
+	predictions,
+	users,
+	leaderboards,
+	standings,
+	uid,
+	leaderboardId,
+	updatePrediction,
+}: MainComponentProps) {
+	switch (route.page) {
+		case Route.Home:
+		case Route.Match:
+			return (
+				<CurrentMatch
+					fixtures={fixtures}
+					predictions={predictions}
+					users={users}
+					gameID={route?.data as number}
+					leaderboards={leaderboards}
+					updatePrediction={updatePrediction}
+				/>
+			);
+		case Route.Predictions:
+			return (
+				<FixturesPage
+					fixtures={fixtures}
+					predictions={predictions}
+					updatePrediction={updatePrediction}
+					standings={standings}
+					user={users[(route.data as string) ?? uid]}
+				/>
+			);
+		case Route.Leaderboard:
+			return <Leaderboards users={users} leaderboards={leaderboards} />;
+		case Route.Standings:
+			return <StandingsPage standings={standings} fixtures={fixtures} />;
+		case Route.Settings:
+			return <SettingsPage />;
+		case Route.Rules:
+			return <Rules />;
+		case Route.Users:
+			return <UsersList />;
+		case Route.JoinLeaderboard:
+			return <JoinLeaderboard leaderboardId={leaderboardId as string} />;
+		case Route.RefreshPage:
+			return <RefreshPage />;
+		case Route.ListLeaderboards:
+			return <ListLeaderboards users={users} />;
+		case Route.Stats:
+			return <Stats fixtures={fixtures} predictions={predictions} />;
+		default:
+			return <></>;
+	}
+});
 
 const routeToQuery = (info: RouteInfo): Record<string, string> => {
 	const params: Record<string, string> = {};
@@ -184,16 +253,19 @@ const Home = () => {
 		updateTournament();
 	}, [updateTournament]);
 
-	const updatePrediction = async (prediction: Prediction, gameId: number) => {
-		if (!auth.user) return;
-		setPredictions(prev => ({ ...prev, [gameId]: { ...prev?.[gameId], [uid]: prediction } }));
+	const updatePrediction = useCallback(
+		async (prediction: Prediction, gameId: number) => {
+			if (!auth.user) return;
+			setPredictions(prev => ({ ...prev, [gameId]: { ...prev?.[gameId], [uid]: prediction } }));
 
-		const result = await updatePredictions(auth.user.token, uid, gameId, prediction, competition);
+			const result = await updatePredictions(auth.user.token, uid, gameId, prediction, competition);
 
-		if (!result.success) {
-			navigateToRef.current({ page: Route.RefreshPage });
-		}
-	};
+			if (!result.success) {
+				navigateToRef.current({ page: Route.RefreshPage });
+			}
+		},
+		[auth.user, uid, competition]
+	);
 
 	const groupMap = Object.values(standings)
 		?.map(s => s?.[1])
@@ -202,53 +274,6 @@ const Home = () => {
 			if (!val.group?.startsWith('Group')) return acc;
 			return { ...acc, [val.team.id]: val.group.split(' ').pop() };
 		}, {});
-
-	const MainComponent = () => {
-		switch (route.page) {
-			case Route.Home:
-			case Route.Match:
-				return (
-					<CurrentMatch
-						fixtures={fixtures}
-						predictions={predictions}
-						users={users}
-						gameID={route?.data as number}
-						leaderboards={leaderboards}
-						updatePrediction={updatePrediction}
-					/>
-				);
-			case Route.Predictions:
-				return (
-					<FixturesPage
-						fixtures={fixtures}
-						predictions={predictions}
-						updatePrediction={updatePrediction}
-						standings={standings}
-						user={users[(route.data as string) ?? uid]}
-					/>
-				);
-			case Route.Leaderboard:
-				return <Leaderboards users={users} leaderboards={leaderboards} />;
-			case Route.Standings:
-				return <StandingsPage standings={standings} fixtures={fixtures} />;
-			case Route.Settings:
-				return <SettingsPage />;
-			case Route.Rules:
-				return <Rules />;
-			case Route.Users:
-				return <UsersList />;
-			case Route.JoinLeaderboard:
-				return <JoinLeaderboard leaderboardId={leaderboardId as string} />;
-			case Route.RefreshPage:
-				return <RefreshPage />;
-			case Route.ListLeaderboards:
-				return <ListLeaderboards users={users} />;
-			case Route.Stats:
-				return <Stats fixtures={fixtures} predictions={predictions} />;
-			default:
-				return <></>;
-		}
-	};
 
 	const showLogin = (!isAuthenticated && !loading && triedToValidateToken) || auth.user === undefined;
 
@@ -268,7 +293,21 @@ const Home = () => {
 											loading={loading}
 											setLoading={setLoading}
 										>
-											{loading || !triedToValidateToken ? <LoadingSkeleton /> : <MainComponent />}
+											{loading || !triedToValidateToken ? (
+												<LoadingSkeleton />
+											) : (
+												<MainComponent
+													route={route}
+													fixtures={fixtures}
+													predictions={predictions}
+													users={users}
+													leaderboards={leaderboards}
+													standings={standings}
+													uid={uid}
+													leaderboardId={leaderboardId}
+													updatePrediction={updatePrediction}
+												/>
+											)}
 										</PageLayout>
 									)}
 								</UpdateTournamentContext.Provider>
