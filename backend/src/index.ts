@@ -819,8 +819,13 @@ app.get('/leaderboards', async (req, res) => {
   const authResult = await authenticate(req, res);
   if (!authResult.success) return authResult.result;
 
+  const { uid: callerUID, admin: isAdmin } = authResult.result;
   const snapshot = await getFirestore(firebaseApp).collection('leaderboards').get();
-  return res.json({ success: true, data: snapshot.docs.map(doc => doc.data()) });
+  const allLeaderboards = snapshot.docs.map(doc => doc.data());
+  const data = isAdmin
+    ? allLeaderboards
+    : allLeaderboards.filter(lb => Array.isArray(lb.members) && lb.members.includes(callerUID));
+  return res.json({ success: true, data });
 });
 
 export const api = onRequest({ secrets: ['APISPORTS'], cors: corsOrigins }, app);
