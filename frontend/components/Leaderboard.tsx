@@ -32,6 +32,35 @@ const SortOptions: Record<string, SortOption> = {
 	groups: { key: 'groups', text: 'Groups', color: 'bg-purple-700' },
 };
 
+const FilterOption = ({
+	children,
+	className,
+	active,
+	onClick,
+}: {
+	children: ReactNode;
+	className: string;
+	active: boolean;
+	onClick: MouseEventHandler<HTMLDivElement>;
+}) => (
+	<div
+		onClick={onClick}
+		className={
+			classNames(
+				'm-2 cursor-pointer select-none rounded-md p-2 text-xs sm:text-lg',
+				'border-2 hover:border-2 hover:border-gray-400',
+				active ? 'border-white' : 'border-transparent',
+				className
+			) +
+			' ' +
+			// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
+			classNames('hover:bg-opacity-50')
+		}
+	>
+		{children}
+	</div>
+);
+
 const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Record<string, Leaderboard> }) => {
 	const auth = useAuth();
 	const { RedactedSpoilers } = useNoSpoilers();
@@ -49,37 +78,6 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 	const [stage, setCurrentStage] = useState<string>('all');
 
 	const currentUser = auth.user?.uid;
-
-	const FilterOption = ({
-		children,
-		className,
-		active,
-		onClick,
-	}: {
-		children: ReactNode;
-		className: string;
-		active: boolean;
-		onClick: MouseEventHandler<HTMLDivElement>;
-	}) => {
-		return (
-			<div
-				onClick={onClick}
-				className={
-					classNames(
-						'm-2 cursor-pointer select-none rounded-md p-2 text-xs sm:text-lg',
-						'border-2 hover:border-2 hover:border-gray-400',
-						active ? 'border-white' : 'border-transparent',
-						className
-					) +
-					' ' +
-					// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
-					classNames('hover:bg-opacity-50')
-				}
-			>
-				{children}
-			</div>
-		);
-	};
 
 	const hasLeaderboards = Object.keys(leaderboards).length > 0;
 	const isGlobalLeaderboard = currentLeaderboard === 'global';
