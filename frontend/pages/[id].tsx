@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react';
-
+import dynamic from 'next/dynamic';
 import PageLayout from '../components/PageLayout';
-import SettingsPage from '../components/Settings';
-import Leaderboards from '../components/Leaderboard';
-import StandingsPage from '../components/Standings';
-
 import { updatePredictions, fetchTournament, postNoSpoilers } from './api';
 import FixturesContext from '../context/FixturesContext';
 import UserContext from '../context/UserContext';
@@ -35,7 +31,11 @@ import JoinLeaderboard from '../components/JoinLeaderboard';
 import ListLeaderboards from '../components/ListLeaderboards';
 import NoSpoilersContext from '../context/NoSpoilersContext';
 import RefreshPage from '../components/RefreshPage';
-import Stats from '../components/Stats';
+
+const SettingsPage = dynamic(() => import('../components/Settings'));
+const Leaderboards = dynamic(() => import('../components/Leaderboard'));
+const StandingsPage = dynamic(() => import('../components/Standings'));
+const Stats = dynamic(() => import('../components/Stats'));
 
 type QueryParams = Record<string, string | string[] | undefined>;
 

@@ -9,11 +9,13 @@ import UserContext from '../context/UserContext';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
+import dynamic from 'next/dynamic';
 import ClientOnly from './ClientOnly';
 import Flag from './Flag';
-import GameExtraInfo from './GameExtraInfo';
 import { Round } from './Round';
 import ShowMore from './ShowMore';
+
+const GameExtraInfo = dynamic(() => import('./GameExtraInfo'));
 
 const LiveGame = ({
 	gameID,
