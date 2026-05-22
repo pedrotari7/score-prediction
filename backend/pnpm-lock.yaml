@@ -55,7 +55,7 @@ importers:
         specifier: 8.59.4
         version: 8.59.4(eslint@8.57.1)(typescript@5.9.3)
       concurrently:
-        specifier: ^9.2.1
+        specifier: 9.2.1
         version: 9.2.1
       eslint:
         specifier: 8.57.1
