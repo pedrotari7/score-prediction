@@ -176,6 +176,12 @@ const CurrentMatch = ({
 	const [currentLeaderboard, setCurrentLeaderboard] = useState('global');
 	const [members, setMembers] = useState<string[]>(Object.keys(users));
 
+	useEffect(() => {
+		if (currentLeaderboard === 'global') {
+			setMembers(Object.keys(users));
+		}
+	}, [users, currentLeaderboard]);
+
 	const calculatePoints = (ur: Partial<UserResult>) => calculateUserResultPoints(ur, competition);
 
 	const sortedFixtures = useMemo(
