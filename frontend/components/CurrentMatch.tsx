@@ -33,7 +33,6 @@ import SelectLeaderboard from './SelectLeaderboard';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import useCompetition from '../hooks/useCompetition';
 import { userInputPrediction, UserInputPrediction } from '../hooks/userInputPrediction';
-import { DateTime } from 'luxon';
 import Panel from './Panel';
 
 const UserGuess = ({
@@ -61,8 +60,8 @@ const UserGuess = ({
 	const hiddenScore = parsedGuess.home === 'H' && parsedGuess.away === 'H';
 	const invalidScore = parsedGuess.home === 'X' && parsedGuess.away === 'X';
 
-	const gameDate = DateTime.fromISO(game?.fixture.date);
-	const isInPast = getCurrentDate() >= gameDate;
+	const gameDate = new Date(game?.fixture.date);
+	const isInPast = getCurrentDate().getTime() >= gameDate.getTime();
 
 	const { homeInputRef, awayInputRef } = userInputPrediction(gameID, guess);
 

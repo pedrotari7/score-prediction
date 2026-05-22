@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import { useContext } from 'react';
 import type { Predictions, UpdatePrediction } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
@@ -8,7 +7,7 @@ import UserContext from '../context/UserContext';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { userInputPrediction, UserInputPrediction } from '../hooks/userInputPrediction';
-import { classNames, formatScore, getCurrentDate } from '../lib/utils/reactHelper';
+import { classNames, formatGameDate, formatScore, getCurrentDate } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import ResultContainer from './ResultContainer';
 import { Round } from './Round';
@@ -43,9 +42,9 @@ const Game = ({
 
 	const game = data[gameID];
 
-	const gameDate = DateTime.fromISO(game?.fixture.date);
+	const gameDate = new Date(game?.fixture.date);
 
-	const isInPast = getCurrentDate() >= gameDate;
+	const isInPast = getCurrentDate().getTime() >= gameDate.getTime();
 
 	const isValidScore = (n: number | null) => isNum(n) && n >= 0;
 
@@ -62,7 +61,7 @@ const Game = ({
 		>
 			<span className='flex w-full items-center justify-between text-left text-xs lg:w-3/12'>
 				<Round game={game} />
-				<span className='text-xs'>{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm ccc')}</span>
+				<span className='text-xs'>{formatGameDate(game?.fixture.date, true)}</span>
 			</span>
 
 			<div className='flex w-full flex-row items-center justify-between sm:justify-center lg:w-8/12'>

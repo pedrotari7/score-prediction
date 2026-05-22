@@ -1,14 +1,39 @@
-import { DateTime } from 'luxon';
 import type { Competition, Venue } from '../../../interfaces/main';
 import { competitions } from '../../../shared/utils';
 
 export const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');
 
 export const getCurrentDate = () => {
-	return DateTime.now();
+	return new Date();
 	// Mocked date
-	// return DateTime.fromISO('2021-06-16T19:00:00+0000');
-	// return DateTime.fromISO('2016-06-09T19:00:00+0000');
+	// return new Date('2021-06-16T19:00:00+0000');
+	// return new Date('2016-06-09T19:00:00+0000');
+};
+
+export const formatGameDate = (isoStr: string | undefined, includeWeekday = false): string => {
+	if (!isoStr) return '';
+	const d = new Date(isoStr);
+	const day = String(d.getDate()).padStart(2, '0');
+	const month = d.toLocaleString('en-US', { month: 'short' });
+	const hours = String(d.getHours()).padStart(2, '0');
+	const mins = String(d.getMinutes()).padStart(2, '0');
+	if (includeWeekday) {
+		const weekday = d.toLocaleString('en-US', { weekday: 'short' });
+		return `${day} ${month} ${hours}:${mins} ${weekday}`;
+	}
+	return `${day} ${month} ${hours}:${mins}`;
+};
+
+export const relativeTimeFromSeconds = (seconds: number): string => {
+	const diffSecs = Math.round((seconds * 1000 - Date.now()) / 1000);
+	const absDiff = Math.abs(diffSecs);
+	const rtf = new Intl.RelativeTimeFormat('en', { style: 'narrow' });
+	if (absDiff < 60) return rtf.format(diffSecs, 'second');
+	if (absDiff < 3600) return rtf.format(Math.round(diffSecs / 60), 'minute');
+	if (absDiff < 86400) return rtf.format(Math.round(diffSecs / 3600), 'hour');
+	if (absDiff < 2592000) return rtf.format(Math.round(diffSecs / 86400), 'day');
+	if (absDiff < 31536000) return rtf.format(Math.round(diffSecs / 2592000), 'month');
+	return rtf.format(Math.round(diffSecs / 31536000), 'year');
 };
 
 export const formatScore = (goal: number | null) => {

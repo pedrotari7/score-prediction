@@ -1,10 +1,9 @@
 import React, { useContext } from 'react';
 import RouteContext, { Route } from '../context/RouteContext';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, relativeTimeFromSeconds } from '../lib/utils/reactHelper';
 import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
 import RefreshButton from './RefreshButton';
-import { DateTime } from 'luxon';
 import Loading from './Loading';
 import useCompetition from '../hooks/useCompetition';
 import useUsers from '../hooks/useUsers';
@@ -83,9 +82,7 @@ const UsersList = () => {
 										<span>{user?.lastRefreshTime}</span>
 										{user?.userExtraInfo?.lastCheckIn?._seconds && (
 											<span className='rounded-md bg-cyan-900 p-2'>
-												{DateTime.fromSeconds(
-													user?.userExtraInfo?.lastCheckIn?._seconds
-												).toRelative({ style: 'narrow' })}
+												{relativeTimeFromSeconds(user.userExtraInfo.lastCheckIn._seconds)}
 											</span>
 										)}
 									</div>

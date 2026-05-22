@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import type { Dispatch, SetStateAction } from 'react';
 import { useContext } from 'react';
 import Countdown, { zeroPad } from 'react-countdown';
@@ -8,7 +7,7 @@ import UpdateTournamentContext from '../context/UpdateTournamentContext';
 import UserContext from '../context/UserContext';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
-import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
+import { classNames, formatGameDate, getCurrentDate } from '../lib/utils/reactHelper';
 import dynamic from 'next/dynamic';
 import ClientOnly from './ClientOnly';
 import Flag from './Flag';
@@ -34,11 +33,11 @@ const LiveGame = ({
 
 	const game = data[gameID];
 
-	const gameDate = DateTime.fromISO(game?.fixture.date);
+	const gameDate = new Date(game?.fixture.date);
 
-	const isInPast = getCurrentDate() < gameDate;
+	const isInPast = getCurrentDate().getTime() < gameDate.getTime();
 
-	const timeDiff = gameDate.diff(getCurrentDate(), 'days').days;
+	const timeDiff = (gameDate.getTime() - getCurrentDate().getTime()) / (1000 * 60 * 60 * 24);
 
 	const isCountdown = timeDiff <= 1;
 
@@ -67,7 +66,7 @@ const LiveGame = ({
 						<span className='mx-2 text-center text-3xl sm:w-4/12'>
 							<ClientOnly>
 								<Countdown
-									date={gameDate.toMillis()}
+									date={gameDate.getTime()}
 									onComplete={() => updateCompetition()}
 									renderer={({ hours, minutes, seconds }) => (
 										<span>
@@ -81,7 +80,7 @@ const LiveGame = ({
 
 					{isInPast && !isCountdown && (
 						<span className='mx-2 text-center text-3xl sm:w-4/12'>
-							{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm')}
+							{formatGameDate(game?.fixture.date)}
 						</span>
 					)}
 

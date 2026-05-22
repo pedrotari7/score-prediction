@@ -1,8 +1,7 @@
-import { DateTime } from 'luxon';
 import type { Fixture } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, formatGameDate } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 
 const Match = ({ game, className = '' }: { game: Fixture; className?: string }) => {
@@ -24,9 +23,7 @@ const Match = ({ game, className = '' }: { game: Fixture; className?: string }) 
 			</div>
 
 			{!isGameFinished(game) && (
-				<span className='w-6/12 text-center text-xs sm:w-4/12'>
-					{DateTime.fromISO(game?.fixture.date).toFormat('dd LLL HH:mm ccc')}
-				</span>
+				<span className='w-6/12 text-center text-xs sm:w-4/12'>{formatGameDate(game?.fixture.date, true)}</span>
 			)}
 
 			{isGameFinished(game) && (
