@@ -355,7 +355,7 @@ const getPredictions = async (
 
   logDev('adminHideScores :>> ', adminHideScores);
 
-  if ((!adminHideScores && isAdmin) || Object.keys(predictions).length === 0) return predictions;
+  if ((adminHideScores && isAdmin) || Object.keys(predictions).length === 0) return predictions;
 
   const censoredPredictions = Object.entries(predictions).reduce((acc, [gameId, gamePredictions]) => {
     const gameDate = new Date(fixtures?.[parseInt(gameId)].fixture.date);
