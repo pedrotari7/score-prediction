@@ -645,7 +645,7 @@ app.post('/update-predictions', async (req, res) => {
 });
 
 app.get('/points', async (req, res) => {
-  const authResult = await authenticate(req, res);
+  const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
   const competition = parseCompetition(req);
