@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { Fixture, Fixtures, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import useNoSpoilers from '../hooks/useNoSpoilers';
@@ -73,7 +74,15 @@ const FixturesPage = ({
 		<Panel className={classNames('m-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop')}>
 			<div className='mb-6 flex flex-col items-center gap-2 text-3xl sm:flex-row'>
 				<div className='flex flex-row items-center justify-center'>
-					<img className='mr-2 size-8 rounded-full object-cover' src={user?.photoURL} />
+					{user?.photoURL && (
+						<Image
+							className='mr-2 size-8 rounded-full object-cover'
+							src={user.photoURL}
+							width={32}
+							height={32}
+							alt=''
+						/>
+					)}
 					{uid !== user.uid && <p>{user.displayName}</p>}
 					{uid === user.uid && <p>My Predictions</p>}
 				</div>

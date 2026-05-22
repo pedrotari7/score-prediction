@@ -11,8 +11,14 @@ exports[`Loading renders loading spinner with message 1`] = `
       test message
     </div>
     <img
-      class=""
-      src="loader.svg"
+      alt=""
+      data-nimg="1"
+      decoding="async"
+      height="48"
+      loading="lazy"
+      src="/loader.svg"
+      style="color: transparent;"
+      width="48"
     />
   </div>
 </div>
@@ -27,8 +33,14 @@ exports[`Loading renders loading spinner with no message 1`] = `
       class="text-3xl"
     />
     <img
-      class=""
-      src="loader.svg"
+      alt=""
+      data-nimg="1"
+      decoding="async"
+      height="48"
+      loading="lazy"
+      src="/loader.svg"
+      style="color: transparent;"
+      width="48"
     />
   </div>
 </div>

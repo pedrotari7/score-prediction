@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { ReactNode } from 'react';
 import type { Event, Fixture, FixtureExtraInfo, Player, PlayersMap, Result } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
@@ -26,7 +27,7 @@ const Score = ({ score, label }: { score: Result; label: string }) => {
 
 const Referee = ({ referee }: { referee: string | null | undefined }) => (
 	<div className='my-6 flex flex-row items-center justify-center'>
-		<img className='mx-3 size-8' src='whistle.svg' />
+		<Image className='mx-3' src='/whistle.svg' width={32} height={32} alt='' />
 		<div className='text-center text-sm'>{referee}</div>
 	</div>
 );
@@ -57,7 +58,13 @@ const PlayerWithPhoto = ({
 	const photo = players[player.id]?.photo ?? DEFAULT_IMAGE;
 	return (
 		<div className={classNames('flex items-center', isAwayTeam ? 'flex-row-reverse' : 'flex-row')}>
-			<img className='m-2 size-6 rounded-full object-cover sm:size-8' src={photo} />
+			<Image
+				className='m-2 size-6 rounded-full object-cover sm:size-8'
+				src={photo}
+				width={32}
+				height={32}
+				alt=''
+			/>
 			<span className={classNames(color ?? gcc('text-light'))}>{player.name}</span>
 		</div>
 	);
@@ -75,10 +82,12 @@ const GameEvent = ({ event, game, players }: { event: Event; game: Fixture; play
 		return (
 			<EventContainer isAwayTeam={isAwayTeam}>
 				<TimeElapsed event={event} />
-				{isNormalGoal && <img className='mx-2 size-5' src='/events/goal.svg' />}
-				{isOwnGoal && <img className='mx-2 size-5' src='/events/own_goal.svg' />}
-				{isMissedPenalty && <img className='mx-2 size-5' src='/events/missed_penalty.svg' />}
-				{isPenalty && <img className='mx-2 size-5' src='/events/penalty.svg' />}
+				{isNormalGoal && <Image className='mx-2' src='/events/goal.svg' width={20} height={20} alt='' />}
+				{isOwnGoal && <Image className='mx-2' src='/events/own_goal.svg' width={20} height={20} alt='' />}
+				{isMissedPenalty && (
+					<Image className='mx-2' src='/events/missed_penalty.svg' width={20} height={20} alt='' />
+				)}
+				{isPenalty && <Image className='mx-2' src='/events/penalty.svg' width={20} height={20} alt='' />}
 				<div className={classNames('flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
 					<PlayerWithPhoto player={event.player} isAwayTeam={isAwayTeam} players={players} />
 					{event.assist.name && <span className='mx-2 text-sm'>assist by {event.assist.name}</span>}
@@ -117,9 +126,11 @@ const GameEvent = ({ event, game, players }: { event: Event; game: Fixture; play
 		return (
 			<EventContainer isAwayTeam={isAwayTeam}>
 				<TimeElapsed event={event} />
-				{isYellowCard && <img className='mx-3 h-5 w-3' src='/events/yellow_card.svg' />}
-				{isSecondYellowCard && <img className='mx-3 h-5 w-3' src='/events/yellow_card.svg' />}
-				{isRedCard && <img className='mx-3 h-5 w-3' src='/events/red_card.svg' />}
+				{isYellowCard && <Image className='mx-3' src='/events/yellow_card.svg' width={12} height={20} alt='' />}
+				{isSecondYellowCard && (
+					<Image className='mx-3' src='/events/yellow_card.svg' width={12} height={20} alt='' />
+				)}
+				{isRedCard && <Image className='mx-3' src='/events/red_card.svg' width={12} height={20} alt='' />}
 				<div className={classNames('flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
 					<PlayerWithPhoto player={event.player} isAwayTeam={isAwayTeam} players={players} />
 					{event.comments && <span className='mx-2 text-sm'>{event.comments}</span>}

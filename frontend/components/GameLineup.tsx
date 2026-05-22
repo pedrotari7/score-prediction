@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { Lineup, LineupPlayer, LineupPlayers, Player, PlayersMap } from '../../interfaces/main';
 import { classNames, DEFAULT_IMAGE } from '../lib/utils/reactHelper';
 
@@ -31,7 +32,13 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 			>
 				<div className='mx-2 w-4 text-center'>{player.number}</div>
 				<div className='mx-2 w-4 text-center'>{player.pos}</div>
-				<img className='m-2 size-6 rounded-full object-cover sm:size-10' src={url} />
+				<Image
+					className='m-2 size-6 rounded-full object-cover sm:size-10'
+					src={url}
+					width={40}
+					height={40}
+					alt=''
+				/>
 				<div className='mx-2'>{player.name}</div>
 			</div>
 		);
@@ -46,7 +53,13 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 
 				<div className='flex flex-col items-center rounded-md p-3'>
 					{/* <div className="text-center mb-2 font-bold">Coach</div> */}
-					<img className='my-2 size-8 rounded-full object-cover sm:size-10' src={lineup.coach.photo} />
+					<Image
+						className='my-2 size-8 rounded-full object-cover sm:size-10'
+						src={lineup.coach.photo}
+						width={40}
+						height={40}
+						alt=''
+					/>
 					<div>{lineup.coach.name}</div>
 				</div>
 
@@ -93,9 +106,12 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 				<div className={classNames('rounded-md text-xs')}>
 					<div className='flex flex-col items-center'>
 						<div className='relative'>
-							<img
+							<Image
 								className='my-1 size-6 rounded-full object-cover sm:size-8 lg:size-12 xl:size-16'
 								src={url}
+								width={64}
+								height={64}
+								alt=''
 							/>
 							<div className='absolute -left-4 top-1/2 w-3 text-center text-xs text-gray-400 lg:-left-6 lg:text-base'>
 								{player.number}

@@ -1,5 +1,6 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import Head from 'next/head';
+import Image from 'next/image';
 import { app } from '../lib/firebaseClient';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import useCompetition from '../hooks/useCompetition';
@@ -61,7 +62,13 @@ const Login = () => {
 				<div className='select-none text-center text-4xl font-bold text-light md:text-8xl'>
 					SCORE PREDICTION
 				</div>
-				<img className='block h-16 w-auto sm:h-48' src={competition.logo} alt='logo' />
+				<Image
+					src={competition.logo}
+					width={192}
+					height={192}
+					alt='logo'
+					className='block h-16 w-auto sm:h-48'
+				/>
 				{isAllowedBrowser ? (
 					<button
 						onClick={signIn}

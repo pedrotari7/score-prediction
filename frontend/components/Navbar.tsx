@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { Dispatch, SetStateAction } from 'react';
 import { Fragment, useContext } from 'react';
 import {
@@ -110,7 +111,13 @@ export default function Navbar({
 									className='flex shrink-0 cursor-pointer items-center'
 									onClick={() => updateRoute({ page: Route.Home })}
 								>
-									<img className='block h-8 w-auto' src={competition.logo} alt='logo' />
+									<Image
+										src={competition.logo}
+										width={80}
+										height={32}
+										alt='logo'
+										className='block h-8 w-auto'
+									/>
 								</div>
 								<div className='hidden lg:ml-6 lg:block'>
 									<div className='flex space-x-4'>
@@ -336,7 +343,13 @@ export default function Navbar({
 										'flex cursor-pointer items-center justify-start gap-2 rounded-md px-3 py-8'
 									)}
 								>
-									<img className='h-10' src={concurrentCompetition.logo} alt='' />
+									<Image
+										src={concurrentCompetition.logo}
+										width={80}
+										height={40}
+										alt=''
+										className='h-10 w-auto'
+									/>
 								</div>
 							) : null}
 						</div>

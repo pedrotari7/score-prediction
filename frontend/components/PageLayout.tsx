@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Image from 'next/image';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import { useContext } from 'react';
 import { competitions } from '../../shared/utils';
@@ -46,7 +47,14 @@ const PageLayout = ({
 
 			{hasFooter && (
 				<div className='fixed bottom-0 w-full select-none'>
-					<img src={`/footer-${competition.name}.png`} alt='' className='w-full opacity-15' />
+					<Image
+						src={`/footer-${competition.name}.png`}
+						alt=''
+						width={2048}
+						height={1052}
+						className='w-full opacity-15'
+						style={{ height: 'auto' }}
+					/>
 				</div>
 			)}
 		</div>

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { MouseEventHandler, ReactNode } from 'react';
 import { useContext, useMemo, useState } from 'react';
 import type { Leaderboard, Users } from '../../interfaces/main';
@@ -199,9 +200,12 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 										</div>
 									</MobileOnly>
 									<div className='mb-2 flex flex-row flex-wrap items-center justify-center sm:mb-0'>
-										<img
+										<Image
 											className='mr-2 size-8 rounded-full object-cover sm:mr-6 sm:size-12'
 											src={user.photoURL}
+											width={48}
+											height={48}
+											alt=''
 										/>
 										<span className='text-center font-bold sm:text-2xl'>{user.displayName}</span>
 									</div>

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import UserContext from '../context/UserContext';
@@ -81,7 +82,15 @@ const UserGuess = ({
 			onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 		>
 			<span className='flex flex-row items-center text-left text-xs'>
-				{user?.photoURL && <img className='mr-2 size-8 rounded-full object-cover' src={user?.photoURL} />}
+				{user?.photoURL && (
+					<Image
+						className='mr-2 size-8 rounded-full object-cover'
+						src={user.photoURL}
+						width={32}
+						height={32}
+						alt=''
+					/>
+				)}
 			</span>
 			<div className='flex items-center justify-center gap-4'>
 				<span className='text-xl'>{user?.displayName}</span>
