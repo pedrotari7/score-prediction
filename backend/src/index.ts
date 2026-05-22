@@ -451,7 +451,12 @@ app.get('/fetch-predictions', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const predictions = (await getDBPredictions(competition).get()).data();
+  const [fixturesDoc, settingsDoc] = await Promise.all([getDBFixtures(competition).get(), getDBSettings().get()]);
+
+  const fixtures = fixturesDoc.data()?.data as Fixtures;
+  const settings = settingsDoc.data() as Settings;
+
+  const predictions = await getPredictions(authResult.result, competition, fixtures, settings);
 
   return res.json(predictions);
 });
