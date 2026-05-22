@@ -361,20 +361,24 @@ const getPredictions = async (
     const gameDate = new Date(fixtures?.[parseInt(gameId)].fixture.date);
     const isInPast = gameDate && getCurrentTime() < gameDate;
 
-    if (isInPast) {
-      for (const uid in gamePredictions) {
-        if (uid !== callerUID) {
-          if (isNum(gamePredictions[uid].home)) {
-            gamePredictions[uid].home = -1;
-          }
-
-          if (isNum(gamePredictions[uid].away)) {
-            gamePredictions[uid].away = -1;
-          }
-        }
-      }
+    if (!isInPast) {
+      acc[gameId] = gamePredictions;
+      return acc;
     }
-    acc[gameId] = gamePredictions;
+
+    acc[gameId] = Object.fromEntries(
+      Object.entries(gamePredictions).map(([uid, prediction]) => {
+        if (uid === callerUID) return [uid, prediction];
+        return [
+          uid,
+          {
+            ...prediction,
+            ...(isNum(prediction.home) ? { home: -1 } : {}),
+            ...(isNum(prediction.away) ? { away: -1 } : {}),
+          },
+        ];
+      })
+    );
 
     return acc;
   }, {} as Predictions);
