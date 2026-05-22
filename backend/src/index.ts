@@ -189,11 +189,7 @@ const getDBSettings = () => getDoc('admin', 'settings');
 const getDBUser = (uid: string) => getDoc('users', uid);
 
 const updateLastCheckIn = async (uid: string): Promise<void> => {
-  const userExtraInfo = (await getDBUser(uid).get()).data() ?? { leaderboards: [] };
-
-  const updatedUserExtraInfo = { ...userExtraInfo, lastCheckIn: FieldValue.serverTimestamp() };
-
-  await getDBUser(uid).set(updatedUserExtraInfo);
+  await getDBUser(uid).set({ lastCheckIn: FieldValue.serverTimestamp() }, { merge: true });
 };
 
 const updateStandings = async (competition: Competition) => {
@@ -592,7 +588,7 @@ app.get('/tournament', async (req, res) => {
     userExtraInfo: { noSpoilers: false, ...userExtraInfo, leaderboards },
   };
 
-  void getDBUser(decodedToken.uid).set({ ...userExtraInfo, lastCheckIn: FieldValue.serverTimestamp() });
+  void getDBUser(decodedToken.uid).set({ lastCheckIn: FieldValue.serverTimestamp() }, { merge: true });
 
   return res.json(tournament);
 });
