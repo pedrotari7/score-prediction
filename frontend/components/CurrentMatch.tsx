@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { memo, useContext, useEffect, useMemo, useState } from 'react';
 import UserContext from '../context/UserContext';
 import { useSwipeable } from 'react-swipeable';
 import LiveGame from './LiveGame';
@@ -128,7 +128,7 @@ const UserGuess = ({
 	);
 };
 
-const KeyboardHandle = ({
+const KeyboardHandle = memo(function KeyboardHandle({
 	prevGameId,
 	nextGameId,
 	children,
@@ -140,7 +140,7 @@ const KeyboardHandle = ({
 	children: ReactNode;
 	className?: string;
 	setGameID: Dispatch<SetStateAction<number>>;
-}) => {
+}) {
 	useEffect(() => {
 		const keyDownHandler = (event: KeyboardEvent) => {
 			switch (event.code) {
@@ -158,7 +158,7 @@ const KeyboardHandle = ({
 	}, [prevGameId, nextGameId, setGameID]);
 
 	return <div className={className}>{children}</div>;
-};
+});
 
 const CurrentMatch = ({
 	fixtures,
