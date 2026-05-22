@@ -1,10 +1,54 @@
 import React, { ChangeEvent, useCallback, useContext, useRef } from 'react';
-import { Prediction, UpdatePrediction } from '../../interfaces/main';
+import type { Prediction, UpdatePrediction } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
 import ScoreInput from '../components/ScoreInput';
 import RouteContext, { Route } from '../context/RouteContext';
 
-export const userInputPrediction = (gameID: number, prediction: Prediction, updatePrediction: UpdatePrediction) => {
+interface UserInputPredictionProps {
+	gameID: number;
+	prediction: Prediction;
+	updatePrediction: UpdatePrediction;
+	homeInputRef: React.RefObject<HTMLInputElement | null>;
+	awayInputRef: React.RefObject<HTMLInputElement | null>;
+}
+
+export const UserInputPrediction = ({
+	gameID,
+	prediction,
+	updatePrediction,
+	homeInputRef,
+	awayInputRef,
+}: UserInputPredictionProps) => {
+	const onPredictionChange = useCallback(
+		async (e: ChangeEvent<HTMLInputElement>, team: string) => {
+			const value = parseInt(e.target.value);
+			await updatePrediction({ ...prediction, [team]: isNaN(value) ? null : value }, gameID);
+		},
+		[prediction, gameID, updatePrediction]
+	);
+
+	return (
+		<>
+			<ScoreInput
+				innerRef={homeInputRef}
+				id={`${gameID}-home`}
+				value={prediction.home}
+				className='mx-2'
+				onchange={async (e: ChangeEvent<HTMLInputElement>) => await onPredictionChange(e, 'home')}
+			/>
+
+			<ScoreInput
+				innerRef={awayInputRef}
+				id={`${gameID}-away`}
+				value={prediction.away}
+				className='mx-2'
+				onchange={async (e: ChangeEvent<HTMLInputElement>) => await onPredictionChange(e, 'away')}
+			/>
+		</>
+	);
+};
+
+export const userInputPrediction = (gameID: number, prediction: Prediction) => {
 	const homeInputRef = useRef<HTMLInputElement>(null);
 	const awayInputRef = useRef<HTMLInputElement>(null);
 	const { setRoute } = useContext(RouteContext)!;
@@ -24,35 +68,5 @@ export const userInputPrediction = (gameID: number, prediction: Prediction, upda
 		[prediction, gameID]
 	);
 
-	const UserInputPrediction = () => {
-		const onPredictionChange = useCallback(
-			async (e: ChangeEvent<HTMLInputElement>, team: string) => {
-				const value = parseInt(e.target.value);
-				await updatePrediction({ ...prediction, [team]: isNaN(value) ? null : value }, gameID);
-			},
-			[prediction, gameID, updatePrediction]
-		);
-
-		return (
-			<>
-				<ScoreInput
-					innerRef={homeInputRef}
-					id={`${gameID}-home`}
-					value={prediction.home}
-					className='mx-2'
-					onchange={async (e: ChangeEvent<HTMLInputElement>) => await onPredictionChange(e, 'home')}
-				/>
-
-				<ScoreInput
-					innerRef={awayInputRef}
-					id={`${gameID}-away`}
-					value={prediction.away}
-					className='mx-2'
-					onchange={async (e: ChangeEvent<HTMLInputElement>) => await onPredictionChange(e, 'away')}
-				/>
-			</>
-		);
-	};
-
-	return { UserInputPrediction, handleContainerClick };
+	return { homeInputRef, awayInputRef, handleContainerClick };
 };

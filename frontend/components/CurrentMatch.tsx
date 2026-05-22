@@ -31,7 +31,7 @@ import PredictionsStats from './PredictionsStats';
 import SelectLeaderboard from './SelectLeaderboard';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import useCompetition from '../hooks/useCompetition';
-import { userInputPrediction } from '../hooks/userInputPrediction';
+import { userInputPrediction, UserInputPrediction } from '../hooks/userInputPrediction';
 import { DateTime } from 'luxon';
 import Panel from './Panel';
 
@@ -63,7 +63,7 @@ const UserGuess = ({
 	const gameDate = DateTime.fromISO(game?.fixture.date);
 	const isInPast = getCurrentDate() >= gameDate;
 
-	const { UserInputPrediction } = userInputPrediction(gameID, guess, updatePrediction);
+	const { homeInputRef, awayInputRef } = userInputPrediction(gameID, guess);
 
 	return (
 		<ResultContainer
@@ -105,7 +105,15 @@ const UserGuess = ({
 							</div>
 						</>
 					)}
-					{!isInPast && myGuess && <UserInputPrediction />}
+					{!isInPast && myGuess && (
+						<UserInputPrediction
+							gameID={gameID}
+							prediction={guess}
+							updatePrediction={updatePrediction}
+							homeInputRef={homeInputRef}
+							awayInputRef={awayInputRef}
+						/>
+					)}
 				</div>
 			)}
 		</ResultContainer>

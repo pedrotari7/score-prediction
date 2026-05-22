@@ -7,7 +7,7 @@ import RouteContext from '../context/RouteContext';
 import UserContext from '../context/UserContext';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
-import { userInputPrediction } from '../hooks/userInputPrediction';
+import { userInputPrediction, UserInputPrediction } from '../hooks/userInputPrediction';
 import { classNames, formatScore, getCurrentDate } from '../lib/utils/reactHelper';
 import Flag from './Flag';
 import ResultContainer from './ResultContainer';
@@ -35,7 +35,7 @@ const Game = ({
 
 	const prediction = predictions?.[gameID]?.[userID] || DEFAULT_PREDICTION;
 
-	const { UserInputPrediction, handleContainerClick } = userInputPrediction(gameID, prediction, updatePrediction);
+	const { homeInputRef, awayInputRef, handleContainerClick } = userInputPrediction(gameID, prediction);
 
 	if (!data || !routeInfo) return <></>;
 
@@ -75,7 +75,15 @@ const Game = ({
 				</div>
 
 				<div className='flex w-4/12 flex-row items-center justify-center lg:w-4/12'>
-					{!isInPast && isMyPredictions && <UserInputPrediction />}
+					{!isInPast && isMyPredictions && (
+						<UserInputPrediction
+							gameID={gameID}
+							prediction={prediction}
+							updatePrediction={updatePrediction}
+							homeInputRef={homeInputRef}
+							awayInputRef={awayInputRef}
+						/>
+					)}
 
 					{!isInPast && !isMyPredictions && (
 						<div className='mx-4 font-bold'>
