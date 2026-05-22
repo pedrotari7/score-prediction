@@ -23,7 +23,15 @@ const Login = () => {
 				<link rel='icon' href={`/favicon-${competition?.name}.ico`} />
 				<meta name='viewport' content='width=device-width, initial-scale=1.0' />
 			</Head>
-			<video className='absolute size-full object-cover' autoPlay loop muted playsInline>
+			<video
+				className='absolute size-full object-cover'
+				autoPlay
+				loop
+				muted
+				playsInline
+				poster='/sample-poster.jpg'
+				preload='metadata'
+			>
 				<source src='/sample.mp4' type='video/mp4' />
 				<source src='/sample.m4v' type='video/x-m4v' />
 			</video>
