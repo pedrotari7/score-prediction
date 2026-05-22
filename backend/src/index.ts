@@ -867,12 +867,7 @@ app.post('/no-spoilers', async (req, res) => {
 
   const { noSpoilers } = parseBody(req.body);
 
-  const userExtraInfo = (await getDBUser(callerUID).get()).data();
-
-  await getDBUser(callerUID).set({
-    ...(userExtraInfo ?? {}),
-    noSpoilers,
-  });
+  await getDBUser(callerUID).update({ noSpoilers });
 
   return res.json({ success: true });
 });
