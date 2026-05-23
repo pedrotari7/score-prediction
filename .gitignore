@@ -47,6 +47,10 @@ typings/
 # TypeScript cache
 *.tsbuildinfo
 
+# Compiled output that should never land in source directories
+shared/**/*.js
+shared/**/*.js.map
+
 # Optional npm cache directory
 .npm
 
