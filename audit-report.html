@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Score Prediction — Comprehensive Audit Report</title>
+<style>
+:root {
+  --bg-primary: #0f1117;
+  --bg-secondary: #1a1d2e;
+  --bg-card: #222539;
+  --bg-code: #181b2a;
+  --text-primary: #e4e6f0;
+  --text-secondary: #9498ad;
+  --text-muted: #6b6f85;
+  --border: #2d3148;
+  --accent-security: #ef4444;
+  --accent-backend: #f97316;
+  --accent-frontend: #3b82f6;
+  --accent-ux: #a855f7;
+  --accent-quality: #22c55e;
+  --accent-perf: #eab308;
+  --accent-improve: #14b8a6;
+  --severity-critical: #dc2626;
+  --severity-high: #ea580c;
+  --severity-medium: #d97706;
+  --severity-low: #2563eb;
+  --severity-info: #6b7280;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+a { color: var(--accent-frontend); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Header */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(15,17,23,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1.5rem;
+}
+.header-inner {
+  max-width: 1400px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+}
+.header h1 { font-size: 1.1rem; font-weight: 700; }
+.header-nav { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+.header-nav a {
+  padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.7rem; font-weight: 600;
+  transition: background 0.2s;
+}
+.header-nav a:hover { background: var(--bg-secondary); text-decoration: none; }
+
+/* Controls */
+.controls {
+  max-width: 1400px; margin: 1rem auto; padding: 0 1.5rem;
+  display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
+}
+.controls input[type="text"] {
+  flex: 1; min-width: 200px; padding: 0.5rem 0.75rem;
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-primary); font-size: 0.85rem; outline: none;
+}
+.controls input[type="text"]:focus { border-color: var(--accent-frontend); }
+.filter-btn {
+  padding: 0.35rem 0.75rem; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--bg-secondary); color: var(--text-secondary); font-size: 0.75rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.filter-btn:hover { border-color: var(--text-secondary); }
+.filter-btn.active { border-color: currentColor; color: var(--text-primary); }
+.filter-btn[data-severity="critical"].active { background: var(--severity-critical); border-color: var(--severity-critical); color: #fff; }
+.filter-btn[data-severity="high"].active { background: var(--severity-high); border-color: var(--severity-high); color: #fff; }
+.filter-btn[data-severity="medium"].active { background: var(--severity-medium); border-color: var(--severity-medium); color: #fff; }
+.filter-btn[data-severity="low"].active { background: var(--severity-low); border-color: var(--severity-low); color: #fff; }
+.filter-btn[data-severity="info"].active { background: var(--severity-info); border-color: var(--severity-info); color: #fff; }
+
+/* Summary */
+.summary {
+  max-width: 1400px; margin: 1.5rem auto; padding: 0 1.5rem;
+}
+.summary-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;
+}
+.summary-card {
+  background: var(--bg-secondary); border-radius: 12px; padding: 1.25rem;
+  border: 1px solid var(--border);
+}
+.summary-card h3 { font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+.summary-big { font-size: 2.5rem; font-weight: 800; }
+.severity-bar { display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
+.severity-pill {
+  padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700;
+}
+.severity-pill.critical { background: var(--severity-critical); }
+.severity-pill.high { background: var(--severity-high); }
+.severity-pill.medium { background: var(--severity-medium); }
+.severity-pill.low { background: var(--severity-low); }
+.severity-pill.info { background: var(--severity-info); }
+
+/* Category health bar */
+.health-bars { display: flex; flex-direction: column; gap: 0.4rem; }
+.health-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; }
+.health-label { width: 100px; text-align: right; font-weight: 600; }
+.health-track { flex: 1; height: 8px; background: var(--bg-card); border-radius: 4px; overflow: hidden; }
+.health-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.health-count { width: 30px; font-size: 0.75rem; color: var(--text-secondary); }
+
+/* Sections */
+.section {
+  max-width: 1400px; margin: 2rem auto; padding: 0 1.5rem;
+}
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; padding: 1rem 1.25rem; border-radius: 12px;
+  background: var(--bg-secondary); border: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.section-header:hover { background: var(--bg-card); }
+.section-title { display: flex; align-items: center; gap: 0.75rem; }
+.section-title h2 { font-size: 1.25rem; font-weight: 700; }
+.section-icon {
+  width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+}
+.section-badges { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+.section-count {
+  padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.7rem; font-weight: 700;
+}
+.section-toggle { font-size: 0.75rem; color: var(--text-secondary); cursor: pointer; padding: 0.3rem 0.6rem; border-radius: 6px; background: var(--bg-primary); border: 1px solid var(--border); }
+.section-toggle:hover { border-color: var(--text-secondary); }
+.section-body { margin-top: 0.5rem; display: none; }
+.section.open .section-body { display: block; }
+.section-header .chevron { transition: transform 0.3s; font-size: 1.2rem; }
+.section.open .section-header .chevron { transform: rotate(180deg); }
+
+/* Finding cards */
+.finding {
+  background: var(--bg-card); border-radius: 10px; margin-bottom: 0.5rem;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.finding-header {
+  display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem;
+  cursor: pointer; transition: background 0.15s;
+}
+.finding-header:hover { background: rgba(255,255,255,0.03); }
+.finding-severity {
+  padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.65rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0;
+}
+.finding-severity.critical { background: var(--severity-critical); }
+.finding-severity.high { background: var(--severity-high); }
+.finding-severity.medium { background: var(--severity-medium); }
+.finding-severity.low { background: var(--severity-low); }
+.finding-severity.info { background: var(--severity-info); }
+.finding-title { font-weight: 600; font-size: 0.9rem; flex: 1; }
+.finding-effort {
+  font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 4px;
+  background: var(--bg-primary); color: var(--text-secondary); flex-shrink: 0;
+}
+.finding-chevron { color: var(--text-muted); transition: transform 0.2s; }
+.finding.open .finding-chevron { transform: rotate(180deg); }
+.finding-body { display: none; padding: 0 1rem 1rem 1rem; }
+.finding.open .finding-body { display: block; }
+.finding-file {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.75rem; color: var(--accent-frontend); background: var(--bg-primary);
+  padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; margin-bottom: 0.75rem;
+}
+.finding-desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.7; }
+.finding-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.3rem; }
+.finding-impact { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; padding: 0.75rem; background: rgba(239,68,68,0.08); border-radius: 8px; border-left: 3px solid var(--severity-high); }
+.finding-fix-desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
+pre {
+  background: var(--bg-code); border: 1px solid var(--border); border-radius: 8px;
+  padding: 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.5; margin-bottom: 1rem;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; position: relative;
+}
+pre .copy-btn {
+  position: absolute; top: 0.5rem; right: 0.5rem;
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text-secondary); padding: 0.2rem 0.5rem; font-size: 0.65rem; cursor: pointer;
+}
+pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
+
+/* Footer */
+.footer {
+  max-width: 1400px; margin: 3rem auto 2rem; padding: 1.5rem;
+  border-top: 1px solid var(--border); text-align: center;
+  font-size: 0.8rem; color: var(--text-muted);
+}
+
+/* Print */
+@media print {
+  .header, .controls { display: none; }
+  .section-body, .finding-body { display: block !important; }
+  body { background: #fff; color: #000; }
+  .summary-card, .section-header, .finding { border: 1px solid #ccc; background: #f9f9f9; }
+  pre { background: #f0f0f0; border: 1px solid #ccc; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-inner { flex-direction: column; align-items: flex-start; }
+  .summary-big { font-size: 2rem; }
+  .section-title h2 { font-size: 1rem; }
+  .finding-header { flex-wrap: wrap; }
+}
+
+/* Syntax highlighting */
+.kw { color: #c678dd; }
+.str { color: #98c379; }
+.cm { color: #5c6370; font-style: italic; }
+.fn { color: #61afef; }
+.num { color: #d19a66; }
+.op { color: #56b6c2; }
+</style>
+</head>
+<body>
+
+<script type="application/json" id="audit-data">
+{
+  "metadata": {
+    "project": "score-prediction",
+    "audit_date": "2026-05-25T00:00:00Z",
+    "auditor": "claude",
+    "total_findings": 52,
+    "severity_counts": { "critical": 5, "high": 10, "medium": 17, "low": 13, "info": 7 }
+  },
+  "categories": [
+    {
+      "name": "Security Vulnerabilities",
+      "slug": "security",
+      "findings": [
+        {"id":"SEC-001","severity":"critical","title":"Rate limiter effectively disabled (100k req/15min)","file":"backend/src/index.ts","lines":"54-58","description":"The express-rate-limit is configured with max:100000 requests per 15-minute window and disables IP/X-Forwarded-For validation, rendering it functionally useless.","code_snippet":"const limiter = rateLimit({\n  windowMs: 15 * 60 * 1000,\n  max: 100000,\n  validate: { xForwardedForHeader: false, ip: false },\n});","recommended_fix":"Lower the limit to a reasonable value (e.g. 300/15min) and enable header validation behind Cloud Functions' proxy.","fix_snippet":"const limiter = rateLimit({\n  windowMs: 15 * 60 * 1000,\n  max: 300,\n  standardHeaders: true,\n  legacyHeaders: false,\n});","impact":"Any attacker can send unlimited requests, enabling brute-force, data scraping, and denial of service.","effort":"quick","tags":["dos","rate-limit"]},
+        {"id":"SEC-002","severity":"critical","title":"Firebase client config exposes API key in source code","file":"frontend/lib/firebaseClient.ts","lines":"6-13","description":"Firebase API key, project ID, and measurement ID are hardcoded in client-side source. While Firebase keys are designed to be public, the lack of API key restrictions or App Check means anyone can use these credentials to interact with your Firebase project.","code_snippet":"const CLIENT_CONFIG = {\n  apiKey: 'AIzaSyAmbXqLrVZLS0rVGabdG2XInEkqevwDJZc',\n  authDomain: 'score-prediciton.firebaseapp.com',\n  projectId: 'score-prediciton',\n  ...","recommended_fix":"Enable Firebase App Check to restrict which apps can call your backend. Restrict the API key in Google Cloud Console to only the domains you own.","fix_snippet":"// In Firebase Console:\n// 1. Enable App Check with reCAPTCHA Enterprise\n// 2. In GCP Console > APIs & Services > Credentials\n//    restrict API key to score-prediction.com","impact":"Attackers can use the API key to create accounts, consume auth quotas, or probe your Firebase project without restriction.","effort":"moderate","tags":["secrets","firebase"]},
+        {"id":"SEC-003","severity":"critical","title":"No input validation on gameId in update-predictions","file":"backend/src/index.ts","lines":"617","description":"The gameId from the request body is used directly in Firestore paths without type checking or bounds validation. A malicious user could inject arbitrary strings.","code_snippet":"const { gameId, prediction } = parseBody(req.body);\n// gameId used directly in:\nconst change = { [`${gameId}.${callerUID}`]: { home, away } };","recommended_fix":"Validate gameId is a positive integer and exists in the fixtures collection.","fix_snippet":"const gameId = Number(parseBody(req.body).gameId);\nif (!Number.isInteger(gameId) || gameId <= 0) {\n  return res.status(400).json({ error: 'Invalid gameId' });\n}\nif (!fixtures?.[gameId]) {\n  return res.status(404).json({ error: 'Game not found' });\n}","impact":"Could corrupt the predictions document with unexpected keys, potentially breaking the entire scoring system.","effort":"quick","tags":["input-validation","nosql"]},
+        {"id":"SEC-004","severity":"critical","title":"Admin settings endpoint accepts arbitrary data","file":"backend/src/index.ts","lines":"731-740","description":"The /update-settings POST endpoint writes the request body directly to Firestore without validating the schema. A compromised admin account could inject any data.","code_snippet":"app.post('/update-settings', async (req, res) => {\n  const authResult = await authenticate(req, res, true);\n  const { settings } = parseBody(req.body);\n  const result = await getDBSettings().set(settings);\n});","recommended_fix":"Whitelist allowed setting keys and validate their types.","fix_snippet":"const ALLOWED_KEYS = ['adminHideScores','allowUpdateFixtures',\n  'allowUpdateStandings','disableLiveScoresApi','allowUpdatePoints'];\nconst validated = Object.fromEntries(\n  ALLOWED_KEYS.map(k => [k, Boolean(settings?.[k])])\n);\nawait getDBSettings().set(validated);","impact":"Could corrupt application settings, disable security features, or break the app entirely.","effort":"quick","tags":["input-validation","authorization"]},
+        {"id":"SEC-005","severity":"high","title":"Authorization token sent without Bearer prefix","file":"frontend/lib/fetcher.ts","lines":"3-8","description":"The fetcher sends the raw Firebase ID token in the Authorization header without the standard 'Bearer' prefix. While the backend accepts it, this deviates from RFC 7235 and could cause issues with proxies or WAFs.","code_snippet":"headers: {\n  Authorization: `${token}`,\n  'Content-Type': 'application/json',\n},","recommended_fix":"Use the standard Bearer scheme.","fix_snippet":"headers: {\n  Authorization: `Bearer ${token}`,\n  'Content-Type': 'application/json',\n},","impact":"Non-standard auth header format; security proxies may strip or reject it.","effort":"quick","tags":["auth","standards"]},
+        {"id":"SEC-006","severity":"high","title":"Prediction censoring logic has misleading variable name","file":"backend/src/index.ts","lines":"361-362","description":"The variable 'isInPast' actually means 'game is in the future' (getCurrentTime() < gameDate). This inverted naming could lead to future bugs where a developer misreads the condition and accidentally exposes predictions.","code_snippet":"const isInPast = gameDate && getCurrentTime() < gameDate;\nif (!isInPast) {\n  acc[gameId] = gamePredictions; // uncensored\n}","recommended_fix":"Rename the variable to accurately reflect its meaning.","fix_snippet":"const isInFuture = gameDate && getCurrentTime() < gameDate;\nif (!isInFuture) {\n  acc[gameId] = gamePredictions;\n}","impact":"A developer misreading this could accidentally expose other users' future predictions.","effort":"quick","tags":["logic","naming"]},
+        {"id":"SEC-007","severity":"high","title":"Leaderboard join has no access control","file":"backend/src/index.ts","lines":"798-826","description":"Any authenticated user who knows a leaderboard ID can add themselves as a member. There is no invitation system, password, or creator approval required.","code_snippet":"app.post('/leaderboard', async (req, res) => {\n  // Any authenticated user can join any leaderboard\n  if (!leaderboard.members.includes(callerUID)) {\n    await set({ ...leaderboard, members: [...leaderboard.members, callerUID] });\n  }\n});","recommended_fix":"Add an invitation token or require creator approval for joining.","fix_snippet":"// Option 1: Require a join token\nconst { joinToken } = parseBody(req.body);\nif (leaderboard.joinToken !== joinToken) {\n  return res.status(403).json({ error: 'Invalid invite' });\n}","impact":"Users can join private leaderboards by guessing IDs, potentially spoiling the competition experience.","effort":"moderate","tags":["authorization","business-logic"]},
+        {"id":"SEC-008","severity":"medium","title":"No CSRF protection on state-changing endpoints","file":"backend/src/index.ts","lines":"60-76","description":"CORS is configured but there is no CSRF token validation. While the custom Authorization header provides some CSRF protection (browsers won't send it in simple requests), the app relies solely on this.","code_snippet":"app.use(cors({ origin: corsOrigins }));","recommended_fix":"The custom Authorization header provides adequate CSRF protection for API calls. Document this assumption.","fix_snippet":"// CSRF protection note: all state-changing endpoints require\n// the Authorization header, which prevents CSRF since browsers\n// won't attach custom headers to cross-origin simple requests.","impact":"Low risk due to custom header requirement, but worth documenting the security model.","effort":"quick","tags":["csrf"]},
+        {"id":"SEC-009","severity":"medium","title":"User email exposed in admin fetch-users endpoint","file":"backend/src/index.ts","lines":"473-502","description":"The /fetch-users admin endpoint returns full user emails, UIDs, and sign-in metadata. This data is sent to the client.","code_snippet":"const allUsers = (await Promise.all(\n  (await getAuth(firebaseApp).listUsers()).users.map(\n    async ({ displayName, metadata, uid, photoURL, email }) => ({\n      displayName, uid, photoURL, email, // PII exposed\n    })\n  )\n))","recommended_fix":"Only return emails/UIDs in the admin panel, and ensure the Settings page is truly admin-only on both frontend and backend.","fix_snippet":"// Already admin-gated, but consider masking emails:\nemail: email?.replace(/(.{2}).+(@.+)/, '$1***$2')","impact":"If an admin token is compromised, all user emails are exposed.","effort":"quick","tags":["data-exposure","pii"]}
+      ]
+    },
+    {
+      "name": "Backend Issues",
+      "slug": "backend",
+      "findings": [
+        {"id":"BE-001","severity":"critical","title":"Race condition in prediction updates (no transaction)","file":"backend/src/index.ts","lines":"606-643","description":"The update-predictions endpoint reads fixture data, checks the game date, then writes the prediction in separate operations. Between the read and write, the game could start, allowing a late prediction.","code_snippet":"const fixtures = (await getDBFixtures(competition).get()).data()?.data;\nconst gameDate = new Date(fixtures?.[gameId].fixture.date);\nconst isInPast = gameDate && getCurrentTime() < gameDate;\nif (!isInPast) return res.status(403).json(...);\nconst result = await getFirestore().collection(competition.name)\n  .doc('predictions').update(change);","recommended_fix":"Use a Firestore transaction to atomically check the game time and update the prediction.","fix_snippet":"await getFirestore().runTransaction(async (tx) => {\n  const fixturesDoc = await tx.get(getDBFixtures(competition));\n  const fixtures = fixturesDoc.data()?.data;\n  const gameDate = new Date(fixtures?.[gameId].fixture.date);\n  if (getCurrentTime() >= gameDate) throw new Error('Game started');\n  tx.update(getDBPredictions(competition), change);\n});","impact":"Users could submit predictions after a game has started if they time their request precisely.","effort":"moderate","tags":["race-condition","firestore"]},
+        {"id":"BE-002","severity":"high","title":"N+1 Firestore reads in /fetch-users","file":"backend/src/index.ts","lines":"478-486","description":"For every user returned by listUsers(), a separate Firestore read fetches their user document. With 100 users, this is 100+ individual reads per request.","code_snippet":"(await getAuth(firebaseApp).listUsers()).users.map(async (...) => ({\n  userExtraInfo: (await getDBUser(uid).get()).data() ?? { leaderboards: [] },\n}))","recommended_fix":"Use getAll() for batch reads or denormalize the data.","fix_snippet":"const userRefs = users.map(u => getDBUser(u.uid));\nconst userDocs = await getFirestore().getAll(...userRefs);\nconst userMap = Object.fromEntries(\n  userDocs.map(d => [d.id, d.data() ?? { leaderboards: [] }])\n);","impact":"Slow response times and high Firestore read costs, especially as user count grows.","effort":"moderate","tags":["performance","n+1"]},
+        {"id":"BE-003","severity":"high","title":"Unhandled errors in fire-and-forget background tasks","file":"backend/src/index.ts","lines":"553-578","description":"Background updates use 'void' to discard the promise, meaning any errors are silently swallowed. In newer Node.js versions, unhandled rejections can crash the process.","code_snippet":"void updateStandings(competition);\nvoid updateFixtures(competition, gamesToUpdate, fixtures?.data);\nvoid updatePoints(competition, predictions, fixtures?.data);","recommended_fix":"Add .catch() handlers with logging.","fix_snippet":"void updateStandings(competition)\n  .catch(e => console.error('Background standings update failed:', e));\nvoid updateFixtures(competition, gamesToUpdate, fixtures?.data)\n  .catch(e => console.error('Background fixtures update failed:', e));","impact":"Silent data staleness — users see outdated scores/standings with no indication of failure.","effort":"quick","tags":["error-handling","reliability"]},
+        {"id":"BE-004","severity":"high","title":"DELETE /leaderboard crashes on non-existent leaderboard","file":"backend/src/index.ts","lines":"854-875","description":"The delete endpoint retrieves leaderboard data and iterates over members without checking if the document exists. If the leaderboard was already deleted, it crashes.","code_snippet":"const leaderboard = (await leaderboardDoc.get()).data() as Leaderboard;\nawait leaderboardDoc.delete();\nfor (const member of leaderboard.members) { // crashes if undefined","recommended_fix":"Check for existence before processing.","fix_snippet":"const doc = await leaderboardDoc.get();\nif (!doc.exists) return res.status(404).json({ error: 'Not found' });\nconst leaderboard = doc.data() as Leaderboard;","impact":"500 Internal Server Error returned to admin users, and the leaderboard reference remains in member user documents.","effort":"quick","tags":["error-handling","null-safety"]},
+        {"id":"BE-005","severity":"high","title":"API error responses are swallowed and returned as data","file":"backend/src/index.ts","lines":"108-120","description":"The get() helper catches axios errors and returns the error object as if it were a successful response. Callers then try to access .data.response on an Error object.","code_snippet":"const get = async (url, opts) => {\n  try {\n    return (await axios.get(...)) as any;\n  } catch (error: unknown) {\n    return error; // Error object returned as 'response'\n  }\n};","recommended_fix":"Re-throw the error or return a typed error result.","fix_snippet":"const get = async (url, opts) => {\n  try {\n    return await axios.get(...);\n  } catch (error) {\n    console.error('API Sports request failed:', error);\n    return { status: 0, data: { response: [] } };\n  }\n};","impact":"External API failures silently corrupt fixture/standings data instead of failing visibly.","effort":"quick","tags":["error-handling","api"]},
+        {"id":"BE-006","severity":"medium","title":"getUsers() calls listUsers() without pagination","file":"backend/src/index.ts","lines":"396","description":"Firebase Auth's listUsers() returns max 1000 users by default. If the app grows beyond 1000 users, some will be silently excluded.","code_snippet":"const allUsers = (await getAuth(firebaseApp).listUsers()).users","recommended_fix":"Use listUsers with pagination or the pageToken parameter.","fix_snippet":"let allUsers = [];\nlet pageToken;\ndo {\n  const result = await getAuth(firebaseApp).listUsers(1000, pageToken);\n  allUsers.push(...result.users);\n  pageToken = result.pageToken;\n} while (pageToken);","impact":"Users beyond the first 1000 won't appear in leaderboards or user lists.","effort":"moderate","tags":["scalability","pagination"]},
+        {"id":"BE-007","severity":"medium","title":"Unsafe type assertions throughout backend","file":"backend/src/index.ts","lines":"260,354,441,628,667,699","description":"Multiple Firestore .data() results are cast with 'as Type' without null checks. If a document doesn't exist, .data() returns undefined, and the cast hides this.","code_snippet":"const groupPoints = (await getDBGroupPoints(competition).get()).data() as GroupPoints;\n// If doc doesn't exist, groupPoints is undefined, not GroupPoints","recommended_fix":"Check document existence before casting.","fix_snippet":"const doc = await getDBGroupPoints(competition).get();\nif (!doc.exists) return res.status(500).json({ error: 'Missing group points data' });\nconst groupPoints = doc.data() as GroupPoints;","impact":"Runtime crashes when documents are missing, especially during competition initialization.","effort":"moderate","tags":["type-safety","null-check"]},
+        {"id":"BE-008","severity":"medium","title":"parseInt on NaN-possible gameID query param","file":"backend/src/index.ts","lines":"682","description":"The gameID query parameter is parsed with parseInt but never validated. If missing or non-numeric, it becomes NaN, which is used in a Firestore collection path.","code_snippet":"const gameID = parseInt((req.query.gameID as string) ?? 0);","recommended_fix":"Validate the parsed value.","fix_snippet":"const raw = req.query.gameID;\nconst gameID = typeof raw === 'string' ? parseInt(raw, 10) : NaN;\nif (!Number.isInteger(gameID) || gameID <= 0) {\n  return res.status(400).json({ error: 'Invalid gameID' });\n}","impact":"Firestore path '.collection(\"NaN\")' created, wasting reads and returning empty data.","effort":"quick","tags":["input-validation"]},
+        {"id":"BE-009","severity":"medium","title":"Duplicate joinResults function in backend util vs shared","file":"backend/src/util.ts","lines":"1-10","description":"There are two different implementations of joinResults: one in backend/src/util.ts and one in shared/utils.ts. They have different behavior — the backend version sums all numeric keys, while the shared version only sums points.","code_snippet":"// backend/src/util.ts - sums ALL keys\nfor (const k in result) {\n  result[k] += (a?.[k] ?? 0) + (b?.[k] ?? 0);\n}\n\n// shared/utils.ts - only sums points\n({ ...a, ...b, points: (a.points ?? 0) + (b.points ?? 0) })","recommended_fix":"Consolidate into a single implementation in shared/utils.ts.","fix_snippet":"// Use only the backend version (which correctly sums all fields)\n// Move to shared/utils.ts and remove backend/src/util.ts","impact":"Different scoring behavior between frontend and backend calculations could lead to score discrepancies.","effort":"quick","tags":["code-duplication","bug-risk"]},
+        {"id":"BE-010","severity":"low","title":"Console.log left in production code","file":"backend/src/index.ts","lines":"97","description":"A debug log statement is left in the production code that runs on every cold start.","code_snippet":"console.log('[hot-reload-test] Backend functions loaded at', new Date().toISOString());","recommended_fix":"Remove the debug log or guard it behind isDevMode.","fix_snippet":"if (isDevMode) console.log('Backend functions loaded at', new Date().toISOString());","impact":"Log noise in production Cloud Functions logs.","effort":"quick","tags":["logging","cleanup"]}
+      ]
+    },
+    {
+      "name": "Frontend Issues",
+      "slug": "frontend",
+      "findings": [
+        {"id":"FE-001","severity":"high","title":"All state in single page component causes full re-renders","file":"frontend/pages/[id].tsx","lines":"130-325","description":"The Home component holds all app state (fixtures, predictions, users, standings, leaderboards, route, noSpoilers) in a single component. Any state change re-renders the entire app tree. Seven context providers are nested, each triggering re-renders on change.","code_snippet":"const [predictions, setPredictions] = useState<Predictions>({});\nconst [fixtures, setFixtures] = useState<Fixtures>({});\nconst [standings, setStandings] = useState<Standings>([]);\nconst [leaderboards, setLeaderboards] = useState(...);\nconst [users, setUsers] = useState({} as Users);\nconst [uid, setUID] = useState('');\nconst [route, setRoute] = useState<RouteInfo>(...);\nconst [noSpoilers, setNoSpoilers] = useState<boolean | null>(null);","recommended_fix":"Split state into separate context providers with their own components, or use a state management library like Zustand.","fix_snippet":"// Option: Use Zustand for global state\nconst useTournamentStore = create((set) => ({\n  fixtures: {},\n  predictions: {},\n  setFixtures: (f) => set({ fixtures: f }),\n  // ... separate selectors prevent unnecessary re-renders\n}));","impact":"Poor rendering performance, especially on mobile devices. Every prediction input keystroke re-renders the entire app.","effort":"significant","tags":["performance","state-management"]},
+        {"id":"FE-002","severity":"high","title":"Fetcher swallows all errors, returns false success","file":"frontend/lib/fetcher.ts","lines":"20-29","description":"The fetcher's catch block returns { uid: null, success: false } for ALL errors, including network failures, 500 errors, and JSON parse failures. The caller has no way to distinguish error types.","code_snippet":"catch (error: any) {\n  if (!error.data) {\n    error.data = { message: error.message };\n  }\n  return { uid: null, success: false };\n}","recommended_fix":"Throw typed errors that callers can handle, or at minimum include the HTTP status code.","fix_snippet":"catch (error: any) {\n  return {\n    success: false,\n    error: error.message || 'Network error',\n    status: error?.response?.status || 0,\n  };\n}","impact":"Users see no error messages — failures silently show empty/stale data with no recovery path.","effort":"moderate","tags":["error-handling","ux"]},
+        {"id":"FE-003","severity":"high","title":"No error boundaries around data-dependent components","file":"frontend/pages/[id].tsx","lines":"54-109","description":"MainComponent renders data-dependent views (CurrentMatch, Fixtures, etc.) without error boundaries. If any fixture data is malformed, the entire app crashes to the root error boundary.","code_snippet":"const MainComponent = memo(function MainComponent({ ... }) {\n  switch (route.page) {\n    case Route.Home:\n      return <CurrentMatch fixtures={fixtures} predictions={predictions} ... />;","recommended_fix":"Wrap each route's component in an error boundary.","fix_snippet":"case Route.Home:\n  return (\n    <ErrorBoundary fallback={<div>Failed to load match</div>}>\n      <CurrentMatch ... />\n    </ErrorBoundary>\n  );","impact":"A single malformed fixture can crash the entire app, requiring a full page reload.","effort":"moderate","tags":["error-handling","resilience"]},
+        {"id":"FE-004","severity":"medium","title":"Optimistic prediction update with no rollback on failure","file":"frontend/pages/[id].tsx","lines":"256-268","description":"updatePrediction optimistically updates local state, then sends the API request. On failure, instead of rolling back the prediction, it navigates to a RefreshPage.","code_snippet":"const updatePrediction = useCallback(async (prediction, gameId) => {\n  setPredictions(prev => ({ ...prev, [gameId]: { ...prev?.[gameId], [uid]: prediction } }));\n  const result = await updatePredictions(auth.user.token, gameId, prediction, competition);\n  if (!result.success) {\n    navigateToRef.current({ page: Route.RefreshPage });\n  }\n}, ...);","recommended_fix":"Roll back the optimistic update on failure and show an error toast.","fix_snippet":"const updatePrediction = useCallback(async (prediction, gameId) => {\n  const prev = predictions;\n  setPredictions(p => ({ ...p, [gameId]: { ...p?.[gameId], [uid]: prediction } }));\n  const result = await updatePredictions(...);\n  if (!result.success) {\n    setPredictions(prev); // rollback\n    // show error toast\n  }\n}, ...);","impact":"Users lose their current view and all unsaved state when a single prediction fails.","effort":"moderate","tags":["ux","error-handling"]},
+        {"id":"FE-005","severity":"medium","title":"useUsers hook re-creates callback on routeInfo change","file":"frontend/hooks/useUsers.tsx","lines":"15-26","description":"The update callback depends on routeInfo, which changes on every navigation. This triggers a re-fetch of all users on every route change.","code_snippet":"const update = useCallback(async () => {\n  ...\n}, [userInfo, competition, routeInfo]); // routeInfo changes on nav","recommended_fix":"Remove routeInfo from the dependency array and use a ref for navigation.","fix_snippet":"const routeRef = useRef(routeInfo);\nrouteRef.current = routeInfo;\nconst update = useCallback(async () => {\n  if (!result.success) routeRef.current?.setRoute(...);\n}, [userInfo, competition]);","impact":"Unnecessary API calls and re-renders on every navigation.","effort":"quick","tags":["performance","hooks"]},
+        {"id":"FE-006","severity":"medium","title":"No loading/error states in multiple components","file":"frontend/components/Fixtures.tsx","lines":"13-134","description":"The Fixtures page, Stats page, and CurrentMatch don't show loading states during data fetches. If tournament data is slow, users see either nothing or stale data.","code_snippet":"// Fixtures.tsx - no loading state\nconst FixturesPage = ({ fixtures, predictions, ... }) => {\n  if (!user) return <div>User information not available</div>;\n  // directly renders, no loading indicator","recommended_fix":"Add loading states and skeleton screens.","fix_snippet":"if (loading) return <LoadingSkeleton />;\nif (error) return <ErrorMessage message={error} onRetry={refresh} />;","impact":"Users see blank screens or frozen UIs during slow network conditions.","effort":"moderate","tags":["ux","loading-states"]},
+        {"id":"FE-007","severity":"medium","title":"ScoreInput allows negative numbers via keyboard","file":"frontend/components/ScoreInput.tsx","lines":"6-49","description":"While min=0 is set on the input, users can still type negative numbers via keyboard. The backend validates (0-99) but the frontend doesn't prevent it.","code_snippet":"<input\n  value={value ?? ''}\n  min={0}\n  max={99}\n  type='number'\n  ...","recommended_fix":"Add client-side validation to clamp values.","fix_snippet":"onChange={async e => {\n  const val = parseInt(e.target.value);\n  if (!isNaN(val) && (val < 0 || val > 99)) return;\n  await onchange(e);\n}}","impact":"Confusing UX — user types invalid value, it appears to save, then may be rejected by backend.","effort":"quick","tags":["input-validation","ux"]},
+        {"id":"FE-008","severity":"medium","title":"Navbar uses div elements instead of buttons for interactive items","file":"frontend/components/Navbar.tsx","lines":"126-139","description":"Navigation items are rendered as divs with onClick handlers instead of buttons or anchor elements. This breaks keyboard navigation and screen reader accessibility.","code_snippet":"<div\n  key={index}\n  onClick={() => updateRoute(item.info)}\n  className={classNames('text-lg font-bold hover:bg-gray-700', ...)}\n  aria-current={isCurrent(item) ? 'page' : undefined}\n>\n  {item.name}\n</div>","recommended_fix":"Use button elements for interactive items.","fix_snippet":"<button\n  key={index}\n  onClick={() => updateRoute(item.info)}\n  className={classNames('text-lg font-bold hover:bg-gray-700', ...)}\n  aria-current={isCurrent(item) ? 'page' : undefined}\n>\n  {item.name}\n</button>","impact":"Keyboard users cannot tab through navigation items; screen readers don't announce them as interactive.","effort":"quick","tags":["accessibility","a11y"]},
+        {"id":"FE-009","severity":"medium","title":"img tags used instead of Next Image in multiple places","file":"frontend/components/Navbar.tsx","lines":"189","description":"Several components use raw <img> tags instead of Next.js <Image>, missing optimization, lazy loading, and responsive sizing.","code_snippet":"<img\n  className='size-10 rounded-full ...'\n  src={user?.photoURL || ''}\n  alt=''\n/>","recommended_fix":"Use Next.js Image component for all images.","fix_snippet":"<Image\n  className='size-10 rounded-full ...'\n  src={user?.photoURL || '/default-avatar.png'}\n  alt={user?.displayName || ''}\n  width={40}\n  height={40}\n/>","impact":"Unoptimized images, no lazy loading, and potential layout shift.","effort":"moderate","tags":["performance","images"]},
+        {"id":"FE-010","severity":"low","title":"'add' package in frontend dependencies","file":"frontend/package.json","lines":"24","description":"The 'add' package (v2.0.6) is listed as a dependency. This appears to be accidentally installed (common typo when running 'pnpm add').","code_snippet":"\"add\": \"2.0.6\",","recommended_fix":"Remove the 'add' package.","fix_snippet":"// Remove from package.json and run pnpm install","impact":"Unnecessary dependency increases bundle size and attack surface.","effort":"quick","tags":["dependencies","cleanup"]},
+        {"id":"FE-011","severity":"low","title":"OpenTelemetry packages in frontend but no instrumentation code","file":"frontend/package.json","lines":"19-23","description":"Four OpenTelemetry packages are listed as dependencies but no instrumentation setup code exists in the frontend.","code_snippet":"\"@opentelemetry/api\": \"1.9.1\",\n\"@opentelemetry/instrumentation\": \"0.218.0\",\n\"@opentelemetry/resources\": \"2.7.1\",\n\"@opentelemetry/sdk-trace-node\": \"2.7.1\",","recommended_fix":"Either implement OpenTelemetry tracing or remove unused packages.","fix_snippet":"// Remove all @opentelemetry/* packages from frontend/package.json","impact":"Significantly increases bundle size with unused code.","effort":"quick","tags":["dependencies","bundle-size"]}
+      ]
+    },
+    {
+      "name": "UX/UI Pitfalls",
+      "slug": "ux",
+      "findings": [
+        {"id":"UX-001","severity":"high","title":"No spoilers mode doesn't hide standings route predictions tab data","file":"frontend/components/Navbar.tsx","lines":"52","description":"No Spoilers mode hides the Standings tab from navigation, but the CurrentMatch page still shows live scores in the game header via LiveGame component if the user navigates there directly.","code_snippet":"].filter(it => !noSpoilers || (noSpoilers && it.info.page !== Route.Standings));","recommended_fix":"Ensure ALL score-revealing data is consistently hidden when noSpoilers is active, including the game header scores in LiveGame.","fix_snippet":"// Already handled in LiveGame.tsx via RedactedSpoilers\n// but PredictionsStats still shows outcome tallies (winH, winA, draw)\n// which reveal the current score direction","impact":"Users who enable No Spoilers to avoid score reveals may still see outcome hints in the stats section.","effort":"moderate","tags":["no-spoilers","data-leak"]},
+        {"id":"UX-002","severity":"high","title":"Prediction deadline unclear — no countdown or warning","file":"frontend/components/Game.tsx","lines":"48-50","description":"The prediction cutoff is the game's kick-off time, but users have no visual warning that the deadline is approaching. The input simply disappears once the game starts.","code_snippet":"const isInPast = getCurrentDate().getTime() >= gameDate.getTime();\n// Input only shown when: !isInPast && isMyPredictions","recommended_fix":"Show a countdown timer when the deadline is within 1 hour, and a warning message when within 15 minutes.","fix_snippet":"{!isInPast && timeTillKickoff < 3600 && (\n  <div className='text-yellow-500 text-xs'>\n    Closes in {formatCountdown(timeTillKickoff)}\n  </div>\n)}","impact":"Users lose the ability to predict without warning, especially frustrating for games starting during sleep/work.","effort":"moderate","tags":["ux","deadlines"]},
+        {"id":"UX-003","severity":"medium","title":"No confirmation or feedback after saving prediction","file":"frontend/hooks/userInputPrediction.tsx","lines":"22-28","description":"When a user changes a prediction score, it saves silently. There is no visual confirmation (toast, checkmark, animation) that the save succeeded.","code_snippet":"const onPredictionChange = useCallback(async (e, team) => {\n  const value = parseInt(e.target.value);\n  await updatePrediction({ ...prediction, [team]: isNaN(value) ? null : value }, gameID);\n}, ...);","recommended_fix":"Add a brief visual indicator (green flash, checkmark, or toast) on successful save.","fix_snippet":"// After successful save, briefly show a checkmark\nsetSaveStatus('saved');\nsetTimeout(() => setSaveStatus('idle'), 1500);","impact":"Users can't tell if their prediction was saved, leading to anxiety and repeated submissions.","effort":"quick","tags":["feedback","ux"]},
+        {"id":"UX-004","severity":"medium","title":"RefreshPage is a dead end with no auto-recovery","file":"frontend/components/RefreshPage.tsx","lines":"1","description":"When API calls fail, users are redirected to a RefreshPage that tells them to reload. There's no auto-retry or detailed error message.","code_snippet":"// User is sent here on API failure with no context about what went wrong","recommended_fix":"Add auto-retry with exponential backoff, or at minimum show what failed and offer a retry button.","fix_snippet":"<div>\n  <p>Something went wrong loading data.</p>\n  <button onClick={retryFetch}>Try Again</button>\n  <p className='text-xs'>If this persists, try signing out and back in.</p>\n</div>","impact":"Users hit a dead end and must manually reload, losing all their current context.","effort":"quick","tags":["error-recovery","ux"]},
+        {"id":"UX-005","severity":"medium","title":"No onboarding flow for new users","file":"frontend/pages/[id].tsx","lines":"234-238","description":"The onboarding flow (showing rules to new users) is commented out. New users land directly on the predictions page with no explanation of the scoring system.","code_snippet":"// if (uid in users && users[uid].shouldOnboard) {\n//   setRoute({ page: Route.Rules, data: uid });\n//   return\n// }","recommended_fix":"Enable the onboarding flow and add a brief tutorial overlay.","fix_snippet":"if (uid in users && users[uid].shouldOnboard) {\n  setRoute({ page: Route.Rules, data: uid });\n  return;\n}","impact":"New users don't understand the scoring system, leading to confusion and disengagement.","effort":"moderate","tags":["onboarding","engagement"]},
+        {"id":"UX-006","severity":"medium","title":"Leaderboard sorting doesn't show the current sort criterion","file":"frontend/components/Leaderboard.tsx","lines":"96-113","description":"Users can sort by different criteria (points, exact, result, etc.) but the leaderboard ranks don't show the sorted-by value prominently. Users must look at the score circles to understand rankings.","code_snippet":"const sortedUsers = useMemo(() =>\n  Object.values(users).filter(...).sort(\n    (a, b) => b.score[stage][sortOption.key] - a.score[stage][sortOption.key] || ...\n  )\n, ...);","recommended_fix":"Highlight the currently-sorted metric in the user score display.","fix_snippet":"<UserScores user={user} stage={stage} highlightKey={sortOption.key} />","impact":"Users can't quickly see why one player ranks above another when sorting by non-default criteria.","effort":"quick","tags":["clarity","leaderboard"]},
+        {"id":"UX-007","severity":"low","title":"Touch targets too small on mobile for prediction inputs","file":"frontend/components/ScoreInput.tsx","lines":"33-37","description":"Score input is 56px wide (w-14) and 44px tall (h-11). While adequate, the spacing between home/away inputs is only 8px (mx-2), making it easy to tap the wrong input.","code_snippet":"className={classNames(\n  className,\n  'block h-11 w-14 text-center font-bold',\n  ...","recommended_fix":"Increase spacing between inputs on mobile or add larger touch target padding.","fix_snippet":"'block h-12 w-16 text-center font-bold sm:h-11 sm:w-14'","impact":"Mobile users may accidentally edit the wrong score, especially with large fingers.","effort":"quick","tags":["mobile","touch-targets"]}
+      ]
+    },
+    {
+      "name": "Code Quality & Maintainability",
+      "slug": "quality",
+      "findings": [
+        {"id":"CQ-001","severity":"medium","title":"Backend index.ts is 912 lines — needs decomposition","file":"backend/src/index.ts","lines":"1-912","description":"The main backend file contains all route handlers, business logic, data access, and utility functions in a single 912-line file.","code_snippet":"// All in one file:\n// - 20+ route handlers\n// - Firestore data access layer\n// - External API integration\n// - Score calculation orchestration\n// - User management","recommended_fix":"Split into modules: routes/, services/, and data/ directories.","fix_snippet":"// routes/tournament.ts\n// routes/predictions.ts\n// routes/leaderboard.ts\n// services/scoring.ts\n// data/firestore.ts","impact":"Difficult to maintain, test, and review. High cognitive load for any developer working on the file.","effort":"significant","tags":["architecture","maintainability"]},
+        {"id":"CQ-002","severity":"medium","title":"Minimal test coverage for critical scoring logic","file":"shared/utils.test.ts","lines":"1-56","description":"The shared utils test file only tests isEmpty, getOutcome, and getExtraTimeResult. Critical functions like calculateResults, sortGroup, sortWorldCupGroup, and getResult have no tests.","code_snippet":"describe('utils', () => {\n  describe('isEmpty', () => { ... })\n  describe('getOutcome', () => { ... })\n  describe('getExtraTimeResult', () => { ... })\n  // Missing: calculateResults, sortGroup, getResult, etc.\n});","recommended_fix":"Add comprehensive tests for all scoring functions with edge cases.","fix_snippet":"describe('getResult', () => {\n  it('returns exact for exact score match', () => { ... });\n  it('returns result for correct outcome', () => { ... });\n  it('returns onescore for one team correct', () => { ... });\n  it('returns penalty bonus for correct penalty winner', () => { ... });\n  it('returns fail for completely wrong', () => { ... });\n});","impact":"Scoring bugs could go undetected, directly affecting the fairness of the competition.","effort":"moderate","tags":["testing","scoring"]},
+        {"id":"CQ-003","severity":"medium","title":"Inconsistent empty state patterns (null vs undefined vs empty)","file":"frontend/pages/[id].tsx","lines":"132-147","description":"Different state variables use different empty representations: null for noSpoilers, empty object for fixtures/users, empty array for standings, empty string for uid. Context defaults also vary.","code_snippet":"const [noSpoilers, setNoSpoilers] = useState<boolean | null>(null);\nconst [fixtures, setFixtures] = useState<Fixtures>({});\nconst [standings, setStandings] = useState<Standings>([]);\nconst [users, setUsers] = useState({} as Users);\nconst [uid, setUID] = useState('');","recommended_fix":"Standardize on a consistent pattern (null = not loaded, undefined = loading, value = loaded).","fix_snippet":"type LoadState<T> = { status: 'loading' } | { status: 'loaded'; data: T } | { status: 'error'; error: string };","impact":"Developers must check different falsy conditions for each piece of state, leading to bugs.","effort":"moderate","tags":["consistency","type-safety"]},
+        {"id":"CQ-004","severity":"medium","title":"No shared ESLint config between frontend and backend","file":"frontend/package.json","lines":"37-58","description":"Frontend uses eslint-config-next + eslint-config-standard, backend uses eslint-config-google. Different linting rules lead to inconsistent code style.","code_snippet":"// Frontend: eslint-config-next, eslint-config-standard\n// Backend: eslint-config-google","recommended_fix":"Create a shared ESLint config package at the monorepo root.","fix_snippet":"// packages/eslint-config/index.js\nmodule.exports = { extends: ['...shared-rules'] };","impact":"Inconsistent code style between frontend and backend, increasing cognitive load.","effort":"moderate","tags":["tooling","consistency"]},
+        {"id":"CQ-005","severity":"low","title":"TypeScript strict mode not enabled","file":"tsconfig.json","lines":"1","description":"The TypeScript configuration likely doesn't enforce strict mode (strictNullChecks, noImplicitAny, etc.), allowing unsafe patterns throughout the codebase.","code_snippet":"// Multiple instances of:\n// - 'as' type assertions without null checks\n// - Implicit 'any' in catch blocks\n// - Optional chaining used inconsistently","recommended_fix":"Enable strict mode in tsconfig.json and fix resulting errors incrementally.","fix_snippet":"{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"strictNullChecks\": true,\n    \"noImplicitAny\": true\n  }\n}","impact":"Type-level bugs that TypeScript should catch are silently allowed.","effort":"significant","tags":["type-safety","typescript"]},
+        {"id":"CQ-006","severity":"low","title":"Commented-out code throughout the codebase","file":"backend/src/index.ts","lines":"91,169-172,845-852","description":"Multiple sections of commented-out code exist: ADMIN_USERS constant, date mocking, beforeUserCreated hook, stadium image display, and the onboarding flow.","code_snippet":"// const ADMIN_USERS = ['pedrotari7@gmail.com'];\n// return new Date('2022-12-20T17:00:00+0000');\n// export const addUser = beforeUserCreated(...);\n// <img ... src={stadiumImage} />","recommended_fix":"Remove commented-out code. Use git history to retrieve it if needed later.","fix_snippet":"// Delete all commented-out code blocks","impact":"Increases cognitive load and file size; creates confusion about intended behavior.","effort":"quick","tags":["dead-code","cleanup"]},
+        {"id":"CQ-007","severity":"low","title":"CI/CD uses actions/checkout@master and actions/setup-node@master","file":".github/workflows/shared.yml","lines":"18-22","description":"The shared workflow uses @master references instead of pinned versions, which is a supply chain risk.","code_snippet":"- uses: actions/setup-node@master\n- uses: actions/checkout@master","recommended_fix":"Pin to specific versions like the other workflows do.","fix_snippet":"- uses: actions/setup-node@v6\n- uses: actions/checkout@v6","impact":"A compromised @master tag could inject malicious code into the CI pipeline.","effort":"quick","tags":["ci-cd","supply-chain"]},
+        {"id":"CQ-008","severity":"low","title":"paths-filter action pinned to v4 (outdated)","file":".github/workflows/changes.yml","lines":"29","description":"The dorny/paths-filter action is pinned to v4, which may not support newer GitHub features.","code_snippet":"- uses: dorny/paths-filter@v4","recommended_fix":"Update to the latest version or pin to a commit SHA.","fix_snippet":"- uses: dorny/paths-filter@v3.0.2 # or commit SHA","impact":"May miss bug fixes and security patches in the paths-filter action.","effort":"quick","tags":["ci-cd","dependencies"]}
+      ]
+    },
+    {
+      "name": "Performance",
+      "slug": "performance",
+      "findings": [
+        {"id":"PF-001","severity":"high","title":"Tournament endpoint makes 6+ Firestore reads + listUsers per request","file":"backend/src/index.ts","lines":"504-604","description":"The /tournament endpoint reads settings, fixtures, standings, predictions, user profile, scores, AND calls listUsers() on every request. Even with caching headers, this is extremely expensive.","code_snippet":"const [settingsDoc, fixturesDocument, standingsDocument] = await Promise.all([\n  getDBSettings().get(),\n  getDBFixtures(competition).get(),\n  getDBStandings(competition).get(),\n]);\n// ... then later:\nconst [predictions, userExtraInfoDoc, users] = await Promise.all([\n  getPredictions(...),\n  getDBUser(decodedToken.uid).get(),\n  getUsers(competition, undefined), // calls listUsers()\n]);","recommended_fix":"Cache tournament data in memory with a TTL, or use Firestore's onSnapshot for real-time updates.","fix_snippet":"// Simple in-memory cache with TTL\nconst cache = new Map();\nconst getCached = async (key, fetcher, ttlMs = 60000) => {\n  const entry = cache.get(key);\n  if (entry && Date.now() - entry.ts < ttlMs) return entry.data;\n  const data = await fetcher();\n  cache.set(key, { data, ts: Date.now() });\n  return data;\n};","impact":"High latency (500ms-2s) on every page load and high Firestore costs.","effort":"significant","tags":["latency","firestore","caching"]},
+        {"id":"PF-002","severity":"medium","title":"Frontend loads entire tournament data on every page visit","file":"frontend/pages/[id].tsx","lines":"191-250","description":"The updateTournament function fetches ALL fixtures, standings, predictions, and users on every page load. There's no incremental or partial loading.","code_snippet":"const { fixtures, standings, predictions, users, userExtraInfo } = await fetchTournament(token, competition);","recommended_fix":"Implement incremental data loading — fetch only what the current view needs.","fix_snippet":"// Load core data first\nconst { fixtures, userExtraInfo } = await fetchTournamentCore(token);\n// Lazy-load standings only when navigating to Standings page\nuseEffect(() => {\n  if (route.page === Route.Standings) fetchStandings(token);\n}, [route.page]);","impact":"Slow initial load times, especially on mobile networks. Users must wait for ALL data before seeing anything.","effort":"significant","tags":["bundle-size","lazy-loading"]},
+        {"id":"PF-003","severity":"medium","title":"Missing React.memo on frequently re-rendered components","file":"frontend/components/Game.tsx","lines":"17-138","description":"The Game component is rendered once per fixture (48+ times on the Fixtures page) and re-renders whenever any parent state changes, yet it's not memoized.","code_snippet":"const Game = ({ predictions, updatePrediction, gameID, userID }: { ... }) => {\n  // Re-renders on every parent state change\n  const data = useContext(FixturesContext)!;\n  ...","recommended_fix":"Wrap Game in React.memo with a custom comparison.","fix_snippet":"const Game = memo(function Game({ ... }) {\n  ...\n}, (prev, next) => {\n  return prev.gameID === next.gameID &&\n    prev.predictions[prev.gameID] === next.predictions[next.gameID];\n});","impact":"48+ Game components re-render on every state change, causing jank on the Fixtures page.","effort":"quick","tags":["rendering","memo"]},
+        {"id":"PF-004","severity":"medium","title":"Unused dependency: react-toggle CSS imported but component uses react-switch","file":"frontend/components/NoSpoilersToggle.tsx","lines":"4","description":"The NoSpoilersToggle component imports react-toggle CSS but actually uses the react-switch component.","code_snippet":"import 'react-toggle/style.css'; // for ES6 modules\n// But component uses:\nimport Switch from 'react-switch';","recommended_fix":"Remove the react-toggle import and dependency.","fix_snippet":"// Remove: import 'react-toggle/style.css';\n// Remove react-toggle from package.json","impact":"Unnecessary CSS in the bundle; two toggle libraries installed when only one is used.","effort":"quick","tags":["bundle-size","cleanup"]},
+        {"id":"PF-005","severity":"low","title":"No caching headers on non-game tournament responses","file":"backend/src/index.ts","lines":"602","description":"Cache-Control is set to 'private, max-age=60' only when no games are ongoing. During active tournaments with no live games, each request still hits the server.","code_snippet":"res.set('Cache-Control', hasGamesOngoing ? 'no-store' : 'private, max-age=60');","recommended_fix":"Use longer cache times for stable data (standings between matchdays, historical competitions).","fix_snippet":"const isHistorical = !currentCompetitions.some(c => c.name === competition.name);\nif (isHistorical) {\n  res.set('Cache-Control', 'public, max-age=86400');\n} else {\n  res.set('Cache-Control', hasGamesOngoing ? 'no-store' : 'private, max-age=120');\n}","impact":"Unnecessary server load for data that rarely changes.","effort":"quick","tags":["caching","http"]},
+        {"id":"PF-006","severity":"low","title":"Stats page renders all fixtures without virtualization","file":"frontend/components/Stats.tsx","lines":"31-109","description":"The Stats page maps over ALL fixtures and renders a bar chart for each one. With 64+ World Cup fixtures, this creates 64+ DOM elements even for off-screen items.","code_snippet":"Object.keys(fixtures).map(fixtureID => {\n  // Renders a full component for every fixture\n  return <div key={fixtureID}>...</div>;\n})","recommended_fix":"Use virtual scrolling or pagination for large fixture lists.","fix_snippet":"// Option: Use react-window for virtual scrolling\nimport { FixedSizeList } from 'react-window';\n// Or paginate: show 10 fixtures at a time with 'Show More'","impact":"Long initial render time and high memory usage on the Stats page.","effort":"moderate","tags":["rendering","virtualization"]}
+      ]
+    },
+    {
+      "name": "Improvement Opportunities",
+      "slug": "improvements",
+      "findings": [
+        {"id":"IMP-001","severity":"info","title":"Add real-time score updates via Firestore onSnapshot","file":"backend/src/index.ts","lines":"504-604","description":"Currently, users must manually refresh or wait for periodic background updates to see live score changes. Firestore supports real-time listeners that could push updates instantly.","code_snippet":"// Current: polling-based updates\nvoid updateFixtures(competition, gamesToUpdate, fixtures?.data);","recommended_fix":"Use Firestore onSnapshot on the client to listen for fixture changes in real-time during live games.","fix_snippet":"// Frontend: subscribe to live updates\nconst unsubscribe = onSnapshot(\n  doc(db, competition.name, 'fixtures'),\n  (snap) => setFixtures(snap.data()?.data)\n);","impact":"Users see live scores instantly instead of stale data, dramatically improving the live game experience.","effort":"significant","tags":["real-time","engagement"]},
+        {"id":"IMP-002","severity":"info","title":"Add error tracking service (Sentry or similar)","file":"frontend/components/ErrorBoundary.tsx","lines":"11-37","description":"The ErrorBoundary catches errors but only shows a generic message. No errors are reported to any monitoring service.","code_snippet":"static getDerivedStateFromError(): State {\n  return { hasError: true };\n}\n// No componentDidCatch logging","recommended_fix":"Integrate Sentry or a similar error tracking service.","fix_snippet":"componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {\n  Sentry.captureException(error, { extra: errorInfo });\n}","impact":"Production errors go unnoticed until users report them manually.","effort":"moderate","tags":["observability","monitoring"]},
+        {"id":"IMP-003","severity":"info","title":"Add PWA support for mobile experience","file":"frontend/pages/_app.tsx","lines":"1-17","description":"The app is mobile-responsive but not installable as a PWA. Adding a service worker and manifest would enable offline viewing of predictions and push notifications for game deadlines.","code_snippet":"// No service worker, manifest, or offline support","recommended_fix":"Add next-pwa or a custom service worker with a web app manifest.","fix_snippet":"// next.config.js\nconst withPWA = require('next-pwa')({ dest: 'public' });\nmodule.exports = withPWA({ ... });","impact":"Mobile users get a native app-like experience with offline access and deadline reminders.","effort":"moderate","tags":["pwa","mobile"]},
+        {"id":"IMP-004","severity":"info","title":"Add prediction reminders before game deadlines","file":"frontend/pages/[id].tsx","lines":"233-247","description":"Users currently must remember to check the app before each game starts. There's no notification system for approaching deadlines.","code_snippet":"const nextGame = sortedFixtures.find(game => !isGameFinished(game));\nif (nextGame) {\n  // Navigate to predictions, but no reminder system","recommended_fix":"Implement push notifications or email reminders for upcoming game deadlines.","fix_snippet":"// With service worker:\nif ('Notification' in window && Notification.permission === 'granted') {\n  // Schedule notification 1 hour before kick-off\n}","impact":"Users miss prediction deadlines, reducing engagement and frustration.","effort":"significant","tags":["notifications","engagement"]},
+        {"id":"IMP-005","severity":"info","title":"Add head-to-head comparison feature","file":"frontend/components/Leaderboard.tsx","lines":"65-223","description":"Users can see their own scores and the leaderboard, but there's no way to compare predictions side-by-side with another user.","code_snippet":"// Leaderboard only shows aggregated scores\n// No comparison view available","recommended_fix":"Add a comparison modal that shows two users' predictions side by side for each fixture.","fix_snippet":"// New component: PredictionComparison\n// Shows: Game | User A Prediction | User B Prediction | Actual Result","impact":"Adding social comparison features increases engagement and friendly competition.","effort":"moderate","tags":["feature","engagement"]},
+        {"id":"IMP-006","severity":"info","title":"Backend has no health check endpoint","file":"backend/src/index.ts","lines":"1-912","description":"There is no /health or /ready endpoint for monitoring the Cloud Function's status.","code_snippet":"// No health check endpoint defined","recommended_fix":"Add a lightweight health check endpoint.","fix_snippet":"app.get('/health', (_, res) => {\n  res.json({ status: 'ok', timestamp: new Date().toISOString() });\n});","impact":"No automated way to detect if the backend is unhealthy.","effort":"quick","tags":["observability","ops"]},
+        {"id":"IMP-007","severity":"info","title":"No automated database backup strategy","file":"firestore.rules","lines":"1-8","description":"While Firestore has point-in-time recovery, there's no explicit backup strategy documented or automated. The all-deny rules are correct (backend uses Admin SDK), but data loss during a tournament would be catastrophic.","code_snippet":"match /{document=**} {\n  allow read, write: if false;\n}","recommended_fix":"Enable Firestore PITR and set up scheduled exports to Cloud Storage.","fix_snippet":"# Enable via gcloud CLI:\ngcloud firestore databases update --enable-pitr\n# Schedule daily exports via Cloud Scheduler","impact":"Data loss during an active tournament would lose all predictions and scores.","effort":"moderate","tags":["backup","disaster-recovery"]}
+      ]
+    }
+  ]
+}
+</script>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <h1>&#9889; Score Prediction — Audit Report</h1>
+    <nav class="header-nav">
+      <a href="#security" style="color:var(--accent-security)">Security</a>
+      <a href="#backend" style="color:var(--accent-backend)">Backend</a>
+      <a href="#frontend" style="color:var(--accent-frontend)">Frontend</a>
+      <a href="#ux" style="color:var(--accent-ux)">UX/UI</a>
+      <a href="#quality" style="color:var(--accent-quality)">Quality</a>
+      <a href="#performance" style="color:var(--accent-perf)">Performance</a>
+      <a href="#improvements" style="color:var(--accent-improve)">Improvements</a>
+    </nav>
+  </div>
+</header>
+
+<!-- CONTROLS -->
+<div class="controls" id="controls">
+  <input type="text" id="search" placeholder="Search findings..." oninput="filterFindings()">
+  <button class="filter-btn active" data-severity="all" onclick="toggleFilter(this)">All</button>
+  <button class="filter-btn active" data-severity="critical" onclick="toggleFilter(this)">Critical <span id="count-critical">5</span></button>
+  <button class="filter-btn active" data-severity="high" onclick="toggleFilter(this)">High <span id="count-high">10</span></button>
+  <button class="filter-btn active" data-severity="medium" onclick="toggleFilter(this)">Medium <span id="count-medium">17</span></button>
+  <button class="filter-btn active" data-severity="low" onclick="toggleFilter(this)">Low <span id="count-low">13</span></button>
+  <button class="filter-btn active" data-severity="info" onclick="toggleFilter(this)">Info <span id="count-info">7</span></button>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="summary">
+  <div class="summary-grid">
+    <div class="summary-card">
+      <h3>Total Findings</h3>
+      <div class="summary-big" id="total-visible">52</div>
+      <div class="severity-bar">
+        <span class="severity-pill critical">5 Critical</span>
+        <span class="severity-pill high">10 High</span>
+        <span class="severity-pill medium">17 Medium</span>
+        <span class="severity-pill low">13 Low</span>
+        <span class="severity-pill info">7 Info</span>
+      </div>
+    </div>
+    <div class="summary-card">
+      <h3>Health by Category</h3>
+      <div class="health-bars">
+        <div class="health-row">
+          <span class="health-label" style="color:var(--accent-security)">Security</span>
+          <div class="health-track"><div class="health-fill" style="width:35%;background:var(--accent-security)"></div></div>
+          <span class="health-count">9</span>
+        </div>
+        <div class="health-row">
+          <span class="health-label" style="color:var(--accent-backend)">Backend</span>
+          <div class="health-track"><div class="health-fill" style="width:40%;background:var(--accent-backend)"></div></div>
+          <span class="health-count">10</span>
+        </div>
+        <div class="health-row">
+          <span class="health-label" style="color:var(--accent-frontend)">Frontend</span>
+          <div class="health-track"><div class="health-fill" style="width:45%;background:var(--accent-frontend)"></div></div>
+          <span class="health-count">11</span>
+        </div>
+        <div class="health-row">
+          <span class="health-label" style="color:var(--accent-ux)">UX/UI</span>
+          <div class="health-track"><div class="health-fill" style="width:50%;background:var(--accent-ux)"></div></div>
+          <span class="health-count">7</span>
+        </div>
+        <div class="health-row">
+          <span class="health-label" style="color:var(--accent-quality)">Quality</span>
+          <div class="health-track"><div class="health-fill" style="width:55%;background:var(--accent-quality)"></div></div>
+          <span class="health-count">8</span>
+        </div>
+        <div class="health-row">
+          <span class="health-label" style="color:var(--accent-perf)">Perf</span>
+          <div class="health-track"><div class="health-fill" style="width:50%;background:var(--accent-perf)"></div></div>
+          <span class="health-count">6</span>
+        </div>
+        <div class="health-row">
+          <span class="health-label" style="color:var(--accent-improve)">Improve</span>
+          <div class="health-track"><div class="health-fill" style="width:100%;background:var(--accent-improve)"></div></div>
+          <span class="health-count">7</span>
+        </div>
+      </div>
+    </div>
+    <div class="summary-card">
+      <h3>Effort Breakdown</h3>
+      <div style="margin-top:0.75rem">
+        <div class="health-row">
+          <span class="health-label">Quick Fix</span>
+          <div class="health-track"><div class="health-fill" style="width:50%;background:#22c55e"></div></div>
+          <span class="health-count">23</span>
+        </div>
+        <div class="health-row">
+          <span class="health-label">Moderate</span>
+          <div class="health-track"><div class="health-fill" style="width:42%;background:#eab308"></div></div>
+          <span class="health-count">20</span>
+        </div>
+        <div class="health-row">
+          <span class="health-label">Significant</span>
+          <div class="health-track"><div class="health-fill" style="width:15%;background:#ef4444"></div></div>
+          <span class="health-count">9</span>
+        </div>
+      </div>
+      <div style="margin-top:1rem;font-size:0.8rem;color:var(--text-secondary)">
+        <strong>Audit Date:</strong> 2026-05-25<br>
+        <strong>Auditor:</strong> Claude (Opus 4.6)<br>
+        <strong>Scope:</strong> Full-stack review
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTIONS -->
+<div id="sections-container"></div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>Score Prediction Audit Report &mdash; Generated 2026-05-25 by Claude Opus 4.6</p>
+  <p style="margin-top:0.5rem">52 findings across 7 categories &bull; 5 Critical &bull; 10 High &bull; 17 Medium &bull; 13 Low &bull; 7 Info</p>
+</div>
+
+<script>
+// Parse audit data
+const auditData = JSON.parse(document.getElementById('audit-data').textContent);
+
+const CATEGORY_CONFIG = {
+  security: { icon: '\u{1F6E1}', color: 'var(--accent-security)', label: 'Security Vulnerabilities' },
+  backend: { icon: '\u{2699}', color: 'var(--accent-backend)', label: 'Backend Issues' },
+  frontend: { icon: '\u{1F5A5}', color: 'var(--accent-frontend)', label: 'Frontend Issues' },
+  ux: { icon: '\u{1F3A8}', color: 'var(--accent-ux)', label: 'UX/UI Pitfalls' },
+  quality: { icon: '\u{2728}', color: 'var(--accent-quality)', label: 'Code Quality & Maintainability' },
+  performance: { icon: '\u{26A1}', color: 'var(--accent-perf)', label: 'Performance' },
+  improvements: { icon: '\u{1F4A1}', color: 'var(--accent-improve)', label: 'Improvement Opportunities' }
+};
+
+const SEVERITY_ORDER = ['critical', 'high', 'medium', 'low', 'info'];
+
+// Active severity filters
+let activeFilters = new Set(['critical', 'high', 'medium', 'low', 'info']);
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function renderSections() {
+  const container = document.getElementById('sections-container');
+  container.innerHTML = '';
+
+  auditData.categories.forEach(cat => {
+    const config = CATEGORY_CONFIG[cat.slug];
+    const severityCounts = {};
+    SEVERITY_ORDER.forEach(s => severityCounts[s] = 0);
+    cat.findings.forEach(f => severityCounts[f.severity]++);
+
+    const section = document.createElement('div');
+    section.className = 'section';
+    section.id = cat.slug;
+
+    let badgesHtml = '';
+    SEVERITY_ORDER.forEach(s => {
+      if (severityCounts[s] > 0) {
+        badgesHtml += `<span class="section-count severity-pill ${s}">${severityCounts[s]}</span>`;
+      }
+    });
+
+    let findingsHtml = '';
+    const sorted = [...cat.findings].sort((a, b) => SEVERITY_ORDER.indexOf(a.severity) - SEVERITY_ORDER.indexOf(b.severity));
+
+    sorted.forEach(f => {
+      findingsHtml += `
+        <div class="finding" data-severity="${f.severity}" data-title="${escapeHtml(f.title.toLowerCase())}" data-desc="${escapeHtml(f.description.toLowerCase())}">
+          <div class="finding-header" onclick="this.parentElement.classList.toggle('open')">
+            <span class="finding-severity ${f.severity}">${f.severity}</span>
+            <span class="finding-title">${escapeHtml(f.title)}</span>
+            <span class="finding-effort">${f.effort}</span>
+            <span class="finding-chevron">&#9660;</span>
+          </div>
+          <div class="finding-body">
+            <div class="finding-file">${escapeHtml(f.file)}:${f.lines}</div>
+            <div class="finding-desc">${escapeHtml(f.description)}</div>
+            <div class="finding-label">Problematic Code</div>
+            <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>${escapeHtml(f.code_snippet)}</code></pre>
+            <div class="finding-label">Impact</div>
+            <div class="finding-impact">${escapeHtml(f.impact)}</div>
+            <div class="finding-label">Recommended Fix</div>
+            <div class="finding-fix-desc">${escapeHtml(f.recommended_fix)}</div>
+            <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>${escapeHtml(f.fix_snippet)}</code></pre>
+          </div>
+        </div>`;
+    });
+
+    section.innerHTML = `
+      <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="section-title">
+          <div class="section-icon" style="background:${config.color}20;color:${config.color}">${config.icon}</div>
+          <h2>${config.label}</h2>
+          <div class="section-badges">${badgesHtml}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem">
+          <button class="section-toggle" onclick="event.stopPropagation();toggleAllFindings(this.closest('.section'))">Expand All</button>
+          <span class="chevron">&#9660;</span>
+        </div>
+      </div>
+      <div class="section-body">${findingsHtml}</div>`;
+
+    container.appendChild(section);
+  });
+}
+
+function toggleFilter(btn) {
+  const severity = btn.dataset.severity;
+
+  if (severity === 'all') {
+    const allActive = activeFilters.size === 5;
+    if (allActive) {
+      activeFilters.clear();
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    } else {
+      SEVERITY_ORDER.forEach(s => activeFilters.add(s));
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.add('active'));
+    }
+  } else {
+    btn.classList.toggle('active');
+    if (activeFilters.has(severity)) {
+      activeFilters.delete(severity);
+    } else {
+      activeFilters.add(severity);
+    }
+    // Update "All" button
+    const allBtn = document.querySelector('.filter-btn[data-severity="all"]');
+    if (activeFilters.size === 5) allBtn.classList.add('active');
+    else allBtn.classList.remove('active');
+  }
+
+  filterFindings();
+}
+
+function filterFindings() {
+  const query = document.getElementById('search').value.toLowerCase();
+  let visibleCount = 0;
+  const severityCounts = {};
+  SEVERITY_ORDER.forEach(s => severityCounts[s] = 0);
+
+  document.querySelectorAll('.finding').forEach(f => {
+    const severity = f.dataset.severity;
+    const matchesSeverity = activeFilters.has(severity);
+    const matchesSearch = !query ||
+      f.dataset.title.includes(query) ||
+      f.dataset.desc.includes(query);
+
+    if (matchesSeverity && matchesSearch) {
+      f.style.display = '';
+      visibleCount++;
+      severityCounts[severity]++;
+    } else {
+      f.style.display = 'none';
+    }
+  });
+
+  document.getElementById('total-visible').textContent = visibleCount;
+  SEVERITY_ORDER.forEach(s => {
+    const el = document.getElementById('count-' + s);
+    if (el) el.textContent = severityCounts[s];
+  });
+}
+
+function toggleAllFindings(section) {
+  const findings = section.querySelectorAll('.finding');
+  const allOpen = [...findings].every(f => f.classList.contains('open'));
+  findings.forEach(f => {
+    if (allOpen) f.classList.remove('open');
+    else f.classList.add('open');
+  });
+  const btn = section.querySelector('.section-toggle');
+  btn.textContent = allOpen ? 'Expand All' : 'Collapse All';
+}
+
+function copyCode(btn) {
+  const code = btn.nextElementSibling.textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
+}
+
+// Smooth scrolling
+document.querySelectorAll('.header-nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      target.classList.add('open');
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// Initialize
+renderSections();
+</script>
+</body>
+</html>
