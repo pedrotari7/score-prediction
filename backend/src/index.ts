@@ -924,7 +924,10 @@ app.delete('/leaderboard', async (req, res) => {
 
   const leaderboardDoc = getFirestore(firebaseApp).collection('leaderboards').doc(leaderboardId);
 
-  const leaderboard = (await leaderboardDoc.get()).data() as Leaderboard;
+  const doc = await leaderboardDoc.get();
+  if (!doc.exists) return res.status(404).json({ error: 'Leaderboard not found' });
+
+  const leaderboard = doc.data() as Leaderboard;
 
   await leaderboardDoc.delete();
 
