@@ -649,7 +649,6 @@ app.post('/update-predictions', async (req, res) => {
 
   const change = { [`${parsedGameId}.${callerUID}`]: { home, away } };
 
-  // TODO: Update this with the helper function
   const result = await getFirestore(firebaseApp).collection(competition.name).doc('predictions').update(change);
 
   return res.json({ ...result, success: true });
