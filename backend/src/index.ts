@@ -478,29 +478,32 @@ app.get('/fetch-users', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
-  const allUsers = (
-    await Promise.all(
-      (await getAuth(firebaseApp).listUsers()).users.map(async ({ displayName, metadata, uid, photoURL, email }) => ({
-        displayName,
-        uid,
-        photoURL,
-        email: email?.replace(/(.{2}).+(@.+)/, '$1***$2'),
-        userExtraInfo: (await getDBUser(uid).get()).data() ?? { leaderboards: [] },
-        ...metadata,
-      }))
-    )
-  ).sort((a, b) => {
-    if (a.userExtraInfo.lastCheckIn && b.userExtraInfo.lastCheckIn) {
-      const ta = new Timestamp(a.userExtraInfo?.lastCheckIn._seconds, a.userExtraInfo?.lastCheckIn._nanoseconds);
-      const tb = new Timestamp(b.userExtraInfo?.lastCheckIn._seconds, b.userExtraInfo?.lastCheckIn._nanoseconds);
-      return tb.toMillis() - ta.toMillis();
-    } else if (a.userExtraInfo.lastCheckIn && !b.userExtraInfo.lastCheckIn) {
-      return -1;
-    } else if (!a.userExtraInfo.lastCheckIn && b.userExtraInfo.lastCheckIn) {
-      return 1;
-    }
-    return new Date(b.lastSignInTime).getTime() - new Date(a.lastSignInTime).getTime();
-  });
+  const authUsers = (await getAuth(firebaseApp).listUsers()).users;
+  const userRefs = authUsers.map(u => getDBUser(u.uid));
+  const userDocs = await getFirestore(firebaseApp).getAll(...userRefs);
+  const userDataMap = Object.fromEntries(userDocs.map(d => [d.id, d.data() ?? { leaderboards: [] }]));
+
+  const allUsers = authUsers
+    .map(({ displayName, metadata, uid, photoURL, email }) => ({
+      displayName,
+      uid,
+      photoURL,
+      email: email?.replace(/(.{2}).+(@.+)/, '$1***$2'),
+      userExtraInfo: userDataMap[uid] ?? { leaderboards: [] },
+      ...metadata,
+    }))
+    .sort((a, b) => {
+      if (a.userExtraInfo.lastCheckIn && b.userExtraInfo.lastCheckIn) {
+        const ta = new Timestamp(a.userExtraInfo?.lastCheckIn._seconds, a.userExtraInfo?.lastCheckIn._nanoseconds);
+        const tb = new Timestamp(b.userExtraInfo?.lastCheckIn._seconds, b.userExtraInfo?.lastCheckIn._nanoseconds);
+        return tb.toMillis() - ta.toMillis();
+      } else if (a.userExtraInfo.lastCheckIn && !b.userExtraInfo.lastCheckIn) {
+        return -1;
+      } else if (!a.userExtraInfo.lastCheckIn && b.userExtraInfo.lastCheckIn) {
+        return 1;
+      }
+      return new Date(b.lastSignInTime).getTime() - new Date(a.lastSignInTime).getTime();
+    });
 
   return res.json({ success: true, data: allUsers });
 });
