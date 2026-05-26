@@ -743,7 +743,16 @@ app.post('/update-settings', async (req, res) => {
 
   const { settings } = parseBody(req.body);
 
-  const result = await getDBSettings().set(settings);
+  const ALLOWED_KEYS = [
+    'adminHideScores',
+    'allowUpdateFixtures',
+    'allowUpdateStandings',
+    'disableLiveScoresApi',
+    'allowUpdatePoints',
+  ] as const;
+  const validated = Object.fromEntries(ALLOWED_KEYS.map(k => [k, Boolean(settings?.[k])]));
+
+  const result = await getDBSettings().set(validated);
 
   return res.json(result);
 });
