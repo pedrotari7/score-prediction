@@ -557,7 +557,7 @@ app.get('/tournament', async (req, res) => {
   // Fire stale updates in the background — serve cached data now, next visit gets fresh data
   if (!settings.disableLiveScoresApi && (settings.allowUpdateStandings || standingsTimeDiffSeconds > timeGuard)) {
     console.log('standings needs update (background)');
-    void updateStandings(competition);
+    void updateStandings(competition).catch(e => console.error('Background standings update failed:', e));
   }
 
   if (!settings.disableLiveScoresApi && (settings.allowUpdateFixtures || fixturesTimeDiffSeconds > timeGuard)) {
@@ -569,7 +569,9 @@ app.get('/tournament', async (req, res) => {
           .map(f => f.fixture.id)
       : [];
 
-    void updateFixtures(competition, gamesToUpdate, fixtures?.data);
+    void updateFixtures(competition, gamesToUpdate, fixtures?.data).catch(e =>
+      console.error('Background fixtures update failed:', e)
+    );
   }
 
   // Parallelize the three independent fetches: predictions, user profile, and all users
@@ -582,7 +584,9 @@ app.get('/tournament', async (req, res) => {
   // Fire points recalculation in background — getUsers already read cached scores above
   if (fixturesTimeDiffSeconds > timeGuard || settings.allowUpdatePoints) {
     console.log('will update points (background)');
-    void updatePoints(competition, predictions, fixtures?.data);
+    void updatePoints(competition, predictions, fixtures?.data).catch(e =>
+      console.error('Background points update failed:', e)
+    );
   }
 
   const userExtraInfo = userExtraInfoDoc.data() ?? { leaderboards: [] };
@@ -604,7 +608,9 @@ app.get('/tournament', async (req, res) => {
     userExtraInfo: { noSpoilers: false, ...userExtraInfo, leaderboards },
   };
 
-  void getDBUser(decodedToken.uid).set({ lastCheckIn: FieldValue.serverTimestamp() }, { merge: true });
+  void getDBUser(decodedToken.uid)
+    .set({ lastCheckIn: FieldValue.serverTimestamp() }, { merge: true })
+    .catch(e => console.error('Background lastCheckIn update failed:', e));
 
   res.set('Cache-Control', hasGamesOngoing ? 'no-store' : 'private, max-age=60');
   return res.json(tournament);
