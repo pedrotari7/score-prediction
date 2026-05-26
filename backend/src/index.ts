@@ -70,6 +70,8 @@ const corsOrigins = [
   ...(process.env.ISDEV ? ['http://localhost:3000', 'http://localhost:3001'] : []),
 ];
 
+// CSRF: all state-changing endpoints require the Authorization header, which browsers
+// won't attach to cross-origin simple requests, preventing CSRF without a dedicated token.
 app.use(
   cors({
     origin: corsOrigins,
