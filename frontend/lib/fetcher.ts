@@ -3,7 +3,7 @@ export default async function fetcher(url: string, token: string, options: Recor
 		const response = await fetch(url, {
 			...options,
 			headers: {
-				Authorization: `${token}`,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json',
 			},
 		});

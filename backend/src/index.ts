@@ -135,8 +135,9 @@ const getFullFixture = async (eventID: number, opts: Record<string, unknown> = {
   return fullFixtures.data.response.pop();
 };
 
-const decodeToken = async (token: string | undefined) => {
-  if (!token) return;
+const decodeToken = async (raw: string | undefined) => {
+  if (!raw) return;
+  const token = raw.startsWith('Bearer ') ? raw.slice(7) : raw;
   try {
     return await getAuth(firebaseApp).verifyIdToken(token);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
