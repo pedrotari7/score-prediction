@@ -484,7 +484,7 @@ app.get('/fetch-users', async (req, res) => {
         displayName,
         uid,
         photoURL,
-        email,
+        email: email?.replace(/(.{2}).+(@.+)/, '$1***$2'),
         userExtraInfo: (await getDBUser(uid).get()).data() ?? { leaderboards: [] },
         ...metadata,
       }))
