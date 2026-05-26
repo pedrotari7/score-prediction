@@ -16,6 +16,7 @@ import {
 	fetchTournament,
 	fetchLeaderboards,
 	initCompetition,
+	migrateLeaderboardTokens,
 } from '../pages/api';
 import type { Competition } from '../../interfaces/main';
 import { competitions, currentCompetition } from '../../shared/utils';
@@ -234,6 +235,13 @@ const SettingsPage = () => {
 					className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
 				>
 					Cleanup
+				</button>
+
+				<button
+					onClick={async () => setResponse(await migrateLeaderboardTokens(userInfo.token))}
+					className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
+				>
+					Migrate Leaderboard Tokens
 				</button>
 
 				<button

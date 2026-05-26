@@ -9,7 +9,7 @@ import { classNames } from '../lib/utils/reactHelper';
 import { fetchLeaderboard, joinLeaderboard } from '../pages/api';
 import Loading from './Loading';
 
-const JoinLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
+const JoinLeaderboard = ({ leaderboardId, joinToken }: { leaderboardId: string; joinToken?: string }) => {
 	const { gcc } = useCompetition();
 	const userInfo = useContext(UserContext);
 	const routeInfo = useContext(RouteContext);
@@ -55,7 +55,7 @@ const JoinLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
 				onClick={async () => {
 					if (userInfo && routeInfo && !loading) {
 						setLoading(true);
-						await joinLeaderboard(leaderboard.id, userInfo?.token);
+						await joinLeaderboard(leaderboard.id, userInfo?.token, joinToken);
 
 						await updateCompetition();
 

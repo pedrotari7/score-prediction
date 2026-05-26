@@ -6,6 +6,7 @@ import { defineSecret } from 'firebase-functions/params';
 
 // import { beforeUserCreated } from 'firebase-functions/v2/identity';
 
+import { randomUUID } from 'crypto';
 import { initializeApp } from 'firebase-admin/app';
 import { FieldValue, Timestamp, getFirestore } from 'firebase-admin/firestore';
 import type { DecodedIdToken } from 'firebase-admin/auth';
@@ -360,9 +361,9 @@ const getPredictions = async (
 
   const censoredPredictions = Object.entries(predictions).reduce((acc, [gameId, gamePredictions]) => {
     const gameDate = new Date(fixtures?.[parseInt(gameId)].fixture.date);
-    const isInPast = gameDate && getCurrentTime() < gameDate;
+    const isInFuture = gameDate && getCurrentTime() < gameDate;
 
-    if (!isInPast) {
+    if (!isInFuture) {
       acc[gameId] = gamePredictions;
       return acc;
     }
@@ -640,9 +641,9 @@ app.post('/update-predictions', async (req, res) => {
 
   const gameDate = new Date(fixtures[parsedGameId].fixture.date);
 
-  const isInPast = gameDate && getCurrentTime() < gameDate;
+  const isInFuture = gameDate && getCurrentTime() < gameDate;
 
-  if (!isInPast) return res.status(403).json({ error: 'Forbidden', result: false });
+  if (!isInFuture) return res.status(403).json({ error: 'Forbidden', result: false });
 
   const change = { [`${parsedGameId}.${callerUID}`]: { home, away } };
 
@@ -774,7 +775,15 @@ app.post('/create-leaderboard', async (req, res) => {
 
   const leaderboardDoc = getFirestore(firebaseApp).collection('leaderboards').doc();
 
-  const leaderboard: Leaderboard = { id: leaderboardDoc.id, name, members: [callerUID], creator: callerUID };
+  const joinToken = randomUUID();
+
+  const leaderboard: Leaderboard = {
+    id: leaderboardDoc.id,
+    name,
+    members: [callerUID],
+    creator: callerUID,
+    joinToken,
+  };
 
   await leaderboardDoc.set(leaderboard);
 
@@ -821,10 +830,19 @@ app.post('/leaderboard', async (req, res) => {
   const { uid: callerUID } = authResult.result;
 
   const leaderboardId = req.query.leaderboardId as string;
+  const { joinToken } = parseBody(req.body);
 
   const leaderboard = (
     await getFirestore(firebaseApp).collection('leaderboards').doc(leaderboardId).get()
   ).data() as Leaderboard;
+
+  if (!leaderboard) {
+    return res.status(404).json({ error: 'Leaderboard not found' });
+  }
+
+  if (leaderboard.joinToken && leaderboard.joinToken !== joinToken) {
+    return res.status(403).json({ error: 'Invalid invite token' });
+  }
 
   if (!leaderboard.members.includes(callerUID)) {
     await getFirestore(firebaseApp)
@@ -845,7 +863,7 @@ app.post('/leaderboard', async (req, res) => {
 });
 
 app.get('/leaderboards', async (req, res) => {
-  const authResult = await authenticate(req, res);
+  const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
   const { uid: callerUID, admin: isAdmin } = authResult.result;
@@ -855,6 +873,24 @@ app.get('/leaderboards', async (req, res) => {
     ? allLeaderboards
     : allLeaderboards.filter(lb => Array.isArray(lb.members) && lb.members.includes(callerUID));
   return res.json({ success: true, data });
+});
+
+app.post('/migrate-leaderboard-tokens', async (req, res) => {
+  const authResult = await authenticate(req, res, true);
+  if (!authResult.success) return authResult.result;
+
+  const snapshot = await getFirestore(firebaseApp).collection('leaderboards').get();
+  let updated = 0;
+
+  for (const doc of snapshot.docs) {
+    const data = doc.data() as Leaderboard;
+    if (!data.joinToken) {
+      await doc.ref.update({ joinToken: randomUUID() });
+      updated++;
+    }
+  }
+
+  return res.json({ success: true, updated });
 });
 
 export const api = onRequest({ secrets: ['APISPORTS'], cors: corsOrigins }, app);

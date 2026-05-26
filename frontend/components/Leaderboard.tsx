@@ -62,7 +62,15 @@ const FilterOption = ({
 	</div>
 );
 
-const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Record<string, Leaderboard> }) => {
+const Leaderboards = ({
+	users,
+	leaderboards,
+	setLeaderboards,
+}: {
+	users: Users;
+	leaderboards: Record<string, Leaderboard>;
+	setLeaderboards: React.Dispatch<React.SetStateAction<Record<string, Leaderboard>>>;
+}) => {
 	const auth = useAuth();
 	const { RedactedSpoilers } = useNoSpoilers();
 	const { route, setRoute } = useContext(RouteContext)!;
@@ -132,8 +140,19 @@ const Leaderboards = ({ users, leaderboards }: { users: Users; leaderboards: Rec
 					)}
 
 					<div className='flex flex-row flex-wrap justify-center gap-2'>
-						<CreateLeaderboard />
-						{!isGlobalLeaderboard && <ShareLeaderboard leaderboardId={currentLeaderboard} />}
+						<CreateLeaderboard
+							onCreated={(id, updatedLeaderboards) => {
+								setLeaderboards(updatedLeaderboards);
+								setCurrentLeaderboard(id);
+								setMembers(updatedLeaderboards[id]?.members ?? []);
+							}}
+						/>
+						{!isGlobalLeaderboard && (
+							<ShareLeaderboard
+								leaderboardId={currentLeaderboard}
+								joinToken={leaderboards[currentLeaderboard]?.joinToken}
+							/>
+						)}
 					</div>
 				</>
 			</div>

@@ -45,9 +45,11 @@ interface MainComponentProps {
 	predictions: Predictions;
 	users: Users;
 	leaderboards: Record<string, Leaderboard>;
+	setLeaderboards: React.Dispatch<React.SetStateAction<Record<string, Leaderboard>>>;
 	standings: Standings;
 	uid: string;
 	leaderboardId: string | string[] | undefined;
+	joinToken: string | string[] | undefined;
 	updatePrediction: (prediction: Prediction, gameId: number) => Promise<void>;
 }
 
@@ -57,9 +59,11 @@ const MainComponent = memo(function MainComponent({
 	predictions,
 	users,
 	leaderboards,
+	setLeaderboards,
 	standings,
 	uid,
 	leaderboardId,
+	joinToken,
 	updatePrediction,
 }: MainComponentProps) {
 	switch (route.page) {
@@ -86,7 +90,14 @@ const MainComponent = memo(function MainComponent({
 				/>
 			);
 		case Route.Leaderboard:
-			return <Leaderboards users={users} leaderboards={leaderboards} />;
+			return (
+				<Leaderboards
+					key={route.data as string}
+					users={users}
+					leaderboards={leaderboards}
+					setLeaderboards={setLeaderboards}
+				/>
+			);
 		case Route.Standings:
 			return <StandingsPage standings={standings} fixtures={fixtures} />;
 		case Route.Settings:
@@ -96,7 +107,7 @@ const MainComponent = memo(function MainComponent({
 		case Route.Users:
 			return <UsersList />;
 		case Route.JoinLeaderboard:
-			return <JoinLeaderboard leaderboardId={leaderboardId as string} />;
+			return <JoinLeaderboard leaderboardId={leaderboardId as string} joinToken={joinToken as string} />;
 		case Route.RefreshPage:
 			return <RefreshPage />;
 		case Route.ListLeaderboards:
@@ -149,7 +160,7 @@ const Home = () => {
 	const isNavigatingRef = useRef(false);
 	const navigateToRef = useRef<(info: RouteInfo) => void>(() => {});
 
-	const { id: competitionName, join: leaderboardId } = router.query;
+	const { id: competitionName, join: leaderboardId, token: joinToken } = router.query;
 
 	const competition: Competition = competitions[competitionName as keyof typeof competitions];
 
@@ -306,9 +317,11 @@ const Home = () => {
 													predictions={predictions}
 													users={users}
 													leaderboards={leaderboards}
+													setLeaderboards={setLeaderboards}
 													standings={standings}
 													uid={uid}
 													leaderboardId={leaderboardId}
+													joinToken={joinToken}
 													updatePrediction={updatePrediction}
 												/>
 											)}

@@ -4,7 +4,7 @@ import { CheckIcon, ShareIcon } from '@heroicons/react/24/outline';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import useCompetition from '../hooks/useCompetition';
 
-const ShareLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
+const ShareLeaderboard = ({ leaderboardId, joinToken }: { leaderboardId: string; joinToken?: string }) => {
 	const { gcc } = useCompetition();
 
 	const [copied, setCopied] = useState(false);
@@ -14,7 +14,7 @@ const ShareLeaderboard = ({ leaderboardId }: { leaderboardId: string }) => {
 		setOrigin(window.location.origin);
 	}, []);
 
-	const url = `${origin}?join=${leaderboardId}`;
+	const url = joinToken ? `${origin}?join=${leaderboardId}&token=${joinToken}` : `${origin}?join=${leaderboardId}`;
 	return (
 		<CopyToClipboard
 			text={url}

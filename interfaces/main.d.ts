@@ -322,6 +322,7 @@ export interface Leaderboard {
 	name: string;
 	members: string[];
 	creator: string;
+	joinToken?: string;
 }
 
 export interface ResponseStatus {

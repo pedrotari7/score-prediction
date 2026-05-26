@@ -1,18 +1,19 @@
 import { PlusCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import RouteContext, { Route } from '../context/RouteContext';
-import UpdateTournamentContext from '../context/UpdateTournamentContext';
+import type { Leaderboard } from '../../interfaces/main';
 import UserContext from '../context/UserContext';
 import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';
-import { createLeaderboard } from '../pages/api';
+import { createLeaderboard, fetchLeaderboards } from '../pages/api';
 import Loading from './Loading';
 
-const CreateLeaderboard = () => {
-	const updateCompetition = useContext(UpdateTournamentContext)!;
+const CreateLeaderboard = ({
+	onCreated,
+}: {
+	onCreated?: (leaderboardId: string, leaderboards: Record<string, Leaderboard>) => void;
+}) => {
 	const inputRef = useRef<HTMLInputElement>(null);
 	const userInfo = useContext(UserContext);
-	const routeInfo = useContext(RouteContext);
 	const [loading, setLoading] = useState(false);
 
 	const [open, setOpen] = useState(false);
@@ -28,12 +29,17 @@ const CreateLeaderboard = () => {
 			const name = inputRef.current.value;
 			if (name) {
 				const result = await createLeaderboard(name, userInfo.token);
-				await updateCompetition();
-				if (result.success && routeInfo) {
-					routeInfo.setRoute({ page: Route.Leaderboard, data: result.uid });
+				if (result.success) {
+					const { data: updatedLeaderboards } = await fetchLeaderboards(userInfo.token);
+					const lbMap = (updatedLeaderboards ?? []).reduce(
+						(acc: Record<string, Leaderboard>, lb: Leaderboard) => ({ ...acc, [lb.id]: lb }),
+						{}
+					);
+					onCreated?.(result.uid, lbMap);
 				}
 			}
 			setLoading(false);
+			setOpen(false);
 		}
 	};
 

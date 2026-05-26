@@ -110,8 +110,21 @@ export const createLeaderboard = async (name: string, token: string): Promise<Cr
 export const fetchLeaderboard = async (leaderboardId: string, token: string): Promise<Leaderboard> =>
 	await cFetch(`${backendUrl}/leaderboard`, token, undefined, { leaderboardId });
 
-export const joinLeaderboard = async (leaderboardId: string, token: string): Promise<CreateLeaderboardResult> =>
-	await cFetch(`${backendUrl}/leaderboard`, token, undefined, { leaderboardId }, { method: 'POST' });
+export const joinLeaderboard = async (
+	leaderboardId: string,
+	token: string,
+	joinToken?: string
+): Promise<CreateLeaderboardResult> =>
+	await cFetch(
+		`${backendUrl}/leaderboard`,
+		token,
+		undefined,
+		{ leaderboardId },
+		{
+			body: JSON.stringify({ joinToken }),
+			method: 'POST',
+		}
+	);
 
 export const fetchLeaderboards = async (token: string) => await cFetch(`${backendUrl}/leaderboards`, token);
 
@@ -129,6 +142,9 @@ export const deleteLeaderboard = async (leaderboardId: string, token: string) =>
 
 export const initCompetition = async (token: string, competition: Competition) =>
 	await cFetch(`${backendUrl}/init-competition`, token, competition, {}, { method: 'POST' });
+
+export const migrateLeaderboardTokens = async (token: string) =>
+	await cFetch(`${backendUrl}/migrate-leaderboard-tokens`, token, undefined, {}, { method: 'POST' });
 
 export const postNoSpoilers = async (noSpoilers: boolean, token: string): Promise<{ success: boolean }> =>
 	await cFetch(
