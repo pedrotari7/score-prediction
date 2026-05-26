@@ -616,6 +616,11 @@ app.post('/update-predictions', async (req, res) => {
 
   const { gameId, prediction } = parseBody(req.body);
 
+  const parsedGameId = Number(gameId);
+  if (!Number.isInteger(parsedGameId) || parsedGameId <= 0) {
+    return res.status(400).json({ error: 'Invalid gameId', result: false });
+  }
+
   const isValidScore = (v: unknown): v is number => typeof v === 'number' && Number.isInteger(v) && v >= 0 && v <= 99;
 
   const home = prediction?.home ?? null;
@@ -628,13 +633,17 @@ app.post('/update-predictions', async (req, res) => {
 
   const fixtures = (await getDBFixtures(competition).get()).data()?.data as Fixtures;
 
-  const gameDate = new Date(fixtures?.[gameId].fixture.date);
+  if (!fixtures?.[parsedGameId]) {
+    return res.status(404).json({ error: 'Game not found', result: false });
+  }
+
+  const gameDate = new Date(fixtures[parsedGameId].fixture.date);
 
   const isInPast = gameDate && getCurrentTime() < gameDate;
 
   if (!isInPast) return res.status(403).json({ error: 'Forbidden', result: false });
 
-  const change = { [`${gameId}.${callerUID}`]: { home, away } };
+  const change = { [`${parsedGameId}.${callerUID}`]: { home, away } };
 
   // TODO: Update this with the helper function
   const result = await getFirestore(firebaseApp).collection(competition.name).doc('predictions').update(change);
