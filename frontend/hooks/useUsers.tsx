@@ -1,6 +1,5 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
-import RouteContext, { Route } from '../context/RouteContext';
-import UserContext from '../context/UserContext';
+import { useCallback, useEffect, useState } from 'react';
+import { Route, useTournamentStore } from '../store/tournamentStore';
 import { fetchUsers } from '../pages/api';
 import useCompetition from './useCompetition';
 import { AuthenticatedUser } from '../../interfaces/main';
@@ -8,22 +7,22 @@ import { AuthenticatedUser } from '../../interfaces/main';
 const useUsers = () => {
 	const [users, setUsers] = useState<AuthenticatedUser[]>();
 	const [loading, setLoading] = useState<boolean>(true);
-	const userInfo = useContext(UserContext);
+	const token = useTournamentStore(s => s.token);
 	const { competition } = useCompetition();
-	const routeInfo = useContext(RouteContext);
+	const setRoute = useTournamentStore(s => s.setRoute);
 
 	const update = useCallback(async () => {
 		setLoading(true);
-		if (userInfo) {
-			const result = await fetchUsers(userInfo.token, competition);
+		if (token) {
+			const result = await fetchUsers(token, competition);
 			if (!result.success) {
-				routeInfo?.setRoute({ page: Route.RefreshPage });
+				setRoute({ page: Route.RefreshPage });
 				return;
 			}
 			setUsers(result.data);
 		}
 		setLoading(false);
-	}, [userInfo, competition, routeInfo]);
+	}, [token, competition, setRoute]);
 
 	useEffect(() => {
 		update();

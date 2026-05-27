@@ -1,8 +1,8 @@
-import React, { ChangeEvent, useCallback, useContext, useRef } from 'react';
+import React, { ChangeEvent, useCallback, useRef } from 'react';
 import type { Prediction, UpdatePrediction } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
 import ScoreInput from '../components/ScoreInput';
-import RouteContext, { Route } from '../context/RouteContext';
+import { Route, useTournamentStore } from '../store/tournamentStore';
 
 interface UserInputPredictionProps {
 	gameID: number;
@@ -51,7 +51,7 @@ export const UserInputPrediction = ({
 export const userInputPrediction = (gameID: number, prediction: Prediction) => {
 	const homeInputRef = useRef<HTMLInputElement>(null);
 	const awayInputRef = useRef<HTMLInputElement>(null);
-	const { setRoute } = useContext(RouteContext)!;
+	const setRoute = useTournamentStore(s => s.setRoute);
 
 	const isValidScore = (n: number | null) => isNum(n) && n >= 0;
 

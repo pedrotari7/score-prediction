@@ -1,9 +1,7 @@
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { Leaderboard } from '../../interfaces/main';
-import RouteContext, { Route } from '../context/RouteContext';
-import UpdateTournamentContext from '../context/UpdateTournamentContext';
-import UserContext from '../context/UserContext';
+import { Route, useTournamentStore } from '../store/tournamentStore';
 import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';
 import { fetchLeaderboard, joinLeaderboard } from '../pages/api';
@@ -11,9 +9,11 @@ import Loading from './Loading';
 
 const JoinLeaderboard = ({ leaderboardId, joinToken }: { leaderboardId: string; joinToken?: string }) => {
 	const { gcc } = useCompetition();
-	const userInfo = useContext(UserContext);
-	const routeInfo = useContext(RouteContext);
-	const updateCompetition = useContext(UpdateTournamentContext)!;
+	const uid = useTournamentStore(s => s.uid);
+	const token = useTournamentStore(s => s.token);
+	const userInfo = { uid, token };
+	const setRoute = useTournamentStore(s => s.setRoute);
+	const updateCompetition = useTournamentStore(s => s.updateTournament);
 	const [loading, setLoading] = useState(false);
 
 	const [leaderboard, setLeaderboard] = useState<Leaderboard>();
@@ -22,11 +22,11 @@ const JoinLeaderboard = ({ leaderboardId, joinToken }: { leaderboardId: string; 
 
 	useEffect(() => {
 		const doAsync = async () => {
-			if (userInfo && routeInfo) {
+			if (userInfo) {
 				const l = await fetchLeaderboard(leaderboardId, userInfo.token);
 
 				if (l && l.members.includes(userInfo.uid)) {
-					routeInfo.setRoute({ page: Route.Leaderboard, data: leaderboardId });
+					setRoute({ page: Route.Leaderboard, data: leaderboardId });
 					const { pathname, query } = router;
 					delete router.query.join;
 					router.replace({ pathname, query }, undefined, { shallow: true });
@@ -37,7 +37,7 @@ const JoinLeaderboard = ({ leaderboardId, joinToken }: { leaderboardId: string; 
 		};
 
 		doAsync();
-	}, [userInfo, routeInfo, router, leaderboardId]);
+	}, [userInfo, setRoute, router, leaderboardId]);
 
 	if (!leaderboard) return <></>;
 
@@ -53,13 +53,13 @@ const JoinLeaderboard = ({ leaderboardId, joinToken }: { leaderboardId: string; 
 			<div className={classNames('text-2xl font-bold sm:text-3xl md:text-6xl')}>{leaderboard.name}</div>
 			<div
 				onClick={async () => {
-					if (userInfo && routeInfo && !loading) {
+					if (userInfo && !loading) {
 						setLoading(true);
 						await joinLeaderboard(leaderboard.id, userInfo?.token, joinToken);
 
 						await updateCompetition();
 
-						routeInfo.setRoute({ page: Route.Leaderboard, data: leaderboardId });
+						setRoute({ page: Route.Leaderboard, data: leaderboardId });
 
 						setLoading(false);
 

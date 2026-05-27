@@ -1,9 +1,8 @@
-import { useContext } from 'react';
-import CompetitionContext from '../context/CompetitionContext';
+import { useTournamentStore } from '../store/tournamentStore';
 import { getCompetitionClass } from '../lib/utils/reactHelper';
 
 const useCompetition = () => {
-	const competition = useContext(CompetitionContext);
+	const competition = useTournamentStore(s => s.competition);
 
 	const gcc = (p?: string) => getCompetitionClass(competition, p);
 

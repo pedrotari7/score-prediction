@@ -1,11 +1,11 @@
 import { EyeSlashIcon } from '@heroicons/react/24/outline';
 import type { JSX } from 'react';
-import { useContext } from 'react';
-import NoSpoilersContext from '../context/NoSpoilersContext';
+import { useTournamentStore } from '../store/tournamentStore';
 import { classNames } from '../lib/utils/reactHelper';
 
 const useNoSpoilers = () => {
-	const { noSpoilers, setNoSpoilers } = useContext(NoSpoilersContext)!;
+	const noSpoilers = useTournamentStore(s => s.noSpoilers);
+	const setNoSpoilers = useTournamentStore(s => s.setNoSpoilers);
 
 	const RedactedSpoilers = ({
 		children,

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
-import { memo, useContext, useEffect, useMemo, useState } from 'react';
-import UserContext from '../context/UserContext';
+import { memo, useEffect, useMemo, useState } from 'react';
+import { Route, useTournamentStore } from '../store/tournamentStore';
 import { useSwipeable } from 'react-swipeable';
 import LiveGame from './LiveGame';
 import type {
@@ -15,7 +15,6 @@ import type {
 	UserResult,
 	Users,
 } from '../../interfaces/main';
-import RouteContext, { Route } from '../context/RouteContext';
 import { classNames, formatScore, getCurrentDate, getStadiumImageURL } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
@@ -50,9 +49,7 @@ const UserGuess = ({
 	updatePrediction: UpdatePrediction;
 	myGuess?: boolean;
 }) => {
-	const routeInfo = useContext(RouteContext)!;
-
-	const { setRoute } = routeInfo;
+	const setRoute = useTournamentStore(s => s.setRoute);
 
 	const parsedGuess = { home: formatScore(guess.home), away: formatScore(guess.away) };
 
@@ -175,7 +172,9 @@ const CurrentMatch = ({
 	leaderboards: Record<string, Leaderboard>;
 	updatePrediction: UpdatePrediction;
 }) => {
-	const userInfo = useContext(UserContext);
+	const uid = useTournamentStore(s => s.uid);
+	const token = useTournamentStore(s => s.token);
+	const userInfo = { uid, token };
 
 	const { gcc, competition } = useCompetition();
 	const { noSpoilers } = useNoSpoilers();

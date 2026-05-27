@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import UpdateTournamentContext from '../context/UpdateTournamentContext';
+import React from 'react';
+import { useTournamentStore } from '../store/tournamentStore';
 import RefreshButton from './RefreshButton';
 
 const RefreshComp = () => {
-	const updateCompetition = useContext(UpdateTournamentContext)!;
+	const updateCompetition = useTournamentStore(s => s.updateTournament);
 
 	return <RefreshButton onClick={updateCompetition}></RefreshButton>;
 };

@@ -1,10 +1,10 @@
-import { Fragment, useContext, useState } from 'react';
+import { Fragment, useState } from 'react';
 import fileDownload from 'js-file-download';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Listbox, Transition } from '@headlessui/react';
 
-import UserContext from '../context/UserContext';
+import { useTournamentStore } from '../store/tournamentStore';
 import {
 	resetFixtures,
 	resetStandings,
@@ -28,7 +28,9 @@ import useStatus from '../hooks/useStatus';
 import RefreshButton from './RefreshButton';
 
 const SettingsPage = () => {
-	const userInfo = useContext(UserContext);
+	const uid = useTournamentStore(s => s.uid);
+	const token = useTournamentStore(s => s.token);
+	const userInfo = { uid, token };
 	const [response, setResponse] = useState({});
 	const [competition, setCompetition] = useState<Competition>(currentCompetition);
 

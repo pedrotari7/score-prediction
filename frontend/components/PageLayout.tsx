@@ -1,9 +1,8 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import type { Dispatch, ReactNode, SetStateAction } from 'react';
-import { useContext } from 'react';
+import type { ReactNode } from 'react';
 import { competitions } from '../../shared/utils';
-import CompetitionContext from '../context/CompetitionContext';
+import { useTournamentStore } from '../store/tournamentStore';
 import Navbar from './Navbar';
 
 const PageLayout = ({
@@ -14,10 +13,10 @@ const PageLayout = ({
 }: {
 	title: string;
 	loading?: boolean;
-	setLoading: Dispatch<SetStateAction<boolean>>;
+	setLoading: (loading: boolean) => void;
 	children: ReactNode;
 }) => {
-	const competition = useContext(CompetitionContext);
+	const competition = useTournamentStore(s => s.competition);
 
 	const footerCompetitions = [competitions.euro2020, competitions.euro2024];
 

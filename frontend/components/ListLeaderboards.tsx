@@ -1,8 +1,6 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import type { Leaderboard, Users } from '../../interfaces/main';
-import RouteContext, { Route } from '../context/RouteContext';
-import UpdateTournamentContext from '../context/UpdateTournamentContext';
-import UserContext from '../context/UserContext';
+import { Route, useTournamentStore } from '../store/tournamentStore';
 import useCompetition from '../hooks/useCompetition';
 import useLeaderboards from '../hooks/useLeaderboards';
 import { classNames } from '../lib/utils/reactHelper';
@@ -28,10 +26,10 @@ const sortLeaderboards = (list: Leaderboard[], key: SortKey, asc: boolean) => {
 };
 
 const ListLeaderboards = ({ users }: { users: Users }) => {
-	const { setRoute } = useContext(RouteContext)!;
+	const setRoute = useTournamentStore(s => s.setRoute);
 	const { gcc } = useCompetition();
-	const userInfo = useContext(UserContext);
-	const updateCompetition = useContext(UpdateTournamentContext)!;
+	const token = useTournamentStore(s => s.token);
+	const updateCompetition = useTournamentStore(s => s.updateTournament);
 
 	const { update, loading, leaderboards } = useLeaderboards();
 
@@ -100,8 +98,8 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 								<DeleteButton
 									className='absolute right-1 top-4 z-10'
 									onClick={async () => {
-										if (userInfo) {
-											await deleteLeaderboard(l.id, userInfo.token);
+										if (token) {
+											await deleteLeaderboard(l.id, token);
 											await updateCompetition();
 										}
 									}}

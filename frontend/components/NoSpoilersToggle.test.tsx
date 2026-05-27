@@ -1,36 +1,34 @@
 import { act } from '@testing-library/react';
 import { customRender } from '../lib/utils/testUtils';
 import NoSpoilersToggle from './NoSpoilersToggle';
-import type { ContextType } from 'react';
-import type NoSpoilersContext from '../context/NoSpoilersContext';
+import { useTournamentStore } from '../store/tournamentStore';
+
+beforeEach(() => {
+	useTournamentStore.setState({ noSpoilers: null, token: '' });
+});
 
 describe('NoSpoilersToggle', () => {
 	it('renders no spoilers toggle turned off if no context', () => {
-		const { container } = customRender(<NoSpoilersToggle />, {
-			noSpoilersContextProps: { noSpoilers: undefined, setNoSpoilers: () => {} } as unknown as ContextType<
-				typeof NoSpoilersContext
-			>,
-		});
+		useTournamentStore.setState({ noSpoilers: null });
+		const { container } = customRender(<NoSpoilersToggle />);
 		expect(container).toMatchSnapshot();
 	});
 
 	it('renders no spoilers toggle turned off', () => {
-		const { container } = customRender(<NoSpoilersToggle />, {
-			noSpoilersContextProps: { noSpoilers: false, setNoSpoilers: () => {} },
-		});
+		useTournamentStore.setState({ noSpoilers: false });
+		const { container } = customRender(<NoSpoilersToggle />);
 		expect(container).toMatchSnapshot();
 	});
 
 	it('renders no spoilers toggle turned on', () => {
-		const { container } = customRender(<NoSpoilersToggle />, {
-			noSpoilersContextProps: { noSpoilers: true, setNoSpoilers: () => {} },
-		});
+		useTournamentStore.setState({ noSpoilers: true });
+		const { container } = customRender(<NoSpoilersToggle />);
 		expect(container).toMatchSnapshot();
 	});
 
-	it('toggle switch and update context', () => {
-		const noSpoilersContextProps = { noSpoilers: false, setNoSpoilers: jest.fn() };
-		const { container } = customRender(<NoSpoilersToggle />, { noSpoilersContextProps });
+	it('toggle switch and update store', () => {
+		useTournamentStore.setState({ noSpoilers: false });
+		const { container } = customRender(<NoSpoilersToggle />);
 
 		expect(container).toMatchSnapshot();
 
@@ -42,7 +40,6 @@ describe('NoSpoilersToggle', () => {
 			}
 		});
 
-		expect(noSpoilersContextProps.setNoSpoilers).toHaveBeenCalledTimes(1);
-		expect(noSpoilersContextProps.setNoSpoilers).toHaveBeenCalledWith(true, expect.anything(), undefined);
+		expect(useTournamentStore.getState().noSpoilers).toBe(true);
 	});
 });

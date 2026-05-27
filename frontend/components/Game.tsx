@@ -1,13 +1,10 @@
-import { useContext } from 'react';
 import type { Predictions, UpdatePrediction } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
-import FixturesContext from '../context/FixturesContext';
-import RouteContext from '../context/RouteContext';
-import UserContext from '../context/UserContext';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { userInputPrediction, UserInputPrediction } from '../hooks/userInputPrediction';
 import { classNames, formatGameDate, formatScore, getCurrentDate } from '../lib/utils/reactHelper';
+import { useTournamentStore } from '../store/tournamentStore';
 import Flag from './Flag';
 import ResultContainer from './ResultContainer';
 import { Round } from './Round';
@@ -25,10 +22,9 @@ const Game = ({
 	gameID: number;
 	userID: string;
 }) => {
-	const data = useContext(FixturesContext)!;
-	const routeInfo = useContext(RouteContext)!;
+	const data = useTournamentStore(s => s.fixtures);
 	const { gcc } = useCompetition();
-	const { uid } = useContext(UserContext)!;
+	const uid = useTournamentStore(s => s.uid);
 
 	const { RedactedSpoilers } = useNoSpoilers();
 
@@ -36,7 +32,7 @@ const Game = ({
 
 	const { homeInputRef, awayInputRef, handleContainerClick } = userInputPrediction(gameID, prediction);
 
-	if (!data || !routeInfo) return <></>;
+	if (!data) return <></>;
 
 	const isMyPredictions = uid === userID;
 

@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import type { MouseEventHandler, ReactNode } from 'react';
-import { useContext, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { Leaderboard, Users } from '../../interfaces/main';
-import RouteContext, { Route } from '../context/RouteContext';
+import { Route, useTournamentStore } from '../store/tournamentStore';
 import { classNames } from '../lib/utils/reactHelper';
 import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
@@ -69,11 +69,12 @@ const Leaderboards = ({
 }: {
 	users: Users;
 	leaderboards: Record<string, Leaderboard>;
-	setLeaderboards: React.Dispatch<React.SetStateAction<Record<string, Leaderboard>>>;
+	setLeaderboards: (leaderboards: Record<string, Leaderboard>) => void;
 }) => {
 	const auth = useAuth();
 	const { RedactedSpoilers } = useNoSpoilers();
-	const { route, setRoute } = useContext(RouteContext)!;
+	const route = useTournamentStore(s => s.route);
+	const setRoute = useTournamentStore(s => s.setRoute);
 	const { gcc } = useCompetition();
 	const [sortOption, setSortOption] = useState(SortOptions.points);
 	const initialLeaderboard = route.data ? (route.data as string) : 'global';

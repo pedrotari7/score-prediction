@@ -1,7 +1,7 @@
 import { PlusCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { Leaderboard } from '../../interfaces/main';
-import UserContext from '../context/UserContext';
+import { useTournamentStore } from '../store/tournamentStore';
 import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';
 import { createLeaderboard, fetchLeaderboards } from '../pages/api';
@@ -13,7 +13,7 @@ const CreateLeaderboard = ({
 	onCreated?: (leaderboardId: string, leaderboards: Record<string, Leaderboard>) => void;
 }) => {
 	const inputRef = useRef<HTMLInputElement>(null);
-	const userInfo = useContext(UserContext);
+	const token = useTournamentStore(s => s.token);
 	const [loading, setLoading] = useState(false);
 
 	const [open, setOpen] = useState(false);
@@ -24,13 +24,13 @@ const CreateLeaderboard = ({
 	}, [open]);
 
 	const handleCreate = async () => {
-		if (inputRef.current && userInfo && !loading) {
+		if (inputRef.current && token && !loading) {
 			setLoading(true);
 			const name = inputRef.current.value;
 			if (name) {
-				const result = await createLeaderboard(name, userInfo.token);
+				const result = await createLeaderboard(name, token);
 				if (result.success) {
-					const { data: updatedLeaderboards } = await fetchLeaderboards(userInfo.token);
+					const { data: updatedLeaderboards } = await fetchLeaderboards(token);
 					const lbMap = (updatedLeaderboards ?? []).reduce(
 						(acc: Record<string, Leaderboard>, lb: Leaderboard) => ({ ...acc, [lb.id]: lb }),
 						{}

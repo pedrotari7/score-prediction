@@ -1,12 +1,12 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Status } from '../../interfaces/main';
-import UserContext from '../context/UserContext';
+import { useTournamentStore } from '../store/tournamentStore';
 import { fetchStatus } from '../pages/api';
 
 const useStatus = () => {
 	const [loading, setLoading] = useState(true);
 	const [status, setStatus] = useState<Status>();
-	const userInfo = useContext(UserContext);
+	const token = useTournamentStore(s => s.token);
 
 	const [trigger, setTrigger] = useState(false);
 
@@ -16,11 +16,11 @@ const useStatus = () => {
 
 	const update = useCallback(async () => {
 		setLoading(true);
-		if (userInfo) {
-			setStatus(await fetchStatus(userInfo?.token));
+		if (token) {
+			setStatus(await fetchStatus(token));
 		}
 		setLoading(false);
-	}, [userInfo]);
+	}, [token]);
 
 	useEffect(() => {
 		update();

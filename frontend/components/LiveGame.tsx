@@ -1,13 +1,10 @@
 import type { Dispatch, SetStateAction } from 'react';
-import { useContext } from 'react';
 import Countdown, { zeroPad } from 'react-countdown';
 import { isGameFinished } from '../../shared/utils';
-import FixturesContext from '../context/FixturesContext';
-import UpdateTournamentContext from '../context/UpdateTournamentContext';
-import UserContext from '../context/UserContext';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames, formatGameDate, getCurrentDate } from '../lib/utils/reactHelper';
+import { useTournamentStore } from '../store/tournamentStore';
 import dynamic from 'next/dynamic';
 import ClientOnly from './ClientOnly';
 import Flag from './Flag';
@@ -23,13 +20,13 @@ const LiveGame = ({
 	gameID: number;
 	setIsExtraInfoOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-	const data = useContext(FixturesContext);
-	const userInfo = useContext(UserContext);
+	const data = useTournamentStore(s => s.fixtures);
+	const token = useTournamentStore(s => s.token);
 	const { gcc } = useCompetition();
-	const updateCompetition = useContext(UpdateTournamentContext)!;
+	const updateCompetition = useTournamentStore(s => s.updateTournament);
 	const { RedactedSpoilers, noSpoilers } = useNoSpoilers();
 
-	if (!data || !userInfo) return <></>;
+	if (!data || !token) return <></>;
 
 	const game = data[gameID];
 

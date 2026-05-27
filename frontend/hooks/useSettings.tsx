@@ -1,6 +1,6 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Settings } from '../../interfaces/main';
-import UserContext from '../context/UserContext';
+import { useTournamentStore } from '../store/tournamentStore';
 import { fetchSettings, updateSettings } from '../pages/api';
 
 const useSettings = () => {
@@ -12,23 +12,23 @@ const useSettings = () => {
 		disableLiveScoresApi: false,
 		allowUpdatePoints: false,
 	});
-	const userInfo = useContext(UserContext);
+	const token = useTournamentStore(s => s.token);
 
 	const update = useCallback(async () => {
 		setLoading(true);
-		if (userInfo) {
-			setSettings(await fetchSettings(userInfo?.token));
+		if (token) {
+			setSettings(await fetchSettings(token));
 		}
 		setLoading(false);
-	}, [userInfo]);
+	}, [token]);
 
 	const toggleSetting = useCallback(
 		async (key: keyof Settings) => {
 			const updatedSettings = { ...settings, [key]: !settings?.[key] } as Settings;
 
 			setSettings(updatedSettings);
-			if (userInfo) {
-				await updateSettings(userInfo.token, updatedSettings);
+			if (token) {
+				await updateSettings(token, updatedSettings);
 			}
 		},
 		[settings]

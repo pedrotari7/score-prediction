@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import RouteContext, { Route } from '../context/RouteContext';
+import React from 'react';
+import { Route, useTournamentStore } from '../store/tournamentStore';
 import { classNames, relativeTimeFromSeconds } from '../lib/utils/reactHelper';
 import DesktopOnly from './DesktopOnly';
 import MobileOnly from './MobileOnly';
@@ -9,7 +9,7 @@ import useCompetition from '../hooks/useCompetition';
 import useUsers from '../hooks/useUsers';
 
 const UsersList = () => {
-	const { setRoute } = useContext(RouteContext)!;
+	const setRoute = useTournamentStore(s => s.setRoute);
 	const { gcc } = useCompetition();
 
 	const { users, loading, update } = useUsers();

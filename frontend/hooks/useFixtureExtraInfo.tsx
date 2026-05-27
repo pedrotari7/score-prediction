@@ -1,6 +1,6 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Fixture, FixtureExtraInfo } from '../../interfaces/main';
-import UserContext from '../context/UserContext';
+import { useTournamentStore } from '../store/tournamentStore';
 import { fetchFixtureExtraInfo } from '../pages/api';
 import useCompetition from './useCompetition';
 import { isGameFinished } from '../../shared/utils';
@@ -10,7 +10,7 @@ const extraInfoCache = new Map<number, FixtureExtraInfo>();
 const useFixtureExtraInfo = (game: Fixture) => {
 	const { competition } = useCompetition();
 	const [loading, setLoading] = useState(false);
-	const userInfo = useContext(UserContext)!;
+	const token = useTournamentStore(s => s.token);
 	const gameFinished = isGameFinished(game);
 	const [extraInfo, setExtraInfo] = useState<FixtureExtraInfo | undefined>(() =>
 		gameFinished ? extraInfoCache.get(game.fixture.id) : undefined
@@ -22,15 +22,15 @@ const useFixtureExtraInfo = (game: Fixture) => {
 			return;
 		}
 		setLoading(true);
-		if (userInfo) {
-			const extra = await fetchFixtureExtraInfo(game.fixture.id, userInfo.token, competition);
+		if (token) {
+			const extra = await fetchFixtureExtraInfo(game.fixture.id, token, competition);
 			if (extra) {
 				if (gameFinished) extraInfoCache.set(game.fixture.id, extra);
 				setExtraInfo(extra);
 			}
 		}
 		setLoading(false);
-	}, [userInfo, game.fixture.id, gameFinished, competition]);
+	}, [token, game.fixture.id, gameFinished, competition]);
 
 	useEffect(() => {
 		update();

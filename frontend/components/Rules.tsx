@@ -1,6 +1,5 @@
-import { useContext } from 'react';
-import type { RouteInfo } from '../context/RouteContext';
-import RouteContext, { Route } from '../context/RouteContext';
+import type { RouteInfo } from '../store/tournamentStore';
+import { Route, useTournamentStore } from '../store/tournamentStore';
 import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';
 import Panel from './Panel';
@@ -91,11 +90,8 @@ const Deadlines = () => (
 const Rules = () => {
 	const { gcc } = useCompetition();
 
-	const routeInfo = useContext(RouteContext);
-
-	if (!routeInfo) return <></>;
-
-	const { setRoute, route } = routeInfo;
+	const setRoute = useTournamentStore(s => s.setRoute);
+	const route = useTournamentStore(s => s.route);
 
 	const updateRoute = (info: RouteInfo) => setRoute(info);
 

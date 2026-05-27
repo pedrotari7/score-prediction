@@ -1,6 +1,5 @@
 import Image from 'next/image';
-import type { Dispatch, SetStateAction } from 'react';
-import { Fragment, useContext } from 'react';
+import { Fragment } from 'react';
 import {
 	Disclosure,
 	DisclosureButton,
@@ -16,8 +15,8 @@ import { classNames } from '../lib/utils/reactHelper';
 import { getAuth } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth';
-import type { RouteInfo } from '../context/RouteContext';
-import RouteContext, { Route } from '../context/RouteContext';
+import type { RouteInfo } from '../store/tournamentStore';
+import { Route, useTournamentStore } from '../store/tournamentStore';
 import { app } from '../lib/firebaseClient';
 import { competitions, currentCompetitions } from '../../shared/utils';
 import NoSpoilersToggle from './NoSpoilersToggle';
@@ -29,13 +28,7 @@ interface NavItem {
 	info: RouteInfo;
 }
 
-export default function Navbar({
-	loading,
-	setLoading,
-}: {
-	loading: boolean;
-	setLoading: Dispatch<SetStateAction<boolean>>;
-}) {
+export default function Navbar({ loading, setLoading }: { loading: boolean; setLoading: (loading: boolean) => void }) {
 	const router = useRouter();
 	const { user } = useAuth();
 
@@ -51,11 +44,10 @@ export default function Navbar({
 		{ name: 'Rules', info: { page: Route.Rules, data: user?.uid } },
 	].filter(it => !noSpoilers || (noSpoilers && it.info.page !== Route.Standings));
 
-	const routeInfo = useContext(RouteContext);
+	const route = useTournamentStore(s => s.route);
+	const setRoute = useTournamentStore(s => s.setRoute);
 
-	if (!routeInfo || !competition) return <></>;
-
-	const { route, setRoute } = routeInfo;
+	if (!competition) return <></>;
 
 	const updateRoute = (info: RouteInfo) => setRoute(info);
 

@@ -256,7 +256,7 @@ exports[`NoSpoilersToggle renders no spoilers toggle turned on 1`] = `
 </div>
 `;
 
-exports[`NoSpoilersToggle toggle switch and update context 1`] = `
+exports[`NoSpoilersToggle toggle switch and update store 1`] = `
 <div>
   <label
     class="flex flex-col items-center justify-between gap-2 rounded-md py-2 text-xs font-bold sm:py-4 cursor-pointer"

@@ -1,6 +1,5 @@
-import { useContext } from 'react';
 import type { Fixture, Fixtures, Standing, Standings } from '../../interfaces/main';
-import GroupMapContext from '../context/GroupMapContext';
+import { useTournamentStore } from '../store/tournamentStore';
 import useCompetition from '../hooks/useCompetition';
 import { classNames, GROUP_COLORS } from '../lib/utils/reactHelper';
 import Flag from './Flag';
@@ -20,7 +19,7 @@ const STANDINGS_HEADERS: { abbr: string; label: string }[] = [
 ];
 
 const StandingsPage = ({ standings, fixtures }: { standings: Standings; fixtures: Fixtures }) => {
-	const groupMap = useContext(GroupMapContext);
+	const groupMap = useTournamentStore(s => s.groupMap);
 	const { gcc } = useCompetition();
 
 	return (
