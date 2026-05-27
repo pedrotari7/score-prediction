@@ -19,12 +19,10 @@ export default async function fetcher(url: string, token: string, options: Recor
 		throw error;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} catch (error: any) {
-		if (!error.data) {
-			error.data = { message: error.message };
-		}
-
-		return { uid: null, success: false };
-
-		// throw error;
+		return {
+			success: false,
+			error: error?.message || 'Network error',
+			status: error?.response?.status || 0,
+		};
 	}
 }
