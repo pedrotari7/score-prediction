@@ -622,7 +622,7 @@ app.get('/tournament', async (req, res) => {
     .set({ lastCheckIn: FieldValue.serverTimestamp() }, { merge: true })
     .catch(e => console.error('Background lastCheckIn update failed:', e));
 
-  res.set('Cache-Control', hasGamesOngoing ? 'no-store' : 'private, max-age=60');
+  res.set('Cache-Control', 'no-store');
   return res.json(tournament);
 });
 
