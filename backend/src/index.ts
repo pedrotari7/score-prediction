@@ -732,7 +732,10 @@ app.get('/fixture-extra', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const gameID = parseInt((req.query.gameID as string) ?? 0);
+  const gameID = parseInt(req.query.gameID as string, 10);
+  if (!Number.isInteger(gameID) || gameID <= 0) {
+    return res.status(400).json({ error: 'Invalid gameID' });
+  }
 
   const extraDoc = await getDBFixturesExtraInfo(competition).collection(`${gameID}`).doc('extra').get();
 
