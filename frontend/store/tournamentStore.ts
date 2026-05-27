@@ -173,7 +173,7 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 	},
 
 	updatePrediction: async (prediction: Prediction, gameId: number) => {
-		const { token, uid, competition } = get();
+		const { token, uid, competition, predictions: prevPredictions } = get();
 		if (!token) return;
 
 		set(state => ({
@@ -186,7 +186,7 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 		const result = await updatePredictions(token, gameId, prediction, competition);
 
 		if (!result.success) {
-			get()._navigate?.({ page: Route.RefreshPage });
+			set({ predictions: prevPredictions });
 		}
 	},
 

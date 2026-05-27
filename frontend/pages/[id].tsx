@@ -12,6 +12,7 @@ import { useAuth } from '../lib/auth';
 import UsersList from '../components/Users';
 import JoinLeaderboard from '../components/JoinLeaderboard';
 import ListLeaderboards from '../components/ListLeaderboards';
+import ErrorBoundary from '../components/ErrorBoundary';
 import RefreshPage from '../components/RefreshPage';
 import type { RouteInfo } from '../store/tournamentStore';
 import { Route, useTournamentStore } from '../store/tournamentStore';
@@ -57,57 +58,61 @@ const MainComponent = () => {
 	const router = useRouter();
 	const { join: leaderboardId, token: joinToken } = router.query;
 
-	switch (route.page) {
-		case Route.Home:
-		case Route.Match:
-			return (
-				<CurrentMatch
-					fixtures={fixtures}
-					predictions={predictions}
-					users={users}
-					gameID={route?.data as number}
-					leaderboards={leaderboards}
-					updatePrediction={updatePrediction}
-				/>
-			);
-		case Route.Predictions:
-			return (
-				<FixturesPage
-					fixtures={fixtures}
-					predictions={predictions}
-					updatePrediction={updatePrediction}
-					standings={standings}
-					user={users[(route.data as string) ?? uid]}
-				/>
-			);
-		case Route.Leaderboard:
-			return (
-				<Leaderboards
-					key={route.data as string}
-					users={users}
-					leaderboards={leaderboards}
-					setLeaderboards={setLeaderboards}
-				/>
-			);
-		case Route.Standings:
-			return <StandingsPage standings={standings} fixtures={fixtures} />;
-		case Route.Settings:
-			return <SettingsPage />;
-		case Route.Rules:
-			return <Rules />;
-		case Route.Users:
-			return <UsersList />;
-		case Route.JoinLeaderboard:
-			return <JoinLeaderboard leaderboardId={leaderboardId as string} joinToken={joinToken as string} />;
-		case Route.RefreshPage:
-			return <RefreshPage />;
-		case Route.ListLeaderboards:
-			return <ListLeaderboards users={users} />;
-		case Route.Stats:
-			return <Stats fixtures={fixtures} predictions={predictions} />;
-		default:
-			return <></>;
-	}
+	const content = (() => {
+		switch (route.page) {
+			case Route.Home:
+			case Route.Match:
+				return (
+					<CurrentMatch
+						fixtures={fixtures}
+						predictions={predictions}
+						users={users}
+						gameID={route?.data as number}
+						leaderboards={leaderboards}
+						updatePrediction={updatePrediction}
+					/>
+				);
+			case Route.Predictions:
+				return (
+					<FixturesPage
+						fixtures={fixtures}
+						predictions={predictions}
+						updatePrediction={updatePrediction}
+						standings={standings}
+						user={users[(route.data as string) ?? uid]}
+					/>
+				);
+			case Route.Leaderboard:
+				return (
+					<Leaderboards
+						key={route.data as string}
+						users={users}
+						leaderboards={leaderboards}
+						setLeaderboards={setLeaderboards}
+					/>
+				);
+			case Route.Standings:
+				return <StandingsPage standings={standings} fixtures={fixtures} />;
+			case Route.Settings:
+				return <SettingsPage />;
+			case Route.Rules:
+				return <Rules />;
+			case Route.Users:
+				return <UsersList />;
+			case Route.JoinLeaderboard:
+				return <JoinLeaderboard leaderboardId={leaderboardId as string} joinToken={joinToken as string} />;
+			case Route.RefreshPage:
+				return <RefreshPage />;
+			case Route.ListLeaderboards:
+				return <ListLeaderboards users={users} />;
+			case Route.Stats:
+				return <Stats fixtures={fixtures} predictions={predictions} />;
+			default:
+				return <></>;
+		}
+	})();
+
+	return <ErrorBoundary>{content}</ErrorBoundary>;
 };
 
 const Home = () => {
