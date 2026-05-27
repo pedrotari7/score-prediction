@@ -32,7 +32,6 @@ import type {
   Tournament,
   UserResult,
 } from '../../interfaces/main';
-import { joinResults } from './util';
 import {
   calculateResults,
   calculateUserResultPoints,
@@ -45,6 +44,7 @@ import {
   isGameStarted,
   isGroupStage,
   isNum,
+  joinResults,
   sortGroup,
   sortWorldCupGroup,
 } from '../../shared/utils';

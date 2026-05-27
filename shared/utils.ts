@@ -110,11 +110,13 @@ export const getExtraTimeResult = ({ score: { fulltime, extratime }, fixture, go
 	return goals;
 };
 
-export const joinResults = (a: Partial<UserResult>, b: Partial<UserResult>) => ({
-	...a,
-	...b,
-	points: (a.points ?? 0) + (b.points ?? 0),
-});
+export const joinResults = (a: Partial<UserResult>, b: Partial<UserResult>): UserResult => {
+	const result = { ...DEFAULT_USER_RESULT };
+	for (const k in result) {
+		result[k] += (a?.[k] ?? 0) + (b?.[k] ?? 0);
+	}
+	return result;
+};
 
 export const getResult = (prediction: Prediction, game: Fixture): Partial<UserResult> => {
 	const result = getExtraTimeResult(game);
