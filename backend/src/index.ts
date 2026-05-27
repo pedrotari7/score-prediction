@@ -118,7 +118,8 @@ const get = async (url: string, opts: Record<string, unknown> = {}) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     })) as any;
   } catch (error: unknown) {
-    return error;
+    console.error('API Sports request failed:', error);
+    return { status: 0, data: { response: [] } };
   }
 };
 
