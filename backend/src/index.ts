@@ -467,6 +467,10 @@ app.get('/fetch-predictions', async (req, res) => {
 
   const [fixturesDoc, settingsDoc] = await Promise.all([getDBFixtures(competition).get(), getDBSettings().get()]);
 
+  if (!fixturesDoc.exists || !settingsDoc.exists) {
+    return res.status(500).json({ error: 'Missing competition data' });
+  }
+
   const fixtures = fixturesDoc.data()?.data as Fixtures;
   const settings = settingsDoc.data() as Settings;
 
@@ -534,6 +538,8 @@ app.get('/tournament', async (req, res) => {
     getDBFixtures(competition).get(),
     getDBStandings(competition).get(),
   ]);
+
+  if (!settingsDoc.exists) return res.status(500).json({ error: 'Missing settings' });
 
   const settings = settingsDoc.data() as Settings;
   let fixtures = fixturesDocument.data();
@@ -679,9 +685,17 @@ app.get('/points', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const fixtures = (await getDBFixtures(competition).get()).data()?.data as Fixtures;
+  const [fixturesDoc, predictionsDoc] = await Promise.all([
+    getDBFixtures(competition).get(),
+    getDBPredictions(competition).get(),
+  ]);
 
-  const predictions = (await getDBPredictions(competition).get()).data() as Predictions;
+  if (!fixturesDoc.exists || !predictionsDoc.exists) {
+    return res.status(500).json({ error: 'Missing competition data' });
+  }
+
+  const fixtures = fixturesDoc.data()?.data as Fixtures;
+  const predictions = predictionsDoc.data() as Predictions;
 
   const points = await updatePoints(competition, predictions, fixtures);
   return res.json(points);
@@ -693,11 +707,19 @@ app.get('/groups', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const fixtures = (await getDBFixtures(competition).get()).data()?.data as Fixtures;
+  const [fixturesDoc, standingsDoc, predictionsDoc] = await Promise.all([
+    getDBFixtures(competition).get(),
+    getDBStandings(competition).get(),
+    getDBPredictions(competition).get(),
+  ]);
 
-  const standings = (await getDBStandings(competition).get()).data()?.data as Record<string, Standing[]>;
+  if (!fixturesDoc.exists || !standingsDoc.exists || !predictionsDoc.exists) {
+    return res.status(500).json({ error: 'Missing competition data' });
+  }
 
-  const predictions = (await getDBPredictions(competition).get()).data() as Predictions;
+  const fixtures = fixturesDoc.data()?.data as Fixtures;
+  const standings = standingsDoc.data()?.data as Record<string, Standing[]>;
+  const predictions = predictionsDoc.data() as Predictions;
 
   const groupPoints = await updateGroups(competition, predictions, fixtures, standings);
 
@@ -712,11 +734,9 @@ app.get('/fixture-extra', async (req, res) => {
 
   const gameID = parseInt((req.query.gameID as string) ?? 0);
 
-  const fixturesExtraInfo = (
-    await getDBFixturesExtraInfo(competition).collection(`${gameID}`).doc('extra').get()
-  ).data() as FixtureExtraInfo;
+  const extraDoc = await getDBFixturesExtraInfo(competition).collection(`${gameID}`).doc('extra').get();
 
-  return res.json(fixturesExtraInfo);
+  return res.json(extraDoc.exists ? (extraDoc.data() as FixtureExtraInfo) : {});
 });
 
 app.get('/cleanup', async (req, res) => {
@@ -727,7 +747,10 @@ app.get('/cleanup', async (req, res) => {
 
   const competition = parseCompetition(req);
 
-  const predictions = (await getDBPredictions(competition).get()).data() as Predictions;
+  const predictionsDoc = await getDBPredictions(competition).get();
+  if (!predictionsDoc.exists) return res.status(500).json({ error: 'Missing predictions data' });
+
+  const predictions = predictionsDoc.data() as Predictions;
 
   const cleanedPredictions = Object.fromEntries(
     Object.entries(predictions).map(([gameID, gamePredictions]) => {
@@ -754,9 +777,10 @@ app.get('/settings', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
-  const settings = (await getDBSettings().get()).data() as Settings;
+  const settingsDoc = await getDBSettings().get();
+  if (!settingsDoc.exists) return res.status(500).json({ error: 'Missing settings' });
 
-  return res.json(settings);
+  return res.json(settingsDoc.data() as Settings);
 });
 
 app.post('/update-settings', async (req, res) => {
