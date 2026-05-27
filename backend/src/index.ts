@@ -9,7 +9,7 @@ import { defineSecret } from 'firebase-functions/params';
 import { randomUUID } from 'crypto';
 import { initializeApp } from 'firebase-admin/app';
 import { FieldValue, Timestamp, getFirestore } from 'firebase-admin/firestore';
-import type { DecodedIdToken } from 'firebase-admin/auth';
+import type { DecodedIdToken, UserRecord } from 'firebase-admin/auth';
 import { getAuth } from 'firebase-admin/auth';
 
 import cors from 'cors';
@@ -192,6 +192,17 @@ const getDBScores = (competition: Competition) => getDbDoc(competition, 'scores'
 const getDBGroupPoints = (competition: Competition) => getDbDoc(competition, 'groupPoints');
 const getDBSettings = () => getDoc('admin', 'settings');
 const getDBUser = (uid: string) => getDoc('users', uid);
+
+const listAllUsers = async () => {
+  const allUsers: UserRecord[] = [];
+  let pageToken: string | undefined;
+  do {
+    const result = await getAuth(firebaseApp).listUsers(1000, pageToken);
+    allUsers.push(...result.users);
+    pageToken = result.pageToken;
+  } while (pageToken);
+  return allUsers;
+};
 
 const updateLastCheckIn = async (uid: string): Promise<void> => {
   await getDBUser(uid).set({ lastCheckIn: FieldValue.serverTimestamp() }, { merge: true });
@@ -398,30 +409,28 @@ const getUsers = async (
   const scores =
     cachedPoints ?? ((await getDBScores(competition).get()).data() as Record<string, Record<string, UserResult>>) ?? {};
 
-  const allUsers = (await getAuth(firebaseApp).listUsers()).users.reduce(
-    (users, { uid, displayName, photoURL, customClaims, metadata }) => {
-      const isNewUser = metadata.creationTime === metadata.lastSignInTime;
+  const authUsers = await listAllUsers();
+  const allUsers = authUsers.reduce((users, { uid, displayName, photoURL, customClaims, metadata }) => {
+    const isNewUser = metadata.creationTime === metadata.lastSignInTime;
 
-      const lastSignInTimeDiff = getTimeDiff(Timestamp.fromDate(new Date(metadata.lastSignInTime)));
+    const lastSignInTimeDiff = getTimeDiff(Timestamp.fromDate(new Date(metadata.lastSignInTime)));
 
-      const OneMonth = 60 * 60 * 24 * 31;
+    const OneMonth = 60 * 60 * 24 * 31;
 
-      const isCurrentCompetition = currentCompetitions.some(current => competition.name === current.name);
+    const isCurrentCompetition = currentCompetitions.some(current => competition.name === current.name);
 
-      if (!(uid in scores) && !(isCurrentCompetition && lastSignInTimeDiff < OneMonth)) {
-        return users;
-      }
-      const score = (scores && scores[uid]) ?? {};
-      const admin = customClaims?.admin as boolean;
+    if (!(uid in scores) && !(isCurrentCompetition && lastSignInTimeDiff < OneMonth)) {
+      return users;
+    }
+    const score = (scores && scores[uid]) ?? {};
+    const admin = customClaims?.admin as boolean;
 
-      const shouldOnboard = isNewUser || lastSignInTimeDiff > OneMonth;
+    const shouldOnboard = isNewUser || lastSignInTimeDiff > OneMonth;
 
-      const name = displayName?.split(' ').shift() ?? 'Unknown User';
+    const name = displayName?.split(' ').shift() ?? 'Unknown User';
 
-      return { ...users, [uid]: { uid, displayName: name, photoURL, admin, score, isNewUser, shouldOnboard } };
-    },
-    {}
-  );
+    return { ...users, [uid]: { uid, displayName: name, photoURL, admin, score, isNewUser, shouldOnboard } };
+  }, {});
 
   return allUsers;
 };
@@ -479,7 +488,7 @@ app.get('/fetch-users', async (req, res) => {
   const authResult = await authenticate(req, res, true);
   if (!authResult.success) return authResult.result;
 
-  const authUsers = (await getAuth(firebaseApp).listUsers()).users;
+  const authUsers = await listAllUsers();
   const userRefs = authUsers.map(u => getDBUser(u.uid));
   const userDocs = await getFirestore(firebaseApp).getAll(...userRefs);
   const userDataMap = Object.fromEntries(userDocs.map(d => [d.id, d.data() ?? { leaderboards: [] }]));
