@@ -105,7 +105,13 @@ describe('POST /leaderboard (join)', () => {
     const user2Token = await createTestUser('user-2', 'user2@test.com');
     await seedUserDoc('user-2');
 
-    const res = await request(app).post(`/leaderboard?leaderboardId=${leaderboardId}`).set('Authorization', user2Token);
+    const lbDoc = await getDb().collection('leaderboards').doc(leaderboardId).get();
+    const joinToken = lbDoc.data()!.joinToken;
+
+    const res = await request(app)
+      .post(`/leaderboard?leaderboardId=${leaderboardId}`)
+      .set('Authorization', user2Token)
+      .send({ joinToken });
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
