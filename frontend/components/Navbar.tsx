@@ -115,7 +115,7 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 									<div className='flex space-x-4'>
 										{!loading &&
 											navigation.map((item, index) => (
-												<div
+												<button
 													key={index}
 													onClick={() => updateRoute(item.info)}
 													className={classNames(
@@ -128,10 +128,10 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 													aria-current={isCurrent(item) ? 'page' : undefined}
 												>
 													{item.name}
-												</div>
+												</button>
 											))}
 										{concurrentCompetition && !loading ? (
-											<div
+											<button
 												onClick={() => {
 													setLoading(true);
 													router.push(`/${concurrentCompetition?.name}`);
@@ -143,7 +143,7 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 												)}
 											>
 												{concurrentCompetition.name}
-											</div>
+											</button>
 										) : null}
 									</div>
 								</div>
@@ -304,27 +304,27 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 						<div className='flex flex-col space-y-1 px-2 pb-3 pt-2'>
 							{!loading &&
 								navigation.map(item => (
-									<DisclosureButton key={item.name}>
-										<div
-											onClick={() => {
-												updateRoute(item.info);
-												open = false;
-											}}
-											className={classNames(
-												'text-lg font-bold',
-												isCurrent(item)
-													? `${gcc('bg-dark')} ${gcc('text-light')}`
-													: `text-gray-300 hover:bg-gray-700 ${gcc('hover:text-light')}`,
-												'block cursor-pointer rounded-md px-3 py-2'
-											)}
-											aria-current={isCurrent(item) ? 'page' : undefined}
-										>
-											{item.name}
-										</div>
+									<DisclosureButton
+										key={item.name}
+										as='button'
+										onClick={() => {
+											updateRoute(item.info);
+											open = false;
+										}}
+										className={classNames(
+											'w-full text-left text-lg font-bold',
+											isCurrent(item)
+												? `${gcc('bg-dark')} ${gcc('text-light')}`
+												: `text-gray-300 hover:bg-gray-700 ${gcc('hover:text-light')}`,
+											'block cursor-pointer rounded-md px-3 py-2'
+										)}
+										aria-current={isCurrent(item) ? 'page' : undefined}
+									>
+										{item.name}
 									</DisclosureButton>
 								))}
 							{concurrentCompetition && !loading ? (
-								<div
+								<button
 									onClick={() => {
 										setLoading(true);
 										router.push(`/${concurrentCompetition?.name}`);
@@ -342,7 +342,7 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 										alt=''
 										className='h-10 w-auto'
 									/>
-								</div>
+								</button>
 							) : null}
 						</div>
 					</DisclosurePanel>
