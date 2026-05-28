@@ -26,6 +26,8 @@ const ScoreInput = ({
 			onChange={async e => {
 				e.stopPropagation();
 				e.preventDefault();
+				const val = parseInt(e.target.value);
+				if (!isNaN(val) && (val < 0 || val > 99)) return;
 				await onchange(e);
 			}}
 			onClick={e => e.stopPropagation()}
