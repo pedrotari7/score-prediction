@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React, { useMemo, useState } from 'react';
 import type { Leaderboard, Users } from '../../interfaces/main';
 import { Route, useTournamentStore } from '../store/tournamentStore';
@@ -132,9 +133,12 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 													}}
 												>
 													{users[m]?.photoURL && (
-														<img
+														<Image
 															className='mr-2 size-8 rounded-full object-cover'
-															src={users[m]?.photoURL}
+															src={users[m].photoURL}
+															alt={users[m].displayName || ''}
+															width={32}
+															height={32}
 														/>
 													)}
 													{users[m]?.displayName}

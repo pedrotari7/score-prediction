@@ -138,8 +138,14 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 
 		return (
 			<div className={classNames('relative flex flex-row justify-center', className)}>
-				<img src='/area_horizontal.svg' className='hidden size-full opacity-10 sm:block' />
-				<img src='/area.svg' className='size-full opacity-10 sm:hidden' />
+				<Image
+					src='/area_horizontal.svg'
+					className='hidden size-full opacity-10 sm:block'
+					width={600}
+					height={400}
+					alt=''
+				/>
+				<Image src='/area.svg' className='size-full opacity-10 sm:hidden' width={400} height={600} alt='' />
 				<div className='absolute size-full'>
 					<div className='flex size-full flex-col items-center justify-center sm:flex-row'>
 						<div className='flex h-1/2 w-full flex-col sm:h-full sm:w-1/2 sm:flex-row'>

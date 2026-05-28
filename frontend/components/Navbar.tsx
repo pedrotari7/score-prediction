@@ -175,10 +175,12 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 														)}
 													>
 														<span className='sr-only'>Open user menu</span>
-														<img
+														<Image
 															className='size-10 rounded-full border-4 border-transparent bg-[#181a1b] hover:border-white'
-															src={user?.photoURL || ''}
-															alt=''
+															src={user?.photoURL || '/default-avatar.png'}
+															alt={user?.displayName || ''}
+															width={40}
+															height={40}
 														/>
 													</MenuButton>
 												)}

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import { classNames, relativeTimeFromSeconds } from '../lib/utils/reactHelper';
@@ -71,9 +72,12 @@ const UsersList = () => {
 									</MobileOnly>
 									<div className='flex flex-row flex-wrap items-center gap-4 text-left text-xs'>
 										{user?.photoURL && (
-											<img
+											<Image
 												className='mr-2 size-8 rounded-full object-cover'
-												src={user?.photoURL}
+												src={user.photoURL}
+												alt={user.displayName || ''}
+												width={32}
+												height={32}
 											/>
 										)}
 										<span className='text-lg font-bold'>{user?.displayName}</span>
