@@ -4,7 +4,7 @@ import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Listbox, Transition } from '@headlessui/react';
 
-import { useTournamentStore } from '../store/tournamentStore';
+import { Route, useTournamentStore } from '../store/tournamentStore';
 import {
 	resetFixtures,
 	resetStandings,
@@ -260,6 +260,15 @@ const SettingsPage = () => {
 					className={`m-5 rounded bg-red-700 px-4 py-2 font-bold text-white`}
 				>
 					Test Error Boundary
+				</button>
+
+				<button
+					onClick={() => {
+						useTournamentStore.getState().setRoute({ page: Route.RefreshPage });
+					}}
+					className={`m-5 rounded bg-red-700 px-4 py-2 font-bold text-white`}
+				>
+					Test Refresh Page
 				</button>
 			</div>
 
