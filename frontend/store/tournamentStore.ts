@@ -162,6 +162,11 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 
 		const nextGame = sortedFixtures.find(game => !isGameFinished(game));
 
+		if (uid in users && users[uid].shouldOnboard) {
+			get()._navigate?.({ page: Route.Rules, data: uid });
+			return;
+		}
+
 		if (nextGame) {
 			const nextGamePrediction = predictions[nextGame.fixture.id];
 			if (!nextGamePrediction || !(uid in nextGamePrediction)) {
