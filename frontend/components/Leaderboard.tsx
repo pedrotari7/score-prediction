@@ -231,7 +231,7 @@ const Leaderboards = ({
 									</div>
 								</div>
 								<RedactedSpoilers>
-									<UserScores user={user} stage={stage} />
+									<UserScores user={user} stage={stage} highlightKey={sortOption.key} />
 								</RedactedSpoilers>
 							</div>
 						</div>

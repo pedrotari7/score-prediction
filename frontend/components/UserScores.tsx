@@ -22,36 +22,50 @@ const TooltipInto = ({ children, content }: { children: ReactNode; content: stri
 	</a>
 );
 
-export const UserScores = ({ user, stage }: { user: User; stage: string }) => {
+const highlight = (key: string, activeKey?: string) => (key === activeKey ? 'ring-2 ring-white scale-110' : '');
+
+export const UserScores = ({ user, stage, highlightKey }: { user: User; stage: string; highlightKey?: string }) => {
 	const stageScore = user.score[stage] ?? DEFAULT_USER_RESULT;
 	return (
 		<div className='flex flex-row flex-wrap items-center justify-center'>
 			<Tooltip id='my-tooltip' />
 			<TooltipInto content='Exact Score'>
-				<Circle className='bg-green-600'>{stageScore.exact}</Circle>
+				<Circle className={classNames('bg-green-600', highlight('exact', highlightKey))}>
+					{stageScore.exact}
+				</Circle>
 			</TooltipInto>
 			<TooltipInto content='Correct Result'>
-				<Circle className='bg-yellow-600'>{stageScore.result}</Circle>
+				<Circle className={classNames('bg-yellow-600', highlight('result', highlightKey))}>
+					{stageScore.result}
+				</Circle>
 			</TooltipInto>
 
 			<TooltipInto content="One Team's Score">
-				<Circle className='bg-pink-600'>{stageScore.onescore}</Circle>
+				<Circle className={classNames('bg-pink-600', highlight('onescore', highlightKey))}>
+					{stageScore.onescore}
+				</Circle>
 			</TooltipInto>
 
 			<TooltipInto content='No Points'>
-				<Circle className='bg-red-600'>{stageScore.fail}</Circle>
+				<Circle className={classNames('bg-red-600', highlight('fail', highlightKey))}>{stageScore.fail}</Circle>
 			</TooltipInto>
 
 			<TooltipInto content='Groups'>
-				<Circle className='bg-purple-700'>{stageScore.groups}</Circle>
+				<Circle className={classNames('bg-purple-700', highlight('groups', highlightKey))}>
+					{stageScore.groups}
+				</Circle>
 			</TooltipInto>
 
 			<TooltipInto content='Penalty Bonus'>
-				<Circle className='bg-gray-500'>{stageScore.penalty}</Circle>
+				<Circle className={classNames('bg-gray-500', highlight('penalty', highlightKey))}>
+					{stageScore.penalty}
+				</Circle>
 			</TooltipInto>
 
 			<TooltipInto content='Total Points'>
-				<Circle className='my-2 size-10 bg-gray-700 p-4'>{stageScore.points}</Circle>
+				<Circle className={classNames('my-2 size-10 bg-gray-700 p-4', highlight('points', highlightKey))}>
+					{stageScore.points}
+				</Circle>
 			</TooltipInto>
 		</div>
 	);
