@@ -26,12 +26,13 @@ module.exports = {
     'object-curly-spacing': 0,
     'max-len': ['error', { code: 120 }],
     'quote-props': ['error', 'as-needed'],
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '_' }],
+    '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '_', argsIgnorePattern: '_' }],
     '@typescript-eslint/consistent-type-imports': 'error',
+    '@typescript-eslint/no-empty-function': ['error', { allow: ['arrowFunctions'] }],
   },
   settings: {
     'import/resolver': {
-      typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
+      typescript: {},
     },
   },
 };
