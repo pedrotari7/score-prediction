@@ -130,10 +130,10 @@ const Game = ({
 			</span>
 
 			<div className='flex w-full flex-row items-center justify-between sm:justify-center lg:w-8/12'>
-				<div className='flex w-2/12 flex-col items-center sm:w-5/12 sm:flex-row sm:items-center sm:justify-end lg:w-5/12'>
+				<div className='flex w-3/12 flex-col items-center sm:w-5/12 sm:flex-row sm:items-center sm:justify-end lg:w-5/12'>
 					<span className='mr-2 hidden font-bold sm:block'>{game?.teams.home.name}</span>
 					<Flag team={game?.teams.home} />
-					<span className='mt-1.5 w-full truncate text-center text-xs font-bold sm:hidden'>
+					<span className='mt-1.5 text-center text-xs font-bold leading-tight sm:hidden'>
 						{game?.teams.home.name}
 					</span>
 				</div>
@@ -186,9 +186,9 @@ const Game = ({
 					)}
 				</div>
 
-				<div className='my-2 flex w-2/12 flex-col items-center sm:w-5/12 sm:flex-row sm:items-center sm:justify-start lg:my-0 lg:w-5/12'>
+				<div className='my-2 flex w-3/12 flex-col items-center sm:w-5/12 sm:flex-row sm:items-center sm:justify-start lg:my-0 lg:w-5/12'>
 					<Flag team={game?.teams.away} />
-					<span className='mt-1.5 w-full truncate text-center text-xs font-bold sm:hidden'>
+					<span className='mt-1.5 text-center text-xs font-bold leading-tight sm:hidden'>
 						{game?.teams.away.name}
 					</span>
 					<span className='ml-2 hidden font-bold sm:block'>{game?.teams.away.name}</span>

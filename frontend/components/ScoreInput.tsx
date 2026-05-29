@@ -39,7 +39,7 @@ const ScoreInput = ({
 			className={classNames(
 				className,
 				gcc('text-dark'),
-				`block h-11 w-14 text-center font-bold hover:bg-gray-100`,
+				`block h-12 w-16 text-center font-bold hover:bg-gray-100 sm:h-11 sm:w-14`,
 				'rounded p-3 leading-tight focus:border-gray-500 focus:bg-white focus:outline-none',
 				'border border-gray-200 transition-colors duration-300',
 				saved
