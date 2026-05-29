@@ -113,10 +113,12 @@ const PredictionsStats = ({
 						</div>
 					</RedactedSpoilers>
 
-					<div className='flex flex-row items-center gap-2'>
-						<span className='font-bold'>Average prediction</span>
-						<span>{`${median(homePredictions)} - ${median(awayPredictions)}`}</span>
-					</div>
+					<RedactedSpoilers>
+						<div className='flex flex-row items-center gap-2'>
+							<span className='font-bold'>Average prediction</span>
+							<span>{`${median(homePredictions)} - ${median(awayPredictions)}`}</span>
+						</div>
+					</RedactedSpoilers>
 				</div>
 			)}
 		</div>

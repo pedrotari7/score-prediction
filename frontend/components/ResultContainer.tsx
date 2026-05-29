@@ -67,7 +67,7 @@ const ResultContainer = ({
 				className
 			)}
 		>
-			{isPenaltyWinner && (
+			{!noSpoilers && isPenaltyWinner && (
 				<div className='absolute -right-3 -top-1 size-7 rounded-full bg-gray-500'>
 					<div className='flex size-full items-center justify-center text-xs'>+1</div>
 				</div>
