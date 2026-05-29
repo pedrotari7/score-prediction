@@ -1,15 +1,81 @@
 import type { Predictions, UpdatePrediction } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
+import Countdown, { zeroPad } from 'react-countdown';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { userInputPrediction, UserInputPrediction } from '../hooks/userInputPrediction';
 import { classNames, formatGameDate, formatScore, getCurrentDate } from '../lib/utils/reactHelper';
 import { useTournamentStore } from '../store/tournamentStore';
+import ClientOnly from './ClientOnly';
 import Flag from './Flag';
 import ResultContainer from './ResultContainer';
 import { Round } from './Round';
 
 const DEFAULT_PREDICTION = { home: null, away: null };
+
+const ONE_HOUR = 60 * 60 * 1000;
+const FIFTEEN_MIN = 15 * 60 * 1000;
+
+const DeadlineCountdown = ({ gameDate }: { gameDate: Date }) => {
+	const now = getCurrentDate();
+	const timeTillKickoff = gameDate.getTime() - now.getTime();
+
+	if (timeTillKickoff <= 0 || timeTillKickoff > ONE_HOUR) return null;
+
+	const isUrgent = timeTillKickoff <= FIFTEEN_MIN;
+
+	return (
+		<ClientOnly>
+			<div
+				className={classNames(
+					'rounded px-2 py-0.5 text-xs font-bold',
+					isUrgent ? 'animate-pulse bg-red-600 text-white' : 'bg-yellow-600 text-white'
+				)}
+			>
+				<Countdown
+					date={gameDate}
+					renderer={({ hours, minutes, seconds }) => (
+						<span>
+							{hours > 0 && `${zeroPad(hours)}:`}
+							{zeroPad(minutes)}:{zeroPad(seconds)}
+						</span>
+					)}
+				/>
+			</div>
+		</ClientOnly>
+	);
+};
+
+const DEBUG_COUNTDOWN = false;
+
+const DebugCountdowns = () => {
+	if (!DEBUG_COUNTDOWN) return null;
+	const now = new Date();
+	return (
+		<div className='m-4 flex flex-col gap-4 rounded bg-gray-800 p-4'>
+			<div className='text-lg font-bold text-yellow-400'>Countdown Debug</div>
+			<div className='flex flex-row flex-wrap gap-4'>
+				<div className='flex flex-col items-center gap-1'>
+					<span className='text-xs text-gray-400'>50 min left</span>
+					<DeadlineCountdown gameDate={new Date(now.getTime() + 50 * 60 * 1000)} />
+				</div>
+				<div className='flex flex-col items-center gap-1'>
+					<span className='text-xs text-gray-400'>14 min left</span>
+					<DeadlineCountdown gameDate={new Date(now.getTime() + 14 * 60 * 1000)} />
+				</div>
+				<div className='flex flex-col items-center gap-1'>
+					<span className='text-xs text-gray-400'>2 min left</span>
+					<DeadlineCountdown gameDate={new Date(now.getTime() + 2 * 60 * 1000)} />
+				</div>
+				<div className='flex flex-col items-center gap-1'>
+					<span className='text-xs text-gray-400'>2 hours (hidden)</span>
+					<DeadlineCountdown gameDate={new Date(now.getTime() + 2 * 60 * 60 * 1000)} />
+					<span className='text-xs text-gray-500'>should be empty</span>
+				</div>
+			</div>
+		</div>
+	);
+};
 
 const Game = ({
 	predictions,
@@ -55,9 +121,12 @@ const Game = ({
 			)}
 			onClick={() => handleContainerClick(isMyPredictions)}
 		>
-			<span className='flex w-full items-center justify-between text-left text-xs lg:w-3/12'>
+			<span className='flex w-full items-center justify-between gap-2 text-left text-xs lg:w-3/12'>
 				<Round game={game} />
-				<span className='text-xs'>{formatGameDate(game?.fixture.date, true)}</span>
+				<span className='flex items-center gap-2'>
+					{!isInPast && <DeadlineCountdown gameDate={gameDate} />}
+					<span className='text-xs'>{formatGameDate(game?.fixture.date, true)}</span>
+				</span>
 			</span>
 
 			<div className='flex w-full flex-row items-center justify-between sm:justify-center lg:w-8/12'>
@@ -134,3 +203,4 @@ const Game = ({
 };
 
 export default Game;
+export { DebugCountdowns };

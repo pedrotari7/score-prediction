@@ -4,7 +4,7 @@ import { isGameFinished } from '../../shared/utils';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { useAuth } from '../lib/auth';
 import { classNames } from '../lib/utils/reactHelper';
-import Game from './Game';
+import Game, { DebugCountdowns } from './Game';
 import Panel from './Panel';
 import PredictedGroups from './PredictedGroups';
 import RefreshComp from './RefreshComp';
@@ -34,6 +34,8 @@ const FixturesPage = ({
 		);
 
 	const uid = currentUser?.uid;
+
+	const debugCountdowns = <DebugCountdowns />;
 
 	const isGroupStage = (f: Fixture) => f.league.round.includes('Group');
 
@@ -72,6 +74,7 @@ const FixturesPage = ({
 
 	return (
 		<Panel className={classNames('m-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop')}>
+			{debugCountdowns}
 			<div className='mb-6 flex flex-col items-center gap-2 text-3xl sm:flex-row'>
 				<div className='flex flex-row items-center justify-center'>
 					{user?.photoURL && (
