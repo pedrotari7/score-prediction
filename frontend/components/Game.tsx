@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { Predictions, UpdatePrediction } from '../../interfaces/main';
 import { isNum } from '../../shared/utils';
 import Countdown, { zeroPad } from 'react-countdown';
@@ -77,7 +78,7 @@ const DebugCountdowns = () => {
 	);
 };
 
-const Game = ({
+const Game = memo(function Game({
 	predictions,
 	updatePrediction,
 	gameID,
@@ -87,7 +88,7 @@ const Game = ({
 	updatePrediction: UpdatePrediction;
 	gameID: number;
 	userID: string;
-}) => {
+}) {
 	const data = useTournamentStore(s => s.fixtures);
 	const { gcc } = useCompetition();
 	const uid = useTournamentStore(s => s.uid);
@@ -200,7 +201,7 @@ const Game = ({
 			</span>
 		</div>
 	);
-};
+});
 
 export default Game;
 export { DebugCountdowns };
