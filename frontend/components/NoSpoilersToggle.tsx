@@ -1,7 +1,6 @@
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import Switch from 'react-switch';
 import React from 'react';
-import 'react-toggle/style.css'; // for ES6 modules
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames } from '../lib/utils/reactHelper';
 
