@@ -17,6 +17,7 @@ import RefreshPage from '../components/RefreshPage';
 import type { RouteInfo } from '../store/tournamentStore';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import type { Competition } from '../../interfaces/main';
+import useLiveFixtures from '../hooks/useLiveFixtures';
 
 const SettingsPage = dynamic(() => import('../components/Settings'));
 const Leaderboards = dynamic(() => import('../components/Leaderboard'));
@@ -130,6 +131,8 @@ const Home = () => {
 	const router = useRouter();
 	const isNavigatingRef = useRef(false);
 	const navigateRef = useRef<(info: RouteInfo) => void>(() => {});
+
+	useLiveFixtures();
 
 	const loading = useTournamentStore(s => s.loading);
 	const isAuthenticated = useTournamentStore(s => s.isAuthenticated);

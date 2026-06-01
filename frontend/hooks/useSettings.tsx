@@ -31,7 +31,7 @@ const useSettings = () => {
 				await updateSettings(token, updatedSettings);
 			}
 		},
-		[settings]
+		[settings, token]
 	);
 
 	useEffect(() => {

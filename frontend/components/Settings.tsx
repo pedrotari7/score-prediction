@@ -17,6 +17,7 @@ import {
 	fetchLeaderboards,
 	initCompetition,
 	migrateLeaderboardTokens,
+	updateFixtureScore,
 } from '../pages/api';
 import type { Competition } from '../../interfaces/main';
 import { competitions, currentCompetition } from '../../shared/utils';
@@ -27,6 +28,108 @@ import Loading from './Loading';
 import useStatus from '../hooks/useStatus';
 import RefreshButton from './RefreshButton';
 import PwaInstallPrompt from './PwaInstallPrompt';
+
+const FIXTURE_STATUSES = ['NS', '1H', 'HT', '2H', 'ET', 'BT', 'PEN', 'FT', 'AET', 'INT', 'PST'];
+
+const FixtureEditor = ({ token }: { token: string }) => {
+	const fixtures = useTournamentStore(s => s.fixtures);
+	const competition = useTournamentStore(s => s.competition);
+	const [selectedGame, setSelectedGame] = useState<number | null>(null);
+	const [home, setHome] = useState(0);
+	const [away, setAway] = useState(0);
+	const [status, setStatus] = useState('FT');
+	const [saving, setSaving] = useState(false);
+	const [result, setResult] = useState('');
+
+	const sortedFixtures = Object.values(fixtures).sort((a, b) => a.fixture.timestamp - b.fixture.timestamp);
+
+	const selectGame = (gameId: number) => {
+		const game = fixtures[gameId];
+		setSelectedGame(gameId);
+		setHome(game?.goals?.home ?? 0);
+		setAway(game?.goals?.away ?? 0);
+		setStatus(game?.fixture?.status?.short ?? 'NS');
+	};
+
+	const handleSave = async () => {
+		if (!selectedGame) return;
+		setSaving(true);
+		setResult('');
+		const res = await updateFixtureScore(token, competition, selectedGame, home, away, status);
+		setResult(res.success ? 'Saved' : res.error || 'Error');
+		setSaving(false);
+		setTimeout(() => setResult(''), 3000);
+	};
+
+	return (
+		<div className='mx-10 my-6 rounded-md bg-gray-600 p-4'>
+			<span className='mb-3 block text-lg font-bold'>Edit Fixture Score</span>
+			<div className='flex flex-col gap-3'>
+				<select
+					className='rounded bg-gray-700 p-2 text-white'
+					value={selectedGame ?? ''}
+					onChange={e => selectGame(Number(e.target.value))}
+				>
+					<option value='' disabled>
+						Select a fixture
+					</option>
+					{sortedFixtures.map(game => (
+						<option key={game.fixture.id} value={game.fixture.id}>
+							{game.teams.home.name} vs {game.teams.away.name} ({game.fixture.status.short})
+						</option>
+					))}
+				</select>
+
+				{selectedGame && (
+					<div className='flex flex-row flex-wrap items-center gap-3'>
+						<div className='flex items-center gap-2'>
+							<label className='text-sm'>Home</label>
+							<input
+								type='number'
+								min={0}
+								value={home}
+								onChange={e => setHome(parseInt(e.target.value) || 0)}
+								className='w-16 rounded bg-gray-700 p-2 text-center text-white'
+							/>
+						</div>
+						<div className='flex items-center gap-2'>
+							<label className='text-sm'>Away</label>
+							<input
+								type='number'
+								min={0}
+								value={away}
+								onChange={e => setAway(parseInt(e.target.value) || 0)}
+								className='w-16 rounded bg-gray-700 p-2 text-center text-white'
+							/>
+						</div>
+						<div className='flex items-center gap-2'>
+							<label className='text-sm'>Status</label>
+							<select
+								value={status}
+								onChange={e => setStatus(e.target.value)}
+								className='rounded bg-gray-700 p-2 text-white'
+							>
+								{FIXTURE_STATUSES.map(s => (
+									<option key={s} value={s}>
+										{s}
+									</option>
+								))}
+							</select>
+						</div>
+						<button
+							onClick={handleSave}
+							disabled={saving}
+							className='rounded bg-green-600 px-4 py-2 font-bold text-white hover:bg-green-500 disabled:opacity-50'
+						>
+							{saving ? 'Saving...' : 'Save'}
+						</button>
+						{result && <span className='text-sm font-bold text-green-400'>{result}</span>}
+					</div>
+				)}
+			</div>
+		</div>
+	);
+};
 
 const SettingsPage = () => {
 	const uid = useTournamentStore(s => s.uid);
@@ -282,6 +385,8 @@ const SettingsPage = () => {
 			</div>
 
 			<PwaInstallPrompt forceShow={showPwaPrompt} onDismiss={() => setShowPwaPrompt(false)} />
+
+			<FixtureEditor token={userInfo.token} />
 
 			<div className='mx-10 my-6 rounded-md bg-gray-600 p-4'>
 				<span className='mb-3 block text-lg font-bold'>App Version</span>

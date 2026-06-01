@@ -66,7 +66,7 @@ export const useInputPrediction = (gameID: number, prediction: Prediction) => {
 			if (!isValidScore(prediction.home)) return homeInputRef.current?.focus();
 			return awayInputRef.current?.focus();
 		},
-		[prediction, gameID]
+		[prediction, gameID, setRoute]
 	);
 
 	return { homeInputRef, awayInputRef, handleContainerClick };

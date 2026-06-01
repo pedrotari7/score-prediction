@@ -47,6 +47,36 @@ export const registerRoutes = (app: Express) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
+  app.post('/update-fixture-score', async (req, res) => {
+    const authResult = await authenticate(req, res, true);
+    if (!authResult.success) return authResult.result;
+
+    const competition = parseCompetition(req);
+    const { gameId, home, away, status } = parseBody(req.body);
+
+    const parsedGameId = Number(gameId);
+    if (!Number.isInteger(parsedGameId) || parsedGameId <= 0) {
+      return res.status(400).json({ error: 'Invalid gameId' });
+    }
+    if (typeof home !== 'number' || typeof away !== 'number') {
+      return res.status(400).json({ error: 'home and away must be numbers' });
+    }
+
+    const fixturesDoc = await getDBFixtures(competition).get();
+    if (!fixturesDoc.exists) return res.status(500).json({ error: 'Missing fixtures' });
+
+    const fixtures = fixturesDoc.data()?.data as Fixtures;
+    if (!fixtures[parsedGameId]) return res.status(404).json({ error: 'Game not found' });
+
+    fixtures[parsedGameId].goals = { home, away };
+    if (status) fixtures[parsedGameId].fixture.status.short = status;
+    fixtures[parsedGameId].score.fulltime = { home, away };
+
+    await getDBFixtures(competition).set({ data: fixtures, timestamp: FieldValue.serverTimestamp() });
+
+    return res.json({ success: true });
+  });
+
   app.get('/tournament', async (req, res) => {
     const authResult = await authenticate(req, res);
     if (!authResult.success) return authResult.result;

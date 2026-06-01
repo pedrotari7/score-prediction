@@ -146,6 +146,25 @@ export const initCompetition = async (token: string, competition: Competition) =
 export const migrateLeaderboardTokens = async (token: string) =>
 	await cFetch(`${backendUrl}/migrate-leaderboard-tokens`, token, undefined, {}, { method: 'POST' });
 
+export const updateFixtureScore = async (
+	token: string,
+	competition: Competition,
+	gameId: number,
+	home: number,
+	away: number,
+	status: string
+) =>
+	await cFetch(
+		`${backendUrl}/update-fixture-score`,
+		token,
+		competition,
+		{},
+		{
+			body: JSON.stringify({ gameId, home, away, status }),
+			method: 'POST',
+		}
+	);
+
 export const postNoSpoilers = async (noSpoilers: boolean, token: string): Promise<{ success: boolean }> =>
 	await cFetch(
 		`${backendUrl}/no-spoilers`,
