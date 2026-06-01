@@ -10,7 +10,7 @@ import type {
   Standing,
   Tournament,
 } from '../../../interfaces/main';
-import { isGameOnGoing, isGameStarted } from '../../../shared/utils';
+import { currentCompetitions, isGameOnGoing, isGameStarted } from '../../../shared/utils';
 import { authenticate, decodeToken, parseBody, parseCompetition } from '../lib/auth';
 import {
   FieldValue,
@@ -149,7 +149,14 @@ export const registerRoutes = (app: Express) => {
       .set({ lastCheckIn: FieldValue.serverTimestamp() }, { merge: true })
       .catch(e => console.error('Background lastCheckIn update failed:', e));
 
-    res.set('Cache-Control', 'no-store');
+    const isHistorical = !currentCompetitions.some(c => c.name === competition.name);
+    if (isHistorical) {
+      res.set('Cache-Control', 'public, max-age=86400');
+    } else if (hasGamesOngoing) {
+      res.set('Cache-Control', 'no-store');
+    } else {
+      res.set('Cache-Control', 'private, no-cache');
+    }
     return res.json(tournament);
   });
 
