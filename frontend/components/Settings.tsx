@@ -283,6 +283,26 @@ const SettingsPage = () => {
 
 			<PwaInstallPrompt forceShow={showPwaPrompt} onDismiss={() => setShowPwaPrompt(false)} />
 
+			<div className='mx-10 my-6 rounded-md bg-gray-600 p-4'>
+				<span className='mb-3 block text-lg font-bold'>App Version</span>
+				<div className='flex flex-col gap-1 text-sm text-gray-300'>
+					<span>
+						<span className='text-gray-400'>Commit: </span>
+						<code className='rounded bg-gray-700 px-1.5 py-0.5 text-xs'>
+							{process.env.NEXT_PUBLIC_APP_ENV === 'local-dev'
+								? 'dev'
+								: (process.env.NEXT_PUBLIC_GIT_COMMIT_HASH ?? 'unknown')}
+						</code>
+					</span>
+					<span>
+						<span className='text-gray-400'>Built: </span>
+						{process.env.NEXT_PUBLIC_BUILD_TIMESTAMP
+							? new Date(process.env.NEXT_PUBLIC_BUILD_TIMESTAMP).toLocaleString()
+							: 'unknown'}
+					</span>
+				</div>
+			</div>
+
 			<div className='m-10 rounded-md bg-gray-700 p-5'>
 				<div className='flex flex-row items-center justify-between'>
 					<div className='text-xl font-bold'>Response</div>
