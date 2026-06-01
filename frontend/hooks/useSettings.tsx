@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Settings } from '../../interfaces/main';
+import type { Settings } from '../../interfaces/main';
 import { useTournamentStore } from '../store/tournamentStore';
 import { fetchSettings, updateSettings } from '../pages/api';
 

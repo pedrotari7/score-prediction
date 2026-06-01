@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import { fetchUsers } from '../pages/api';
 import useCompetition from './useCompetition';
-import { AuthenticatedUser } from '../../interfaces/main';
+import type { AuthenticatedUser } from '../../interfaces/main';
 
 const useUsers = () => {
 	const [users, setUsers] = useState<AuthenticatedUser[]>();

@@ -31,7 +31,7 @@ import PredictionsStats from './PredictionsStats';
 import SelectLeaderboard from './SelectLeaderboard';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import useCompetition from '../hooks/useCompetition';
-import { userInputPrediction, UserInputPrediction } from '../hooks/userInputPrediction';
+import { useInputPrediction, UserInputPrediction } from '../hooks/useInputPrediction';
 import Panel from './Panel';
 
 const UserGuess = ({
@@ -60,7 +60,7 @@ const UserGuess = ({
 	const gameDate = new Date(game?.fixture.date);
 	const isInPast = getCurrentDate().getTime() >= gameDate.getTime();
 
-	const { homeInputRef, awayInputRef } = userInputPrediction(gameID, guess);
+	const { homeInputRef, awayInputRef } = useInputPrediction(gameID, guess);
 
 	return (
 		<ResultContainer
@@ -140,6 +140,7 @@ const KeyboardHandle = memo(function KeyboardHandle({
 }) {
 	useEffect(() => {
 		const keyDownHandler = (event: KeyboardEvent) => {
+			if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
 			switch (event.code) {
 				case 'ArrowLeft':
 					if (prevGameId !== null) setGameID(prevGameId);

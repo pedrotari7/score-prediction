@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { GroupMap } from '../../interfaces/main';
+import type { GroupMap } from '../../interfaces/main';
 
 const GroupMapContext = createContext<GroupMap>({});
 

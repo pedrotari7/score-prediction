@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Status } from '../../interfaces/main';
+import type { Status } from '../../interfaces/main';
 import { useTournamentStore } from '../store/tournamentStore';
 import { fetchStatus } from '../pages/api';
 

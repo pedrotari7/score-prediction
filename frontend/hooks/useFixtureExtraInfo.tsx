@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Fixture, FixtureExtraInfo } from '../../interfaces/main';
+import type { Fixture, FixtureExtraInfo } from '../../interfaces/main';
 import { useTournamentStore } from '../store/tournamentStore';
 import { fetchFixtureExtraInfo } from '../pages/api';
 import useCompetition from './useCompetition';

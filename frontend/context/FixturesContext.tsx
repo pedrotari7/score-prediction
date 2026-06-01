@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { Fixtures } from '../../interfaces/main';
+import type { Fixtures } from '../../interfaces/main';
 
 const FixturesContext = createContext<Fixtures | null>(null);
 

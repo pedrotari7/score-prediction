@@ -4,7 +4,7 @@ import { isNum } from '../../shared/utils';
 import Countdown, { zeroPad } from 'react-countdown';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
-import { userInputPrediction, UserInputPrediction } from '../hooks/userInputPrediction';
+import { useInputPrediction, UserInputPrediction } from '../hooks/useInputPrediction';
 import { classNames, formatGameDate, formatScore, getCurrentDate } from '../lib/utils/reactHelper';
 import { useTournamentStore } from '../store/tournamentStore';
 import ClientOnly from './ClientOnly';
@@ -97,7 +97,7 @@ const Game = memo(function Game({
 
 	const prediction = predictions?.[gameID]?.[userID] || DEFAULT_PREDICTION;
 
-	const { homeInputRef, awayInputRef, handleContainerClick } = userInputPrediction(gameID, prediction);
+	const { homeInputRef, awayInputRef, handleContainerClick } = useInputPrediction(gameID, prediction);
 
 	if (!data) return <></>;
 

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Leaderboard } from '../../interfaces/main';
+import type { Leaderboard } from '../../interfaces/main';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import { fetchLeaderboards } from '../pages/api';
 

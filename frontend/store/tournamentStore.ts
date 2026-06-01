@@ -9,7 +9,7 @@ import type {
 	Standings,
 	Users,
 } from '../../interfaces/main';
-import { competitions, currentCompetition, isGameFinished } from '../../shared/utils';
+import { currentCompetition, isGameFinished } from '../../shared/utils';
 import { fetchTournament, postNoSpoilers, updatePredictions } from '../pages/api';
 
 export enum Route {
