@@ -43,6 +43,10 @@ import {
 } from '../services/tournament';
 
 export const registerRoutes = (app: Express) => {
+  app.get('/health', (_, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  });
+
   app.get('/tournament', async (req, res) => {
     const authResult = await authenticate(req, res);
     if (!authResult.success) return authResult.result;
