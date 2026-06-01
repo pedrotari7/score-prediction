@@ -22,6 +22,7 @@ const SettingsPage = dynamic(() => import('../components/Settings'));
 const Leaderboards = dynamic(() => import('../components/Leaderboard'));
 const StandingsPage = dynamic(() => import('../components/Standings'));
 const Stats = dynamic(() => import('../components/Stats'));
+const HeadToHead = dynamic(() => import('../components/HeadToHead'));
 
 type QueryParams = Record<string, string | string[] | undefined>;
 
@@ -107,6 +108,15 @@ const MainComponent = () => {
 				return <ListLeaderboards users={users} />;
 			case Route.Stats:
 				return <Stats fixtures={fixtures} predictions={predictions} />;
+			case Route.Compare:
+				return (
+					<HeadToHead
+						fixtures={fixtures}
+						predictions={predictions}
+						users={users}
+						compareUid={route.data as string}
+					/>
+				);
 			default:
 				return <></>;
 		}

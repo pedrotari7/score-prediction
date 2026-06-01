@@ -12,6 +12,7 @@ module.exports = {
 	outputFileTracingRoot: path.join(__dirname, '../'),
 	experimental: {
 		externalDir: true,
+		instrumentationHook: true,
 	},
 	images: {
 		remotePatterns: [

@@ -25,6 +25,7 @@ export enum Route {
 	JoinLeaderboard = 'joinLeaderboard',
 	RefreshPage = 'refreshPage',
 	Stats = 'stats',
+	Compare = 'compare',
 }
 
 export interface RouteInfo {

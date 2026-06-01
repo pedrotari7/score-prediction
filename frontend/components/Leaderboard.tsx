@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import type { MouseEventHandler, ReactNode } from 'react';
 import { useMemo, useState } from 'react';
+import { ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import type { Leaderboard, Users } from '../../interfaces/main';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import { classNames } from '../lib/utils/reactHelper';
@@ -196,16 +197,28 @@ const Leaderboards = ({
 							>
 								<div className='mb-0 flex flex-col flex-wrap items-center justify-evenly sm:mr-4 sm:flex-row sm:justify-start'>
 									<DesktopOnly>
-										<div className='m-2 mr-6 flex size-8 flex-row items-center justify-center text-xl font-bold'>
+										<div className='m-2 mr-6 flex flex-row items-center gap-2 text-xl font-bold'>
 											<span
 												className={classNames(
 													gcc('bg-light'),
 													gcc('text-dark'),
-													'mr-1 flex size-full items-center justify-center rounded-full px-6'
+													'flex size-8 items-center justify-center rounded-full px-6'
 												)}
 											>
 												{index + 1}
 											</span>
+											{currentUser && currentUser !== user.uid && (
+												<button
+													onClick={e => {
+														e.stopPropagation();
+														setRoute({ page: Route.Compare, data: user.uid });
+													}}
+													className='rounded-md p-1 hover:bg-gray-600'
+													title='Compare predictions'
+												>
+													<ArrowsRightLeftIcon className='size-5' />
+												</button>
+											)}
 										</div>
 									</DesktopOnly>
 									<MobileOnly>
@@ -213,10 +226,22 @@ const Leaderboards = ({
 											className={classNames(
 												gcc('bg-light'),
 												gcc('text-dark'),
-												'absolute -left-0 top-0 w-12 rounded-md text-center font-bold'
+												'absolute -left-0 top-0 flex flex-row items-center gap-1 rounded-md px-2 text-center font-bold'
 											)}
 										>
-											<span className='p-3'>{index + 1}</span>
+											<span className='p-1'>{index + 1}</span>
+											{currentUser && currentUser !== user.uid && (
+												<button
+													onClick={e => {
+														e.stopPropagation();
+														setRoute({ page: Route.Compare, data: user.uid });
+													}}
+													className='rounded-md p-1'
+													title='Compare predictions'
+												>
+													<ArrowsRightLeftIcon className='size-4' />
+												</button>
+											)}
 										</div>
 									</MobileOnly>
 									<div className='mb-2 flex flex-row flex-wrap items-center justify-center sm:mb-0'>

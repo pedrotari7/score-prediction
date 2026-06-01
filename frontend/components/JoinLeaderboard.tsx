@@ -11,7 +11,6 @@ const JoinLeaderboard = ({ leaderboardId, joinToken }: { leaderboardId: string; 
 	const { gcc } = useCompetition();
 	const uid = useTournamentStore(s => s.uid);
 	const token = useTournamentStore(s => s.token);
-	const userInfo = { uid, token };
 	const setRoute = useTournamentStore(s => s.setRoute);
 	const updateCompetition = useTournamentStore(s => s.updateTournament);
 	const [loading, setLoading] = useState(false);
@@ -22,10 +21,10 @@ const JoinLeaderboard = ({ leaderboardId, joinToken }: { leaderboardId: string; 
 
 	useEffect(() => {
 		const doAsync = async () => {
-			if (userInfo) {
-				const l = await fetchLeaderboard(leaderboardId, userInfo.token);
+			if (token) {
+				const l = await fetchLeaderboard(leaderboardId, token);
 
-				if (l && l.members.includes(userInfo.uid)) {
+				if (l && l.members.includes(uid)) {
 					setRoute({ page: Route.Leaderboard, data: leaderboardId });
 					const { pathname, query } = router;
 					delete router.query.join;
@@ -37,7 +36,7 @@ const JoinLeaderboard = ({ leaderboardId, joinToken }: { leaderboardId: string; 
 		};
 
 		doAsync();
-	}, [userInfo, setRoute, router, leaderboardId]);
+	}, [token, uid, setRoute, router, leaderboardId]);
 
 	if (!leaderboard) return <></>;
 
@@ -53,9 +52,9 @@ const JoinLeaderboard = ({ leaderboardId, joinToken }: { leaderboardId: string; 
 			<div className={classNames('text-2xl font-bold sm:text-3xl md:text-6xl')}>{leaderboard.name}</div>
 			<div
 				onClick={async () => {
-					if (userInfo && !loading) {
+					if (token && !loading) {
 						setLoading(true);
-						await joinLeaderboard(leaderboard.id, userInfo?.token, joinToken);
+						await joinLeaderboard(leaderboard.id, token, joinToken);
 
 						await updateCompetition();
 
