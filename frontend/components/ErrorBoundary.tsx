@@ -1,4 +1,5 @@
-import { Component, type ReactNode } from 'react';
+import { trace } from '@opentelemetry/api';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 interface Props {
 	children: ReactNode;
@@ -13,6 +14,13 @@ class ErrorBoundary extends Component<Props, State> {
 
 	static getDerivedStateFromError(): State {
 		return { hasError: true };
+	}
+
+	componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+		const span = trace.getTracer('error-boundary').startSpan('uncaught-error');
+		span.recordException(error);
+		span.setAttribute('component_stack', errorInfo.componentStack ?? '');
+		span.end();
 	}
 
 	render() {
