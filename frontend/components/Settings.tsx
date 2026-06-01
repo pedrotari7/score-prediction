@@ -26,6 +26,7 @@ import useSettings from '../hooks/useSettings';
 import Loading from './Loading';
 import useStatus from '../hooks/useStatus';
 import RefreshButton from './RefreshButton';
+import PwaInstallPrompt from './PwaInstallPrompt';
 
 const SettingsPage = () => {
 	const uid = useTournamentStore(s => s.uid);
@@ -33,6 +34,7 @@ const SettingsPage = () => {
 	const userInfo = { uid, token };
 	const [response, setResponse] = useState({});
 	const [competition, setCompetition] = useState<Competition>(currentCompetition);
+	const [showPwaPrompt, setShowPwaPrompt] = useState(false);
 
 	const { settings, toggleSetting, loading: loadSettings } = useSettings();
 
@@ -270,7 +272,16 @@ const SettingsPage = () => {
 				>
 					Test Refresh Page
 				</button>
+
+				<button
+					onClick={() => setShowPwaPrompt(true)}
+					className={`m-5 rounded bg-red-700 px-4 py-2 font-bold text-white`}
+				>
+					Test PWA Install Prompt
+				</button>
 			</div>
+
+			<PwaInstallPrompt forceShow={showPwaPrompt} onDismiss={() => setShowPwaPrompt(false)} />
 
 			<div className='m-10 rounded-md bg-gray-700 p-5'>
 				<div className='flex flex-row items-center justify-between'>

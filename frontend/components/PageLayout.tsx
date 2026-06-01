@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { competitions } from '../../shared/utils';
 import { useTournamentStore } from '../store/tournamentStore';
 import Navbar from './Navbar';
+import PwaInstallPrompt from './PwaInstallPrompt';
 
 const PageLayout = ({
 	title,
@@ -43,6 +44,8 @@ const PageLayout = ({
 			<Navbar loading={loading} setLoading={setLoading} />
 
 			<main className='relative top-16 z-10 flex h-[calc(100vh-4rem)] flex-col'>{children}</main>
+
+			<PwaInstallPrompt />
 
 			{hasFooter && (
 				<div className='fixed bottom-0 w-full select-none'>
