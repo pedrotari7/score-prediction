@@ -220,6 +220,11 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
 .fn { color: #61afef; }
 .num { color: #d19a66; }
 .op { color: #56b6c2; }
+.v2-badge {
+  display: inline-block; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.6rem;
+  font-weight: 800; background: linear-gradient(135deg, #06b6d4, #8b5cf6); color: #fff;
+  letter-spacing: 0.05em; margin-right: 0.4rem; vertical-align: middle;
+}
 </style>
 </head>
 <body>
@@ -338,6 +343,89 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
 }
 </script>
 
+<script type="application/json" id="audit-data-v2">
+{
+  "categories": [
+    {
+      "slug": "security",
+      "findings": [
+        {"id":"V2-SEC-001","version":2,"severity":"high","title":"parseBody throws unhandled JSON.parse on malformed input","file":"backend/src/lib/auth.ts","lines":"36","description":"parseBody does JSON.parse(body) when body is a string. If content-type is wrong or middleware misconfigured, a malformed string throws an unhandled exception crashing the request handler. No try-catch wrapping exists.","code_snippet":"export const parseBody = (body: unknown) =>\n  typeof body === 'string' ? JSON.parse(body) : (body ?? {});","recommended_fix":"Wrap JSON.parse in try-catch or add express.json() middleware to the production app.","fix_snippet":"export const parseBody = (body: unknown) => {\n  if (typeof body !== 'string') return body ?? {};\n  try { return JSON.parse(body); } catch { return {}; }\n};","impact":"Crafted requests with invalid JSON could cause 500 errors and potentially reveal stack traces.","effort":"quick","tags":["input-validation","error-handling"]},
+        {"id":"V2-SEC-002","version":2,"severity":"medium","title":"noSpoilers endpoint accepts arbitrary data types","file":"backend/src/routes/settings.ts","lines":"37-48","description":"POST /no-spoilers extracts noSpoilers from the body and passes it directly to Firestore .update() without type validation. An attacker could set it to an object, array, number, or string instead of boolean.","code_snippet":"const { noSpoilers } = parseBody(req.body);\nawait getDBUser(callerUID).update({ noSpoilers });","recommended_fix":"Cast to boolean before saving.","fix_snippet":"await getDBUser(callerUID).update({ noSpoilers: Boolean(noSpoilers) });","impact":"Corrupted user documents could crash frontend components that expect noSpoilers to be boolean.","effort":"quick","tags":["input-validation","type-safety"]},
+        {"id":"V2-SEC-003","version":2,"severity":"medium","title":"update-fixture-score accepts arbitrary status strings","file":"backend/src/routes/tournament.ts","lines":"72","description":"The admin endpoint sets fixture.status.short to whatever string value is in the body with no validation against known fixture statuses (NS, 1H, HT, 2H, ET, FT, AET, PEN, etc.).","code_snippet":"if (status) fixtures[parsedGameId].fixture.status.short = status;","recommended_fix":"Validate status against a whitelist of valid values.","fix_snippet":"const VALID = ['NS','1H','HT','2H','ET','BT','PEN','FT','AET','INT','PST'];\nif (status && !VALID.includes(status))\n  return res.status(400).json({ error: 'Invalid status' });","impact":"Invalid status breaks isGameFinished, isGameStarted, and isGameOnGoing logic throughout the app.","effort":"quick","tags":["input-validation","admin"]},
+        {"id":"V2-SEC-004","version":2,"severity":"medium","title":"Leaderboard ID parameters not validated before Firestore doc access","file":"backend/src/routes/leaderboard.ts","lines":"57,78,148","description":"Multiple leaderboard endpoints accept leaderboardId from query params or body and pass it directly to Firestore .doc(). IDs containing '/' or empty strings could cause unexpected Firestore errors or path traversal.","code_snippet":"const leaderboardId = req.query.leaderboardId as string;\nconst leaderboard = (await getFirestore()\n  .collection('leaderboards').doc(leaderboardId).get()).data();","recommended_fix":"Validate leaderboard IDs before use.","fix_snippet":"if (!leaderboardId || typeof leaderboardId !== 'string'\n    || leaderboardId.includes('/') || leaderboardId.length > 128)\n  return res.status(400).json({ error: 'Invalid leaderboard ID' });","impact":"Unhandled Firestore exceptions (500 errors) or access to unintended document paths.","effort":"quick","tags":["input-validation","firestore"]},
+        {"id":"V2-SEC-005","version":2,"severity":"low","title":"cleanup endpoint non-atomically rewrites entire predictions document","file":"backend/src/routes/tournament.ts","lines":"396-418","description":"The /cleanup admin endpoint reads all predictions, filters deleted users, and does a full .set() overwrite. Any predictions submitted between the read and write are permanently lost since this is not a transaction.","code_snippet":"const cleanedPredictions = Object.fromEntries(...);\nawait getDBPredictions(competition).set(cleanedPredictions);","recommended_fix":"Use a Firestore transaction or batch write with FieldValue.delete() for specific user entries.","fix_snippet":"// Use FieldValue.delete() for individual user entries\n// instead of overwriting the entire document","impact":"Data loss for any user submitting predictions during cleanup execution window.","effort":"moderate","tags":["data-integrity","atomicity"]},
+        {"id":"V2-SEC-006","version":2,"severity":"info","title":"validate-token returns HTTP 200 for invalid/missing tokens","file":"backend/src/routes/tournament.ts","lines":"420-428","description":"The /validate-token endpoint returns { success: false, uid: '' } with a 200 status for invalid tokens, deviating from HTTP conventions where authentication failure should return 401.","code_snippet":"if (!decodedToken) return res.json({ success: false, uid: '' });","recommended_fix":"Return 401 status for invalid/missing tokens.","fix_snippet":"if (!decodedToken) return res.status(401).json({ success: false, uid: '' });","impact":"Clients and monitoring tools cannot distinguish auth failures from successful responses by status code.","effort":"quick","tags":["auth","http-standards"]}
+      ]
+    },
+    {
+      "slug": "backend",
+      "findings": [
+        {"id":"V2-BE-001","version":2,"severity":"high","title":"updateFixtures mutates the oldFixtures parameter in place","file":"backend/src/services/tournament.ts","lines":"108-124","description":"In the gamesToUpdate branch, the function mutates oldFixtures[gameID] directly on the parameter object. This reference originates from fixtures?.data in the tournament route, meaning the in-memory data is silently corrupted before the Firestore write completes.","code_snippet":"oldFixtures[gameID] = { fixture, teams, league, goals, score };","recommended_fix":"Clone fixtures before mutating.","fix_snippet":"const updatedFixtures = { ...oldFixtures };\nupdatedFixtures[gameID] = { fixture, teams, league, goals, score };","impact":"Race conditions where concurrent requests see partially-updated fixture data. Write failures leave corrupted in-memory data.","effort":"quick","tags":["mutation","data-integrity"]},
+        {"id":"V2-BE-002","version":2,"severity":"high","title":"getTimeDiff returns NaN when timestamp is undefined, silently breaking staleness checks","file":"backend/src/services/tournament.ts","lines":"53-55","description":"When timestamp is undefined (freshly seeded docs), timestamp?.toMillis() returns undefined and the subtraction yields NaN. Since NaN > timeGuard is always false, staleness checks silently fail and no background update is ever triggered.","code_snippet":"export const getTimeDiff = (timestamp: Timestamp) => {\n  return (getCurrentTime().getTime() - timestamp?.toMillis()) / 1000;\n};","recommended_fix":"Return Infinity when timestamp is undefined to always trigger refresh.","fix_snippet":"export const getTimeDiff = (timestamp: Timestamp) => {\n  if (!timestamp) return Infinity;\n  return (getCurrentTime().getTime() - timestamp.toMillis()) / 1000;\n};","impact":"Stale data never gets refreshed if the timestamp field is missing. App silently serves outdated fixtures/standings.","effort":"quick","tags":["nan","staleness"]},
+        {"id":"V2-BE-003","version":2,"severity":"medium","title":"Leaderboard deletion is not atomic — crash leaves dangling member references","file":"backend/src/routes/leaderboard.ts","lines":"142-166","description":"DELETE /leaderboard first deletes the leaderboard doc, then iterates members to remove references. If the function crashes midway, members have dangling leaderboard IDs causing frontend errors.","code_snippet":"await leaderboardDoc.delete();\nfor (const member of leaderboard.members) {\n  // Sequential updates per member\n}","recommended_fix":"Use a Firestore batch write to delete the leaderboard and update all member documents atomically.","fix_snippet":"const batch = getFirestore().batch();\nbatch.delete(leaderboardDoc);\nfor (const member of leaderboard.members) {\n  batch.update(getDBUser(member), { ... });\n}\nawait batch.commit();","impact":"Users with dangling references see errors when the app tries to fetch the deleted leaderboard.","effort":"moderate","tags":["atomicity","firestore"]},
+        {"id":"V2-BE-004","version":2,"severity":"medium","title":"updateStandings hardcodes euro2016 format exception by competition name","file":"backend/src/services/tournament.ts","lines":"68-82","description":"Standings parsing has a hardcoded check 'competition.name !== competitions.euro2016.name' for a different API response format. Any future competition with a similar format needs another hardcoded exception.","code_snippet":"const standings = competition.name !== competitions.euro2016.name\n  ? response.data.response?.[0]?.league.standings\n  : response.data.response?.[0]?.league.standings[1];","recommended_fix":"Detect format by inspecting the response structure rather than checking competition name.","fix_snippet":"const raw = response.data.response?.[0]?.league.standings;\nconst standings = Array.isArray(raw?.[0]) ? raw : [raw];","impact":"Fragile code that will silently break if a new competition has a different standings format.","effort":"moderate","tags":["hardcoding","maintainability"]},
+        {"id":"V2-BE-005","version":2,"severity":"medium","title":"update-settings uses .set() which overwrites the entire settings document","file":"backend/src/routes/settings.ts","lines":"32","description":"getDBSettings().set(validated) replaces the entire settings document with only the 5 validated keys. Any other data in the document (metadata, timestamps) is permanently deleted on every settings update.","code_snippet":"const result = await getDBSettings().set(validated);","recommended_fix":"Use .set() with merge or .update() to preserve other fields.","fix_snippet":"const result = await getDBSettings().set(validated, { merge: true });","impact":"Non-whitelisted fields in settings are silently destroyed on every admin settings update.","effort":"quick","tags":["data-loss","firestore"]},
+        {"id":"V2-BE-006","version":2,"severity":"medium","title":"Express body parser not configured on production app","file":"backend/src/index.ts","lines":"20","description":"The production Express app has no express.json() middleware. It relies on Firebase Functions built-in parsing, which may deliver body as a string. The test setup adds express.json(), masking the discrepancy.","code_snippet":"const app = express();\napp.use(limiter);\napp.use(cors({ origin: corsOrigins }));","recommended_fix":"Add express.json() middleware to the production app.","fix_snippet":"const app = express();\napp.use(express.json());\napp.use(limiter);\napp.use(cors({ origin: corsOrigins }));","impact":"Inconsistent body parsing between test and production. The manual JSON.parse in parseBody is a brittle workaround.","effort":"quick","tags":["middleware","consistency"]},
+        {"id":"V2-BE-007","version":2,"severity":"low","title":"getExtraTimeResult can produce NaN scores for incomplete API data","file":"shared/utils.ts","lines":"106-111","description":"For PEN/AET games, the function computes fulltime.home + extratime.home. If the API returns null/undefined for extratime (during live updates), the addition produces NaN that propagates through scoring calculations.","code_snippet":"return { home: fulltime.home + extratime.home,\n  away: fulltime.away + extratime.away };","recommended_fix":"Add null-safe defaults for extratime values.","fix_snippet":"return {\n  home: (fulltime.home ?? 0) + (extratime.home ?? 0),\n  away: (fulltime.away ?? 0) + (extratime.away ?? 0)\n};","impact":"Users could see NaN displayed as scores for in-progress extra time games.","effort":"quick","tags":["nan","null-safety"]}
+      ]
+    },
+    {
+      "slug": "frontend",
+      "findings": [
+        {"id":"V2-FE-002","version":2,"severity":"medium","title":"extraInfoCache Map grows unbounded with no eviction","file":"frontend/hooks/useFixtureExtraInfo.tsx","lines":"8","description":"Module-level Map caches every finished game's extra info (events, lineups, statistics, players) permanently with no size limit or TTL. Over a tournament with 64+ games, memory grows continuously.","code_snippet":"const extraInfoCache = new Map<number, FixtureExtraInfo>();","recommended_fix":"Add a max size limit with LRU eviction.","fix_snippet":"const MAX_CACHE = 20;\nfunction cacheSet(key, val) {\n  if (extraInfoCache.size >= MAX_CACHE)\n    extraInfoCache.delete(extraInfoCache.keys().next().value);\n  extraInfoCache.set(key, val);\n}","impact":"Increasing memory consumption on mobile devices as users browse games. Persists until page reload.","effort":"moderate","tags":["memory-leak","caching"]},
+        {"id":"V2-FE-003","version":2,"severity":"high","title":"Flag component crashes on unknown team IDs","file":"frontend/components/Flag.tsx","lines":"8","description":"FLAGS[team?.id] returns undefined for any team not in the hardcoded map. Next.js Image throws when src is undefined. For WC2026 with 48 teams, many IDs may be missing from the map.","code_snippet":"<Image src={FLAGS[team?.id]} width={28} height={20} alt='' />","recommended_fix":"Add a fallback using the team's API-provided logo URL.","fix_snippet":"<Image src={FLAGS[team?.id] ?? team?.logo ?? '/default-flag.svg'}\n  width={28} height={20} alt='' />","impact":"App crashes with unhandled error for any team not in the FLAGS map. Error boundary catches it but entire section becomes unusable.","effort":"quick","tags":["crash","null-safety"]},
+        {"id":"V2-FE-004","version":2,"severity":"high","title":"react-countdown is in devDependencies but used in production components","file":"frontend/package.json","lines":"60","description":"react-countdown is listed in devDependencies but imported by production components Game.tsx and LiveGame.tsx. Production builds with --production flag would fail.","code_snippet":"// devDependencies:\n\"react-countdown\": \"2.3.6\"","recommended_fix":"Move react-countdown to dependencies.","fix_snippet":"// dependencies:\n\"react-countdown\": \"2.3.6\"","impact":"Production builds could fail if build environment strips devDependencies. Currently works on Vercel but is a ticking time bomb.","effort":"quick","tags":["dependencies","build"]},
+        {"id":"V2-FE-005","version":2,"severity":"medium","title":"js-file-download is in devDependencies but used in production code","file":"frontend/package.json","lines":"54","description":"js-file-download is listed in devDependencies but imported by Settings.tsx (line 2), a production page component.","code_snippet":"// devDependencies:\n\"js-file-download\": \"0.4.12\"","recommended_fix":"Move js-file-download to dependencies.","fix_snippet":"// dependencies:\n\"js-file-download\": \"0.4.12\"","impact":"The admin settings export button would break if devDependencies are stripped during build.","effort":"quick","tags":["dependencies","build"]},
+        {"id":"V2-FE-006","version":2,"severity":"medium","title":"GameStats produces invalid CSS color '#undefined' when lineup colors are missing","file":"frontend/components/GameStats.tsx","lines":"11-12,38-57","description":"When lineups lack color data, destructuring gives undefined for homeColor/awayColor. Template literals produce '#undefined' which is an invalid CSS color, making stat highlights invisible.","code_snippet":"const [homeColor, awayColor] = colors;\n// backgroundColor: `#${homeColor}` => '#undefined'","recommended_fix":"Add default color values.","fix_snippet":"const [homeColor = '666666', awayColor = '999999'] = colors;","impact":"Stats bars show no team colors when lineup data is missing, making the comparison useless.","effort":"quick","tags":["css","null-safety"]},
+        {"id":"V2-FE-007","version":2,"severity":"medium","title":"GameFacts mutates let variables during render via .map()","file":"frontend/components/GameFacts.tsx","lines":"185-202","description":"Uses let addedHTScore/addedFTScore mutated inside a .map() callback during render. In React concurrent/strict mode, render functions can be called multiple times, causing score separators to appear incorrectly.","code_snippet":"let addedHTScore = false;\nconst events = extraInfo.events?.map((event) => {\n  if (shouldAddHTScore) addedHTScore = true;\n});","recommended_fix":"Pre-compute insertion indices before render or use reduce.","fix_snippet":"const htIdx = events.findIndex(e => e.time.elapsed >= 45 && !e.time.extra);\nconst ftIdx = events.findIndex(e => e.time.elapsed > 90 && !e.time.extra);","impact":"In React 18+ strict mode, HT/FT score markers could appear in wrong positions or be duplicated.","effort":"moderate","tags":["react","mutation"]},
+        {"id":"V2-FE-008","version":2,"severity":"low","title":"getContrastYIQ uses deprecated String.prototype.substr()","file":"frontend/lib/utils/reactHelper.ts","lines":"81-83","description":"Uses the deprecated substr() method which may be removed in future JavaScript engine versions.","code_snippet":"const r = parseInt(hexcolor.substr(0, 2), 16);","recommended_fix":"Replace substr with slice.","fix_snippet":"const r = parseInt(hexcolor.slice(0, 2), 16);","impact":"No current breakage, but future runtime versions could remove substr() support.","effort":"quick","tags":["deprecation","cleanup"]},
+        {"id":"V2-FE-009","version":2,"severity":"low","title":"Navbar mobile menu 'open = false' assignment has no effect","file":"frontend/components/Navbar.tsx","lines":"313","description":"Inside mobile DisclosureButton onClick: open = false is a no-op since open is a local render-prop value, not a state setter. The menu doesn't close after selecting a nav item.","code_snippet":"onClick={() => {\n  updateRoute(item.info);\n  open = false; // no-op\n}}","recommended_fix":"DisclosureButton already closes the panel on click. Remove the dead assignment.","fix_snippet":"// Remove open = false; DisclosureButton handles close","impact":"Mobile navigation menu doesn't close after selecting an item, forcing users to tap X or click outside.","effort":"quick","tags":["ux","dead-code"]},
+        {"id":"V2-FE-010","version":2,"severity":"low","title":"RefreshPage loads external GIF that fails when most needed","file":"frontend/components/RefreshPage.tsx","lines":"28","description":"The error page loads a GIF from https://media.tenor.com. This page is shown on network failures, so the GIF also won't load, leaving a broken image on the error page.","code_snippet":"<img src='https://media.tenor.com/...' />","recommended_fix":"Download the GIF to public/ and reference it locally, or use a simple SVG.","fix_snippet":"<Image src='/error-animation.gif' width={300} height={200} alt='' />","impact":"The error page — shown precisely when things go wrong — has an external dependency making it look more broken.","effort":"quick","tags":["offline","resilience"]},
+        {"id":"V2-FE-011","version":2,"severity":"medium","title":"updateTournament silently swallows network errors","file":"frontend/store/tournamentStore.ts","lines":"123-178","description":"fetchTournament errors are caught by the fetcher and returned as {success:false}. The destructured fields become undefined, the early return fires, but no error indicator is shown. Users are stuck with stale data.","code_snippet":"const { fixtures, standings, ... } = await fetchTournament(...);\nif (!standings || !fixtures || !userExtraInfo) return;","recommended_fix":"Navigate to RefreshPage on failure, like useUsers and useLeaderboards already do.","fix_snippet":"const result = await fetchTournament(token, competition);\nif (!result?.fixtures) {\n  get()._navigate?.({ page: Route.RefreshPage });\n  return;\n}","impact":"Network failures leave users stuck with stale data and no indication that something went wrong.","effort":"moderate","tags":["error-handling","ux"]}
+      ]
+    },
+    {
+      "slug": "ux",
+      "findings": [
+        {"id":"V2-UX-001","version":2,"severity":"medium","title":"Stats page fixtures displayed in arbitrary insertion order","file":"frontend/components/Stats.tsx","lines":"31","description":"Object.keys(fixtures).map() iterates fixture IDs in JS object insertion order (numeric ascending), which roughly correlates with chronological order but is not guaranteed.","code_snippet":"Object.keys(fixtures).map(fixtureID => { ... })","recommended_fix":"Sort fixtures chronologically before mapping.","fix_snippet":"Object.values(fixtures)\n  .sort((a, b) => a.fixture.timestamp - b.fixture.timestamp)\n  .map(fixture => { ... })","impact":"Stats bars may appear in confusing order, making it harder to track prediction performance over time.","effort":"quick","tags":["sorting","ux"]},
+        {"id":"V2-UX-002","version":2,"severity":"medium","title":"Leaderboard ranks don't handle ties — tied users get different ranks","file":"frontend/components/Leaderboard.tsx","lines":"208","description":"Rank display uses {index + 1} from array index. Users with identical scores show different ranks (e.g. #3 and #4 instead of both #3).","code_snippet":"{sortedUsers.map((user, index) => (\n  <span>{index + 1}</span>\n))}","recommended_fix":"Compute rank by checking if current user's score equals previous user's score.","fix_snippet":"const rank = index === 0 ||\n  score !== sortedUsers[index-1].score[stage].points\n    ? index + 1 : prevRank;","impact":"Users feel unfairly ranked when they have identical scores but show different positions.","effort":"moderate","tags":["leaderboard","fairness"]},
+        {"id":"V2-UX-003","version":2,"severity":"medium","title":"PWA manifest start_url hardcoded to /wc2026","file":"frontend/public/manifest.json","lines":"6","description":"start_url is hardcoded to /wc2026. After the tournament, PWA users always land on the old competition page.","code_snippet":"\"start_url\": \"/wc2026\"","recommended_fix":"Set start_url to / and let Next.js redirect handle routing.","fix_snippet":"\"start_url\": \"/\"","impact":"After tournament season changes, PWA users are directed to an old competition page on every launch.","effort":"quick","tags":["pwa","config"]},
+        {"id":"V2-UX-004","version":2,"severity":"low","title":"Custom font loads without font-display causing Flash of Invisible Text","file":"frontend/styles/globals.css","lines":"6-18","description":"The @font-face declarations for PFBeauSansPro don't include font-display. Browsers default to 'auto' which means invisible text for up to 3 seconds while the font loads.","code_snippet":"@font-face {\n  font-family: 'PFBeauSansPro';\n  src: url('/fonts/PFBeauSansPro-Regular.woff2');\n}","recommended_fix":"Add font-display: swap to both @font-face declarations.","fix_snippet":"@font-face {\n  font-family: 'PFBeauSansPro';\n  src: url('/fonts/PFBeauSansPro-Regular.woff2');\n  font-display: swap;\n}","impact":"Users on slow connections see invisible text for up to 3 seconds, especially on mobile PWA first launches.","effort":"quick","tags":["fonts","performance"]},
+        {"id":"V2-UX-005","version":2,"severity":"low","title":"Game times displayed without timezone indicator","file":"frontend/lib/utils/reactHelper.ts","lines":"13-25","description":"formatGameDate displays times using the user's local timezone but without any timezone indicator. Users in different timezones see different times with no way to know which timezone is shown.","code_snippet":"return `${day} ${month} ${hours}:${mins}`;","recommended_fix":"Append the timezone abbreviation to formatted times.","fix_snippet":"const tz = new Date().toLocaleString('en-US',\n  { timeZoneName: 'short' }).split(' ').pop();\nreturn `${day} ${month} ${hours}:${mins} ${tz}`;","impact":"Users coordinating across timezones may misunderstand game times.","effort":"quick","tags":["timezone","i18n"]},
+        {"id":"V2-UX-006","version":2,"severity":"low","title":"No error feedback when leaderboard join fails","file":"frontend/components/JoinLeaderboard.tsx","lines":"56-62","description":"The join button calls joinLeaderboard() but doesn't check the result. On failure, the UI proceeds to navigate away as if join succeeded.","code_snippet":"await joinLeaderboard(leaderboard.id, token, joinToken);\nawait updateCompetition();\nsetRoute({ page: Route.Leaderboard });","recommended_fix":"Check the join response and show an error state on failure.","fix_snippet":"const result = await joinLeaderboard(...);\nif (!result.success) {\n  setError('Failed to join leaderboard');\n  return;\n}","impact":"Users think they've joined a leaderboard but actually haven't. Discover the failure only later.","effort":"quick","tags":["error-handling","feedback"]}
+      ]
+    },
+    {
+      "slug": "quality",
+      "findings": [
+        {"id":"V2-CQ-001","version":2,"severity":"medium","title":"7 dead React Context files remain after Zustand migration","file":"frontend/context/","lines":"all files","description":"The frontend/context/ directory contains 7 context files (CompetitionContext, FixturesContext, GroupMapContext, NoSpoilersContext, RouteContext, UpdateTournamentContext, UserContext) that are not imported anywhere. RouteContext.tsx also contains a duplicate Route enum.","code_snippet":"// frontend/context/ — 7 unused files:\n// CompetitionContext.tsx, FixturesContext.tsx,\n// GroupMapContext.tsx, NoSpoilersContext.tsx,\n// RouteContext.tsx, UpdateTournamentContext.tsx, UserContext.tsx","recommended_fix":"Delete the entire frontend/context/ directory.","fix_snippet":"rm -r frontend/context/","impact":"Confuses developers who might think contexts are still in use. Duplicate Route enum risks wrong import.","effort":"quick","tags":["dead-code","cleanup"]},
+        {"id":"V2-CQ-002","version":2,"severity":"medium","title":"Inconsistent pnpm versions across workspace packages","file":"package.json, frontend/package.json","lines":"root:6, frontend:6","description":"Root package.json specifies pnpm@10.34.1, frontend specifies pnpm@11.4.0 — different major versions that could cause lockfile format differences.","code_snippet":"// Root: \"packageManager\": \"pnpm@10.34.1\"\n// Frontend: \"packageManager\": \"pnpm@11.4.0\"","recommended_fix":"Align all packageManager fields to the same version.","fix_snippet":"\"packageManager\": \"pnpm@11.4.0\"","impact":"Developers may get version mismatch warnings. CI could behave inconsistently.","effort":"quick","tags":["tooling","consistency"]},
+        {"id":"V2-CQ-003","version":2,"severity":"low","title":"changes.yml and shared.yml use older action versions than other workflows","file":".github/workflows/changes.yml, shared.yml","lines":"changes:28-29, shared:17-19","description":"changes.yml uses actions/checkout@v4 and dorny/paths-filter@v4.0.1, shared.yml uses actions/setup-node@v4 and checkout@v4, while other workflows use @v6.","code_snippet":"- uses: actions/checkout@v4\n- uses: actions/setup-node@v4","recommended_fix":"Update to @v6 for consistency with other workflows.","fix_snippet":"- uses: actions/checkout@v6\n- uses: actions/setup-node@v6","impact":"Potential security vulnerability from older action versions. Inconsistency makes maintenance harder.","effort":"quick","tags":["ci-cd","versions"]},
+        {"id":"V2-CQ-004","version":2,"severity":"low","title":"isEmpty uses loose equality (==) instead of strict (===)","file":"shared/utils.ts","lines":"97","description":"isEmpty uses == instead of === when comparing Object.keys().length to 0. While identical for number-to-number comparison, it violates strict equality conventions.","code_snippet":"export const isEmpty = (obj: Object) => Object.keys(obj).length == 0;","recommended_fix":"Use strict equality.","fix_snippet":"export const isEmpty = (obj: Object) => Object.keys(obj).length === 0;","impact":"No runtime impact but inconsistent with rest of codebase and would be flagged by strict linting.","effort":"quick","tags":["lint","consistency"]},
+        {"id":"V2-CQ-005","version":2,"severity":"low","title":"Backend lib/ directory contains stale compiled JS files in git","file":"backend/lib/","lines":"all files","description":"The backend/lib/ directory contains compiled JavaScript build artifacts that should be generated by tsc and excluded from version control.","code_snippet":"backend/lib/backend/src/index.js\nbackend/lib/backend/src/lib/api-sports.js\nbackend/lib/shared/utils.js","recommended_fix":"Add backend/lib/ to .gitignore and remove from tracking.","fix_snippet":"echo 'backend/lib/' >> .gitignore\ngit rm -r --cached backend/lib/","impact":"Confusing merge conflicts, inflated repo size, and stale compiled files misleading developers.","effort":"quick","tags":["git","cleanup"]}
+      ]
+    },
+    {
+      "slug": "performance",
+      "findings": [
+        {"id":"V2-PF-001","version":2,"severity":"medium","title":"CurrentMatch recomputes and re-sorts prediction results on every render","file":"frontend/components/CurrentMatch.tsx","lines":"230-249","description":"gamePredictionsAndResults is computed via filter, map, and two sorts on every render. This involves calling getResult() for each prediction and sorting twice. None of this is memoized with useMemo.","code_snippet":"let gamePredictionsAndResults = currentLeaderboardPredictions\n  .filter(...).map(...).sort(...);","recommended_fix":"Wrap the computation in useMemo with appropriate dependencies.","fix_snippet":"const gamePredictionsAndResults = useMemo(() =>\n  currentLeaderboardPredictions\n    .filter(...).map(...).sort(...),\n  [gamePredictions, users, noSpoilers, members]\n);","impact":"On a game with 50+ predictions, every render triggers expensive computation compounded by swipe/keyboard events.","effort":"quick","tags":["memo","rendering"]},
+        {"id":"V2-PF-002","version":2,"severity":"low","title":"Multiple Tooltip components with same ID rendered across components","file":"frontend/components/UserScores.tsx, Standings.tsx","lines":"UserScores:31, Standings:56","description":"Both UserScores and Standings render Tooltip components. In Leaderboard, UserScores is rendered once per user, creating N duplicate Tooltip DOM instances.","code_snippet":"// UserScores.tsx: <Tooltip id='my-tooltip' />\n// Standings.tsx: <Tooltip id='standings-tooltip' />","recommended_fix":"Render a single Tooltip at the app/page level and remove from individual components.","fix_snippet":"// In PageLayout:\n<Tooltip id='app-tooltip' />\n// Remove from UserScores.tsx and Standings.tsx","impact":"DOM bloat — a leaderboard with 30 users creates 30 Tooltip instances. Minor memory and rendering overhead.","effort":"quick","tags":["dom","rendering"]},
+        {"id":"V2-PF-003","version":2,"severity":"low","title":"sortedFixtures computed but result unused in updateTournament store action","file":"frontend/store/tournamentStore.ts","lines":"138-140","description":"Object.values(fixtures).sort() creates a sorted copy of all fixtures but the sorted result is only used locally for .find(). The unsorted fixtures object is what gets stored in state.","code_snippet":"const sortedFixtures = Object.values(fixtures).sort(\n  ({ fixture: a }, { fixture: b }) => a.timestamp - b.timestamp\n);","recommended_fix":"Remove the unnecessary sort; use a simple find on the original values.","fix_snippet":"const nextGame = Object.values(fixtures)\n  .find(game => !isGameFinished(game));","impact":"Unnecessary O(n log n) sort of all fixtures on every tournament data fetch. Minor but wasteful.","effort":"quick","tags":["computation","waste"]}
+      ]
+    },
+    {
+      "slug": "improvements",
+      "findings": [
+        {"id":"V2-IMP-001","version":2,"severity":"info","title":"PWA has no service worker — no offline support","file":"frontend/public/manifest.json","lines":"1-22","description":"The app has a PWA manifest and install prompt but no service worker. The installed PWA has no offline caching, can't show content when offline, and can't receive push notifications.","code_snippet":"// manifest.json exists but no service worker\n// registered anywhere in the codebase","recommended_fix":"Add a service worker using next-pwa or Workbox for offline caching.","fix_snippet":"const withPWA = require('next-pwa')({ dest: 'public' });\nmodule.exports = withPWA({ ...nextConfig });","impact":"Users who install the PWA get no benefit beyond a home screen icon. Connectivity drops show blank page.","effort":"significant","tags":["pwa","offline"]},
+        {"id":"V2-IMP-002","version":2,"severity":"info","title":"Predictions export and sharing for users","file":"N/A","lines":"N/A","description":"Only admins can export data via Settings. Regular users cannot export predictions, share score breakdowns, or generate shareable images/links of their performance.","code_snippet":"// No user-facing export/share feature exists","recommended_fix":"Add a 'Share My Results' button generating a shareable image or link.","fix_snippet":"// Generate canvas/image with prediction record\n// Share via Web Share API or clipboard link","impact":"Missed social engagement opportunity. Users can't share prediction results on social media.","effort":"moderate","tags":["social","engagement"]},
+        {"id":"V2-IMP-003","version":2,"severity":"info","title":"Batch prediction entry for upcoming games","file":"N/A","lines":"N/A","description":"Users must navigate to each game individually to enter predictions. For WC2026 group stage with 48 games in the first round, this is tedious.","code_snippet":"// Each prediction requires navigating to individual game view","recommended_fix":"Add a batch prediction view with inline score inputs for all upcoming games.","fix_snippet":"// New component: BatchPredictions\n// Shows all upcoming games with inline ScoreInputs\n// Single save-all action","impact":"High friction for new users joining mid-tournament or entering predictions for multiple same-day games.","effort":"moderate","tags":["ux","efficiency"]},
+        {"id":"V2-IMP-004","version":2,"severity":"info","title":"Prediction deadline notifications via push","file":"N/A","lines":"N/A","description":"While the countdown timer shows time remaining, there are no proactive notifications. Users who don't check the app before kickoff miss their prediction window.","code_snippet":"// No push notification or reminder system","recommended_fix":"Implement browser/push notifications using a service worker that fire 1h and 15min before games lacking predictions.","fix_snippet":"// Use Notification API + service worker\nif (Notification.permission === 'granted') {\n  // Schedule notification before kickoff\n}","impact":"Users frequently miss prediction deadlines for early-morning or weekday games, reducing engagement.","effort":"significant","tags":["notifications","engagement"]}
+      ]
+    }
+  ]
+}
+</script>
+
 <!-- HEADER -->
 <header class="header">
   <div class="header-inner">
@@ -359,10 +447,10 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
   <input type="text" id="search" placeholder="Search findings..." oninput="filterFindings()">
   <button class="filter-btn active" data-severity="all" onclick="toggleFilter(this)">All</button>
   <button class="filter-btn active" data-severity="critical" onclick="toggleFilter(this)">Critical <span id="count-critical">5</span></button>
-  <button class="filter-btn active" data-severity="high" onclick="toggleFilter(this)">High <span id="count-high">10</span></button>
-  <button class="filter-btn active" data-severity="medium" onclick="toggleFilter(this)">Medium <span id="count-medium">17</span></button>
-  <button class="filter-btn active" data-severity="low" onclick="toggleFilter(this)">Low <span id="count-low">13</span></button>
-  <button class="filter-btn active" data-severity="info" onclick="toggleFilter(this)">Info <span id="count-info">7</span></button>
+  <button class="filter-btn active" data-severity="high" onclick="toggleFilter(this)">High <span id="count-high">15</span></button>
+  <button class="filter-btn active" data-severity="medium" onclick="toggleFilter(this)">Medium <span id="count-medium">35</span></button>
+  <button class="filter-btn active" data-severity="low" onclick="toggleFilter(this)">Low <span id="count-low">26</span></button>
+  <button class="filter-btn active" data-severity="info" onclick="toggleFilter(this)">Info <span id="count-info">12</span></button>
 </div>
 
 <!-- EXECUTIVE SUMMARY -->
@@ -370,13 +458,13 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
   <div class="summary-grid">
     <div class="summary-card">
       <h3>Total Findings</h3>
-      <div class="summary-big" id="total-visible">52</div>
+      <div class="summary-big" id="total-visible">93</div>
       <div class="severity-bar">
         <span class="severity-pill critical">5 Critical</span>
-        <span class="severity-pill high">10 High</span>
-        <span class="severity-pill medium">17 Medium</span>
-        <span class="severity-pill low">13 Low</span>
-        <span class="severity-pill info">7 Info</span>
+        <span class="severity-pill high">15 High</span>
+        <span class="severity-pill medium">35 Medium</span>
+        <span class="severity-pill low">26 Low</span>
+        <span class="severity-pill info">12 Info</span>
       </div>
     </div>
     <div class="summary-card">
@@ -384,38 +472,38 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
       <div class="health-bars">
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-security)">Security</span>
-          <div class="health-track"><div class="health-fill" style="width:35%;background:var(--accent-security)"></div></div>
-          <span class="health-count">9</span>
+          <div class="health-track"><div class="health-fill" style="width:71%;background:var(--accent-security)"></div></div>
+          <span class="health-count">15</span>
         </div>
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-backend)">Backend</span>
-          <div class="health-track"><div class="health-fill" style="width:40%;background:var(--accent-backend)"></div></div>
-          <span class="health-count">10</span>
+          <div class="health-track"><div class="health-fill" style="width:81%;background:var(--accent-backend)"></div></div>
+          <span class="health-count">17</span>
         </div>
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-frontend)">Frontend</span>
-          <div class="health-track"><div class="health-fill" style="width:45%;background:var(--accent-frontend)"></div></div>
-          <span class="health-count">11</span>
+          <div class="health-track"><div class="health-fill" style="width:100%;background:var(--accent-frontend)"></div></div>
+          <span class="health-count">21</span>
         </div>
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-ux)">UX/UI</span>
-          <div class="health-track"><div class="health-fill" style="width:50%;background:var(--accent-ux)"></div></div>
-          <span class="health-count">7</span>
+          <div class="health-track"><div class="health-fill" style="width:62%;background:var(--accent-ux)"></div></div>
+          <span class="health-count">13</span>
         </div>
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-quality)">Quality</span>
-          <div class="health-track"><div class="health-fill" style="width:55%;background:var(--accent-quality)"></div></div>
-          <span class="health-count">8</span>
+          <div class="health-track"><div class="health-fill" style="width:62%;background:var(--accent-quality)"></div></div>
+          <span class="health-count">13</span>
         </div>
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-perf)">Perf</span>
-          <div class="health-track"><div class="health-fill" style="width:50%;background:var(--accent-perf)"></div></div>
-          <span class="health-count">6</span>
+          <div class="health-track"><div class="health-fill" style="width:43%;background:var(--accent-perf)"></div></div>
+          <span class="health-count">9</span>
         </div>
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-improve)">Improve</span>
-          <div class="health-track"><div class="health-fill" style="width:100%;background:var(--accent-improve)"></div></div>
-          <span class="health-count">7</span>
+          <div class="health-track"><div class="health-fill" style="width:52%;background:var(--accent-improve)"></div></div>
+          <span class="health-count">11</span>
         </div>
       </div>
     </div>
@@ -424,22 +512,23 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
       <div style="margin-top:0.75rem">
         <div class="health-row">
           <span class="health-label">Quick Fix</span>
-          <div class="health-track"><div class="health-fill" style="width:50%;background:#22c55e"></div></div>
-          <span class="health-count">23</span>
+          <div class="health-track"><div class="health-fill" style="width:58%;background:#22c55e"></div></div>
+          <span class="health-count">54</span>
         </div>
         <div class="health-row">
           <span class="health-label">Moderate</span>
-          <div class="health-track"><div class="health-fill" style="width:42%;background:#eab308"></div></div>
-          <span class="health-count">20</span>
+          <div class="health-track"><div class="health-fill" style="width:30%;background:#eab308"></div></div>
+          <span class="health-count">28</span>
         </div>
         <div class="health-row">
           <span class="health-label">Significant</span>
-          <div class="health-track"><div class="health-fill" style="width:15%;background:#ef4444"></div></div>
-          <span class="health-count">9</span>
+          <div class="health-track"><div class="health-fill" style="width:12%;background:#ef4444"></div></div>
+          <span class="health-count">11</span>
         </div>
       </div>
       <div style="margin-top:1rem;font-size:0.8rem;color:var(--text-secondary)">
-        <strong>Audit Date:</strong> 2026-05-25<br>
+        <strong>V1 Audit:</strong> 2026-05-25 (52 findings)<br>
+        <strong>V2 Audit:</strong> 2026-06-01 (41 new findings)<br>
         <strong>Auditor:</strong> Claude (Opus 4.6)<br>
         <strong>Scope:</strong> Full-stack review
       </div>
@@ -452,13 +541,31 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
 
 <!-- FOOTER -->
 <div class="footer">
-  <p>Score Prediction Audit Report &mdash; Generated 2026-05-25 by Claude Opus 4.6</p>
-  <p style="margin-top:0.5rem">52 findings across 7 categories &bull; 5 Critical &bull; 10 High &bull; 17 Medium &bull; 13 Low &bull; 7 Info</p>
+  <p>Score Prediction Audit Report &mdash; V1: 2026-05-25 &bull; V2: 2026-06-01 &bull; Claude Opus 4.6</p>
+  <p style="margin-top:0.5rem">93 findings across 7 categories &bull; 5 Critical &bull; 15 High &bull; 35 Medium &bull; 26 Low &bull; 12 Info</p>
 </div>
 
 <script>
 // Parse audit data
 const auditData = JSON.parse(document.getElementById('audit-data').textContent);
+
+// Merge V2 findings into V1 categories
+const v2El = document.getElementById('audit-data-v2');
+if (v2El) {
+  const v2Data = JSON.parse(v2El.textContent);
+  v2Data.categories.forEach(v2Cat => {
+    const v1Cat = auditData.categories.find(c => c.slug === v2Cat.slug);
+    if (v1Cat) v1Cat.findings.push(...v2Cat.findings);
+  });
+  // Recompute metadata
+  let total = 0;
+  const sc = { critical: 0, high: 0, medium: 0, low: 0, info: 0 };
+  auditData.categories.forEach(c => {
+    c.findings.forEach(f => { total++; sc[f.severity]++; });
+  });
+  auditData.metadata.total_findings = total;
+  auditData.metadata.severity_counts = sc;
+}
 
 const CATEGORY_CONFIG = {
   security: { icon: '\u{1F6E1}', color: 'var(--accent-security)', label: 'Security Vulnerabilities' },
@@ -508,7 +615,7 @@ function renderSections() {
         <div class="finding" data-severity="${f.severity}" data-title="${escapeHtml(f.title.toLowerCase())}" data-desc="${escapeHtml(f.description.toLowerCase())}">
           <div class="finding-header" onclick="this.parentElement.classList.toggle('open')">
             <span class="finding-severity ${f.severity}">${f.severity}</span>
-            <span class="finding-title">${escapeHtml(f.title)}</span>
+            <span class="finding-title">${f.version === 2 ? '<span class="v2-badge">NEW</span>' : ''}${escapeHtml(f.title)}</span>
             <span class="finding-effort">${f.effort}</span>
             <span class="finding-chevron">&#9660;</span>
           </div>
