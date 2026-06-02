@@ -124,7 +124,7 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 		const { token, competition, _leaderboardId, _routerQuery } = get();
 
 		if (!token) {
-			set({ loading: false, isAuthenticated: false });
+			set({ isAuthenticated: false });
 			return;
 		}
 
