@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type {
 	Competition,
+	FixtureOdds,
 	Fixtures,
 	GroupMap,
 	Leaderboard,
@@ -39,6 +40,7 @@ interface TournamentState {
 	standings: Standings;
 	leaderboards: Record<string, Leaderboard>;
 	users: Users;
+	odds: FixtureOdds;
 	uid: string;
 	route: RouteInfo;
 	noSpoilers: boolean | null;
@@ -89,6 +91,7 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 	standings: [],
 	leaderboards: {},
 	users: {} as Users,
+	odds: {},
 	uid: '',
 	route: { page: Route.Home },
 	noSpoilers: null,
@@ -130,7 +133,10 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 
 		set({ triedToValidateToken: true, isAuthenticated: true });
 
-		const { fixtures, standings, predictions, users, userExtraInfo } = await fetchTournament(token, competition);
+		const { fixtures, standings, predictions, users, userExtraInfo, odds } = await fetchTournament(
+			token,
+			competition
+		);
 
 		if (!standings || !fixtures || !userExtraInfo) return;
 
@@ -149,6 +155,7 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 			standings: sortedStandings,
 			groupMap: computeGroupMap(sortedStandings),
 			users,
+			odds: odds ?? {},
 			loading: false,
 		});
 

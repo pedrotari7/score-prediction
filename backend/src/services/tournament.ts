@@ -11,6 +11,7 @@ import type {
   Settings,
   Standing,
   UserResult,
+  FixtureOdds,
 } from '../../../interfaces/main';
 import {
   calculateResults,
@@ -21,26 +22,34 @@ import {
   getResult,
   isGroupStage,
   isNum,
+  isUpsetResult,
   joinResults,
   sortGroup,
   sortWorldCupGroup,
 } from '../../../shared/utils';
-import { FieldValue } from '../lib/firebase';
 import {
+  FieldValue,
   getDBFixtures,
   getDBFixturesExtraInfo,
   getDBGroupPoints,
+  getDBOdds,
   getDBPredictions,
   getDBScores,
   getDBStandings,
   listAllUsers,
 } from '../lib/firebase';
-import { getStandings as apiGetStandings, getFixtures as apiGetFixtures, getFullFixture } from '../lib/api-sports';
+import {
+  getStandings as apiGetStandings,
+  getFixtures as apiGetFixtures,
+  getFullFixture,
+  getOdds as apiGetOdds,
+} from '../lib/api-sports';
 
 export const isDevMode = process.env.ISDEV;
 
 export const STALE_TIME = 60 * 60 * 4;
 export const GAME_TIME = 60 * 1;
+export const ODDS_STALE_TIME = 60 * 60 * 3;
 
 export const getCurrentTime = () => {
   return new Date();
@@ -124,8 +133,66 @@ export const updateFixtures = async (competition: Competition, gamesToUpdate: nu
   }
 };
 
+export const updateOdds = async (competition: Competition, fixtures: Fixtures): Promise<FixtureOdds> => {
+  const doc = await getDBOdds(competition).get();
+  const existingOdds: FixtureOdds = ((doc.exists ? doc.data()?.data : {}) as FixtureOdds) ?? {};
+
+  const fixtureIds = new Set(Object.values(fixtures).map(f => f.fixture.id));
+  const hasMissing = [...fixtureIds].some(id => !existingOdds[id]);
+  if (!hasMissing) return existingOdds;
+
+  let page = 1;
+  let totalPages = 1;
+  let updated = false;
+
+  while (page <= totalPages) {
+    const response = await apiGetOdds({
+      league: competition.league,
+      season: competition.season,
+      page,
+    });
+
+    if (response.status !== 200) break;
+    totalPages = response.data.paging?.total ?? 1;
+
+    for (const item of response.data.response) {
+      const fixtureId = item.fixture.id;
+      if (existingOdds[fixtureId] || !fixtureIds.has(fixtureId)) continue;
+
+      const bookmaker = item.bookmakers?.[0];
+      if (!bookmaker) continue;
+
+      const matchWinner = bookmaker.bets.find((b: { id: number }) => b.id === 1);
+      if (!matchWinner) continue;
+
+      const home = parseFloat(matchWinner.values.find((v: { value: string }) => v.value === 'Home')?.odd);
+      const away = parseFloat(matchWinner.values.find((v: { value: string }) => v.value === 'Away')?.odd);
+      const draw = parseFloat(matchWinner.values.find((v: { value: string }) => v.value === 'Draw')?.odd);
+
+      if (!isNaN(home) && !isNaN(away) && !isNaN(draw)) {
+        existingOdds[fixtureId] = { home, away, draw };
+        updated = true;
+      }
+    }
+
+    page++;
+  }
+
+  if (updated) await getDBOdds(competition).set({ data: existingOdds, timestamp: FieldValue.serverTimestamp() });
+
+  return existingOdds;
+};
+
 export const updatePoints = async (competition: Competition, predictions: Predictions, fixtures: Fixtures) => {
-  const groupPoints = (await getDBGroupPoints(competition).get()).data() as GroupPoints;
+  const hasUpset = (competition.points.upset ?? 0) > 0;
+
+  const [groupPointsDoc, oddsDoc] = await Promise.all([
+    getDBGroupPoints(competition).get(),
+    hasUpset ? getDBOdds(competition).get() : Promise.resolve(null),
+  ]);
+
+  const groupPoints = groupPointsDoc.data() as GroupPoints;
+  const fixtureOdds: FixtureOdds = ((oddsDoc?.exists ? oddsDoc.data()?.data : {}) as FixtureOdds) ?? {};
 
   const updatedScores = Object.entries(predictions).reduce(
     (users, [gameID, gamePredictions]) => {
@@ -134,6 +201,7 @@ export const updatePoints = async (competition: Competition, predictions: Predic
       if (!game) return users;
 
       const stage = isGroupStage(game) ? 'Groups' : game.league.round;
+      const upset = hasUpset && isUpsetResult(game, fixtureOdds);
 
       for (const user in gamePredictions) {
         if (!(user in users)) {
@@ -143,8 +211,8 @@ export const updatePoints = async (competition: Competition, predictions: Predic
           users[user][stage] = { ...DEFAULT_USER_RESULT };
         }
         if (game?.fixture.status.short === 'NS') continue;
-        users[user][stage] = joinResults(users[user][stage], getResult(gamePredictions[user], game));
-        users[user]['all'] = joinResults(users[user]['all'], getResult(gamePredictions[user], game));
+        users[user][stage] = joinResults(users[user][stage], getResult(gamePredictions[user], game, upset));
+        users[user]['all'] = joinResults(users[user]['all'], getResult(gamePredictions[user], game, upset));
       }
       return users;
     },

@@ -3,6 +3,7 @@
 import type { Express } from 'express';
 import type {
   Fixture,
+  FixtureOdds,
   Fixtures,
   Leaderboard,
   Predictions,
@@ -20,6 +21,7 @@ import {
   firebaseApp,
   getDBFixtures,
   getDBFixturesExtraInfo,
+  getDBOdds,
   getDBPredictions,
   getDBSettings,
   getDBStandings,
@@ -35,9 +37,11 @@ import {
   getUsers,
   getPredictions,
   GAME_TIME,
+  ODDS_STALE_TIME,
   STALE_TIME,
   updateFixtures,
   updateGroups,
+  updateOdds,
   updatePoints,
   updateStandings,
 } from '../services/tournament';
@@ -87,11 +91,14 @@ export const registerRoutes = (app: Express) => {
 
     const competition = parseCompetition(req);
 
+    const hasUpset = (competition.points.upset ?? 0) > 0;
+
     // Fetch all initial data in parallel instead of sequentially
-    const [settingsDoc, fixturesDocument, standingsDocument] = await Promise.all([
+    const [settingsDoc, fixturesDocument, standingsDocument, oddsDocument] = await Promise.all([
       getDBSettings().get(),
       getDBFixtures(competition).get(),
       getDBStandings(competition).get(),
+      hasUpset ? getDBOdds(competition).get() : Promise.resolve(null),
     ]);
 
     if (!settingsDoc.exists) return res.status(500).json({ error: 'Missing settings' });
@@ -145,7 +152,15 @@ export const registerRoutes = (app: Express) => {
       );
     }
 
-    // Parallelize the three independent fetches: predictions, user profile, and all users
+    if (!settings.disableLiveScoresApi && hasUpset) {
+      const oddsTimeDiffSeconds = oddsDocument?.exists ? getTimeDiff(oddsDocument.data()?.timestamp) : Infinity;
+      if (oddsTimeDiffSeconds > ODDS_STALE_TIME) {
+        console.log('odds needs update (background)');
+        void updateOdds(competition, fixtures?.data).catch(e => console.error('Background odds update failed:', e));
+      }
+    }
+
+    // Parallelize the independent fetches: predictions, user profile, and all users
     const [predictions, userExtraInfoDoc, users] = await Promise.all([
       getPredictions(decodedToken, competition, fixtures?.data, settings),
       getDBUser(decodedToken.uid).get(),
@@ -171,12 +186,15 @@ export const registerRoutes = (app: Express) => {
         )
       ).reduce((acc, l) => ({ ...acc, [l.id]: l }), {}) ?? {};
 
+    const odds: FixtureOdds | undefined = oddsDocument?.exists ? (oddsDocument.data()?.data as FixtureOdds) : undefined;
+
     const tournament: Tournament = {
       fixtures: fixtures?.data,
       standings: standings?.data,
       predictions,
       users,
       userExtraInfo: { noSpoilers: false, ...userExtraInfo, leaderboards },
+      ...(odds && { odds }),
     };
 
     void getDBUser(decodedToken.uid)
@@ -375,6 +393,33 @@ export const registerRoutes = (app: Express) => {
     const groupPoints = await updateGroups(competition, predictions, fixtures, standings);
 
     return res.json(groupPoints);
+  });
+
+  app.get('/fetch-odds', async (req, res) => {
+    const authResult = await authenticate(req, res, true);
+    if (!authResult.success) return authResult.result;
+
+    const competition = parseCompetition(req);
+
+    const oddsDoc = await getDBOdds(competition).get();
+    const odds = oddsDoc.exists ? (oddsDoc.data()?.data ?? {}) : {};
+
+    return res.json(odds);
+  });
+
+  app.get('/fetch-odds-live', async (req, res) => {
+    const authResult = await authenticate(req, res, true);
+    if (!authResult.success) return authResult.result;
+
+    const competition = parseCompetition(req);
+
+    const fixturesDoc = await getDBFixtures(competition).get();
+    if (!fixturesDoc.exists) return res.status(500).json({ error: 'Missing fixtures' });
+
+    const fixtures = fixturesDoc.data()?.data as Fixtures;
+    const odds = await updateOdds(competition, fixtures);
+
+    return res.json(odds);
   });
 
   app.get('/fixture-extra', async (req, res) => {

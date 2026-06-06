@@ -13,6 +13,8 @@ import {
 	fetchPredictions,
 	fetchUsers,
 	updateGroups,
+	fetchOdds,
+	fetchOddsLive,
 	fetchTournament,
 	fetchLeaderboards,
 	initCompetition,
@@ -335,6 +337,20 @@ const SettingsPage = () => {
 					className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
 				>
 					Update Groups
+				</button>
+
+				<button
+					onClick={async () => setResponse(await fetchOdds(userInfo.token, competition))}
+					className={`m-5 rounded bg-dark px-4 py-2 font-bold text-white`}
+				>
+					Fetch Odds (DB)
+				</button>
+
+				<button
+					onClick={async () => setResponse(await fetchOddsLive(userInfo.token, competition))}
+					className={`m-5 rounded bg-orange-700 px-4 py-2 font-bold text-white`}
+				>
+					Fetch Odds (Live)
 				</button>
 
 				<button

@@ -15,6 +15,7 @@ export const getDBStandings = (competition: Competition) => getDbDoc(competition
 export const getDBPredictions = (competition: Competition) => getDbDoc(competition, 'predictions');
 export const getDBScores = (competition: Competition) => getDbDoc(competition, 'scores');
 export const getDBGroupPoints = (competition: Competition) => getDbDoc(competition, 'groupPoints');
+export const getDBOdds = (competition: Competition) => getDbDoc(competition, 'odds');
 export const getDBSettings = () => getDoc('admin', 'settings');
 export const getDBUser = (uid: string) => getDoc('users', uid);
 

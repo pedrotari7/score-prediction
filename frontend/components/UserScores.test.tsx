@@ -15,6 +15,7 @@ describe('UserScores', () => {
 				penalty: 5,
 				fail: 6,
 				groups: 7,
+				upset: 8,
 			},
 			Groups: {
 				exact: 8,
@@ -24,6 +25,7 @@ describe('UserScores', () => {
 				penalty: 12,
 				fail: 13,
 				groups: 14,
+				upset: 15,
 			},
 		},
 	} as Partial<User> as User;

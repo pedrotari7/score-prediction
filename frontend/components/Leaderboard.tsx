@@ -29,6 +29,7 @@ const SortOptions: Record<string, SortOption> = {
 	exact: { key: 'exact', text: 'Exact', color: 'bg-green-600' },
 	result: { key: 'result', text: 'Correct Result', color: 'bg-yellow-600' },
 	onescore: { key: 'onescore', text: 'Team Score', color: 'bg-pink-600' },
+	upset: { key: 'upset', text: 'Upsets', color: 'bg-cyan-700' },
 	penalty: { key: 'penalty', text: 'Penalties', color: 'bg-gray-500' },
 	fail: { key: 'fail', text: 'Fail', color: 'bg-red-600' },
 	groups: { key: 'groups', text: 'Groups', color: 'bg-purple-700' },
@@ -76,7 +77,7 @@ const Leaderboards = ({
 	const { RedactedSpoilers } = useNoSpoilers();
 	const route = useTournamentStore(s => s.route);
 	const setRoute = useTournamentStore(s => s.setRoute);
-	const { gcc } = useCompetition();
+	const { gcc, competition } = useCompetition();
 	const [sortOption, setSortOption] = useState(SortOptions.points);
 	const initialLeaderboard = route.data ? (route.data as string) : 'global';
 
@@ -162,16 +163,18 @@ const Leaderboards = ({
 			<RedactedSpoilers>
 				<div className='flex flex-col items-center'>
 					<div className='mb-6 flex flex-row flex-wrap items-center justify-center font-bold sm:justify-center'>
-						{Object.values(SortOptions).map(option => (
-							<FilterOption
-								key={option.key}
-								active={option.text === sortOption.text}
-								className={option.color}
-								onClick={() => setSortOption(option)}
-							>
-								{option.text}
-							</FilterOption>
-						))}
+						{Object.values(SortOptions)
+							.filter(o => o.key !== 'upset' || (competition.points.upset ?? 0) > 0)
+							.map(option => (
+								<FilterOption
+									key={option.key}
+									active={option.text === sortOption.text}
+									className={option.color}
+									onClick={() => setSortOption(option)}
+								>
+									{option.text}
+								</FilterOption>
+							))}
 					</div>
 					<SelectStage setCurrentStage={setCurrentStage} currentStage={stage} stages={[...stages.values()]} />
 				</div>

@@ -71,6 +71,25 @@ exports[`Rules renders rules page 1`] = `
         <div
           class="mb-4 text-2xl font-bold"
         >
+          Upset Bonus
+        </div>
+        <div
+          class="mb-4 flex flex-row flex-wrap rounded-md bg-cyan-700 p-2 text-lg"
+        >
+          If you correctly predict the result of an upset (the underdog wins based on pre-match betting odds), you earn a bonus point on top of your regular points. Draws and games where the draw is favored are excluded.
+          <span
+            class="mt-2 w-full text-2xl font-bold"
+          >
+            +
+            1
+             Point
+          </span>
+        </div>
+      </div>
+      <div>
+        <div
+          class="mb-4 text-2xl font-bold"
+        >
           Groups
         </div>
         <div

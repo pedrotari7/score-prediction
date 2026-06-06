@@ -1,5 +1,6 @@
 import type { DecodedIdToken } from 'firebase-admin/auth';
 import type { Request, Response } from 'express';
+import type { Competition } from '../../../interfaces/main';
 import { getAuth, firebaseApp } from './firebase';
 import { competitions, currentCompetition } from '../../../shared/utils';
 
@@ -35,5 +36,5 @@ export const authenticate = async (req: Request, res: Response, needsAdmin = fal
 
 export const parseBody = (body: unknown) => (typeof body === 'string' ? JSON.parse(body) : (body ?? {}));
 
-export const parseCompetition = (req: Request) =>
+export const parseCompetition = (req: Request): Competition =>
   competitions[req.query.competition as keyof typeof competitions] || currentCompetition;

@@ -32,6 +32,8 @@ export const getStandings = async (opts: Record<string, unknown> = {}) => await 
 
 export const getFixtures = async (opts: Record<string, unknown> = {}) => await get('fixtures', opts);
 
+export const getOdds = async (opts: Record<string, unknown> = {}) => await get('odds', { bet: 1, ...opts });
+
 export const getStatus = async (): Promise<Status> => (await get('status')).data.response;
 
 export const getFullFixture = async (eventID: number, opts: Record<string, unknown> = {}): Promise<Fixture | null> => {

@@ -1,11 +1,13 @@
-import { Competition, Fixture, FixtureData, Prediction, Result, Score } from '../interfaces/main';
+import { Competition, Fixture, FixtureData, FixtureOdds, Prediction, Result, Score } from '../interfaces/main';
 import {
 	calculateUserResultPoints,
 	DEFAULT_USER_RESULT,
 	getExtraTimeResult,
 	getOutcome,
 	getResult,
+	isDrawFavorite,
 	isEmpty,
+	isUpsetResult,
 	joinResults,
 } from './utils';
 
@@ -90,7 +92,7 @@ describe('utils', () => {
 					fulltime: { home, away },
 					penalty: penalty ?? { home: null, away: null },
 				} as Score,
-				fixture: { status: { short: status } } as FixtureData,
+				fixture: { id: 100, status: { short: status } } as FixtureData,
 				goals: { home, away },
 			}) as Fixture;
 
@@ -146,11 +148,112 @@ describe('utils', () => {
 			const result = getResult({ home: null, away: null } as unknown as Prediction, makeGame(1, 0));
 			expect(result.fail).toBe(1);
 		});
+
+		it('returns upset bonus for exact score on upset game', () => {
+			const result = getResult({ home: 2, away: 1 }, makeGame(2, 1), true);
+			expect(result.exact).toBe(1);
+			expect(result.upset).toBe(1);
+		});
+
+		it('returns upset bonus for correct result on upset game', () => {
+			const result = getResult({ home: 3, away: 0 }, makeGame(2, 1), true);
+			expect(result.result).toBe(1);
+			expect(result.upset).toBe(1);
+		});
+
+		it('no upset bonus for onescore on upset game', () => {
+			const result = getResult({ home: 1, away: 0 }, makeGame(1, 2), true);
+			expect(result.onescore).toBe(1);
+			expect(result.upset).toBeFalsy();
+		});
+
+		it('no upset bonus for fail on upset game', () => {
+			const result = getResult({ home: 3, away: 0 }, makeGame(0, 2), true);
+			expect(result.fail).toBe(1);
+			expect(result.upset).toBeUndefined();
+		});
+
+		it('no upset bonus when isUpset is false', () => {
+			const result = getResult({ home: 2, away: 1 }, makeGame(2, 1), false);
+			expect(result.exact).toBe(1);
+			expect(result.upset).toBeFalsy();
+		});
+	});
+
+	describe('isUpsetResult', () => {
+		const makeGameWithId = (home: number, away: number, fixtureId: number): Fixture =>
+			({
+				score: { fulltime: { home, away } } as Score,
+				fixture: { id: fixtureId, status: { short: 'FT' } } as FixtureData,
+				goals: { home, away },
+			}) as Fixture;
+
+		it('detects upset when home team (underdog) wins', () => {
+			const odds: FixtureOdds = { 1: { home: 4.5, away: 1.8, draw: 3.2 } };
+			expect(isUpsetResult(makeGameWithId(2, 1, 1), odds)).toBe(true);
+		});
+
+		it('detects upset when away team (underdog) wins', () => {
+			const odds: FixtureOdds = { 1: { home: 1.5, away: 5.0, draw: 3.5 } };
+			expect(isUpsetResult(makeGameWithId(0, 1, 1), odds)).toBe(true);
+		});
+
+		it('no upset when favorite wins at home', () => {
+			const odds: FixtureOdds = { 1: { home: 1.5, away: 5.0, draw: 3.5 } };
+			expect(isUpsetResult(makeGameWithId(2, 0, 1), odds)).toBe(false);
+		});
+
+		it('no upset when favorite wins away', () => {
+			const odds: FixtureOdds = { 1: { home: 4.0, away: 1.8, draw: 3.2 } };
+			expect(isUpsetResult(makeGameWithId(0, 1, 1), odds)).toBe(false);
+		});
+
+		it('no upset on draw', () => {
+			const odds: FixtureOdds = { 1: { home: 4.5, away: 1.8, draw: 3.2 } };
+			expect(isUpsetResult(makeGameWithId(1, 1, 1), odds)).toBe(false);
+		});
+
+		it('no upset when odds are missing for fixture', () => {
+			const odds: FixtureOdds = {};
+			expect(isUpsetResult(makeGameWithId(2, 1, 1), odds)).toBe(false);
+		});
+
+		it('no upset when odds are equal', () => {
+			const odds: FixtureOdds = { 1: { home: 2.5, away: 2.5, draw: 3.0 } };
+			expect(isUpsetResult(makeGameWithId(2, 1, 1), odds)).toBe(false);
+		});
+
+		it('no upset when draw is favored even if underdog wins', () => {
+			const odds: FixtureOdds = { 1: { home: 4.0, away: 3.5, draw: 2.8 } };
+			expect(isUpsetResult(makeGameWithId(2, 1, 1), odds)).toBe(false);
+		});
+	});
+
+	describe('isDrawFavorite', () => {
+		it('true when draw has lowest odd', () => {
+			expect(isDrawFavorite({ home: 3.0, away: 4.0, draw: 2.5 })).toBe(true);
+		});
+
+		it('false when home is favored', () => {
+			expect(isDrawFavorite({ home: 1.5, away: 4.0, draw: 3.0 })).toBe(false);
+		});
+
+		it('false when away is favored', () => {
+			expect(isDrawFavorite({ home: 3.0, away: 1.8, draw: 3.5 })).toBe(false);
+		});
+
+		it('true when draw ties with lowest', () => {
+			expect(isDrawFavorite({ home: 2.5, away: 3.0, draw: 2.5 })).toBe(true);
+		});
 	});
 
 	describe('calculateUserResultPoints', () => {
 		const competition = {
 			points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1 },
+		} as Competition;
+
+		const competitionWithUpset = {
+			points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1, upset: 1 },
 		} as Competition;
 
 		it('calculates points correctly', () => {
@@ -165,6 +268,18 @@ describe('utils', () => {
 
 		it('handles partial results', () => {
 			expect(calculateUserResultPoints({ exact: 1 }, competition)).toBe(3);
+		});
+
+		it('includes upset bonus when competition supports it', () => {
+			expect(
+				calculateUserResultPoints({ exact: 1, upset: 2 }, competitionWithUpset)
+			).toBe(3 + 2);
+		});
+
+		it('ignores upset when competition has no upset config', () => {
+			expect(
+				calculateUserResultPoints({ exact: 1, upset: 2 }, competition)
+			).toBe(3);
 		});
 	});
 });

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import React from 'react';
 import type { User } from '../../interfaces/main';
 import { DEFAULT_USER_RESULT } from '../../shared/utils';
+import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';
 import { Tooltip } from 'react-tooltip';
 
@@ -25,7 +26,9 @@ const TooltipInto = ({ children, content }: { children: ReactNode; content: stri
 const highlight = (key: string, activeKey?: string) => (key === activeKey ? 'ring-2 ring-white scale-110' : '');
 
 export const UserScores = ({ user, stage, highlightKey }: { user: User; stage: string; highlightKey?: string }) => {
+	const { competition } = useCompetition();
 	const stageScore = user.score[stage] ?? DEFAULT_USER_RESULT;
+	const hasUpset = (competition.points.upset ?? 0) > 0;
 	return (
 		<div className='flex flex-row flex-wrap items-center justify-center'>
 			<Tooltip id='my-tooltip' />
@@ -55,6 +58,14 @@ export const UserScores = ({ user, stage, highlightKey }: { user: User; stage: s
 					{stageScore.groups}
 				</Circle>
 			</TooltipInto>
+
+			{hasUpset && (
+				<TooltipInto content='Upset Bonus'>
+					<Circle className={classNames('bg-cyan-700', highlight('upset', highlightKey))}>
+						{stageScore.upset ?? 0}
+					</Circle>
+				</TooltipInto>
+			)}
 
 			<TooltipInto content='Penalty Bonus'>
 				<Circle className={classNames('bg-gray-500', highlight('penalty', highlightKey))}>

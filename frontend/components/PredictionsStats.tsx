@@ -107,6 +107,9 @@ const PredictionsStats = ({
 							{(resultsTally.fail ?? 0) > 0 && (
 								<Circle className='bg-red-600'>{resultsTally.fail}</Circle>
 							)}
+							{(resultsTally.upset ?? 0) > 0 && (
+								<Circle className='bg-cyan-700'>{resultsTally.upset}</Circle>
+							)}
 							{(resultsTally.penalty ?? 0) > 0 && (
 								<Circle className='bg-gray-500'>{resultsTally.penalty}</Circle>
 							)}

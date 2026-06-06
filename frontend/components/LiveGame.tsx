@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react';
 import Countdown, { zeroPad } from 'react-countdown';
-import { isGameFinished } from '../../shared/utils';
+import { isDrawFavorite, isGameFinished } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames, formatGameDate, getCurrentDate } from '../lib/utils/reactHelper';
@@ -21,6 +21,7 @@ const LiveGame = ({
 	setIsExtraInfoOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
 	const data = useTournamentStore(s => s.fixtures);
+	const odds = useTournamentStore(s => s.odds);
 	const token = useTournamentStore(s => s.token);
 	const { gcc } = useCompetition();
 	const updateCompetition = useTournamentStore(s => s.updateTournament);
@@ -29,6 +30,7 @@ const LiveGame = ({
 	if (!data || !token) return <></>;
 
 	const game = data[gameID];
+	const gameOdds = odds?.[gameID];
 
 	const gameDate = new Date(game?.fixture.date);
 
@@ -126,6 +128,48 @@ const LiveGame = ({
 					{[game?.fixture.venue.name, game?.fixture.venue.city].filter(Boolean).join(', ')}
 				</span>
 			</div>
+
+			{gameOdds && (
+				<div className='mt-3 flex flex-col items-center gap-1.5'>
+					<span className='text-[10px] uppercase tracking-widest opacity-40'>Betting Odds</span>
+					<div className='flex items-center gap-1 text-xs'>
+						<div
+							className={classNames(
+								'flex flex-col items-center rounded px-3 py-1',
+								!isDrawFavorite(gameOdds) && gameOdds.home <= gameOdds.away
+									? 'bg-white/10 font-bold'
+									: 'opacity-50'
+							)}
+						>
+							<span className='text-[10px] uppercase opacity-60'>Home</span>
+							<span>{gameOdds.home.toFixed(2)}</span>
+						</div>
+						<div
+							className={classNames(
+								'flex flex-col items-center rounded px-3 py-1',
+								isDrawFavorite(gameOdds) ? 'bg-white/10 font-bold' : 'opacity-50'
+							)}
+						>
+							<span className='text-[10px] uppercase opacity-60'>Draw</span>
+							<span>{gameOdds.draw.toFixed(2)}</span>
+						</div>
+						<div
+							className={classNames(
+								'flex flex-col items-center rounded px-3 py-1',
+								!isDrawFavorite(gameOdds) && gameOdds.away <= gameOdds.home
+									? 'bg-white/10 font-bold'
+									: 'opacity-50'
+							)}
+						>
+							<span className='text-[10px] uppercase opacity-60'>Away</span>
+							<span>{gameOdds.away.toFixed(2)}</span>
+						</div>
+					</div>
+					{isDrawFavorite(gameOdds) && (
+						<span className='text-[10px] opacity-40'>Draw favored — no upset bonus</span>
+					)}
+				</div>
+			)}
 		</ShowMore>
 	);
 };

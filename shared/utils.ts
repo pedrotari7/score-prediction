@@ -1,6 +1,7 @@
 import {
 	Competition,
 	Fixture,
+	FixtureOdds,
 	Fixtures,
 	Prediction,
 	Predictions,
@@ -73,7 +74,7 @@ export const competitions = {
 		start: '2026-06-11',
 		end: '2026-07-19',
 		logo: '/wc2026-logo.svg',
-		points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1 },
+		points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1, upset: 1 },
 		color: '#3a0a5e',
 	},
 } as const;
@@ -90,6 +91,7 @@ export const DEFAULT_USER_RESULT: UserResult = {
 	penalty: 0,
 	fail: 0,
 	groups: 0,
+	upset: 0,
 };
 
 export const isNum = (n: number | null): n is number => typeof n === 'number';
@@ -118,7 +120,24 @@ export const joinResults = (a: Partial<UserResult>, b: Partial<UserResult>): Use
 	return result;
 };
 
-export const getResult = (prediction: Prediction, game: Fixture): Partial<UserResult> => {
+export const isDrawFavorite = (odds: { home: number; away: number; draw: number }): boolean =>
+	odds.draw <= odds.home && odds.draw <= odds.away;
+
+export const isUpsetResult = (game: Fixture, fixtureOdds: FixtureOdds): boolean => {
+	const result = getExtraTimeResult(game);
+	const outcome = getOutcome(result);
+	if (outcome === 'draw' || outcome === null) return false;
+
+	const odds = fixtureOdds[game.fixture.id];
+	if (!odds) return false;
+
+	if (isDrawFavorite(odds)) return false;
+
+	if (outcome === 'winH') return odds.home > odds.away;
+	return odds.away > odds.home;
+};
+
+export const getResult = (prediction: Prediction, game: Fixture, isUpset = false): Partial<UserResult> => {
 	const result = getExtraTimeResult(game);
 
 	let ret = {};
@@ -145,6 +164,8 @@ export const getResult = (prediction: Prediction, game: Fixture): Partial<UserRe
 		getOutcome(prediction) === getOutcome(game.score.penalty);
 
 	if (isPenaltyWinner) ret = joinResults(ret, { penalty: 1 });
+
+	if ((isExactScore || isCorrectResult) && isUpset) ret = joinResults(ret, { upset: 1 });
 
 	if (isEmpty(ret)) return { fail: 1 };
 
@@ -337,4 +358,5 @@ export const calculateUserResultPoints = (ur: Partial<UserResult>, competition: 
 	competition.points.result * (ur.result ?? 0) +
 	competition.points.onescore * (ur.onescore ?? 0) +
 	competition.points.penalty * (ur.penalty ?? 0) +
-	competition.points.groups * (ur.groups ?? 0);
+	competition.points.groups * (ur.groups ?? 0) +
+	(competition.points.upset ?? 0) * (ur.upset ?? 0);

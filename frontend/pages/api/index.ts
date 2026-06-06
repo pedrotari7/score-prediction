@@ -1,4 +1,5 @@
 import type {
+	FixtureOdds,
 	Fixtures,
 	GroupPoints,
 	Prediction,
@@ -77,6 +78,12 @@ export const validateToken = async (token: string): Promise<VerificationResult> 
 
 export const updateGroups = async (token: string, competition: Competition): Promise<GroupPoints> =>
 	await cFetch(`${backendUrl}/groups`, token, competition);
+
+export const fetchOdds = async (token: string, competition: Competition): Promise<FixtureOdds> =>
+	await cFetch(`${backendUrl}/fetch-odds`, token, competition);
+
+export const fetchOddsLive = async (token: string, competition: Competition): Promise<FixtureOdds> =>
+	await cFetch(`${backendUrl}/fetch-odds-live`, token, competition);
 
 export const fetchSettings = async (token: string): Promise<Settings> => await cFetch(`${backendUrl}/settings`, token);
 
