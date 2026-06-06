@@ -92,7 +92,10 @@ export const DEFAULT_USER_RESULT: UserResult = {
 	fail: 0,
 	groups: 0,
 	upset: 0,
+	boost: 0,
 };
+
+export const MAX_BOOSTS = 3;
 
 export const isNum = (n: number | null): n is number => typeof n === 'number';
 
@@ -370,4 +373,5 @@ export const calculateUserResultPoints = (ur: Partial<UserResult>, competition: 
 	competition.points.onescore * (ur.onescore ?? 0) +
 	competition.points.penalty * (ur.penalty ?? 0) +
 	competition.points.groups * (ur.groups ?? 0) +
-	(competition.points.upset ?? 0) * (ur.upset ?? 0);
+	(competition.points.upset ?? 0) * (ur.upset ?? 0) +
+	(ur.boost ?? 0);

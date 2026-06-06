@@ -172,6 +172,23 @@ export const updateFixtureScore = async (
 		}
 	);
 
+export const updateBoost = async (
+	token: string,
+	gameId: number,
+	competition: Competition
+): Promise<{ success: boolean; boosts: number[] }> => {
+	return await cFetch(
+		`${backendUrl}/update-boost`,
+		token,
+		competition,
+		{},
+		{
+			body: JSON.stringify({ gameId }),
+			method: 'POST',
+		}
+	);
+};
+
 export const postNoSpoilers = async (noSpoilers: boolean, token: string): Promise<{ success: boolean }> =>
 	await cFetch(
 		`${backendUrl}/no-spoilers`,

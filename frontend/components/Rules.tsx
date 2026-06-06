@@ -64,6 +64,17 @@ const UpsetBonus = () => {
 	);
 };
 
+const ConfidenceMultiplier = () => (
+	<div>
+		<div className='mb-4 text-2xl font-bold'>Confidence Multiplier</div>
+		<div className='mb-4 flex flex-row flex-wrap rounded-md bg-indigo-500 p-2 text-lg'>
+			You can boost up to 3 predictions per tournament. Boosted predictions earn double points. Choose wisely —
+			boosts must be placed before the game starts and can be toggled on/off until kickoff.
+			<span className='mt-2 w-full text-2xl font-bold'>2x Points</span>
+		</div>
+	</div>
+);
+
 const GroupsPoints = () => {
 	const { competition } = useCompetition();
 	return (
@@ -128,6 +139,7 @@ const Rules = () => {
 				<NoPoints />
 				<ExtraInfo />
 				<UpsetBonus />
+				<ConfidenceMultiplier />
 				<GroupsPoints />
 				<FinalStages />
 				<Deadlines />

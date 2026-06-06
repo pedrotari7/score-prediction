@@ -67,6 +67,12 @@ export const UserScores = ({ user, stage, highlightKey }: { user: User; stage: s
 				</TooltipInto>
 			)}
 
+			<TooltipInto content='Boost Bonus'>
+				<Circle className={classNames('bg-indigo-500', highlight('boost', highlightKey))}>
+					{stageScore.boost ?? 0}
+				</Circle>
+			</TooltipInto>
+
 			<TooltipInto content='Penalty Bonus'>
 				<Circle className={classNames('bg-gray-500', highlight('penalty', highlightKey))}>
 					{stageScore.penalty}

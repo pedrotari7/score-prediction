@@ -31,6 +31,7 @@ const SortOptions: Record<string, SortOption> = {
 	onescore: { key: 'onescore', text: 'Team Score', color: 'bg-pink-600' },
 	upset: { key: 'upset', text: 'Upsets', color: 'bg-cyan-700' },
 	penalty: { key: 'penalty', text: 'Penalties', color: 'bg-gray-500' },
+	boost: { key: 'boost', text: 'Boosts', color: 'bg-indigo-500' },
 	fail: { key: 'fail', text: 'Fail', color: 'bg-red-600' },
 	groups: { key: 'groups', text: 'Groups', color: 'bg-purple-700' },
 };

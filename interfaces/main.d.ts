@@ -238,6 +238,7 @@ export interface UserResult extends Record<string, number> {
 	fail: number;
 	groups: number;
 	upset: number;
+	boost: number;
 }
 
 export interface Competition {
@@ -272,6 +273,7 @@ export interface Tournament {
 	users: Users;
 	userExtraInfo: UserExtraInfo;
 	odds?: FixtureOdds;
+	boosts?: Boosts;
 }
 
 export interface VerificationResult {
@@ -282,6 +284,8 @@ export interface VerificationResult {
 export type GroupPoints = Record<string, number>;
 
 export type FixtureOdds = Record<number, { home: number; away: number; draw: number }>;
+
+export type Boosts = Record<string, number[]>;
 
 export type UpdatePrediction = (prediction: Prediction, gameId: number) => Promise<void>;
 

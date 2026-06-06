@@ -84,6 +84,17 @@ exports[`UserScores renders user scores with a stage all 1`] = `
       </div>
     </a>
     <a
+      data-tooltip-content="Boost Bonus"
+      data-tooltip-id="my-tooltip"
+      data-tooltip-place="bottom"
+    >
+      <div
+        class="mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center bg-indigo-500"
+      >
+        0
+      </div>
+    </a>
+    <a
       data-tooltip-content="Penalty Bonus"
       data-tooltip-id="my-tooltip"
       data-tooltip-place="bottom"
@@ -178,6 +189,17 @@ exports[`UserScores renders user scores with a stage groups 1`] = `
         class="mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center bg-cyan-700"
       >
         15
+      </div>
+    </a>
+    <a
+      data-tooltip-content="Boost Bonus"
+      data-tooltip-id="my-tooltip"
+      data-tooltip-place="bottom"
+    >
+      <div
+        class="mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center bg-indigo-500"
+      >
+        0
       </div>
     </a>
     <a

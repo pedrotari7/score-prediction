@@ -29,6 +29,7 @@ import {
 } from '../../../shared/utils';
 import {
   FieldValue,
+  getDBBoosts,
   getDBFixtures,
   getDBFixturesExtraInfo,
   getDBGroupPoints,
@@ -186,13 +187,15 @@ export const updateOdds = async (competition: Competition, fixtures: Fixtures): 
 export const updatePoints = async (competition: Competition, predictions: Predictions, fixtures: Fixtures) => {
   const hasUpset = (competition.points.upset ?? 0) > 0;
 
-  const [groupPointsDoc, oddsDoc] = await Promise.all([
+  const [groupPointsDoc, oddsDoc, boostsDoc] = await Promise.all([
     getDBGroupPoints(competition).get(),
     hasUpset ? getDBOdds(competition).get() : Promise.resolve(null),
+    getDBBoosts(competition).get(),
   ]);
 
   const groupPoints = groupPointsDoc.data() as GroupPoints;
   const fixtureOdds: FixtureOdds = ((oddsDoc?.exists ? oddsDoc.data()?.data : {}) as FixtureOdds) ?? {};
+  const allBoosts = (boostsDoc.exists ? boostsDoc.data() : {}) as Record<string, number[]>;
 
   const updatedScores = Object.entries(predictions).reduce(
     (users, [gameID, gamePredictions]) => {
@@ -211,8 +214,16 @@ export const updatePoints = async (competition: Competition, predictions: Predic
           users[user][stage] = { ...DEFAULT_USER_RESULT };
         }
         if (game?.fixture.status.short === 'NS') continue;
-        users[user][stage] = joinResults(users[user][stage], getResult(gamePredictions[user], game, upset));
-        users[user]['all'] = joinResults(users[user]['all'], getResult(gamePredictions[user], game, upset));
+        const gameResult = getResult(gamePredictions[user], game, upset);
+        users[user][stage] = joinResults(users[user][stage], gameResult);
+        users[user]['all'] = joinResults(users[user]['all'], gameResult);
+
+        const userBoosts = allBoosts[user] ?? [];
+        if (userBoosts.includes(parseInt(gameID))) {
+          const boostBonus = calculateUserResultPoints(gameResult, competition);
+          users[user][stage] = joinResults(users[user][stage], { boost: boostBonus });
+          users[user]['all'] = joinResults(users[user]['all'], { boost: boostBonus });
+        }
       }
       return users;
     },

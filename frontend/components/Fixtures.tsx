@@ -1,9 +1,10 @@
 import Image from 'next/image';
 import type { Fixture, Fixtures, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
-import { isGameFinished } from '../../shared/utils';
+import { isGameFinished, MAX_BOOSTS } from '../../shared/utils';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { useAuth } from '../lib/auth';
 import { classNames } from '../lib/utils/reactHelper';
+import { useTournamentStore } from '../store/tournamentStore';
 import Game, { DebugCountdowns } from './Game';
 import Panel from './Panel';
 import PredictedGroups from './PredictedGroups';
@@ -25,6 +26,9 @@ const FixturesPage = ({
 }) => {
 	const { user: currentUser } = useAuth();
 	const { RedactedSpoilers } = useNoSpoilers();
+	const boosts = useTournamentStore(s => s.boosts);
+	const userBoosts = boosts?.[user?.uid] ?? [];
+	const remainingBoosts = MAX_BOOSTS - userBoosts.length;
 
 	if (!user)
 		return (
@@ -87,7 +91,16 @@ const FixturesPage = ({
 						/>
 					)}
 					{uid !== user.uid && <p>{user.displayName}</p>}
-					{uid === user.uid && <p>My Predictions</p>}
+					{uid === user.uid && (
+						<div className='flex items-center gap-2'>
+							<p>My Predictions</p>
+							{remainingBoosts < MAX_BOOSTS && (
+								<span className='rounded-full bg-indigo-500 px-2 py-0.5 text-xs font-bold'>
+									{remainingBoosts} boost{remainingBoosts !== 1 ? 's' : ''} left
+								</span>
+							)}
+						</div>
+					)}
 				</div>
 
 				<RedactedSpoilers>

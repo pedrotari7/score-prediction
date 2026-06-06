@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type {
+	Boosts,
 	Competition,
 	FixtureOdds,
 	Fixtures,
@@ -11,7 +12,7 @@ import type {
 	Users,
 } from '../../interfaces/main';
 import { currentCompetition, isGameFinished } from '../../shared/utils';
-import { fetchTournament, postNoSpoilers, updatePredictions } from '../pages/api';
+import { fetchTournament, postNoSpoilers, updateBoost as apiUpdateBoost, updatePredictions } from '../pages/api';
 
 export enum Route {
 	Home = 'home',
@@ -41,6 +42,7 @@ interface TournamentState {
 	leaderboards: Record<string, Leaderboard>;
 	users: Users;
 	odds: FixtureOdds;
+	boosts: Boosts;
 	uid: string;
 	route: RouteInfo;
 	noSpoilers: boolean | null;
@@ -67,6 +69,7 @@ interface TournamentState {
 
 	updateTournament: () => Promise<void>;
 	updatePrediction: (prediction: Prediction, gameId: number) => Promise<void>;
+	updateBoost: (gameId: number) => Promise<void>;
 
 	_navigate: ((info: RouteInfo) => void) | null;
 	_setNavigate: (fn: (info: RouteInfo) => void) => void;
@@ -92,6 +95,7 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 	leaderboards: {},
 	users: {} as Users,
 	odds: {},
+	boosts: {},
 	uid: '',
 	route: { page: Route.Home },
 	noSpoilers: null,
@@ -133,7 +137,7 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 
 		set({ loading: true, triedToValidateToken: true, isAuthenticated: true });
 
-		const { fixtures, standings, predictions, users, userExtraInfo, odds } = await fetchTournament(
+		const { fixtures, standings, predictions, users, userExtraInfo, odds, boosts } = await fetchTournament(
 			token,
 			competition
 		);
@@ -159,6 +163,7 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 			groupMap: computeGroupMap(sortedStandings),
 			users,
 			odds: odds ?? {},
+			boosts: boosts ?? {},
 			loading: false,
 		});
 
@@ -203,6 +208,25 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 
 		if (!result.success) {
 			set({ predictions: prevPredictions });
+		}
+	},
+
+	updateBoost: async (gameId: number) => {
+		const { token, uid, competition, boosts: prevBoosts } = get();
+		if (!token) return;
+
+		const userBoosts = prevBoosts[uid] ?? [];
+		const idx = userBoosts.indexOf(gameId);
+		const newUserBoosts = idx >= 0 ? userBoosts.filter(id => id !== gameId) : [...userBoosts, gameId];
+
+		set(state => ({
+			boosts: { ...state.boosts, [uid]: newUserBoosts },
+		}));
+
+		const result = await apiUpdateBoost(token, gameId, competition);
+
+		if (!result.success) {
+			set({ boosts: prevBoosts });
 		}
 	},
 

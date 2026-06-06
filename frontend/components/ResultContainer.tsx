@@ -46,15 +46,18 @@ const ResultContainer = ({
 	game,
 	className = '',
 	onClick = () => {},
+	userID,
 }: {
 	className?: string;
 	children: ReactNode;
 	prediction: Prediction;
 	game: Fixture;
 	onClick?: MouseEventHandler<HTMLDivElement>;
+	userID?: string;
 }) => {
 	const { gcc, competition } = useCompetition();
 	const odds = useTournamentStore(s => s.odds);
+	const boosts = useTournamentStore(s => s.boosts);
 	const { noSpoilers } = useNoSpoilers();
 
 	const { isExactScore, isCorrectResult, isCorrectGoal, isPenaltyWinner, isWrong, isPredictValid } =
@@ -65,6 +68,7 @@ const ResultContainer = ({
 	const started = isGameStarted(game);
 	const predictionIsUpset = gameOdds && isPredictValid && isPredictionUpset(prediction, gameOdds);
 	const earnedUpsetBonus = started && !noSpoilers && predictionIsUpset && (isExactScore || isCorrectResult);
+	const isBoosted = userID && boosts?.[userID]?.includes(game.fixture.id);
 
 	return (
 		<div
@@ -94,6 +98,11 @@ const ResultContainer = ({
 			{!started && predictionIsUpset && (
 				<div className='absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-cyan-700 px-1.5 py-0.5 text-[9px] font-bold'>
 					Upset pick
+				</div>
+			)}
+			{isBoosted && (
+				<div className='absolute -bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-indigo-500 px-1.5 py-0.5 text-[9px] font-bold text-white'>
+					2x
 				</div>
 			)}
 			{children}

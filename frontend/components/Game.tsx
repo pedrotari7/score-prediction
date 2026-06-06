@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import type { Predictions, UpdatePrediction } from '../../interfaces/main';
-import { isNum, isPredictionUpset } from '../../shared/utils';
+import { isNum, isPredictionUpset, MAX_BOOSTS } from '../../shared/utils';
 import Countdown, { zeroPad } from 'react-countdown';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
@@ -91,8 +91,14 @@ const Game = memo(function Game({
 }) {
 	const data = useTournamentStore(s => s.fixtures);
 	const odds = useTournamentStore(s => s.odds);
+	const boosts = useTournamentStore(s => s.boosts);
+	const doUpdateBoost = useTournamentStore(s => s.updateBoost);
 	const { gcc, competition } = useCompetition();
 	const uid = useTournamentStore(s => s.uid);
+
+	const myBoosts = boosts?.[uid] ?? [];
+	const isBoosted = myBoosts.includes(gameID);
+	const remainingBoosts = MAX_BOOSTS - myBoosts.length;
 
 	const { RedactedSpoilers } = useNoSpoilers();
 
@@ -142,23 +148,42 @@ const Game = memo(function Game({
 
 				<div className='flex w-4/12 flex-row items-center justify-center lg:w-4/12'>
 					{!isInPast && isMyPredictions && (
-						<div className='relative flex flex-row items-center'>
-							<UserInputPrediction
-								gameID={gameID}
-								prediction={prediction}
-								updatePrediction={updatePrediction}
-								homeInputRef={homeInputRef}
-								awayInputRef={awayInputRef}
-							/>
-							{(competition.points.upset ?? 0) > 0 &&
-								odds?.[gameID] &&
-								isNum(prediction.home) &&
-								isNum(prediction.away) &&
-								isPredictionUpset(prediction, odds[gameID]) && (
-									<div className='absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-cyan-700 px-1.5 py-0.5 text-[9px] font-bold'>
-										Upset pick
-									</div>
+						<div className='relative flex flex-col items-center'>
+							<div className='relative flex flex-row items-center'>
+								<UserInputPrediction
+									gameID={gameID}
+									prediction={prediction}
+									updatePrediction={updatePrediction}
+									homeInputRef={homeInputRef}
+									awayInputRef={awayInputRef}
+								/>
+								{(competition.points.upset ?? 0) > 0 &&
+									odds?.[gameID] &&
+									isNum(prediction.home) &&
+									isNum(prediction.away) &&
+									isPredictionUpset(prediction, odds[gameID]) && (
+										<div className='absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-cyan-700 px-1.5 py-0.5 text-[9px] font-bold'>
+											Upset pick
+										</div>
+									)}
+							</div>
+							<button
+								onClick={e => {
+									e.stopPropagation();
+									doUpdateBoost(gameID);
+								}}
+								disabled={!isBoosted && remainingBoosts <= 0}
+								className={classNames(
+									'mt-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-colors',
+									isBoosted
+										? 'bg-indigo-500 text-white'
+										: remainingBoosts > 0
+											? 'bg-gray-600 text-gray-300 hover:bg-indigo-500/50'
+											: 'cursor-not-allowed bg-gray-700 text-gray-500'
 								)}
+							>
+								{isBoosted ? '2x Boosted' : `2x (${remainingBoosts} left)`}
+							</button>
 						</div>
 					)}
 
@@ -174,12 +199,22 @@ const Game = memo(function Game({
 										Upset pick
 									</div>
 								)}
+							{boosts?.[userID]?.includes(gameID) && (
+								<div className='absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-indigo-500 px-1.5 py-0.5 text-[9px] font-bold text-white'>
+									2x
+								</div>
+							)}
 						</div>
 					)}
 
 					{isInPast && (
 						<div className='mx-4 flex flex-col items-center justify-center font-bold lg:w-6/12'>
-							<ResultContainer className='mb-2 min-w-result px-2' prediction={prediction} game={game}>
+							<ResultContainer
+								className='mb-2 min-w-result px-2'
+								prediction={prediction}
+								game={game}
+								userID={userID}
+							>
 								{(!isValidScore(prediction.home) || !isValidScore(prediction.away)) && (
 									<span>No prediction</span>
 								)}

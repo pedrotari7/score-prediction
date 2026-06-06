@@ -2,6 +2,7 @@
 
 import type { Express } from 'express';
 import type {
+  Boosts,
   Fixture,
   FixtureOdds,
   Fixtures,
@@ -11,7 +12,7 @@ import type {
   Standing,
   Tournament,
 } from '../../../interfaces/main';
-import { currentCompetitions, isGameOnGoing, isGameStarted } from '../../../shared/utils';
+import { currentCompetitions, isGameOnGoing, isGameStarted, MAX_BOOSTS } from '../../../shared/utils';
 import { authenticate, decodeToken, parseBody, parseCompetition } from '../lib/auth';
 import {
   FieldValue,
@@ -20,6 +21,7 @@ import {
   Timestamp,
   firebaseApp,
   getDBFixtures,
+  getDBBoosts,
   getDBFixturesExtraInfo,
   getDBOdds,
   getDBPredictions,
@@ -94,11 +96,12 @@ export const registerRoutes = (app: Express) => {
     const hasUpset = (competition.points.upset ?? 0) > 0;
 
     // Fetch all initial data in parallel instead of sequentially
-    const [settingsDoc, fixturesDocument, standingsDocument, oddsDocument] = await Promise.all([
+    const [settingsDoc, fixturesDocument, standingsDocument, oddsDocument, boostsDocument] = await Promise.all([
       getDBSettings().get(),
       getDBFixtures(competition).get(),
       getDBStandings(competition).get(),
       hasUpset ? getDBOdds(competition).get() : Promise.resolve(null),
+      getDBBoosts(competition).get(),
     ]);
 
     if (!settingsDoc.exists) return res.status(500).json({ error: 'Missing settings' });
@@ -187,6 +190,7 @@ export const registerRoutes = (app: Express) => {
       ).reduce((acc, l) => ({ ...acc, [l.id]: l }), {}) ?? {};
 
     const odds: FixtureOdds | undefined = oddsDocument?.exists ? (oddsDocument.data()?.data as FixtureOdds) : undefined;
+    const boosts: Boosts | undefined = boostsDocument?.exists ? (boostsDocument.data() as Boosts) : undefined;
 
     const tournament: Tournament = {
       fixtures: fixtures?.data,
@@ -195,6 +199,7 @@ export const registerRoutes = (app: Express) => {
       users,
       userExtraInfo: { noSpoilers: false, ...userExtraInfo, leaderboards },
       ...(odds && { odds }),
+      ...(boosts && { boosts }),
     };
 
     void getDBUser(decodedToken.uid)
@@ -348,6 +353,50 @@ export const registerRoutes = (app: Express) => {
     return res.json({ ...result, success: true });
   });
 
+  app.post('/update-boost', async (req, res) => {
+    const authResult = await authenticate(req, res);
+    if (!authResult.success) return authResult.result;
+
+    const { uid: callerUID } = authResult.result;
+    const { gameId } = parseBody(req.body);
+
+    const parsedGameId = Number(gameId);
+    if (!Number.isInteger(parsedGameId) || parsedGameId <= 0) {
+      return res.status(400).json({ error: 'Invalid gameId', result: false });
+    }
+
+    const competition = parseCompetition(req);
+
+    const fixtures = (await getDBFixtures(competition).get()).data()?.data as Fixtures;
+    if (!fixtures?.[parsedGameId]) {
+      return res.status(404).json({ error: 'Game not found', result: false });
+    }
+
+    const gameDate = new Date(fixtures[parsedGameId].fixture.date);
+    if (getCurrentTime() >= gameDate) {
+      return res.status(403).json({ error: 'Game already started', result: false });
+    }
+
+    const boostsDoc = await getDBBoosts(competition).get();
+    const allBoosts = (boostsDoc.exists ? boostsDoc.data() : {}) as Record<string, number[]>;
+    const userBoosts = allBoosts[callerUID] ?? [];
+
+    const idx = userBoosts.indexOf(parsedGameId);
+    if (idx >= 0) {
+      userBoosts.splice(idx, 1);
+    } else {
+      if (userBoosts.length >= MAX_BOOSTS) {
+        return res.status(400).json({ error: 'Maximum boosts reached', result: false });
+      }
+      userBoosts.push(parsedGameId);
+    }
+
+    allBoosts[callerUID] = userBoosts;
+    await getDBBoosts(competition).set(allBoosts);
+
+    return res.json({ success: true, boosts: userBoosts });
+  });
+
   app.get('/points', async (req, res) => {
     const authResult = await authenticate(req, res, true);
     if (!authResult.success) return authResult.result;
@@ -478,7 +527,7 @@ export const registerRoutes = (app: Express) => {
 
     const competition = parseCompetition(req);
 
-    const docs = ['predictions', 'scores', 'groupPoints'];
+    const docs = ['predictions', 'scores', 'groupPoints', 'boosts'];
     const results: Record<string, string> = {};
 
     for (const doc of docs) {

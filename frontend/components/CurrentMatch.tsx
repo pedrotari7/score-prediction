@@ -24,6 +24,7 @@ import {
 	getResult,
 	isGameFinished,
 	isGameStarted,
+	MAX_BOOSTS,
 } from '../../shared/utils';
 import LoadingSkeleton from './LoadingSkeleton';
 import RefreshComp from './RefreshComp';
@@ -50,6 +51,13 @@ const UserGuess = ({
 	myGuess?: boolean;
 }) => {
 	const setRoute = useTournamentStore(s => s.setRoute);
+	const boosts = useTournamentStore(s => s.boosts);
+	const doUpdateBoost = useTournamentStore(s => s.updateBoost);
+	const uid = useTournamentStore(s => s.uid);
+
+	const myBoosts = boosts?.[uid] ?? [];
+	const isBoosted = myBoosts.includes(gameID);
+	const remainingBoosts = MAX_BOOSTS - myBoosts.length;
 
 	const parsedGuess = { home: formatScore(guess.home), away: formatScore(guess.away) };
 
@@ -66,6 +74,7 @@ const UserGuess = ({
 		<ResultContainer
 			prediction={guess}
 			game={game}
+			userID={user.uid}
 			className={
 				classNames(
 					'my-2 flex w-full flex-row items-center justify-between rounded p-4 sm:m-2 sm:w-max',
@@ -120,6 +129,25 @@ const UserGuess = ({
 						/>
 					)}
 				</div>
+			)}
+			{!isInPast && myGuess && (
+				<button
+					onClick={e => {
+						e.stopPropagation();
+						doUpdateBoost(gameID);
+					}}
+					disabled={!isBoosted && remainingBoosts <= 0}
+					className={classNames(
+						'rounded-full px-3 py-1 text-xs font-bold transition-colors',
+						isBoosted
+							? 'bg-indigo-500 text-white'
+							: remainingBoosts > 0
+								? 'bg-gray-600 text-gray-300 hover:bg-indigo-500/50'
+								: 'cursor-not-allowed bg-gray-700 text-gray-500'
+					)}
+				>
+					{isBoosted ? '2x Boosted' : `2x (${remainingBoosts} left)`}
+				</button>
 			)}
 		</ResultContainer>
 	);
