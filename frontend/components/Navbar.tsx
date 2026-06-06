@@ -18,7 +18,7 @@ import { useAuth } from '../lib/auth';
 import type { RouteInfo } from '../store/tournamentStore';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import { app } from '../lib/firebaseClient';
-import { competitions, currentCompetitions } from '../../shared/utils';
+import { competitions, currentCompetitions, isGameFinished } from '../../shared/utils';
 import NoSpoilersToggle from './NoSpoilersToggle';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import useCompetition from '../hooks/useCompetition';
@@ -34,6 +34,9 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 
 	const { noSpoilers, setNoSpoilers } = useNoSpoilers();
 	const { gcc, competition } = useCompetition();
+	const fixtures = useTournamentStore(s => s.fixtures);
+	const finalGame = Object.values(fixtures).find(f => f.league.round === 'Final');
+	const isTournamentFinished = !!finalGame && isGameFinished(finalGame);
 
 	const navigation: NavItem[] = [
 		{ name: 'NextGame', info: { page: Route.Match } },
@@ -41,8 +44,11 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 		{ name: 'Leaderboard', info: { page: Route.Leaderboard } },
 		{ name: 'Standings', info: { page: Route.Standings } },
 		{ name: 'Stats', info: { page: Route.Stats } },
+		{ name: 'Recap', info: { page: Route.Recap } },
 		{ name: 'Rules', info: { page: Route.Rules, data: user?.uid } },
-	].filter(it => !noSpoilers || (noSpoilers && it.info.page !== Route.Standings));
+	]
+		.filter(it => it.info.page !== Route.Recap || isTournamentFinished)
+		.filter(it => !noSpoilers || (noSpoilers && it.info.page !== Route.Standings));
 
 	const route = useTournamentStore(s => s.route);
 	const setRoute = useTournamentStore(s => s.setRoute);

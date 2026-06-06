@@ -28,6 +28,7 @@ export enum Route {
 	RefreshPage = 'refreshPage',
 	Stats = 'stats',
 	Compare = 'compare',
+	Recap = 'recap',
 }
 
 export interface RouteInfo {
@@ -177,13 +178,17 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 		}
 
 		const nextGame = sortedFixtures.find(game => !isGameFinished(game));
+		const finalGame = sortedFixtures.find(game => game.league.round === 'Final');
+		const isTournamentFinished = !!finalGame && isGameFinished(finalGame);
 
 		if (uid in users && users[uid].shouldOnboard) {
 			get()._navigate?.({ page: Route.Rules, data: uid });
 			return;
 		}
 
-		if (nextGame) {
+		if (isTournamentFinished) {
+			get()._navigate?.({ page: Route.Recap });
+		} else if (nextGame) {
 			const nextGamePrediction = predictions[nextGame.fixture.id];
 			if (!nextGamePrediction || !(uid in nextGamePrediction)) {
 				get()._navigate?.({ page: Route.Predictions, data: uid });

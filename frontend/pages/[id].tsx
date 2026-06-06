@@ -24,6 +24,7 @@ const Leaderboards = dynamic(() => import('../components/Leaderboard'));
 const StandingsPage = dynamic(() => import('../components/Standings'));
 const Stats = dynamic(() => import('../components/Stats'));
 const HeadToHead = dynamic(() => import('../components/HeadToHead'));
+const TournamentRecap = dynamic(() => import('../components/TournamentRecap'));
 
 type QueryParams = Record<string, string | string[] | undefined>;
 
@@ -118,6 +119,8 @@ const MainComponent = () => {
 						compareUid={route.data as string}
 					/>
 				);
+			case Route.Recap:
+				return <TournamentRecap />;
 			default:
 				return <></>;
 		}

@@ -3,6 +3,7 @@ import type { MouseEventHandler, ReactNode } from 'react';
 import { useMemo, useState } from 'react';
 import { ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import type { Leaderboard, Users } from '../../interfaces/main';
+import { isGameFinished } from '../../shared/utils';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import { classNames } from '../lib/utils/reactHelper';
 import DesktopOnly from './DesktopOnly';
@@ -79,6 +80,9 @@ const Leaderboards = ({
 	const route = useTournamentStore(s => s.route);
 	const setRoute = useTournamentStore(s => s.setRoute);
 	const { gcc, competition } = useCompetition();
+	const fixtures = useTournamentStore(s => s.fixtures);
+	const finalGame = Object.values(fixtures).find(f => f.league.round === 'Final');
+	const isTournamentFinished = !!finalGame && isGameFinished(finalGame);
 	const [sortOption, setSortOption] = useState(SortOptions.points);
 	const initialLeaderboard = route.data ? (route.data as string) : 'global';
 
@@ -128,7 +132,17 @@ const Leaderboards = ({
 		<Panel className={classNames('m-3 select-none rounded-md p-3 shadow-pop sm:mx-[5%] sm:p-6')}>
 			<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
 				<div className='text-2xl font-bold'>Leaderboards</div>
-				<RefreshComp />
+				<div className='flex items-center gap-2'>
+					{isTournamentFinished && (
+						<button
+							onClick={() => setRoute({ page: Route.Recap })}
+							className='rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-1.5 text-xs font-bold text-white transition-transform hover:scale-105'
+						>
+							My Recap
+						</button>
+					)}
+					<RefreshComp />
+				</div>
 			</div>
 
 			<div className='mb-4 flex flex-col items-center gap-4 sm:flex-row'>
