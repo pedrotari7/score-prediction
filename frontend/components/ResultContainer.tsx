@@ -1,9 +1,17 @@
 import type { ReactNode, MouseEventHandler } from 'react';
 import type { Fixture, Prediction } from '../../interfaces/main';
-import { getExtraTimeResult, getOutcome, isNum, isPenaltyShootout } from '../../shared/utils';
+import {
+	getExtraTimeResult,
+	getOutcome,
+	isGameStarted,
+	isNum,
+	isPenaltyShootout,
+	isPredictionUpset,
+} from '../../shared/utils';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames } from '../lib/utils/reactHelper';
 import useCompetition from '../hooks/useCompetition';
+import { useTournamentStore } from '../store/tournamentStore';
 
 export const getPredictionResult = (prediction: Prediction, game: Fixture) => {
 	const result = getExtraTimeResult(game);
@@ -45,12 +53,18 @@ const ResultContainer = ({
 	game: Fixture;
 	onClick?: MouseEventHandler<HTMLDivElement>;
 }) => {
-	const { gcc } = useCompetition();
-
+	const { gcc, competition } = useCompetition();
+	const odds = useTournamentStore(s => s.odds);
 	const { noSpoilers } = useNoSpoilers();
 
 	const { isExactScore, isCorrectResult, isCorrectGoal, isPenaltyWinner, isWrong, isPredictValid } =
 		getPredictionResult(prediction, game);
+
+	const hasUpsetConfig = (competition.points.upset ?? 0) > 0;
+	const gameOdds = hasUpsetConfig ? odds?.[game.fixture.id] : undefined;
+	const started = isGameStarted(game);
+	const predictionIsUpset = gameOdds && isPredictValid && isPredictionUpset(prediction, gameOdds);
+	const earnedUpsetBonus = started && !noSpoilers && predictionIsUpset && (isExactScore || isCorrectResult);
 
 	return (
 		<div
@@ -70,6 +84,16 @@ const ResultContainer = ({
 			{!noSpoilers && isPenaltyWinner && (
 				<div className='absolute -right-5 -top-4 size-7 rounded-full bg-gray-500'>
 					<div className='flex size-full items-center justify-center text-xs'>+1</div>
+				</div>
+			)}
+			{earnedUpsetBonus && (
+				<div className='absolute -left-5 -top-4 size-7 rounded-full bg-cyan-700'>
+					<div className='flex size-full items-center justify-center text-xs'>+1</div>
+				</div>
+			)}
+			{!started && predictionIsUpset && (
+				<div className='absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-cyan-700 px-1.5 py-0.5 text-[9px] font-bold'>
+					Upset pick
 				</div>
 			)}
 			{children}

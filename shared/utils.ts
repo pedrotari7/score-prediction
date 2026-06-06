@@ -123,6 +123,17 @@ export const joinResults = (a: Partial<UserResult>, b: Partial<UserResult>): Use
 export const isDrawFavorite = (odds: { home: number; away: number; draw: number }): boolean =>
 	odds.draw <= odds.home && odds.draw <= odds.away;
 
+export const isPredictionUpset = (
+	prediction: Prediction,
+	odds: { home: number; away: number; draw: number }
+): boolean => {
+	if (isDrawFavorite(odds)) return false;
+	const outcome = getOutcome(prediction);
+	if (outcome === 'draw' || outcome === null) return false;
+	if (outcome === 'winH') return odds.home > odds.away;
+	return odds.away > odds.home;
+};
+
 export const isUpsetResult = (game: Fixture, fixtureOdds: FixtureOdds): boolean => {
 	const result = getExtraTimeResult(game);
 	const outcome = getOutcome(result);

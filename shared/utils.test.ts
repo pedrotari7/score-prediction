@@ -7,6 +7,7 @@ import {
 	getResult,
 	isDrawFavorite,
 	isEmpty,
+	isPredictionUpset,
 	isUpsetResult,
 	joinResults,
 } from './utils';
@@ -244,6 +245,28 @@ describe('utils', () => {
 
 		it('true when draw ties with lowest', () => {
 			expect(isDrawFavorite({ home: 2.5, away: 3.0, draw: 2.5 })).toBe(true);
+		});
+	});
+
+	describe('isPredictionUpset', () => {
+		it('true when predicting home underdog to win', () => {
+			expect(isPredictionUpset({ home: 2, away: 1 }, { home: 4.5, away: 1.8, draw: 3.2 })).toBe(true);
+		});
+
+		it('true when predicting away underdog to win', () => {
+			expect(isPredictionUpset({ home: 0, away: 1 }, { home: 1.5, away: 5.0, draw: 3.5 })).toBe(true);
+		});
+
+		it('false when predicting favorite to win', () => {
+			expect(isPredictionUpset({ home: 2, away: 0 }, { home: 1.5, away: 5.0, draw: 3.5 })).toBe(false);
+		});
+
+		it('false when predicting draw', () => {
+			expect(isPredictionUpset({ home: 1, away: 1 }, { home: 4.5, away: 1.8, draw: 3.2 })).toBe(false);
+		});
+
+		it('false when draw is favored', () => {
+			expect(isPredictionUpset({ home: 2, away: 1 }, { home: 4.0, away: 3.5, draw: 2.8 })).toBe(false);
 		});
 	});
 

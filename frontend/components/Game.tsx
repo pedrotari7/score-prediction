@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import type { Predictions, UpdatePrediction } from '../../interfaces/main';
-import { isNum } from '../../shared/utils';
+import { isNum, isPredictionUpset } from '../../shared/utils';
 import Countdown, { zeroPad } from 'react-countdown';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
@@ -90,7 +90,8 @@ const Game = memo(function Game({
 	userID: string;
 }) {
 	const data = useTournamentStore(s => s.fixtures);
-	const { gcc } = useCompetition();
+	const odds = useTournamentStore(s => s.odds);
+	const { gcc, competition } = useCompetition();
 	const uid = useTournamentStore(s => s.uid);
 
 	const { RedactedSpoilers } = useNoSpoilers();
@@ -141,18 +142,38 @@ const Game = memo(function Game({
 
 				<div className='flex w-4/12 flex-row items-center justify-center lg:w-4/12'>
 					{!isInPast && isMyPredictions && (
-						<UserInputPrediction
-							gameID={gameID}
-							prediction={prediction}
-							updatePrediction={updatePrediction}
-							homeInputRef={homeInputRef}
-							awayInputRef={awayInputRef}
-						/>
+						<div className='relative flex flex-row items-center'>
+							<UserInputPrediction
+								gameID={gameID}
+								prediction={prediction}
+								updatePrediction={updatePrediction}
+								homeInputRef={homeInputRef}
+								awayInputRef={awayInputRef}
+							/>
+							{(competition.points.upset ?? 0) > 0 &&
+								odds?.[gameID] &&
+								isNum(prediction.home) &&
+								isNum(prediction.away) &&
+								isPredictionUpset(prediction, odds[gameID]) && (
+									<div className='absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-cyan-700 px-1.5 py-0.5 text-[9px] font-bold'>
+										Upset pick
+									</div>
+								)}
+						</div>
 					)}
 
 					{!isInPast && !isMyPredictions && (
-						<div className='mx-4 font-bold'>
+						<div className='relative mx-4 font-bold'>
 							{formatScore(prediction.home)} - {formatScore(prediction.away)}
+							{(competition.points.upset ?? 0) > 0 &&
+								odds?.[gameID] &&
+								isNum(prediction.home) &&
+								isNum(prediction.away) &&
+								isPredictionUpset(prediction, odds[gameID]) && (
+									<div className='absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-cyan-700 px-1.5 py-0.5 text-[9px] font-bold'>
+										Upset pick
+									</div>
+								)}
 						</div>
 					)}
 
