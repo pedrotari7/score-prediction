@@ -25,6 +25,7 @@ const StandingsPage = dynamic(() => import('../components/Standings'));
 const Stats = dynamic(() => import('../components/Stats'));
 const HeadToHead = dynamic(() => import('../components/HeadToHead'));
 const TournamentRecap = dynamic(() => import('../components/TournamentRecap'));
+const DebugCardGallery = dynamic(() => import('../components/DebugCardGallery'));
 
 type QueryParams = Record<string, string | string[] | undefined>;
 
@@ -121,6 +122,8 @@ const MainComponent = () => {
 				);
 			case Route.Recap:
 				return <TournamentRecap />;
+			case Route.DebugCards:
+				return <DebugCardGallery />;
 			default:
 				return <></>;
 		}

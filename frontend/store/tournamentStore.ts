@@ -29,6 +29,7 @@ export enum Route {
 	Stats = 'stats',
 	Compare = 'compare',
 	Recap = 'recap',
+	DebugCards = 'debugCards',
 }
 
 export interface RouteInfo {

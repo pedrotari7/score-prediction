@@ -398,6 +398,13 @@ const SettingsPage = () => {
 				>
 					Test PWA Install Prompt
 				</button>
+
+				<button
+					onClick={() => useTournamentStore.getState().setRoute({ page: Route.DebugCards })}
+					className={`m-5 rounded bg-purple-700 px-4 py-2 font-bold text-white`}
+				>
+					Debug Card Gallery
+				</button>
 			</div>
 
 			<PwaInstallPrompt forceShow={showPwaPrompt} onDismiss={() => setShowPwaPrompt(false)} />
