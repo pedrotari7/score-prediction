@@ -77,8 +77,8 @@ const UserGuess = ({
 			userID={user.uid}
 			className={
 				classNames(
-					'my-2 flex w-full flex-row items-center justify-between rounded p-4 sm:m-2 sm:w-max',
-					'cursor-pointer select-none gap-4'
+					'my-2 flex w-full flex-col gap-3 rounded p-4 sm:m-2 sm:w-max sm:flex-row sm:items-center sm:justify-between sm:gap-4',
+					'cursor-pointer select-none'
 				) +
 				' ' +
 				// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
@@ -86,18 +86,16 @@ const UserGuess = ({
 			}
 			onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 		>
-			<span className='flex flex-row items-center text-left text-xs'>
+			<div className='flex items-center gap-2'>
 				{user?.photoURL && (
 					<Image
-						className='mr-2 size-8 rounded-full object-cover'
+						className='size-8 rounded-full object-cover'
 						src={user.photoURL}
 						width={32}
 						height={32}
 						alt=''
 					/>
 				)}
-			</span>
-			<div className='flex items-center justify-center gap-4'>
 				<span className='text-xl'>{user?.displayName}</span>
 				<span className='text-sm text-light'>{user?.score?.['all']?.points ?? 0} pts</span>
 			</div>
@@ -105,7 +103,7 @@ const UserGuess = ({
 			{invalidScore && !emptyScore && <div className='text-sm font-bold'>Invalid</div>}
 
 			{!hiddenScore && (
-				<div className='flex flex-row text-xl'>
+				<div className='flex justify-center text-xl sm:justify-start'>
 					{(isInPast || !myGuess) && !invalidScore && (
 						<>
 							<div className='flex flex-row items-center justify-end font-bold'>
@@ -131,23 +129,25 @@ const UserGuess = ({
 				</div>
 			)}
 			{!isInPast && myGuess && (
-				<button
-					onClick={e => {
-						e.stopPropagation();
-						doUpdateBoost(gameID);
-					}}
-					disabled={!isBoosted && remainingBoosts <= 0}
-					className={classNames(
-						'rounded-full px-3 py-1 text-xs font-bold transition-colors',
-						isBoosted
-							? 'bg-indigo-500 text-white'
-							: remainingBoosts > 0
-								? 'bg-gray-600 text-gray-300 hover:bg-indigo-500/50'
-								: 'cursor-not-allowed bg-gray-700 text-gray-500'
-					)}
-				>
-					{isBoosted ? '2x Boosted' : `2x (${remainingBoosts} left)`}
-				</button>
+				<div className='flex justify-center sm:justify-start'>
+					<button
+						onClick={e => {
+							e.stopPropagation();
+							doUpdateBoost(gameID);
+						}}
+						disabled={!isBoosted && remainingBoosts <= 0}
+						className={classNames(
+							'rounded-full px-3 py-1 text-xs font-bold transition-colors',
+							isBoosted
+								? 'bg-indigo-500 text-white'
+								: remainingBoosts > 0
+									? 'bg-gray-600 text-gray-300 hover:bg-indigo-500/50'
+									: 'cursor-not-allowed bg-gray-700 text-gray-500'
+						)}
+					>
+						{isBoosted ? '2x Boosted' : `2x (${remainingBoosts} left)`}
+					</button>
+				</div>
 			)}
 		</ResultContainer>
 	);
