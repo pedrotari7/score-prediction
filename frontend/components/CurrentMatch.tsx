@@ -77,7 +77,10 @@ const UserGuess = ({
 			userID={user.uid}
 			className={
 				classNames(
-					'my-2 flex w-full flex-col gap-3 rounded p-4 sm:m-2 sm:w-max sm:flex-row sm:items-center sm:justify-between sm:gap-4',
+					'my-2 flex w-full rounded p-4 sm:m-2 sm:w-max',
+					!isInPast && myGuess
+						? 'flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4'
+						: 'flex-row items-center justify-between gap-4',
 					'cursor-pointer select-none'
 				) +
 				' ' +
