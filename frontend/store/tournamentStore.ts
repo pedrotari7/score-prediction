@@ -131,14 +131,17 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 			return;
 		}
 
-		set({ triedToValidateToken: true, isAuthenticated: true });
+		set({ loading: true, triedToValidateToken: true, isAuthenticated: true });
 
 		const { fixtures, standings, predictions, users, userExtraInfo, odds } = await fetchTournament(
 			token,
 			competition
 		);
 
-		if (!standings || !fixtures || !userExtraInfo) return;
+		if (!standings || !fixtures || !userExtraInfo) {
+			set({ loading: false });
+			return;
+		}
 
 		const sortedStandings = Object.entries(standings).sort() as unknown as Standings;
 		const sortedFixtures = Object.values(fixtures).sort(
