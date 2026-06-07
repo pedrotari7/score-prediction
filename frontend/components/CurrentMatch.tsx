@@ -12,7 +12,6 @@ import type {
 	Predictions,
 	UpdatePrediction,
 	User,
-	UserResult,
 	Users,
 } from '../../interfaces/main';
 import { classNames, formatScore, getCurrentDate, getStadiumImageURL } from '../lib/utils/reactHelper';
@@ -222,8 +221,6 @@ const CurrentMatch = ({
 		}
 	}, [users, currentLeaderboard]);
 
-	const calculatePoints = (ur: Partial<UserResult>) => calculateUserResultPoints(ur, competition);
-
 	const sortedFixtures = useMemo(
 		() => Object.values(fixtures).sort((a, b) => a.fixture.timestamp - b.fixture.timestamp) as Fixture[],
 		[fixtures]
@@ -253,45 +250,57 @@ const CurrentMatch = ({
 		preventScrollOnSwipe: true,
 	});
 
+	const gamePredictions = useMemo(() => (game ? (predictions?.[game.fixture?.id] ?? {}) : {}), [predictions, game]);
+
+	const currentLeaderboardPredictions = useMemo(
+		() => Object.entries(gamePredictions).filter(([entryUid]) => members.includes(entryUid)),
+		[gamePredictions, members]
+	);
+
+	const gamePredictionsAndResults = useMemo(() => {
+		if (!game) return [];
+		const sorted = currentLeaderboardPredictions
+			.filter(([entryUid]) => entryUid !== uid)
+			.map(([entryUid, prediction]) => ({
+				uid: entryUid,
+				prediction,
+				result: getResult(prediction, game),
+			}))
+			.sort(
+				(a, b) =>
+					(users[b.uid].score?.['all']?.points ?? 0) - (users[a.uid].score?.['all']?.points ?? 0) ||
+					users[a.uid].displayName.localeCompare(users[b.uid].displayName)
+			);
+		if (!noSpoilers) {
+			sorted.sort(
+				(a, b) =>
+					calculateUserResultPoints(b.result ?? {}, competition) -
+						calculateUserResultPoints(a.result ?? {}, competition) ||
+					(b.result.onescore ?? 0) - (a.result.onescore ?? 0)
+			);
+		}
+		return sorted;
+	}, [currentLeaderboardPredictions, uid, game, users, noSpoilers, competition]);
+
+	const resultsTally = useMemo(
+		() =>
+			game && isGameStarted(game)
+				? [...gamePredictionsAndResults, { result: getResult(gamePredictions[uid], game) }].reduce(
+						(acc, { result: r }) => ({
+							...acc,
+							exact: acc.exact + (r.exact ?? 0),
+							onescore: acc.onescore + (r.onescore ?? 0),
+							result: acc.result + (r.result ?? 0),
+							penalty: acc.penalty + (r.penalty ?? 0),
+							fail: acc.fail + (r.fail ?? 0),
+						}),
+						DEFAULT_USER_RESULT
+					)
+				: {},
+		[gamePredictionsAndResults, game, gamePredictions, uid]
+	);
+
 	if (!game || !userInfo) return <LoadingSkeleton />;
-
-	const gamePredictions = predictions?.[game.fixture?.id] ?? {};
-
-	const currentLeaderboardPredictions = Object.entries(gamePredictions).filter(([uid]) => members.includes(uid));
-
-	let gamePredictionsAndResults = currentLeaderboardPredictions
-		.filter(([uid]) => uid !== userInfo.uid)
-		.map(([uid, prediction]) => ({
-			uid,
-			prediction,
-			result: getResult(prediction, game),
-		}))
-		.sort(
-			(a, b) =>
-				(users[b.uid].score?.['all']?.points ?? 0) - (users[a.uid].score?.['all']?.points ?? 0) ||
-				users[a.uid].displayName.localeCompare(users[b.uid].displayName)
-		);
-
-	if (!noSpoilers) {
-		gamePredictionsAndResults = gamePredictionsAndResults.sort(
-			(a, b) =>
-				calculatePoints(b.result ?? {}) - calculatePoints(a.result ?? {}) ||
-				(b.result.onescore ?? 0) - (a.result.onescore ?? 0)
-		);
-	}
-	const resultsTally = isGameStarted(game)
-		? [...gamePredictionsAndResults, { result: getResult(gamePredictions[userInfo.uid], game) }].reduce(
-				(acc, { result: r }) => ({
-					...acc,
-					exact: acc.exact + (r.exact ?? 0),
-					onescore: acc.onescore + (r.onescore ?? 0),
-					result: acc.result + (r.result ?? 0),
-					penalty: acc.penalty + (r.penalty ?? 0),
-					fail: acc.fail + (r.fail ?? 0),
-				}),
-				DEFAULT_USER_RESULT
-			)
-		: {};
 
 	const stadiumImage = getStadiumImageURL(game?.fixture.venue);
 
