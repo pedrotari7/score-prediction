@@ -26,15 +26,15 @@ interface SortOption {
 }
 
 const SortOptions: Record<string, SortOption> = {
-	points: { key: 'points', text: 'Points', color: ' bg-gray-700' },
 	exact: { key: 'exact', text: 'Exact', color: 'bg-green-600' },
 	result: { key: 'result', text: 'Correct Result', color: 'bg-yellow-600' },
 	onescore: { key: 'onescore', text: 'Team Score', color: 'bg-pink-600' },
-	upset: { key: 'upset', text: 'Upsets', color: 'bg-cyan-700' },
-	penalty: { key: 'penalty', text: 'Penalties', color: 'bg-gray-500' },
-	boost: { key: 'boost', text: 'Boosts', color: 'bg-indigo-500' },
 	fail: { key: 'fail', text: 'Fail', color: 'bg-red-600' },
 	groups: { key: 'groups', text: 'Groups', color: 'bg-purple-700' },
+	upset: { key: 'upset', text: 'Upsets', color: 'bg-cyan-700' },
+	boost: { key: 'boost', text: 'Boosts', color: 'bg-indigo-500' },
+	penalty: { key: 'penalty', text: 'Penalties', color: 'bg-gray-500' },
+	points: { key: 'points', text: 'Points', color: ' bg-gray-700' },
 };
 
 const FilterOption = ({
