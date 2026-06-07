@@ -24,7 +24,6 @@ import {
 	getResult,
 	isGameFinished,
 	isGameStarted,
-	MAX_BOOSTS,
 } from '../../shared/utils';
 import LoadingSkeleton from './LoadingSkeleton';
 import RefreshComp from './RefreshComp';
@@ -54,10 +53,12 @@ const UserGuess = ({
 	const boosts = useTournamentStore(s => s.boosts);
 	const doUpdateBoost = useTournamentStore(s => s.updateBoost);
 	const uid = useTournamentStore(s => s.uid);
+	const { competition } = useCompetition();
 
+	const maxBoosts = competition.points.boosts ?? 0;
 	const myBoosts = boosts?.[uid] ?? [];
 	const isBoosted = myBoosts.includes(gameID);
-	const remainingBoosts = MAX_BOOSTS - myBoosts.length;
+	const remainingBoosts = maxBoosts - myBoosts.length;
 
 	const parsedGuess = { home: formatScore(guess.home), away: formatScore(guess.away) };
 
@@ -131,7 +132,7 @@ const UserGuess = ({
 					)}
 				</div>
 			)}
-			{!isInPast && myGuess && (
+			{!isInPast && myGuess && maxBoosts > 0 && (
 				<div className='flex justify-center sm:justify-start'>
 					<button
 						onClick={e => {

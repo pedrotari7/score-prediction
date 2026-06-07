@@ -18,6 +18,7 @@ module.exports = {
 		remotePatterns: [
 			{ protocol: 'https', hostname: 'lh3.googleusercontent.com' },
 			{ protocol: 'https', hostname: 'media.api-sports.io' },
+			{ protocol: 'https', hostname: '*.api-sports.io' },
 		],
 	},
 	async redirects() {

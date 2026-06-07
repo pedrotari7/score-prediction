@@ -180,6 +180,7 @@ const Leaderboards = ({
 					<div className='mb-6 flex flex-row flex-wrap items-center justify-center font-bold sm:justify-center'>
 						{Object.values(SortOptions)
 							.filter(o => o.key !== 'upset' || (competition.points.upset ?? 0) > 0)
+							.filter(o => o.key !== 'boost' || (competition.points.boosts ?? 0) > 0)
 							.map(option => (
 								<FilterOption
 									key={option.key}

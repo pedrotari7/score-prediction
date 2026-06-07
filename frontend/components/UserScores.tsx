@@ -29,6 +29,7 @@ export const UserScores = ({ user, stage, highlightKey }: { user: User; stage: s
 	const { competition } = useCompetition();
 	const stageScore = user.score[stage] ?? DEFAULT_USER_RESULT;
 	const hasUpset = (competition.points.upset ?? 0) > 0;
+	const hasBoosts = (competition.points.boosts ?? 0) > 0;
 	return (
 		<div className='flex flex-row flex-wrap items-center justify-center'>
 			<Tooltip id='my-tooltip' />
@@ -67,11 +68,13 @@ export const UserScores = ({ user, stage, highlightKey }: { user: User; stage: s
 				</TooltipInto>
 			)}
 
-			<TooltipInto content='Boost Bonus'>
-				<Circle className={classNames('bg-indigo-500', highlight('boost', highlightKey))}>
-					{stageScore.boost ?? 0}
-				</Circle>
-			</TooltipInto>
+			{hasBoosts && (
+				<TooltipInto content='Boost Bonus'>
+					<Circle className={classNames('bg-indigo-500', highlight('boost', highlightKey))}>
+						{stageScore.boost ?? 0}
+					</Circle>
+				</TooltipInto>
+			)}
 
 			<TooltipInto content='Penalty Bonus'>
 				<Circle className={classNames('bg-gray-500', highlight('penalty', highlightKey))}>

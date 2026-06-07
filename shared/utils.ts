@@ -74,7 +74,7 @@ export const competitions = {
 		start: '2026-06-11',
 		end: '2026-07-19',
 		logo: '/wc2026-logo.svg',
-		points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1, upset: 1 },
+		points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1, upset: 1, boosts: 3 },
 		color: '#3a0a5e',
 	},
 } as const;
@@ -95,7 +95,6 @@ export const DEFAULT_USER_RESULT: UserResult = {
 	boost: 0,
 };
 
-export const MAX_BOOSTS = 3;
 
 export const isNum = (n: number | null): n is number => typeof n === 'number';
 

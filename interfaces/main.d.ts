@@ -255,6 +255,7 @@ export interface Competition {
 		penalty: number;
 		groups: number;
 		upset?: number;
+		boosts?: number;
 	};
 	color: string;
 }

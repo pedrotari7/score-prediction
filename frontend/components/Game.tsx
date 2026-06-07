@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import type { Predictions, UpdatePrediction } from '../../interfaces/main';
-import { isNum, isPredictionUpset, MAX_BOOSTS } from '../../shared/utils';
+import { isNum, isPredictionUpset } from '../../shared/utils';
 import Countdown, { zeroPad } from 'react-countdown';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
@@ -96,9 +96,10 @@ const Game = memo(function Game({
 	const { gcc, competition } = useCompetition();
 	const uid = useTournamentStore(s => s.uid);
 
+	const maxBoosts = competition.points.boosts ?? 0;
 	const myBoosts = boosts?.[uid] ?? [];
 	const isBoosted = myBoosts.includes(gameID);
-	const remainingBoosts = MAX_BOOSTS - myBoosts.length;
+	const remainingBoosts = maxBoosts - myBoosts.length;
 
 	const { RedactedSpoilers } = useNoSpoilers();
 
@@ -167,23 +168,25 @@ const Game = memo(function Game({
 										</div>
 									)}
 							</div>
-							<button
-								onClick={e => {
-									e.stopPropagation();
-									doUpdateBoost(gameID);
-								}}
-								disabled={!isBoosted && remainingBoosts <= 0}
-								className={classNames(
-									'mt-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-colors',
-									isBoosted
-										? 'bg-indigo-500 text-white'
-										: remainingBoosts > 0
-											? 'bg-gray-600 text-gray-300 hover:bg-indigo-500/50'
-											: 'cursor-not-allowed bg-gray-700 text-gray-500'
-								)}
-							>
-								{isBoosted ? '2x Boosted' : `2x (${remainingBoosts} left)`}
-							</button>
+							{maxBoosts > 0 && (
+								<button
+									onClick={e => {
+										e.stopPropagation();
+										doUpdateBoost(gameID);
+									}}
+									disabled={!isBoosted && remainingBoosts <= 0}
+									className={classNames(
+										'mt-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-colors',
+										isBoosted
+											? 'bg-indigo-500 text-white'
+											: remainingBoosts > 0
+												? 'bg-gray-600 text-gray-300 hover:bg-indigo-500/50'
+												: 'cursor-not-allowed bg-gray-700 text-gray-500'
+									)}
+								>
+									{isBoosted ? '2x Boosted' : `2x (${remainingBoosts} left)`}
+								</button>
+							)}
 						</div>
 					)}
 

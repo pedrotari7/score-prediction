@@ -95,7 +95,9 @@ exports[`Rules renders rules page 1`] = `
         <div
           class="mb-4 flex flex-row flex-wrap rounded-md bg-indigo-500 p-2 text-lg"
         >
-          You can boost up to 3 predictions per tournament. Boosted predictions earn double points. Choose wisely — boosts must be placed before the game starts and can be toggled on/off until kickoff.
+          You can boost up to 
+          3
+           predictions per tournament. Boosted predictions earn double points. Choose wisely — boosts must be placed before the game starts and can be toggled on/off until kickoff.
           <span
             class="mt-2 w-full text-2xl font-bold"
           >
