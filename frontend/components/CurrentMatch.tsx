@@ -50,6 +50,7 @@ const ReactionBar = ({
 	onReact,
 	isMyPrediction,
 	users,
+	onPanelChange,
 }: {
 	targetUid: string;
 	myUid: string;
@@ -57,6 +58,7 @@ const ReactionBar = ({
 	onReact: (targetUid: string, emoji: string) => void;
 	isMyPrediction: boolean;
 	users: Users;
+	onPanelChange?: (open: boolean) => void;
 }) => {
 	const [pickerOpen, setPickerOpen] = useState(false);
 	const [longPressInfo, setLongPressInfo] = useState<{ emoji: string; uids: string[] } | null>(null);
@@ -73,6 +75,10 @@ const ReactionBar = ({
 		document.addEventListener('mousedown', handler);
 		return () => document.removeEventListener('mousedown', handler);
 	}, [pickerOpen]);
+
+	useEffect(() => {
+		onPanelChange?.(!!longPressInfo);
+	}, [longPressInfo]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const counts: Record<string, number> = {};
 	const reactors: Record<string, string[]> = {};
@@ -221,7 +227,10 @@ const ReactionBar = ({
 			{longPressInfo && (
 				<div
 					className='fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center'
-					onClick={() => setLongPressInfo(null)}
+					onClick={e => {
+						e.stopPropagation();
+						setLongPressInfo(null);
+					}}
 				>
 					<div
 						className='w-full max-w-sm rounded-t-2xl bg-gray-900 p-4 sm:rounded-2xl'
@@ -270,6 +279,7 @@ const UserGuess = ({
 	gameReactions,
 	onReact,
 	users,
+	onReactionPanelChange,
 }: {
 	gameID: number;
 	user: User;
@@ -280,6 +290,7 @@ const UserGuess = ({
 	gameReactions?: GameReactions;
 	onReact?: (targetUid: string, emoji: string) => void;
 	users?: Users;
+	onReactionPanelChange?: (open: boolean) => void;
 }) => {
 	const setRoute = useTournamentStore(s => s.setRoute);
 	const boosts = useTournamentStore(s => s.boosts);
@@ -395,6 +406,7 @@ const UserGuess = ({
 						onReact={onReact}
 						isMyPrediction={myGuess}
 						users={users ?? {}}
+						onPanelChange={onReactionPanelChange}
 					/>
 				</div>
 			)}
@@ -408,16 +420,19 @@ const KeyboardHandle = memo(function KeyboardHandle({
 	children,
 	className,
 	setGameID,
+	isReactionPanelOpen,
 }: {
 	prevGameId: number | null;
 	nextGameId: number | null;
 	children: ReactNode;
 	className?: string;
 	setGameID: Dispatch<SetStateAction<number>>;
+	isReactionPanelOpen: boolean;
 }) {
 	useEffect(() => {
 		const keyDownHandler = (event: KeyboardEvent) => {
 			if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
+			if (isReactionPanelOpen) return;
 			switch (event.code) {
 				case 'ArrowLeft':
 					if (prevGameId !== null) setGameID(prevGameId);
@@ -430,7 +445,7 @@ const KeyboardHandle = memo(function KeyboardHandle({
 		document.addEventListener('keydown', keyDownHandler);
 
 		return () => document.removeEventListener('keydown', keyDownHandler);
-	}, [prevGameId, nextGameId, setGameID]);
+	}, [prevGameId, nextGameId, setGameID, isReactionPanelOpen]);
 
 	return <div className={className}>{children}</div>;
 });
@@ -539,6 +554,7 @@ const CurrentMatch = ({
 	const [currentLeaderboard, setCurrentLeaderboard] = useState('global');
 	const [members, setMembers] = useState<string[]>(Object.keys(users));
 	const [gameReactions, setGameReactions] = useState<GameReactions>({});
+	const [isReactionPanelOpen, setIsReactionPanelOpen] = useState(false);
 
 	useEffect(() => {
 		if (currentLeaderboard === 'global') {
@@ -570,8 +586,8 @@ const CurrentMatch = ({
 	}, [sortedFixtures, game]);
 
 	const handlers = useSwipeable({
-		onSwipedLeft: () => nextGameId !== null && !isExtraInfoOpen && setGameID(nextGameId),
-		onSwipedRight: () => prevGameId !== null && !isExtraInfoOpen && setGameID(prevGameId),
+		onSwipedLeft: () => nextGameId !== null && !isExtraInfoOpen && !isReactionPanelOpen && setGameID(nextGameId),
+		onSwipedRight: () => prevGameId !== null && !isExtraInfoOpen && !isReactionPanelOpen && setGameID(prevGameId),
 		preventScrollOnSwipe: true,
 	});
 
@@ -662,7 +678,12 @@ const CurrentMatch = ({
 	const stadiumImage = getStadiumImageURL(game?.fixture.venue);
 
 	return (
-		<KeyboardHandle prevGameId={prevGameId} nextGameId={nextGameId} setGameID={setGameID}>
+		<KeyboardHandle
+			prevGameId={prevGameId}
+			nextGameId={nextGameId}
+			setGameID={setGameID}
+			isReactionPanelOpen={isReactionPanelOpen}
+		>
 			<Panel
 				className={classNames(
 					gcc('text-light'),
@@ -689,7 +710,7 @@ const CurrentMatch = ({
 					<GameStoryStrip
 						sortedFixtures={sortedFixtures}
 						currentId={game.fixture.id}
-						onSelect={setGameID}
+						onSelect={id => !isReactionPanelOpen && setGameID(id)}
 						noSpoilers={noSpoilers}
 					/>
 
@@ -699,7 +720,7 @@ const CurrentMatch = ({
 								className={classNames(
 									`absolute left-0 top-1/2 w-max -translate-y-1/2 cursor-pointer rounded-md sm:-translate-x-full`
 								)}
-								onClick={() => setGameID(prevGameId)}
+								onClick={() => !isReactionPanelOpen && setGameID(prevGameId)}
 							>
 								<ChevronLeftIcon className={classNames(gcc('text-light'), 'size-8')} />
 							</div>
@@ -716,7 +737,7 @@ const CurrentMatch = ({
 									gcc('hover:text-light'),
 									`absolute right-0 top-1/2 w-max -translate-y-1/2 cursor-pointer rounded-md sm:translate-x-full`
 								)}
-								onClick={() => setGameID(nextGameId)}
+								onClick={() => !isReactionPanelOpen && setGameID(nextGameId)}
 							>
 								<ChevronRightIcon className={classNames(gcc('text-light'), 'size-8')} />
 							</div>
@@ -737,6 +758,7 @@ const CurrentMatch = ({
 								gameReactions={gameReactions}
 								onReact={handleReact}
 								users={users}
+								onReactionPanelChange={setIsReactionPanelOpen}
 							/>
 						</div>
 					</div>
@@ -775,6 +797,7 @@ const CurrentMatch = ({
 									gameReactions={gameReactions}
 									onReact={handleReact}
 									users={users}
+									onReactionPanelChange={setIsReactionPanelOpen}
 								/>
 							))}
 						</div>
