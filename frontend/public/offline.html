@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline — Score Prediction</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f1117;
+      color: #e4e6f0;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    img { width: 72px; height: 72px; opacity: 0.7; }
+    h1 { font-size: 1.5rem; font-weight: 700; }
+    p { color: #9498ad; font-size: 0.95rem; max-width: 320px; line-height: 1.6; }
+    button {
+      margin-top: 0.5rem;
+      padding: 0.6rem 1.5rem;
+      background: #1e3a5f;
+      color: #e4e6f0;
+      border: 1px solid #2d3148;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    button:hover { background: #2a4f80; }
+  </style>
+</head>
+<body>
+  <img src="/whistle.svg" alt="" />
+  <h1>You're offline</h1>
+  <p>No internet connection. Check your network and try again.</p>
+  <button onclick="location.reload()">Try again</button>
+</body>
+</html>
