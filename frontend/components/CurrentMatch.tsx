@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import { useSwipeable } from 'react-swipeable';
 import LiveGame from './LiveGame';
@@ -22,6 +22,7 @@ import {
 	DEFAULT_USER_RESULT,
 	getResult,
 	isGameFinished,
+	isGameOnGoing,
 	isGameStarted,
 } from '../../shared/utils';
 import LoadingSkeleton from './LoadingSkeleton';
@@ -32,6 +33,7 @@ import useNoSpoilers from '../hooks/useNoSpoilers';
 import useCompetition from '../hooks/useCompetition';
 import { useInputPrediction, UserInputPrediction } from '../hooks/useInputPrediction';
 import Panel from './Panel';
+import Flag from './Flag';
 
 const UserGuess = ({
 	gameID,
@@ -189,6 +191,84 @@ const KeyboardHandle = memo(function KeyboardHandle({
 	return <div className={className}>{children}</div>;
 });
 
+const GameStoryStrip = ({
+	sortedFixtures,
+	currentId,
+	onSelect,
+	noSpoilers,
+}: {
+	sortedFixtures: Fixture[];
+	currentId: number;
+	onSelect: (id: number) => void;
+	noSpoilers: boolean | null;
+}) => {
+	const activeRef = useRef<HTMLButtonElement>(null);
+
+	useEffect(() => {
+		activeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+	}, [currentId]);
+
+	return (
+		<div
+			className='-mx-4 mb-4 flex gap-1.5 overflow-x-auto px-4 pb-2 sm:-mx-8 sm:px-8'
+			style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+		>
+			{sortedFixtures.map(fixture => {
+				const isActive = fixture.fixture.id === currentId;
+				const isLive = isGameOnGoing(fixture);
+				const isFinished = isGameFinished(fixture);
+				const notStarted = !isGameStarted(fixture);
+
+				return (
+					<button
+						key={fixture.fixture.id}
+						ref={isActive ? activeRef : undefined}
+						onClick={() => onSelect(fixture.fixture.id)}
+						className={classNames(
+							'flex shrink-0 flex-col items-center gap-1 rounded-xl border-2 px-2 py-1.5 transition-all duration-200 focus:outline-none',
+							isActive ? 'scale-105 border-white bg-white/15' : 'border-transparent',
+							isLive && !isActive ? 'bg-green-900/40' : '',
+							isFinished && !isActive ? 'bg-white/5' : '',
+							notStarted && !isActive ? 'opacity-50' : ''
+						)}
+					>
+						<div className='flex items-center'>
+							<Flag team={fixture.teams.home} className='scale-75 [&_img]:mx-0.5' />
+							{isLive ? (
+								<span className='relative mx-1 flex size-1.5 shrink-0'>
+									<span className='absolute inline-flex size-full animate-ping rounded-full bg-green-400 opacity-75' />
+									<span className='relative inline-flex size-1.5 rounded-full bg-green-500' />
+								</span>
+							) : (
+								<span className='text-[10px] opacity-30'>-</span>
+							)}
+							<Flag team={fixture.teams.away} className='scale-75 [&_img]:mx-0.5' />
+						</div>
+						<div className='text-[10px] font-bold tabular-nums leading-none'>
+							{isGameStarted(fixture) ? (
+								noSpoilers ? (
+									<span className='opacity-30'>?-?</span>
+								) : (
+									<span className={isLive ? 'text-green-400' : 'opacity-70'}>
+										{fixture.goals.home}-{fixture.goals.away}
+									</span>
+								)
+							) : (
+								<span className='opacity-40'>
+									{new Date(fixture.fixture.date).toLocaleTimeString([], {
+										hour: '2-digit',
+										minute: '2-digit',
+									})}
+								</span>
+							)}
+						</div>
+					</button>
+				);
+			})}
+		</div>
+	);
+};
+
 const CurrentMatch = ({
 	fixtures,
 	predictions,
@@ -328,6 +408,13 @@ const CurrentMatch = ({
 							<RefreshComp />
 						</div>
 					</div>
+
+					<GameStoryStrip
+						sortedFixtures={sortedFixtures}
+						currentId={game.fixture.id}
+						onSelect={setGameID}
+						noSpoilers={noSpoilers}
+					/>
 
 					<div className='relative'>
 						{!isExtraInfoOpen && prevGameId !== null && (
