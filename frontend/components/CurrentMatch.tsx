@@ -59,6 +59,8 @@ const ReactionBar = ({
 	users: Users;
 }) => {
 	const [pickerOpen, setPickerOpen] = useState(false);
+	const [longPressInfo, setLongPressInfo] = useState<{ emoji: string; uids: string[] } | null>(null);
+	const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const pickerRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -90,116 +92,171 @@ const ReactionBar = ({
 	const hasReactions = orderedEmojis.length > 0;
 	if (isMyPrediction && !hasReactions) return null;
 
+	const startLongPress = (emoji: string) => {
+		longPressTimer.current = setTimeout(() => setLongPressInfo({ emoji, uids: reactors[emoji] ?? [] }), 500);
+	};
+
+	const cancelLongPress = () => {
+		if (longPressTimer.current) {
+			clearTimeout(longPressTimer.current);
+			longPressTimer.current = null;
+		}
+	};
+
 	return (
-		<div className='flex flex-wrap items-center gap-1 pt-1' onClick={e => e.stopPropagation()}>
-			{orderedEmojis.map(emoji => {
-				const count = counts[emoji] ?? 0;
-				const isSelected = myReactions.has(emoji);
-				return (
-					<div key={emoji} className='group relative'>
+		<>
+			<div className='flex flex-wrap items-center gap-1 pt-1' onClick={e => e.stopPropagation()}>
+				{orderedEmojis.map(emoji => {
+					const count = counts[emoji] ?? 0;
+					const isSelected = myReactions.has(emoji);
+					return (
+						<div key={emoji} className='group relative'>
+							<button
+								onClick={
+									isMyPrediction
+										? undefined
+										: e => {
+												e.stopPropagation();
+												onReact(targetUid, emoji);
+											}
+								}
+								onTouchStart={() => startLongPress(emoji)}
+								onTouchEnd={cancelLongPress}
+								onTouchMove={cancelLongPress}
+								className={classNames(
+									'flex items-center gap-0.5 rounded-full px-2 py-0.5 text-sm transition-all',
+									isSelected ? 'bg-white/25 ring-1 ring-white/40' : 'bg-white/10 hover:bg-white/20',
+									isMyPrediction ? 'cursor-default' : 'cursor-pointer'
+								)}
+							>
+								<span>{emoji}</span>
+								<span className='text-xs opacity-60'>{count}</span>
+							</button>
+							<div className='pointer-events-none absolute bottom-full left-0 z-50 mb-1.5 hidden min-w-max rounded-lg bg-gray-900 p-2 shadow-lg group-hover:block'>
+								{(reactors[emoji] ?? []).map(reactorUid => {
+									const u = users[reactorUid];
+									const name = reactorUid === myUid ? 'You' : (u?.displayName ?? reactorUid);
+									return (
+										<div key={reactorUid} className='flex items-center gap-2 py-0.5'>
+											{u?.photoURL ? (
+												<Image
+													src={u.photoURL}
+													width={20}
+													height={20}
+													alt=''
+													className='size-5 rounded-full object-cover'
+												/>
+											) : (
+												<div className='size-5 rounded-full bg-white/20' />
+											)}
+											<span className='text-xs'>{name}</span>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					);
+				})}
+
+				{!isMyPrediction && (
+					<div ref={pickerRef} className='relative'>
 						<button
-							onClick={
-								isMyPrediction
-									? undefined
-									: e => {
-											e.stopPropagation();
-											onReact(targetUid, emoji);
-										}
-							}
+							onClick={e => {
+								e.stopPropagation();
+								setPickerOpen(p => !p);
+							}}
+							aria-label='Add reaction'
 							className={classNames(
-								'flex items-center gap-0.5 rounded-full px-2 py-0.5 text-sm transition-all',
-								isSelected ? 'bg-white/25 ring-1 ring-white/40' : 'bg-white/10 hover:bg-white/20',
-								isMyPrediction ? 'cursor-default' : 'cursor-pointer'
+								'flex items-center rounded-full px-1.5 py-0.5 transition-all',
+								pickerOpen
+									? 'bg-white/20 opacity-100'
+									: 'bg-white/5 opacity-50 hover:bg-white/15 hover:opacity-100'
 							)}
 						>
-							<span>{emoji}</span>
-							<span className='text-xs opacity-60'>{count}</span>
+							<span className='relative inline-flex'>
+								<FaceSmileIcon className='size-4' />
+								<span className='absolute -right-0.5 -top-1 text-[9px] font-bold leading-none'>+</span>
+							</span>
 						</button>
-						<div className='pointer-events-none absolute bottom-full left-0 z-50 mb-1.5 hidden min-w-max rounded-lg bg-gray-900 p-2 shadow-lg group-hover:block'>
-							{(reactors[emoji] ?? []).map(reactorUid => {
-								const u = users[reactorUid];
-								const name = reactorUid === myUid ? 'You' : (u?.displayName ?? reactorUid);
-								return (
-									<div key={reactorUid} className='flex items-center gap-2 py-0.5'>
-										{u?.photoURL ? (
-											<Image
-												src={u.photoURL}
-												width={20}
-												height={20}
-												alt=''
-												className='size-5 rounded-full object-cover'
-											/>
-										) : (
-											<div className='size-5 rounded-full bg-white/20' />
-										)}
-										<span className='text-xs'>{name}</span>
-									</div>
-								);
-							})}
-						</div>
-					</div>
-				);
-			})}
 
-			{!isMyPrediction && (
-				<div ref={pickerRef} className='relative'>
-					<button
-						onClick={e => {
-							e.stopPropagation();
-							setPickerOpen(p => !p);
-						}}
-						aria-label='Add reaction'
-						className={classNames(
-							'flex items-center rounded-full px-1.5 py-0.5 transition-all',
-							pickerOpen
-								? 'bg-white/20 opacity-100'
-								: 'bg-white/5 opacity-50 hover:bg-white/15 hover:opacity-100'
-						)}
-					>
-						<span className='relative inline-flex'>
-							<FaceSmileIcon className='size-4' />
-							<span className='absolute -right-0.5 -top-1 text-[9px] font-bold leading-none'>+</span>
-						</span>
-					</button>
-
-					{pickerOpen && (
-						<div className='absolute bottom-full left-0 z-50 mb-1 overflow-hidden rounded-xl shadow-xl'>
-							<div className='flex gap-0.5 bg-gray-900/95 p-1.5'>
-								{REACTION_EMOJIS.map(emoji => (
-									<button
-										key={emoji}
-										onClick={e => {
-											e.stopPropagation();
-											onReact(targetUid, emoji);
-											setPickerOpen(false);
-										}}
-										className={classNames(
-											'rounded-lg p-1.5 text-xl transition-all hover:scale-125 hover:bg-white/10',
-											myReactions.has(emoji) ? 'scale-110 bg-white/20' : ''
-										)}
-									>
-										{emoji}
-									</button>
-								))}
+						{pickerOpen && (
+							<div className='absolute bottom-full left-0 z-50 mb-1 overflow-hidden rounded-xl shadow-xl'>
+								<div className='flex gap-0.5 bg-gray-900/95 p-1.5'>
+									{REACTION_EMOJIS.map(emoji => (
+										<button
+											key={emoji}
+											onClick={e => {
+												e.stopPropagation();
+												onReact(targetUid, emoji);
+												setPickerOpen(false);
+											}}
+											className={classNames(
+												'rounded-lg p-1.5 text-xl transition-all hover:scale-125 hover:bg-white/10',
+												myReactions.has(emoji) ? 'scale-110 bg-white/20' : ''
+											)}
+										>
+											{emoji}
+										</button>
+									))}
+								</div>
+								<EmojiPicker
+									data={data}
+									theme='dark'
+									previewPosition='none'
+									skinTonePosition='none'
+									maxFrequentRows={1}
+									perLine={8}
+									style={{ '--border-radius': '0px' } as CSSProperties}
+									onEmojiSelect={(emoji: { native: string }) => {
+										onReact(targetUid, emoji.native);
+										setPickerOpen(false);
+									}}
+								/>
 							</div>
-							<EmojiPicker
-								data={data}
-								theme='dark'
-								previewPosition='none'
-								skinTonePosition='none'
-								maxFrequentRows={1}
-								perLine={8}
-								style={{ '--border-radius': '0px' } as CSSProperties}
-								onEmojiSelect={(emoji: { native: string }) => {
-									onReact(targetUid, emoji.native);
-									setPickerOpen(false);
-								}}
-							/>
+						)}
+					</div>
+				)}
+			</div>
+
+			{longPressInfo && (
+				<div
+					className='fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center'
+					onClick={() => setLongPressInfo(null)}
+				>
+					<div
+						className='w-full max-w-sm rounded-t-2xl bg-gray-900 p-4 sm:rounded-2xl'
+						onClick={e => e.stopPropagation()}
+					>
+						<div className='mb-3 flex items-center gap-2'>
+							<span className='text-2xl'>{longPressInfo.emoji}</span>
+							<span className='font-medium opacity-70'>
+								{longPressInfo.uids.length} reaction{longPressInfo.uids.length !== 1 ? 's' : ''}
+							</span>
 						</div>
-					)}
+						{longPressInfo.uids.map(reactorUid => {
+							const u = users[reactorUid];
+							const name = reactorUid === myUid ? 'You' : (u?.displayName ?? reactorUid);
+							return (
+								<div key={reactorUid} className='flex items-center gap-3 py-2'>
+									{u?.photoURL ? (
+										<Image
+											src={u.photoURL}
+											width={36}
+											height={36}
+											alt=''
+											className='size-9 rounded-full object-cover'
+										/>
+									) : (
+										<div className='size-9 rounded-full bg-white/20' />
+									)}
+									<span className='text-sm font-medium'>{name}</span>
+								</div>
+							);
+						})}
+					</div>
 				</div>
 			)}
-		</div>
+		</>
 	);
 };
 
