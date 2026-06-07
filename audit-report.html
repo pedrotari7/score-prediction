@@ -249,6 +249,11 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
   font-weight: 800; background: linear-gradient(135deg, #f43f5e, #f97316); color: #fff;
   letter-spacing: 0.05em; margin-right: 0.4rem; vertical-align: middle;
 }
+.v4-badge {
+  display: inline-block; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.6rem;
+  font-weight: 800; background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff;
+  letter-spacing: 0.05em; margin-right: 0.4rem; vertical-align: middle;
+}
 </style>
 </head>
 <body>
@@ -482,6 +487,47 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
 }
 </script>
 
+<script type="application/json" id="audit-data-v4">
+{
+  "categories": [
+    {
+      "name": "Security Vulnerabilities",
+      "slug": "security",
+      "findings": [
+        {"id":"V4-SEC-001","version":4,"severity":"high","title":"No security headers on backend or frontend responses","file":"backend/src/index.ts, frontend/next.config.js","lines":"20-47","description":"Neither the Express backend nor the Next.js frontend sets security headers. No Content-Security-Policy, X-Frame-Options, X-Content-Type-Options, Strict-Transport-Security, or Referrer-Policy headers are configured. The backend has no helmet middleware and the frontend next.config.js has no headers() export.","code_snippet":"const app = express();\napp.use(limiter);\napp.use(cors({ origin: corsOrigins }));\n// No helmet() or security headers middleware","recommended_fix":"Add helmet middleware to the Express backend and configure security headers in next.config.js.","fix_snippet":"// Backend:\nimport helmet from 'helmet';\napp.use(helmet());\n\n// Frontend next.config.js:\nasync headers() {\n  return [{ source: '/(.*)', headers: [\n    { key: 'X-Frame-Options', value: 'DENY' },\n    { key: 'X-Content-Type-Options', value: 'nosniff' },\n    { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },\n  ]}];\n}","impact":"Missing headers leave the app vulnerable to clickjacking (no X-Frame-Options), MIME-type sniffing attacks (no X-Content-Type-Options), and information leakage (no Referrer-Policy).","effort":"moderate","tags":["headers","helmet","clickjacking","defense-in-depth"],"status":"open"},
+        {"id":"V4-SEC-002","version":4,"severity":"medium","title":"CORS localhost origins guarded by fragile ISDEV env var","file":"backend/src/index.ts","lines":"29","description":"Localhost origins (http://localhost:3000, http://localhost:3001) are included in the CORS allowlist when process.env.ISDEV is truthy. This environment variable is not tied to NODE_ENV and could accidentally be set in production, enabling CORS bypass from localhost.","code_snippet":"const corsOrigins = [\n  'https://score-prediction.com',\n  ...(process.env.ISDEV\n    ? ['http://localhost:3000', 'http://localhost:3001']\n    : []),\n];","recommended_fix":"Use NODE_ENV instead of a custom ISDEV variable, or check that the deployment target is not production.","fix_snippet":"const corsOrigins = [\n  'https://score-prediction.com',\n  'https://www.score-prediction.com',\n  'https://score-prediction.vercel.app',\n  ...(process.env.NODE_ENV !== 'production'\n    ? ['http://localhost:3000', 'http://localhost:3001']\n    : []),\n];","impact":"If ISDEV is accidentally set in production, an attacker on localhost (e.g. via browser extension or local malware) could make cross-origin requests to the API.","effort":"quick","tags":["cors","configuration","env-vars"],"status":"open"},
+        {"id":"V4-SEC-003","version":4,"severity":"medium","title":"Leaderboard joinToken exposed to all members in GET response","file":"backend/src/routes/leaderboard.ts","lines":"69","description":"The GET /leaderboard endpoint returns the full leaderboard document including the joinToken to any authenticated member. This token is the secret used to invite new members. Any member can extract it and share the leaderboard invite link without the creator's knowledge.","code_snippet":"return res.json(leaderboard);\n// leaderboard includes: { id, name, members, joinToken, creator, ... }\n// joinToken sent to ALL members, not just creator","recommended_fix":"Strip joinToken from the response unless the requesting user is the leaderboard creator.","fix_snippet":"const { joinToken, ...safeLeaderboard } = leaderboard;\nconst response = callerUID === leaderboard.creator\n  ? leaderboard\n  : safeLeaderboard;\nreturn res.json(response);","impact":"Members can extract the join token and distribute invite links without the creator's control, undermining private leaderboard access control.","effort":"quick","tags":["data-exposure","authorization","leaderboard"],"status":"open"},
+        {"id":"V4-SEC-004","version":4,"severity":"medium","title":"Email masking regex fails for 1-character local parts","file":"backend/src/routes/tournament.ts","lines":"287","description":"The email masking regex (.{2}).+(@.+) requires at least 2 characters before the @ symbol. For emails like a@example.com (1-char local part), the regex fails to match and the full email is returned unmasked, defeating the PII protection.","code_snippet":"email: email?.replace(/(.{2}).+(@.+)/, '$1***$2')\n// 'ab@test.com' → 'ab***@test.com' ✓\n// 'a@test.com'  → 'a@test.com'     ✗ (unmasked!)","recommended_fix":"Handle 1-char local parts by using a more flexible approach.","fix_snippet":"const maskEmail = (email?: string) => {\n  if (!email) return undefined;\n  const [local, domain] = email.split('@');\n  if (!domain) return '***';\n  return local.slice(0, Math.min(2, local.length)) + '***@' + domain;\n};","impact":"Short email addresses are exposed in full to admin users, violating the intended PII masking.","effort":"quick","tags":["pii","regex","data-exposure"],"status":"open"},
+        {"id":"V4-SEC-005","version":4,"severity":"low","title":"Unknown competition query param silently falls back to current competition","file":"backend/src/lib/auth.ts","lines":"40","description":"parseCompetition looks up req.query.competition in the competitions object. If the value is not found (misspelled or invalid), it silently falls back to currentCompetition instead of returning a 400 error. A user requesting ?competition=wc3000 would get data for the current competition with no indication of the mistake.","code_snippet":"export const parseCompetition = (req: Request) =>\n  competitions[req.query.competition as keyof typeof competitions]\n    || currentCompetition;","recommended_fix":"Return a 400 error when the competition parameter is provided but not found.","fix_snippet":"export const parseCompetition = (req: Request, res: Response) => {\n  const name = req.query.competition as string;\n  if (name && !competitions[name as keyof typeof competitions]) {\n    res.status(400).json({ error: `Unknown competition: ${name}` });\n    return null;\n  }\n  return competitions[name as keyof typeof competitions] || currentCompetition;\n};","impact":"API consumers receive data for the wrong competition without any error indication, leading to confusing behavior.","effort":"quick","tags":["input-validation","silent-fallback"],"status":"open"}
+      ]
+    },
+    {
+      "name": "Backend Issues",
+      "slug": "backend",
+      "findings": [
+        {"id":"V4-BE-001","version":4,"severity":"medium","title":"API Sports errors return empty array — callers cannot distinguish failure from empty data","file":"backend/src/lib/api-sports.ts","lines":"25-28","description":"When the API Sports request fails (network error, timeout, 500), the catch block returns { status: 0, data: { response: [] } }. This has the same shape as a successful response with no results. Background fire-and-forget callers only use .catch(), meaning data staleness from API failures is invisible.","code_snippet":"} catch (error: unknown) {\n  console.error('API Sports request failed:', error);\n  return { status: 0, data: { response: [] } };\n}","recommended_fix":"Return a typed error result that callers can distinguish from empty success, and add request context to the log.","fix_snippet":"} catch (error: unknown) {\n  const msg = error instanceof Error ? error.message : String(error);\n  console.error(`API Sports request failed [${url}]:`, msg);\n  return { status: 0, data: { response: [] }, error: msg };\n}","impact":"API outages silently serve stale fixture/standings data with no indication to operators or users that updates have stopped.","effort":"moderate","tags":["error-handling","silent-failure","observability"],"status":"open"},
+        {"id":"V4-BE-002","version":4,"severity":"low","title":"Leaderboard Promise.all in /tournament has no error handling","file":"backend/src/routes/tournament.ts","lines":"183-190","description":"The /tournament endpoint fetches multiple leaderboard documents via Promise.all. If any single leaderboard document is corrupted, deleted, or the read fails, the entire Promise.all rejects and the tournament response fails — even though leaderboard data is non-essential.","code_snippet":"const leaderboardDocs = await Promise.all(\n  userLeaderboardIds.map(id =>\n    getFirestore(firebaseApp).collection('leaderboards').doc(id).get()\n  )\n);","recommended_fix":"Use Promise.allSettled so one failed leaderboard doesn't crash the entire tournament response.","fix_snippet":"const results = await Promise.allSettled(\n  userLeaderboardIds.map(id =>\n    getFirestore(firebaseApp).collection('leaderboards').doc(id).get()\n  )\n);\nconst leaderboardDocs = results\n  .filter(r => r.status === 'fulfilled')\n  .map(r => r.value);","impact":"A single corrupted or deleted leaderboard causes a 500 error on the main tournament endpoint, blocking all app functionality for the user.","effort":"quick","tags":["error-handling","resilience","promise"],"status":"open"}
+      ]
+    },
+    {
+      "name": "Frontend Issues",
+      "slug": "frontend",
+      "findings": [
+        {"id":"V4-FE-001","version":4,"severity":"low","title":"Double type assertion (as unknown as Standings) bypasses TypeScript safety","file":"frontend/hooks/useLiveFixtures.ts, frontend/store/tournamentStore.ts","lines":"34, 152","description":"Two files use as unknown as Standings to force-cast sorted standings entries. This double assertion silently bypasses TypeScript's type checker. If the Standings type changes, these casts will hide the incompatibility instead of producing compile errors.","code_snippet":"const sorted = Object.entries(standings)\n  .sort(([, a], [, b]) => ...)\n  as unknown as Standings;\n// TypeScript cannot verify this is actually Standings","recommended_fix":"Fix the root Standings type definition so the cast is unnecessary, or create a typed conversion function.","fix_snippet":"const sorted: Standings = Object.entries(standings)\n  .sort(([, a], [, b]) => a[0]?.rank - b[0]?.rank)\n  .map(([group, teams]) => [group, teams]) as Standings;","impact":"Type changes to Standings won't produce compile errors in these files, potentially causing runtime crashes.","effort":"quick","tags":["type-safety","typescript","assertion"],"status":"open"},
+        {"id":"V4-FE-002","version":4,"severity":"low","title":"Untyped error handling (catch error: any) in fetcher","file":"frontend/lib/fetcher.ts","lines":"21","description":"The fetcher's catch block types the error as any, bypassing TypeScript's type safety. Properties like error.data and error.message are accessed without type narrowing, which could cause silent undefined access on unexpected error shapes.","code_snippet":"} catch (error: any) {\n  if (!error.data) {\n    error.data = { message: error.message };\n  }\n  return { uid: null, success: false };\n}","recommended_fix":"Type the error as unknown and use instanceof narrowing.","fix_snippet":"} catch (error: unknown) {\n  const message = error instanceof Error ? error.message : 'Unknown error';\n  return { uid: null, success: false, error: message };\n}","impact":"Accessing properties on an untyped error could cause secondary errors in unexpected failure modes.","effort":"quick","tags":["type-safety","error-handling","typescript"],"status":"open"}
+      ]
+    },
+    {
+      "name": "Code Quality & Maintainability",
+      "slug": "quality",
+      "findings": [
+        {"id":"V4-CQ-001","version":4,"severity":"medium","title":"API Sports response cast as any without runtime shape validation","file":"backend/src/lib/api-sports.ts","lines":"24","description":"The axios response from the external API Sports service is cast as any with an eslint-disable comment. The response data is used directly throughout services/tournament.ts without any runtime validation of its shape. If API Sports changes their response format, the app would break in unpredictable ways rather than failing fast.","code_snippet":"// eslint-disable-next-line @typescript-eslint/no-explicit-any\n})) as any;","recommended_fix":"Add lightweight runtime validation of the API response shape before using the data.","fix_snippet":"interface ApiSportsResponse<T> {\n  data: { response: T[] };\n  status: number;\n}\nconst isValidResponse = (r: unknown): r is ApiSportsResponse<unknown> =>\n  r != null && typeof r === 'object' && 'data' in r\n  && typeof (r as any).data?.response !== 'undefined';","impact":"External API format changes would silently corrupt fixture/standings data rather than failing fast with a clear error.","effort":"moderate","tags":["type-safety","external-api","validation"],"status":"open"}
+      ]
+    }
+  ]
+}
+</script>
+
 <!-- HEADER -->
 <header class="header">
   <div class="header-inner">
@@ -503,10 +549,10 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
 <div class="controls" id="controls">
   <input type="text" id="search" placeholder="Search findings..." oninput="filterFindings()">
   <button class="filter-btn active" data-severity="all" onclick="toggleFilter(this)">All</button>
-  <button class="filter-btn active" data-severity="critical" onclick="toggleFilter(this)">Critical <span id="count-critical">5</span></button>
-  <button class="filter-btn active" data-severity="high" onclick="toggleFilter(this)">High <span id="count-high">15</span></button>
-  <button class="filter-btn active" data-severity="medium" onclick="toggleFilter(this)">Medium <span id="count-medium">35</span></button>
-  <button class="filter-btn active" data-severity="low" onclick="toggleFilter(this)">Low <span id="count-low">26</span></button>
+  <button class="filter-btn active" data-severity="critical" onclick="toggleFilter(this)">Critical <span id="count-critical">8</span></button>
+  <button class="filter-btn active" data-severity="high" onclick="toggleFilter(this)">High <span id="count-high">24</span></button>
+  <button class="filter-btn active" data-severity="medium" onclick="toggleFilter(this)">Medium <span id="count-medium">52</span></button>
+  <button class="filter-btn active" data-severity="low" onclick="toggleFilter(this)">Low <span id="count-low">31</span></button>
   <button class="filter-btn active" data-severity="info" onclick="toggleFilter(this)">Info <span id="count-info">12</span></button>
   <span style="width:1px;height:1.2rem;background:var(--border)"></span>
   <button class="filter-btn status-toggle" id="hide-fixed-btn" onclick="toggleHideFixed(this)">Hide Resolved</button>
@@ -519,12 +565,12 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
   <div class="summary-grid">
     <div class="summary-card">
       <h3>Total Findings</h3>
-      <div class="summary-big" id="total-visible">93</div>
+      <div class="summary-big" id="total-visible">127</div>
       <div class="severity-bar">
-        <span class="severity-pill critical">5 Critical</span>
-        <span class="severity-pill high">15 High</span>
-        <span class="severity-pill medium">35 Medium</span>
-        <span class="severity-pill low">26 Low</span>
+        <span class="severity-pill critical">8 Critical</span>
+        <span class="severity-pill high">24 High</span>
+        <span class="severity-pill medium">52 Medium</span>
+        <span class="severity-pill low">31 Low</span>
         <span class="severity-pill info">12 Info</span>
       </div>
     </div>
@@ -533,42 +579,42 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
       <div class="health-bars">
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-security)">Security</span>
-          <div class="health-track"><div class="health-fill" style="width:71%;background:var(--accent-security)"></div></div>
-          <span class="health-count">15</span>
+          <div class="health-track"><div class="health-fill" style="width:87%;background:var(--accent-security)"></div></div>
+          <span class="health-count">20</span>
         </div>
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-backend)">Backend</span>
-          <div class="health-track"><div class="health-fill" style="width:81%;background:var(--accent-backend)"></div></div>
-          <span class="health-count">17</span>
+          <div class="health-track"><div class="health-fill" style="width:83%;background:var(--accent-backend)"></div></div>
+          <span class="health-count">19</span>
         </div>
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-frontend)">Frontend</span>
           <div class="health-track"><div class="health-fill" style="width:100%;background:var(--accent-frontend)"></div></div>
-          <span class="health-count">21</span>
+          <span class="health-count">23</span>
         </div>
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-ux)">UX/UI</span>
-          <div class="health-track"><div class="health-fill" style="width:62%;background:var(--accent-ux)"></div></div>
+          <div class="health-track"><div class="health-fill" style="width:57%;background:var(--accent-ux)"></div></div>
           <span class="health-count">13</span>
         </div>
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-quality)">Quality</span>
-          <div class="health-track"><div class="health-fill" style="width:62%;background:var(--accent-quality)"></div></div>
-          <span class="health-count">13</span>
+          <div class="health-track"><div class="health-fill" style="width:61%;background:var(--accent-quality)"></div></div>
+          <span class="health-count">14</span>
         </div>
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-perf)">Perf</span>
-          <div class="health-track"><div class="health-fill" style="width:43%;background:var(--accent-perf)"></div></div>
+          <div class="health-track"><div class="health-fill" style="width:39%;background:var(--accent-perf)"></div></div>
           <span class="health-count">9</span>
         </div>
         <div class="health-row">
           <span class="health-label" style="color:var(--accent-improve)">Improve</span>
-          <div class="health-track"><div class="health-fill" style="width:52%;background:var(--accent-improve)"></div></div>
+          <div class="health-track"><div class="health-fill" style="width:48%;background:var(--accent-improve)"></div></div>
           <span class="health-count">11</span>
         </div>
         <div class="health-row">
           <span class="health-label" style="color:#f43f5e">Features</span>
-          <div class="health-track"><div class="health-fill" style="width:86%;background:#f43f5e"></div></div>
+          <div class="health-track"><div class="health-fill" style="width:78%;background:#f43f5e"></div></div>
           <span class="health-count">18</span>
         </div>
       </div>
@@ -578,26 +624,27 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
       <div style="margin-top:0.75rem">
         <div class="health-row">
           <span class="health-label">Quick Fix</span>
-          <div class="health-track"><div class="health-fill" style="width:51%;background:#22c55e"></div></div>
-          <span class="health-count">57</span>
+          <div class="health-track"><div class="health-fill" style="width:53%;background:#22c55e"></div></div>
+          <span class="health-count">64</span>
         </div>
         <div class="health-row">
           <span class="health-label">Moderate</span>
           <div class="health-track"><div class="health-fill" style="width:35%;background:#eab308"></div></div>
-          <span class="health-count">39</span>
+          <span class="health-count">42</span>
         </div>
         <div class="health-row">
           <span class="health-label">Significant</span>
-          <div class="health-track"><div class="health-fill" style="width:14%;background:#ef4444"></div></div>
+          <div class="health-track"><div class="health-fill" style="width:12%;background:#ef4444"></div></div>
           <span class="health-count">15</span>
         </div>
       </div>
       <div style="margin-top:1rem;font-size:0.8rem;color:var(--text-secondary)">
-        <strong>V1 Audit:</strong> 2026-05-25 (52 findings)<br>
+        <strong>V1 Audit:</strong> 2026-05-25 (58 findings)<br>
         <strong>V2 Audit:</strong> 2026-06-01 (41 new findings)<br>
         <strong>V3 Features:</strong> 2026-06-02 (18 engagement ideas)<br>
+        <strong>V4 Re-audit:</strong> 2026-06-07 (10 new findings)<br>
         <strong>Auditor:</strong> Claude (Opus 4.6)<br>
-        <strong>Scope:</strong> Full-stack review + engagement analysis
+        <strong>Scope:</strong> Full-stack review + engagement analysis + re-audit
       </div>
     </div>
   </div>
@@ -608,8 +655,8 @@ pre .copy-btn:hover { background: var(--bg-card); color: var(--text-primary); }
 
 <!-- FOOTER -->
 <div class="footer">
-  <p>Score Prediction Audit Report &mdash; V1: 2026-05-25 &bull; V2: 2026-06-01 &bull; V3: 2026-06-02 &bull; Claude Opus 4.6</p>
-  <p style="margin-top:0.5rem">111 findings across 8 categories &bull; 8 Critical &bull; 20 High &bull; 41 Medium &bull; 30 Low &bull; 12 Info</p>
+  <p>Score Prediction Audit Report &mdash; V1: 2026-05-25 &bull; V2: 2026-06-01 &bull; V3: 2026-06-02 &bull; V4: 2026-06-07 &bull; Claude Opus 4.6</p>
+  <p style="margin-top:0.5rem">127 findings across 8 categories &bull; 8 Critical &bull; 24 High &bull; 52 Medium &bull; 31 Low &bull; 12 Info</p>
 </div>
 
 <script>
@@ -738,7 +785,7 @@ function renderSections() {
         <div class="finding" data-id="${f.id}" data-severity="${f.severity}" data-status="${f.status || 'open'}" data-title="${escapeHtml(f.title.toLowerCase())}" data-desc="${escapeHtml(f.description.toLowerCase())}">
           <div class="finding-header" onclick="this.parentElement.classList.toggle('open')">
             <span class="finding-severity ${f.severity}">${f.severity}</span>
-            <span class="finding-title">${f.version === 2 ? '<span class="v2-badge">NEW</span>' : f.version === 3 ? '<span class="v3-badge">FEATURE</span>' : ''}${escapeHtml(f.title)}</span>
+            <span class="finding-title">${f.version === 2 ? '<span class="v2-badge">NEW</span>' : f.version === 3 ? '<span class="v3-badge">FEATURE</span>' : f.version === 4 ? '<span class="v4-badge">V4</span>' : ''}${escapeHtml(f.title)}</span>
             <div class="status-btns" onclick="event.stopPropagation()">
               <button class="status-btn${f.status === 'fixed' ? ' active-fixed' : ''}" onclick="setStatus('${f.id}','fixed',this)">Fixed</button>
               <button class="status-btn${f.status === 'skipped' ? ' active-skipped' : ''}" onclick="setStatus('${f.id}','skipped',this)">Skip</button>
@@ -876,6 +923,7 @@ document.querySelectorAll('.header-nav a').forEach(a => {
 
 // Initialize
 renderSections();
+filterFindings();
 </script>
 </body>
 </html>

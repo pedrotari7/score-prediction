@@ -57,5 +57,16 @@
   "IMP-006": "fixed",
   "IMP-007": "fixed",
   "V3-FT-004": "fixed",
-  "V3-FT-010": "fixed"
+  "V3-FT-010": "fixed",
+  "V4-SEC-001": "open",
+  "V4-SEC-002": "open",
+  "V4-SEC-003": "open",
+  "V4-SEC-004": "open",
+  "V4-SEC-005": "open",
+  "V4-BE-001": "open",
+  "V4-BE-002": "open",
+  "V4-FE-001": "open",
+  "V4-FE-002": "open",
+  "V4-CQ-001": "open",
+  "V3-FT-014": "fixed"
 }
