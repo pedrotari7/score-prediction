@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import type { Predictions, UpdatePrediction } from '../../interfaces/main';
-import { isNum, isPredictionUpset } from '../../shared/utils';
+import { getUpsetSide, isNum, isPredictionUpset } from '../../shared/utils';
 import Countdown, { zeroPad } from 'react-countdown';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
@@ -119,6 +119,9 @@ const Game = memo(function Game({
 
 	const isValidScore = (n: number | null) => isNum(n) && n >= 0;
 
+	const upsetSide =
+		!isInPast && (competition.points.upset ?? 0) > 0 && odds?.[gameID] ? getUpsetSide(odds[gameID]) : null;
+
 	return (
 		<div
 			className={classNames(
@@ -141,7 +144,12 @@ const Game = memo(function Game({
 			<div className='flex w-full flex-row items-center justify-between sm:justify-center lg:w-8/12'>
 				<div className='flex w-3/12 flex-col items-center sm:w-5/12 sm:flex-row sm:items-center sm:justify-end lg:w-5/12'>
 					<span className='mr-2 hidden font-bold sm:block'>{game?.teams.home.name}</span>
-					<Flag team={game?.teams.home} />
+					<div className='relative'>
+						<Flag team={game?.teams.home} />
+						{upsetSide === 'home' && (
+							<span className='absolute -bottom-0.5 -right-0.5 size-2 rounded-full bg-cyan-500' />
+						)}
+					</div>
 					<span className='mt-1.5 text-center text-xs font-bold leading-tight sm:hidden'>
 						{game?.teams.home.name}
 					</span>
@@ -247,7 +255,12 @@ const Game = memo(function Game({
 				</div>
 
 				<div className='my-2 flex w-3/12 flex-col items-center sm:w-5/12 sm:flex-row sm:items-center sm:justify-start lg:my-0 lg:w-5/12'>
-					<Flag team={game?.teams.away} />
+					<div className='relative'>
+						<Flag team={game?.teams.away} />
+						{upsetSide === 'away' && (
+							<span className='absolute -bottom-0.5 -left-0.5 size-2 rounded-full bg-cyan-500' />
+						)}
+					</div>
 					<span className='mt-1.5 text-center text-xs font-bold leading-tight sm:hidden'>
 						{game?.teams.away.name}
 					</span>

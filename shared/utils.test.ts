@@ -5,6 +5,7 @@ import {
 	getExtraTimeResult,
 	getOutcome,
 	getResult,
+	getUpsetSide,
 	isDrawFavorite,
 	isEmpty,
 	isPredictionUpset,
@@ -228,6 +229,37 @@ describe('utils', () => {
 			const odds: FixtureOdds = { 1: { home: 4.0, away: 3.5, draw: 2.8 } };
 			expect(isUpsetResult(makeGameWithId(2, 1, 1), odds)).toBe(false);
 		});
+
+		it('no upset when odds difference is below threshold', () => {
+			const odds: FixtureOdds = { 1: { home: 2.3, away: 2.0, draw: 3.5 } };
+			expect(isUpsetResult(makeGameWithId(2, 1, 1), odds)).toBe(false);
+		});
+	});
+
+	describe('getUpsetSide', () => {
+		it('returns home when home is the underdog', () => {
+			expect(getUpsetSide({ home: 4.5, away: 1.8, draw: 3.2 })).toBe('home');
+		});
+
+		it('returns away when away is the underdog', () => {
+			expect(getUpsetSide({ home: 1.5, away: 5.0, draw: 3.5 })).toBe('away');
+		});
+
+		it('returns null when draw is favored', () => {
+			expect(getUpsetSide({ home: 4.0, away: 3.5, draw: 2.8 })).toBeNull();
+		});
+
+		it('returns null when odds are equal', () => {
+			expect(getUpsetSide({ home: 2.5, away: 2.5, draw: 3.0 })).toBeNull();
+		});
+
+		it('returns null when odds difference is below threshold', () => {
+			expect(getUpsetSide({ home: 2.3, away: 2.0, draw: 3.5 })).toBeNull();
+		});
+
+		it('returns side when odds difference is at threshold', () => {
+			expect(getUpsetSide({ home: 3.0, away: 2.0, draw: 3.5 })).toBe('home');
+		});
 	});
 
 	describe('isDrawFavorite', () => {
@@ -267,6 +299,10 @@ describe('utils', () => {
 
 		it('false when draw is favored', () => {
 			expect(isPredictionUpset({ home: 2, away: 1 }, { home: 4.0, away: 3.5, draw: 2.8 })).toBe(false);
+		});
+
+		it('false when odds difference is below threshold', () => {
+			expect(isPredictionUpset({ home: 2, away: 1 }, { home: 2.3, away: 2.0, draw: 3.5 })).toBe(false);
 		});
 	});
 

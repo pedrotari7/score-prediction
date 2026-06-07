@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react';
 import Countdown, { zeroPad } from 'react-countdown';
-import { isDrawFavorite, isGameFinished } from '../../shared/utils';
+import { getUpsetSide, isDrawFavorite, isGameFinished } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames, formatGameDate, getCurrentDate } from '../lib/utils/reactHelper';
@@ -135,14 +135,21 @@ const LiveGame = ({
 					<div className='flex items-center gap-1 text-xs'>
 						<div
 							className={classNames(
-								'flex flex-col items-center rounded px-3 py-1',
-								!isDrawFavorite(gameOdds) && gameOdds.home <= gameOdds.away
-									? 'bg-white/10 font-bold'
-									: 'opacity-50'
+								'group relative flex flex-col items-center rounded px-3 py-1',
+								getUpsetSide(gameOdds) === 'home'
+									? 'bg-cyan-700/30 font-bold text-cyan-300'
+									: !isDrawFavorite(gameOdds) && gameOdds.home <= gameOdds.away
+										? 'bg-white/10 font-bold'
+										: 'opacity-50'
 							)}
 						>
 							<span className='text-[10px] uppercase opacity-60'>Home</span>
 							<span>{gameOdds.home.toFixed(2)}</span>
+							{getUpsetSide(gameOdds) === 'home' && (
+								<div className='pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-[10px] text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100'>
+									Predict this result for a bonus point
+								</div>
+							)}
 						</div>
 						<div
 							className={classNames(
@@ -155,14 +162,21 @@ const LiveGame = ({
 						</div>
 						<div
 							className={classNames(
-								'flex flex-col items-center rounded px-3 py-1',
-								!isDrawFavorite(gameOdds) && gameOdds.away <= gameOdds.home
-									? 'bg-white/10 font-bold'
-									: 'opacity-50'
+								'group relative flex flex-col items-center rounded px-3 py-1',
+								getUpsetSide(gameOdds) === 'away'
+									? 'bg-cyan-700/30 font-bold text-cyan-300'
+									: !isDrawFavorite(gameOdds) && gameOdds.away <= gameOdds.home
+										? 'bg-white/10 font-bold'
+										: 'opacity-50'
 							)}
 						>
 							<span className='text-[10px] uppercase opacity-60'>Away</span>
 							<span>{gameOdds.away.toFixed(2)}</span>
+							{getUpsetSide(gameOdds) === 'away' && (
+								<div className='pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-[10px] text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100'>
+									Predict this result for a bonus point
+								</div>
+							)}
 						</div>
 					</div>
 					{isDrawFavorite(gameOdds) && (

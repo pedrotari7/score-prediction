@@ -125,15 +125,26 @@ export const joinResults = (a: Partial<UserResult>, b: Partial<UserResult>): Use
 export const isDrawFavorite = (odds: { home: number; away: number; draw: number }): boolean =>
 	odds.draw <= odds.home && odds.draw <= odds.away;
 
+const UPSET_ODDS_THRESHOLD = 1.0;
+
+export const getUpsetSide = (odds: { home: number; away: number; draw: number }): 'home' | 'away' | null => {
+	if (isDrawFavorite(odds)) return null;
+	if (Math.abs(odds.home - odds.away) < UPSET_ODDS_THRESHOLD) return null;
+	if (odds.home > odds.away) return 'home';
+	if (odds.away > odds.home) return 'away';
+	return null;
+};
+
 export const isPredictionUpset = (
 	prediction: Prediction,
 	odds: { home: number; away: number; draw: number }
 ): boolean => {
-	if (isDrawFavorite(odds)) return false;
+	const upsetSide = getUpsetSide(odds);
+	if (!upsetSide) return false;
 	const outcome = getOutcome(prediction);
 	if (outcome === 'draw' || outcome === null) return false;
-	if (outcome === 'winH') return odds.home > odds.away;
-	return odds.away > odds.home;
+	if (outcome === 'winH') return upsetSide === 'home';
+	return upsetSide === 'away';
 };
 
 export const isUpsetResult = (game: Fixture, fixtureOdds: FixtureOdds): boolean => {
@@ -144,10 +155,11 @@ export const isUpsetResult = (game: Fixture, fixtureOdds: FixtureOdds): boolean 
 	const odds = fixtureOdds[game.fixture.id];
 	if (!odds) return false;
 
-	if (isDrawFavorite(odds)) return false;
+	const upsetSide = getUpsetSide(odds);
+	if (!upsetSide) return false;
 
-	if (outcome === 'winH') return odds.home > odds.away;
-	return odds.away > odds.home;
+	if (outcome === 'winH') return upsetSide === 'home';
+	return upsetSide === 'away';
 };
 
 export const getResult = (prediction: Prediction, game: Fixture, isUpset = false): Partial<UserResult> => {
