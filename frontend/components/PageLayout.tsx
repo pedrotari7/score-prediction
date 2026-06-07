@@ -23,10 +23,14 @@ const PageLayout = ({
 
 	const hasFooter = competition?.name && footerCompetitions.some(c => c.name === competition.name);
 
-	let style =
+	let style: React.CSSProperties =
 		competition?.name === competitions.euro2020.name
 			? { backgroundImage: 'url(/background.webp)' }
-			: { background: '#181a1b' };
+			: {
+					background: competition?.color
+						? `linear-gradient(to bottom right, ${competition.color}, ${competition.color}66, #0f172a)`
+						: '#181a1b',
+				};
 
 	if (competition?.name === competitions.ca2024.name) {
 		style = {
