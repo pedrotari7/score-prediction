@@ -288,6 +288,9 @@ export type FixtureOdds = Record<number, { home: number; away: number; draw: num
 
 export type Boosts = Record<string, number[]>;
 
+// { reactorUid: { targetUid: emoji[] } }
+export type GameReactions = Record<string, Record<string, string[]>>;
+
 export type UpdatePrediction = (prediction: Prediction, gameId: number) => Promise<void>;
 
 export interface Settings {

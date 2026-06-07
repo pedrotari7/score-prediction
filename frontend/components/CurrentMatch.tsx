@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import type { Dispatch, ReactNode, SetStateAction } from 'react';
+import type { CSSProperties, Dispatch, ReactNode, SetStateAction } from 'react';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import { useSwipeable } from 'react-swipeable';
@@ -7,6 +7,7 @@ import LiveGame from './LiveGame';
 import type {
 	Fixture,
 	Fixtures,
+	GameReactions,
 	Leaderboard,
 	Prediction,
 	Predictions,
@@ -16,7 +17,7 @@ import type {
 } from '../../interfaces/main';
 import { classNames, formatScore, getCurrentDate, getStadiumImageURL } from '../lib/utils/reactHelper';
 import ResultContainer from './ResultContainer';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { ChevronLeftIcon, ChevronRightIcon, FaceSmileIcon } from '@heroicons/react/24/outline';
 import {
 	calculateUserResultPoints,
 	DEFAULT_USER_RESULT,
@@ -34,6 +35,173 @@ import useCompetition from '../hooks/useCompetition';
 import { useInputPrediction, UserInputPrediction } from '../hooks/useInputPrediction';
 import Panel from './Panel';
 import Flag from './Flag';
+import { fetchReactions, updateReaction } from '../pages/api';
+import data from '@emoji-mart/data';
+import dynamic from 'next/dynamic';
+
+const EmojiPicker = dynamic(() => import('@emoji-mart/react'), { ssr: false });
+
+const REACTION_EMOJIS = ['🔥', '😱', '🤡', '🎯', '💀'] as const;
+
+const ReactionBar = ({
+	targetUid,
+	myUid,
+	gameReactions,
+	onReact,
+	isMyPrediction,
+	users,
+}: {
+	targetUid: string;
+	myUid: string;
+	gameReactions: GameReactions;
+	onReact: (targetUid: string, emoji: string) => void;
+	isMyPrediction: boolean;
+	users: Users;
+}) => {
+	const [pickerOpen, setPickerOpen] = useState(false);
+	const pickerRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (!pickerOpen) return;
+		const handler = (e: MouseEvent) => {
+			if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+				setPickerOpen(false);
+			}
+		};
+		document.addEventListener('mousedown', handler);
+		return () => document.removeEventListener('mousedown', handler);
+	}, [pickerOpen]);
+
+	const counts: Record<string, number> = {};
+	const reactors: Record<string, string[]> = {};
+	const myReactions = new Set<string>();
+	const orderedEmojis: string[] = [];
+
+	for (const [reactorUid, targets] of Object.entries(gameReactions)) {
+		const emojis = targets[targetUid] ?? [];
+		for (const emoji of emojis) {
+			if (!counts[emoji]) orderedEmojis.push(emoji);
+			counts[emoji] = (counts[emoji] ?? 0) + 1;
+			reactors[emoji] = [...(reactors[emoji] ?? []), reactorUid];
+			if (reactorUid === myUid) myReactions.add(emoji);
+		}
+	}
+
+	const hasReactions = orderedEmojis.length > 0;
+	if (isMyPrediction && !hasReactions) return null;
+
+	return (
+		<div className='flex flex-wrap items-center gap-1 pt-1' onClick={e => e.stopPropagation()}>
+			{orderedEmojis.map(emoji => {
+				const count = counts[emoji] ?? 0;
+				const isSelected = myReactions.has(emoji);
+				return (
+					<div key={emoji} className='group relative'>
+						<button
+							onClick={
+								isMyPrediction
+									? undefined
+									: e => {
+											e.stopPropagation();
+											onReact(targetUid, emoji);
+										}
+							}
+							className={classNames(
+								'flex items-center gap-0.5 rounded-full px-2 py-0.5 text-sm transition-all',
+								isSelected ? 'bg-white/25 ring-1 ring-white/40' : 'bg-white/10 hover:bg-white/20',
+								isMyPrediction ? 'cursor-default' : 'cursor-pointer'
+							)}
+						>
+							<span>{emoji}</span>
+							<span className='text-xs opacity-60'>{count}</span>
+						</button>
+						<div className='pointer-events-none absolute bottom-full left-0 z-50 mb-1.5 hidden min-w-max rounded-lg bg-gray-900 p-2 shadow-lg group-hover:block'>
+							{(reactors[emoji] ?? []).map(reactorUid => {
+								const u = users[reactorUid];
+								const name = reactorUid === myUid ? 'You' : (u?.displayName ?? reactorUid);
+								return (
+									<div key={reactorUid} className='flex items-center gap-2 py-0.5'>
+										{u?.photoURL ? (
+											<Image
+												src={u.photoURL}
+												width={20}
+												height={20}
+												alt=''
+												className='size-5 rounded-full object-cover'
+											/>
+										) : (
+											<div className='size-5 rounded-full bg-white/20' />
+										)}
+										<span className='text-xs'>{name}</span>
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				);
+			})}
+
+			{!isMyPrediction && (
+				<div ref={pickerRef} className='relative'>
+					<button
+						onClick={e => {
+							e.stopPropagation();
+							setPickerOpen(p => !p);
+						}}
+						aria-label='Add reaction'
+						className={classNames(
+							'flex items-center rounded-full px-1.5 py-0.5 transition-all',
+							pickerOpen
+								? 'bg-white/20 opacity-100'
+								: 'bg-white/5 opacity-50 hover:bg-white/15 hover:opacity-100'
+						)}
+					>
+						<span className='relative inline-flex'>
+							<FaceSmileIcon className='size-4' />
+							<span className='absolute -right-0.5 -top-1 text-[9px] font-bold leading-none'>+</span>
+						</span>
+					</button>
+
+					{pickerOpen && (
+						<div className='absolute bottom-full left-0 z-50 mb-1 overflow-hidden rounded-xl shadow-xl'>
+							<div className='flex gap-0.5 bg-gray-900/95 p-1.5'>
+								{REACTION_EMOJIS.map(emoji => (
+									<button
+										key={emoji}
+										onClick={e => {
+											e.stopPropagation();
+											onReact(targetUid, emoji);
+											setPickerOpen(false);
+										}}
+										className={classNames(
+											'rounded-lg p-1.5 text-xl transition-all hover:scale-125 hover:bg-white/10',
+											myReactions.has(emoji) ? 'scale-110 bg-white/20' : ''
+										)}
+									>
+										{emoji}
+									</button>
+								))}
+							</div>
+							<EmojiPicker
+								data={data}
+								theme='dark'
+								previewPosition='none'
+								skinTonePosition='none'
+								maxFrequentRows={1}
+								perLine={8}
+								style={{ '--border-radius': '0px' } as CSSProperties}
+								onEmojiSelect={(emoji: { native: string }) => {
+									onReact(targetUid, emoji.native);
+									setPickerOpen(false);
+								}}
+							/>
+						</div>
+					)}
+				</div>
+			)}
+		</div>
+	);
+};
 
 const UserGuess = ({
 	gameID,
@@ -42,6 +210,9 @@ const UserGuess = ({
 	game,
 	updatePrediction,
 	myGuess = false,
+	gameReactions,
+	onReact,
+	users,
 }: {
 	gameID: number;
 	user: User;
@@ -49,6 +220,9 @@ const UserGuess = ({
 	game: Fixture;
 	updatePrediction: UpdatePrediction;
 	myGuess?: boolean;
+	gameReactions?: GameReactions;
+	onReact?: (targetUid: string, emoji: string) => void;
+	users?: Users;
 }) => {
 	const setRoute = useTournamentStore(s => s.setRoute);
 	const boosts = useTournamentStore(s => s.boosts);
@@ -71,6 +245,7 @@ const UserGuess = ({
 	const isInPast = getCurrentDate().getTime() >= gameDate.getTime();
 
 	const { homeInputRef, awayInputRef } = useInputPrediction(gameID, guess);
+	const showReactions = isGameFinished(game) && !!gameReactions && !!onReact;
 
 	return (
 		<ResultContainer
@@ -82,7 +257,7 @@ const UserGuess = ({
 					'my-2 flex w-full rounded p-4 sm:m-2 sm:w-max',
 					!isInPast && myGuess
 						? 'flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4'
-						: 'flex-row items-center justify-between gap-4',
+						: classNames('flex-row items-center justify-between gap-4', showReactions ? 'flex-wrap' : ''),
 					'cursor-pointer select-none'
 				) +
 				' ' +
@@ -152,6 +327,18 @@ const UserGuess = ({
 					>
 						{isBoosted ? '2x Boosted' : `2x (${remainingBoosts} left)`}
 					</button>
+				</div>
+			)}
+			{showReactions && (
+				<div className='w-full leading-none'>
+					<ReactionBar
+						targetUid={user.uid}
+						myUid={uid}
+						gameReactions={gameReactions}
+						onReact={onReact}
+						isMyPrediction={myGuess}
+						users={users ?? {}}
+					/>
 				</div>
 			)}
 		</ResultContainer>
@@ -225,7 +412,7 @@ const GameStoryStrip = ({
 						ref={isActive ? activeRef : undefined}
 						onClick={() => onSelect(fixture.fixture.id)}
 						className={classNames(
-							'flex shrink-0 flex-col items-center gap-1 rounded-xl border-2 px-2 py-1.5 transition-all duration-200 focus:outline-none',
+							'flex shrink-0 flex-col items-center justify-between rounded-xl border-2 px-2 py-1.5 transition-all duration-200 focus:outline-none',
 							isActive ? 'scale-105 border-white bg-white/15' : 'border-transparent',
 							isLive && !isActive ? 'bg-green-900/40' : '',
 							isFinished && !isActive ? 'bg-white/5' : '',
@@ -294,6 +481,7 @@ const CurrentMatch = ({
 	const [id, setGameID] = useState(gameID);
 	const [currentLeaderboard, setCurrentLeaderboard] = useState('global');
 	const [members, setMembers] = useState<string[]>(Object.keys(users));
+	const [gameReactions, setGameReactions] = useState<GameReactions>({});
 
 	useEffect(() => {
 		if (currentLeaderboard === 'global') {
@@ -329,6 +517,38 @@ const CurrentMatch = ({
 		onSwipedRight: () => prevGameId !== null && !isExtraInfoOpen && setGameID(prevGameId),
 		preventScrollOnSwipe: true,
 	});
+
+	useEffect(() => {
+		if (!game || !isGameFinished(game)) {
+			setGameReactions({});
+			return;
+		}
+		fetchReactions(token, game.fixture.id, competition).then(reactions => {
+			setGameReactions(reactions);
+		});
+	}, [game?.fixture.id, game?.fixture.status.short]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	const handleReact = async (targetUid: string, emoji: string) => {
+		if (!game) return;
+		const gameId = game.fixture.id;
+		const prev = gameReactions;
+		setGameReactions(curr => {
+			const next = { ...curr, [uid]: { ...(curr[uid] ?? {}) } };
+			const current = next[uid][targetUid] ?? [];
+			const updated = current.includes(emoji) ? current.filter(e => e !== emoji) : [...current, emoji];
+			if (updated.length === 0) {
+				delete next[uid][targetUid];
+			} else {
+				next[uid][targetUid] = updated;
+			}
+			return next;
+		});
+		try {
+			await updateReaction(token, gameId, targetUid, emoji, competition);
+		} catch {
+			setGameReactions(prev);
+		}
+	};
 
 	const gamePredictions = useMemo(() => (game ? (predictions?.[game.fixture?.id] ?? {}) : {}), [predictions, game]);
 
@@ -457,6 +677,9 @@ const CurrentMatch = ({
 								game={game}
 								updatePrediction={updatePrediction}
 								myGuess
+								gameReactions={gameReactions}
+								onReact={handleReact}
+								users={users}
 							/>
 						</div>
 					</div>
@@ -492,6 +715,9 @@ const CurrentMatch = ({
 									key={uid}
 									game={game}
 									updatePrediction={updatePrediction}
+									gameReactions={gameReactions}
+									onReact={handleReact}
+									users={users}
 								/>
 							))}
 						</div>

@@ -1,6 +1,7 @@
 import type {
 	FixtureOdds,
 	Fixtures,
+	GameReactions,
 	GroupPoints,
 	Prediction,
 	Settings,
@@ -188,6 +189,33 @@ export const updateBoost = async (
 		}
 	);
 };
+
+export const fetchReactions = async (
+	token: string,
+	gameId: number,
+	competition: Competition
+): Promise<GameReactions> => {
+	const result = await cFetch(`${backendUrl}/reactions`, token, competition, { gameId });
+	return result?.reactions ?? {};
+};
+
+export const updateReaction = async (
+	token: string,
+	gameId: number,
+	targetUid: string,
+	emoji: string,
+	competition: Competition
+): Promise<{ success: boolean }> =>
+	await cFetch(
+		`${backendUrl}/reactions`,
+		token,
+		competition,
+		{},
+		{
+			body: JSON.stringify({ gameId, targetUid, emoji }),
+			method: 'POST',
+		}
+	);
 
 export const postNoSpoilers = async (noSpoilers: boolean, token: string): Promise<{ success: boolean }> =>
 	await cFetch(

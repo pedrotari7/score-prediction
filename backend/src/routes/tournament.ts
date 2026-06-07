@@ -12,7 +12,7 @@ import type {
   Standing,
   Tournament,
 } from '../../../interfaces/main';
-import { currentCompetitions, isGameOnGoing, isGameStarted } from '../../../shared/utils';
+import { currentCompetitions, isGameFinished, isGameOnGoing, isGameStarted } from '../../../shared/utils';
 import { authenticate, decodeToken, parseBody, parseCompetition } from '../lib/auth';
 import {
   FieldValue,
@@ -22,6 +22,7 @@ import {
   firebaseApp,
   getDBFixtures,
   getDBBoosts,
+  getDBReactions,
   getDBFixturesExtraInfo,
   getDBOdds,
   getDBPredictions,
@@ -396,6 +397,77 @@ export const registerRoutes = (app: Express) => {
     await getDBBoosts(competition).set(allBoosts);
 
     return res.json({ success: true, boosts: userBoosts });
+  });
+
+  app.get('/reactions', async (req, res) => {
+    const authResult = await authenticate(req, res);
+    if (!authResult.success) return authResult.result;
+
+    const competition = parseCompetition(req);
+    const parsedGameId = Number(req.query.gameId);
+
+    if (!Number.isInteger(parsedGameId) || parsedGameId <= 0) {
+      return res.status(400).json({ error: 'Invalid gameId' });
+    }
+
+    const reactionsDoc = await getDBReactions(competition).get();
+    const allReactions = reactionsDoc.exists ? (reactionsDoc.data() ?? {}) : {};
+
+    return res.json({ reactions: allReactions[String(parsedGameId)] ?? {} });
+  });
+
+  app.post('/reactions', async (req, res) => {
+    const authResult = await authenticate(req, res);
+    if (!authResult.success) return authResult.result;
+
+    const { uid: callerUID } = authResult.result;
+    const { gameId, targetUid, emoji } = parseBody(req.body);
+
+    const parsedGameId = Number(gameId);
+    if (!Number.isInteger(parsedGameId) || parsedGameId <= 0) {
+      return res.status(400).json({ error: 'Invalid gameId' });
+    }
+    if (typeof targetUid !== 'string' || !targetUid) {
+      return res.status(400).json({ error: 'Invalid targetUid' });
+    }
+    if (typeof emoji !== 'string' || !emoji.trim()) {
+      return res.status(400).json({ error: 'Invalid emoji' });
+    }
+    if (callerUID === targetUid) {
+      return res.status(400).json({ error: 'Cannot react to your own prediction' });
+    }
+
+    const competition = parseCompetition(req);
+
+    const fixtures = (await getDBFixtures(competition).get()).data()?.data as Fixtures;
+    if (!fixtures?.[parsedGameId]) {
+      return res.status(404).json({ error: 'Game not found' });
+    }
+    if (!isGameFinished(fixtures[parsedGameId])) {
+      return res.status(403).json({ error: 'Game has not ended yet' });
+    }
+
+    const reactionsDoc = await getDBReactions(competition).get();
+    const allReactions = reactionsDoc.exists ? (reactionsDoc.data() ?? {}) : {};
+    const gameKey = String(parsedGameId);
+    const gameReactions = (allReactions[gameKey] ?? {}) as Record<string, Record<string, string[]>>;
+
+    if (!gameReactions[callerUID]) gameReactions[callerUID] = {};
+    const currentEmojis: string[] = gameReactions[callerUID][targetUid] ?? [];
+    const idx = currentEmojis.indexOf(emoji);
+    const updated = idx >= 0 ? currentEmojis.filter(e => e !== emoji) : [...currentEmojis, emoji];
+
+    if (updated.length === 0) {
+      delete gameReactions[callerUID][targetUid];
+      if (Object.keys(gameReactions[callerUID]).length === 0) delete gameReactions[callerUID];
+    } else {
+      gameReactions[callerUID][targetUid] = updated;
+    }
+
+    allReactions[gameKey] = gameReactions;
+    await getDBReactions(competition).set(allReactions);
+
+    return res.json({ success: true });
   });
 
   app.get('/points', async (req, res) => {
