@@ -210,7 +210,7 @@ const GameStoryStrip = ({
 
 	return (
 		<div
-			className='-mx-4 mb-4 flex gap-1.5 overflow-x-auto px-4 pb-2 sm:-mx-8 sm:px-8'
+			className='-mx-4 mb-4 flex gap-1.5 overflow-x-auto px-4 py-1.5 pb-2 sm:-mx-8 sm:px-8'
 			style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
 		>
 			{sortedFixtures.map(fixture => {
