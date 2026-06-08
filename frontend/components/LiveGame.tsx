@@ -23,7 +23,7 @@ const LiveGame = ({
 	const data = useTournamentStore(s => s.fixtures);
 	const odds = useTournamentStore(s => s.odds);
 	const token = useTournamentStore(s => s.token);
-	const { gcc } = useCompetition();
+	const { gcc, competition } = useCompetition();
 	const updateCompetition = useTournamentStore(s => s.updateTournament);
 	const { RedactedSpoilers, noSpoilers } = useNoSpoilers();
 
@@ -147,7 +147,7 @@ const LiveGame = ({
 							<span>{gameOdds.home.toFixed(2)}</span>
 							{getUpsetSide(gameOdds) === 'home' && (
 								<div className='pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-[10px] text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100'>
-									Predict this result for a bonus point
+									Predict this result for +{competition.points.upset} bonus points
 								</div>
 							)}
 						</div>
@@ -174,7 +174,7 @@ const LiveGame = ({
 							<span>{gameOdds.away.toFixed(2)}</span>
 							{getUpsetSide(gameOdds) === 'away' && (
 								<div className='pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-[10px] text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100'>
-									Predict this result for a bonus point
+									Predict this result for +{competition.points.upset} bonus points
 								</div>
 							)}
 						</div>

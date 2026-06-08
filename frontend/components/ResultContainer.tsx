@@ -88,12 +88,16 @@ const ResultContainer = ({
 		>
 			{!noSpoilers && isPenaltyWinner && (
 				<div className='absolute -right-5 -top-4 size-7 rounded-full bg-gray-500'>
-					<div className='flex size-full items-center justify-center text-xs'>+1</div>
+					<div className='flex size-full items-center justify-center text-xs'>
+						+{competition.points.penalty}
+					</div>
 				</div>
 			)}
 			{earnedUpsetBonus && (
 				<div className='absolute -left-5 -top-4 size-7 rounded-full bg-cyan-700'>
-					<div className='flex size-full items-center justify-center text-xs'>+1</div>
+					<div className='flex size-full items-center justify-center text-xs'>
+						+{competition.points.upset}
+					</div>
 				</div>
 			)}
 			{!started && predictionIsUpset && (

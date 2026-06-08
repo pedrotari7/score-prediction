@@ -74,7 +74,7 @@ export const competitions = {
 		start: '2026-06-11',
 		end: '2026-07-19',
 		logo: '/wc2026-logo.svg',
-		points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1, upset: 1, boosts: 3 },
+		points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1, upset: 2, boosts: 3 },
 		color: '#3a0a5e',
 	},
 } as const;

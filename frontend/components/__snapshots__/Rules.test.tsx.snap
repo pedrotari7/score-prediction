@@ -81,8 +81,9 @@ exports[`Rules renders rules page 1`] = `
             class="mt-2 w-full text-2xl font-bold"
           >
             +
-            1
-             Point
+            2
+             
+            Points
           </span>
         </div>
       </div>

@@ -58,7 +58,9 @@ const UpsetBonus = () => {
 				If you correctly predict the result of an upset (the underdog wins based on pre-match betting odds), you
 				earn a bonus point on top of your regular points. Draws and games where the draw is favored are
 				excluded.
-				<span className='mt-2 w-full text-2xl font-bold'>+{competition.points.upset} Point</span>
+				<span className='mt-2 w-full text-2xl font-bold'>
+					+{competition.points.upset} {competition.points.upset === 1 ? 'Point' : 'Points'}
+				</span>
 			</div>
 		</div>
 	);

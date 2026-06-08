@@ -312,7 +312,7 @@ describe('utils', () => {
 		} as Competition;
 
 		const competitionWithUpset = {
-			points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1, upset: 1 },
+			points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1, upset: 2 },
 		} as Competition;
 
 		it('calculates points correctly', () => {
@@ -332,7 +332,7 @@ describe('utils', () => {
 		it('includes upset bonus when competition supports it', () => {
 			expect(
 				calculateUserResultPoints({ exact: 1, upset: 2 }, competitionWithUpset)
-			).toBe(3 + 2);
+			).toBe(3 + 4);
 		});
 
 		it('ignores upset when competition has no upset config', () => {

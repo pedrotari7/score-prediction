@@ -242,7 +242,7 @@ const scenarios: DebugScenario[] = [
 	},
 	{
 		title: 'Exact Score + Upset Bonus',
-		description: 'Exact score on an upset pick — predicted underdog wins. Green + cyan +1 badge top-left.',
+		description: 'Exact score on an upset pick — predicted underdog wins. Green + cyan +2 badge top-left.',
 		prediction: { home: 0, away: 1 },
 		game: makeFixture({
 			id: 80009,
@@ -257,7 +257,7 @@ const scenarios: DebugScenario[] = [
 	},
 	{
 		title: 'Correct Result + Upset Bonus',
-		description: 'Correct result on an underdog pick. Yellow + cyan +1 badge.',
+		description: 'Correct result on an underdog pick. Yellow + cyan +2 badge.',
 		prediction: { home: 0, away: 2 },
 		game: makeFixture({
 			id: 80010,
@@ -324,7 +324,7 @@ const scenarios: DebugScenario[] = [
 	},
 	{
 		title: 'Exact + Upset + Boost',
-		description: 'Maximum combo — exact score on an upset pick with 2x boost. Green + cyan +1 + 2x badge.',
+		description: 'Maximum combo — exact score on an upset pick with 2x boost. Green + cyan +2 + 2x badge.',
 		prediction: { home: 0, away: 1 },
 		game: makeFixture({
 			id: 80015,
