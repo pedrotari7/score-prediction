@@ -58,6 +58,7 @@ const ResultContainer = ({
 	const { gcc, competition } = useCompetition();
 	const odds = useTournamentStore(s => s.odds);
 	const boosts = useTournamentStore(s => s.boosts);
+	const uid = useTournamentStore(s => s.uid);
 	const { noSpoilers } = useNoSpoilers();
 
 	const { isExactScore, isCorrectResult, isCorrectGoal, isPenaltyWinner, isWrong, isPredictValid } =
@@ -100,7 +101,7 @@ const ResultContainer = ({
 					Upset pick
 				</div>
 			)}
-			{isBoosted && (
+			{isBoosted && (started || userID === uid) && (
 				<div className='absolute -bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-indigo-500 px-1.5 py-0.5 text-[9px] font-bold text-white'>
 					2x
 				</div>
