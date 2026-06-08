@@ -26,6 +26,7 @@ export const registerRoutes = (app: Express) => {
       'allowUpdateStandings',
       'disableLiveScoresApi',
       'allowUpdatePoints',
+      'enableMetricsCollection',
     ] as const;
     const validated = Object.fromEntries(ALLOWED_KEYS.map(k => [k, Boolean(settings?.[k])]));
 

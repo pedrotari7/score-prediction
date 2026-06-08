@@ -9,6 +9,7 @@ import { APISPORTSKEY } from './lib/api-sports';
 import { registerRoutes as registerTournamentRoutes } from './routes/tournament';
 import { registerRoutes as registerLeaderboardRoutes } from './routes/leaderboard';
 import { registerRoutes as registerSettingsRoutes } from './routes/settings';
+import { registerRoutes as registerMetricsRoutes } from './routes/metrics';
 
 // High limit intentional — users were being rate limited during normal usage
 const limiter = rateLimit({
@@ -43,6 +44,7 @@ setGlobalOptions({ region: 'europe-west1' });
 registerTournamentRoutes(app);
 registerLeaderboardRoutes(app);
 registerSettingsRoutes(app);
+registerMetricsRoutes(app);
 
 export const api = onRequest({ secrets: [APISPORTSKEY], cors: corsOrigins }, app);
 

@@ -14,6 +14,7 @@ import type {
 	Leaderboard,
 	ResponseStatus,
 	AuthenticatedUser,
+	MetricsQueryEvent,
 } from '../../../interfaces/main';
 import { currentCompetition } from '../../../shared/utils';
 import fetcher from '../../lib/fetcher';
@@ -235,3 +236,24 @@ export const postNoSpoilers = async (noSpoilers: boolean, token: string): Promis
 			method: 'POST',
 		}
 	);
+
+export const fetchMetricsEnabled = async (): Promise<{ enabled: boolean }> => {
+	try {
+		const res = await fetch(`${backendUrl}/metrics-enabled`);
+		if (res.ok) return await res.json();
+		return { enabled: false };
+	} catch {
+		return { enabled: false };
+	}
+};
+
+export const fetchMetricsData = async (
+	token: string,
+	filters: { eventName?: string; uid?: string; sessionId?: string; limit?: number } = {}
+): Promise<{ events: MetricsQueryEvent[]; total: number }> =>
+	await cFetch(`${backendUrl}/metrics-data`, token, undefined, {
+		...(filters.eventName ? { eventName: filters.eventName } : {}),
+		...(filters.uid ? { uid: filters.uid } : {}),
+		...(filters.sessionId ? { sessionId: filters.sessionId } : {}),
+		...(filters.limit ? { limit: filters.limit } : {}),
+	});

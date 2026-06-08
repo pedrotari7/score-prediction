@@ -282,6 +282,15 @@ const SettingsPage = () => {
 					/>
 					<span className='ml-2'>Allow Update Points</span>
 				</label>
+				<label className='mx-4 mt-3 inline-flex cursor-pointer select-none items-center'>
+					<input
+						type='checkbox'
+						className='size-5'
+						checked={settings.enableMetricsCollection}
+						onChange={() => toggleSetting('enableMetricsCollection')}
+					/>
+					<span className='ml-2'>Enable Metrics Collection</span>
+				</label>
 			</div>
 			<div className='flex flex-col flex-wrap items-center justify-center sm:flex-row'>
 				<button
@@ -404,6 +413,13 @@ const SettingsPage = () => {
 					className={`m-5 rounded bg-purple-700 px-4 py-2 font-bold text-white`}
 				>
 					Debug Card Gallery
+				</button>
+
+				<button
+					onClick={() => useTournamentStore.getState().setRoute({ page: Route.Metrics })}
+					className={`m-5 rounded bg-teal-700 px-4 py-2 font-bold text-white`}
+				>
+					Metrics Dashboard
 				</button>
 			</div>
 

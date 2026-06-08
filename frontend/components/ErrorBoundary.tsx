@@ -1,5 +1,6 @@
 import { trace } from '@opentelemetry/api';
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { getMetrics } from '../lib/metrics';
 
 interface Props {
 	children: ReactNode;
@@ -21,6 +22,10 @@ class ErrorBoundary extends Component<Props, State> {
 		span.recordException(error);
 		span.setAttribute('component_stack', errorInfo.componentStack ?? '');
 		span.end();
+
+		getMetrics().trackError(error, {
+			componentStack: errorInfo.componentStack?.slice(0, 500),
+		});
 	}
 
 	render() {

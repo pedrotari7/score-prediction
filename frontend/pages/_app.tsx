@@ -1,8 +1,29 @@
 import type { AppProps } from 'next/app';
 import { useEffect } from 'react';
 import ErrorBoundary from '../components/ErrorBoundary';
-import { AuthProvider } from '../lib/auth';
+import { AuthProvider, useAuth } from '../lib/auth';
+import { destroyMetrics, getMetrics } from '../lib/metrics';
 import '../styles/globals.css';
+
+function MetricsInit() {
+	const { user } = useAuth();
+
+	useEffect(() => {
+		if (!user?.token) return;
+
+		const metrics = getMetrics();
+		metrics.init(user.token);
+		metrics.updateToken(user.token);
+	}, [user?.token]);
+
+	useEffect(() => {
+		return () => {
+			destroyMetrics();
+		};
+	}, []);
+
+	return null;
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
 	useEffect(() => {
@@ -14,6 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 	return (
 		<ErrorBoundary>
 			<AuthProvider>
+				<MetricsInit />
 				<Component {...pageProps} />
 			</AuthProvider>
 		</ErrorBoundary>

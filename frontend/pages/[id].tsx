@@ -26,6 +26,7 @@ const Stats = dynamic(() => import('../components/Stats'));
 const HeadToHead = dynamic(() => import('../components/HeadToHead'));
 const TournamentRecap = dynamic(() => import('../components/TournamentRecap'));
 const DebugCardGallery = dynamic(() => import('../components/DebugCardGallery'));
+const MetricsDashboard = dynamic(() => import('../components/MetricsDashboard'));
 
 type QueryParams = Record<string, string | string[] | undefined>;
 
@@ -124,6 +125,8 @@ const MainComponent = () => {
 				return <TournamentRecap />;
 			case Route.DebugCards:
 				return <DebugCardGallery />;
+			case Route.Metrics:
+				return <MetricsDashboard />;
 			default:
 				return <></>;
 		}

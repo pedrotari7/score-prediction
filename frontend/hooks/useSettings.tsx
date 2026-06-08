@@ -11,6 +11,7 @@ const useSettings = () => {
 		allowUpdateStandings: false,
 		disableLiveScoresApi: false,
 		allowUpdatePoints: false,
+		enableMetricsCollection: false,
 	});
 	const token = useTournamentStore(s => s.token);
 

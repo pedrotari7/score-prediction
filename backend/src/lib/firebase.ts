@@ -36,4 +36,6 @@ export const updateLastCheckIn = async (uid: string): Promise<void> => {
   await getDBUser(uid).set({ lastCheckIn: FieldValue.serverTimestamp() }, { merge: true });
 };
 
+export const getDBMetrics = () => getFirestore(firebaseApp).collection('metrics');
+
 export { getFirestore, getAuth, FieldValue, Timestamp };

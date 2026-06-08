@@ -12,6 +12,7 @@ import type {
 	Users,
 } from '../../interfaces/main';
 import { currentCompetition, isGameFinished } from '../../shared/utils';
+import { getMetrics } from '../lib/metrics';
 import { fetchTournament, postNoSpoilers, updateBoost as apiUpdateBoost, updatePredictions } from '../pages/api';
 
 export enum Route {
@@ -30,6 +31,7 @@ export enum Route {
 	Compare = 'compare',
 	Recap = 'recap',
 	DebugCards = 'debugCards',
+	Metrics = 'metrics',
 }
 
 export interface RouteInfo {
@@ -117,6 +119,7 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 	setRoute: route => {
 		set({ route });
 		get()._navigate?.(route);
+		getMetrics().trackPageView(route.page, route.data);
 	},
 	setNoSpoilers: ns => {
 		const { token } = get();
@@ -214,6 +217,9 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 
 		if (!result.success) {
 			set({ predictions: prevPredictions });
+			getMetrics().trackEvent('prediction_failed', { gameId });
+		} else {
+			getMetrics().trackEvent('prediction_submitted', { gameId });
 		}
 	},
 
@@ -223,7 +229,8 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 
 		const userBoosts = prevBoosts[uid] ?? [];
 		const idx = userBoosts.indexOf(gameId);
-		const newUserBoosts = idx >= 0 ? userBoosts.filter(id => id !== gameId) : [...userBoosts, gameId];
+		const isRemoving = idx >= 0;
+		const newUserBoosts = isRemoving ? userBoosts.filter(id => id !== gameId) : [...userBoosts, gameId];
 
 		set(state => ({
 			boosts: { ...state.boosts, [uid]: newUserBoosts },
@@ -233,6 +240,8 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 
 		if (!result.success) {
 			set({ boosts: prevBoosts });
+		} else {
+			getMetrics().trackEvent('boost_toggled', { gameId, action: isRemoving ? 'removed' : 'added' });
 		}
 	},
 
