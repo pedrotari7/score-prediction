@@ -94,13 +94,27 @@ exports[`Rules renders rules page 1`] = `
           Confidence Multiplier
         </div>
         <div
-          class="mb-4 flex flex-row flex-wrap rounded-md bg-indigo-500 p-2 text-lg"
+          class="mb-4 flex flex-col gap-2 rounded-md bg-indigo-500 p-2 text-lg"
         >
-          You can boost up to 
-          3
-           predictions per tournament. Boosted predictions earn double points. Choose wisely — boosts must be placed before the game starts and can be toggled on/off until kickoff.
+          <span>
+            Boost predictions to earn double points. Choose wisely! Boosts must be placed before the game starts and can be toggled on/off until kickoff.
+          </span>
+          <ul
+            class="ml-4 list-disc text-base"
+          >
+            <li>
+              1
+               boost
+               per group round
+            </li>
+            <li>
+              1
+               boost
+               per knockout round (except the Final and 3rd Place Final)
+            </li>
+          </ul>
           <span
-            class="mt-2 w-full text-2xl font-bold"
+            class="w-full text-2xl font-bold"
           >
             2x Points
           </span>

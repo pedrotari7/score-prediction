@@ -255,7 +255,7 @@ export interface Competition {
 		penalty: number;
 		groups: number;
 		upset?: number;
-		boosts?: number;
+		boosts?: { groups: number; perRound: number };
 	};
 	color: string;
 }
@@ -299,6 +299,7 @@ export interface Settings {
 	allowUpdateStandings: boolean;
 	disableLiveScoresApi: boolean;
 	allowUpdatePoints: boolean;
+	enableMetricsCollection: boolean;
 }
 
 export interface Account {
@@ -340,4 +341,35 @@ export interface Leaderboard {
 
 export interface ResponseStatus {
 	success: boolean;
+}
+
+export interface SessionMetadata {
+	device: string;
+	viewport: string;
+	browser: string;
+	os: string;
+	appVersion: string;
+	buildTimestamp: string;
+}
+
+export interface MetricEvent {
+	name: string;
+	timestamp: number;
+	sessionId: string;
+	payload?: Record<string, unknown>;
+}
+
+export interface MetricsBatch {
+	events: MetricEvent[];
+	metadata: SessionMetadata;
+}
+
+export interface MetricsQueryEvent {
+	id: string;
+	uid: string;
+	name: string;
+	timestamp: number;
+	sessionId: string;
+	payload: Record<string, unknown>;
+	metadata: SessionMetadata;
 }

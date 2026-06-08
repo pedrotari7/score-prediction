@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import type { Predictions, UpdatePrediction } from '../../interfaces/main';
-import { getUpsetSide, isNum, isPredictionUpset } from '../../shared/utils';
+import { getGameStage, getStageBoostInfo, getUpsetSide, isNum, isPredictionUpset } from '../../shared/utils';
 import Countdown, { zeroPad } from 'react-countdown';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
@@ -96,10 +96,8 @@ const Game = memo(function Game({
 	const { gcc, competition } = useCompetition();
 	const uid = useTournamentStore(s => s.uid);
 
-	const maxBoosts = competition.points.boosts ?? 0;
 	const myBoosts = boosts?.[uid] ?? [];
 	const isBoosted = myBoosts.includes(gameID);
-	const remainingBoosts = maxBoosts - myBoosts.length;
 
 	const { RedactedSpoilers } = useNoSpoilers();
 
@@ -112,6 +110,8 @@ const Game = memo(function Game({
 	const isMyPredictions = uid === userID;
 
 	const game = data[gameID];
+	const stage = game ? getGameStage(game) : '';
+	const { max: maxBoosts, remaining: remainingBoosts } = getStageBoostInfo(competition, stage, myBoosts, data);
 
 	const gameDate = new Date(game?.fixture.date);
 

@@ -21,7 +21,9 @@ import { ChevronLeftIcon, ChevronRightIcon, FaceSmileIcon } from '@heroicons/rea
 import {
 	calculateUserResultPoints,
 	DEFAULT_USER_RESULT,
+	getGameStage,
 	getResult,
+	getStageBoostInfo,
 	isGameFinished,
 	isGameOnGoing,
 	isGameStarted,
@@ -296,12 +298,18 @@ const UserGuess = ({
 	const boosts = useTournamentStore(s => s.boosts);
 	const doUpdateBoost = useTournamentStore(s => s.updateBoost);
 	const uid = useTournamentStore(s => s.uid);
+	const fixtures = useTournamentStore(s => s.fixtures);
 	const { competition } = useCompetition();
 
-	const maxBoosts = competition.points.boosts ?? 0;
 	const myBoosts = boosts?.[uid] ?? [];
 	const isBoosted = myBoosts.includes(gameID);
-	const remainingBoosts = maxBoosts - myBoosts.length;
+	const stage = getGameStage(game);
+	const { max: maxBoosts, remaining: remainingBoosts } = getStageBoostInfo(
+		competition,
+		stage,
+		myBoosts,
+		fixtures ?? {}
+	);
 
 	const parsedGuess = { home: formatScore(guess.home), away: formatScore(guess.away) };
 

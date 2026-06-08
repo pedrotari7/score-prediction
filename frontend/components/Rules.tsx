@@ -1,5 +1,6 @@
 import type { RouteInfo } from '../store/tournamentStore';
 import { Route, useTournamentStore } from '../store/tournamentStore';
+import { hasBoosts } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';
 import Panel from './Panel';
@@ -68,15 +69,30 @@ const UpsetBonus = () => {
 
 const ConfidenceMultiplier = () => {
 	const { competition } = useCompetition();
-	if (!competition.points.boosts) return null;
+	if (!hasBoosts(competition)) return null;
+	const { groups, perRound } = competition.points.boosts!;
 	return (
 		<div>
 			<div className='mb-4 text-2xl font-bold'>Confidence Multiplier</div>
-			<div className='mb-4 flex flex-row flex-wrap rounded-md bg-indigo-500 p-2 text-lg'>
-				You can boost up to {competition.points.boosts} predictions per tournament. Boosted predictions earn
-				double points. Choose wisely — boosts must be placed before the game starts and can be toggled on/off
-				until kickoff.
-				<span className='mt-2 w-full text-2xl font-bold'>2x Points</span>
+			<div className='mb-4 flex flex-col gap-2 rounded-md bg-indigo-500 p-2 text-lg'>
+				<span>
+					Boost predictions to earn double points. Choose wisely! Boosts must be placed before the game starts
+					and can be toggled on/off until kickoff.
+				</span>
+				<ul className='ml-4 list-disc text-base'>
+					{groups > 0 && (
+						<li>
+							{groups} boost{groups !== 1 ? 's' : ''} per group round
+						</li>
+					)}
+					{perRound > 0 && (
+						<li>
+							{perRound} boost{perRound !== 1 ? 's' : ''} per knockout round (except the Final and 3rd
+							Place Final)
+						</li>
+					)}
+				</ul>
+				<span className='w-full text-2xl font-bold'>2x Points</span>
 			</div>
 		</div>
 	);

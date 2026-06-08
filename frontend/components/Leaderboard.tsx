@@ -3,7 +3,7 @@ import type { MouseEventHandler, ReactNode } from 'react';
 import { useMemo, useState } from 'react';
 import { ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import type { Leaderboard, Users } from '../../interfaces/main';
-import { DEFAULT_USER_RESULT, isGameFinished } from '../../shared/utils';
+import { DEFAULT_USER_RESULT, hasBoosts, isGameFinished } from '../../shared/utils';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import { classNames } from '../lib/utils/reactHelper';
 import DesktopOnly from './DesktopOnly';
@@ -183,7 +183,7 @@ const Leaderboards = ({
 					<div className='mb-6 flex flex-row flex-wrap items-center justify-center font-bold sm:justify-center'>
 						{Object.values(SortOptions)
 							.filter(o => o.key !== 'upset' || (competition.points.upset ?? 0) > 0)
-							.filter(o => o.key !== 'boost' || (competition.points.boosts ?? 0) > 0)
+							.filter(o => o.key !== 'boost' || hasBoosts(competition))
 							.map(option => (
 								<FilterOption
 									key={option.key}

@@ -12,7 +12,14 @@ import type {
   Standing,
   Tournament,
 } from '../../../interfaces/main';
-import { currentCompetitions, isGameFinished, isGameOnGoing, isGameStarted } from '../../../shared/utils';
+import {
+  currentCompetitions,
+  getGameStage,
+  getMaxBoostsForStage,
+  isGameFinished,
+  isGameOnGoing,
+  isGameStarted,
+} from '../../../shared/utils';
 import { authenticate, decodeToken, parseBody, parseCompetition } from '../lib/auth';
 import {
   FieldValue,
@@ -386,9 +393,12 @@ export const registerRoutes = (app: Express) => {
     if (idx >= 0) {
       userBoosts.splice(idx, 1);
     } else {
-      const maxBoosts = competition.points.boosts ?? 0;
-      if (userBoosts.length >= maxBoosts) {
-        return res.status(400).json({ error: 'Maximum boosts reached', result: false });
+      const game = fixtures[parsedGameId];
+      const stage = getGameStage(game);
+      const maxForStage = getMaxBoostsForStage(competition, stage);
+      const usedInStage = userBoosts.filter(id => fixtures[id] && getGameStage(fixtures[id]) === stage).length;
+      if (usedInStage >= maxForStage) {
+        return res.status(400).json({ error: 'Maximum boosts reached for this stage', result: false });
       }
       userBoosts.push(parsedGameId);
     }

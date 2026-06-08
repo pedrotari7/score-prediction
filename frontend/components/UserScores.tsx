@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import React from 'react';
 import type { User } from '../../interfaces/main';
-import { DEFAULT_USER_RESULT } from '../../shared/utils';
+import { DEFAULT_USER_RESULT, hasBoosts } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';
 import { Tooltip } from 'react-tooltip';
@@ -29,7 +29,7 @@ export const UserScores = ({ user, stage, highlightKey }: { user: User; stage: s
 	const { competition } = useCompetition();
 	const stageScore = user.score?.[stage] ?? DEFAULT_USER_RESULT;
 	const hasUpset = (competition.points.upset ?? 0) > 0;
-	const hasBoosts = (competition.points.boosts ?? 0) > 0;
+	const showBoosts = hasBoosts(competition);
 	return (
 		<div className='flex flex-row flex-wrap items-center justify-center'>
 			<Tooltip id='my-tooltip' />
@@ -68,7 +68,7 @@ export const UserScores = ({ user, stage, highlightKey }: { user: User; stage: s
 				</TooltipInto>
 			)}
 
-			{hasBoosts && (
+			{showBoosts && (
 				<TooltipInto content='Boost Bonus'>
 					<Circle className={classNames('bg-indigo-500', highlight('boost', highlightKey))}>
 						{stageScore.boost ?? 0}

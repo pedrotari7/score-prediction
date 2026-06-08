@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import type { Fixture, Fixtures, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
-import { isGameFinished } from '../../shared/utils';
+import { getStageBoostInfo, isGameFinished } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { useAuth } from '../lib/auth';
@@ -28,10 +28,8 @@ const FixturesPage = ({
 	const { user: currentUser } = useAuth();
 	const { RedactedSpoilers } = useNoSpoilers();
 	const { competition } = useCompetition();
-	const maxBoosts = competition.points.boosts ?? 0;
 	const boosts = useTournamentStore(s => s.boosts);
 	const userBoosts = boosts?.[user?.uid] ?? [];
-	const remainingBoosts = maxBoosts - userBoosts.length;
 
 	if (!user)
 		return (
@@ -94,16 +92,7 @@ const FixturesPage = ({
 						/>
 					)}
 					{uid !== user.uid && <p>{user.displayName}</p>}
-					{uid === user.uid && (
-						<div className='flex items-center gap-2'>
-							<p>My Predictions</p>
-							{maxBoosts > 0 && remainingBoosts < maxBoosts && (
-								<span className='rounded-full bg-indigo-500 px-2 py-0.5 text-xs font-bold'>
-									{remainingBoosts} boost{remainingBoosts !== 1 ? 's' : ''} left
-								</span>
-							)}
-						</div>
-					)}
+					{uid === user.uid && <p>My Predictions</p>}
 				</div>
 
 				<RedactedSpoilers>
@@ -117,10 +106,21 @@ const FixturesPage = ({
 				.sort(([_, gA], [__, gB]) => gB?.[0]?.fixture.timestamp - gA?.[0]?.fixture.timestamp)
 				.map(([round, games], index) => {
 					games.sort(sortWithFinishedLast);
+					const { max, remaining } =
+						uid === user.uid
+							? getStageBoostInfo(competition, round, userBoosts, fixtures)
+							: { max: 0, remaining: 0 };
 					return (
 						<div key={round} className='mb-6'>
 							<div className={classNames('mb-6 flex flex-row items-center justify-between')}>
-								<div className='text-3xl'>{round}</div>
+								<div className='flex items-center gap-2 text-3xl'>
+									{round}
+									{max > 0 && remaining < max && (
+										<span className='rounded-full bg-indigo-500 px-2 py-0.5 text-xs font-bold'>
+											{remaining} boost{remaining !== 1 ? 's' : ''} left
+										</span>
+									)}
+								</div>
 								{index === 0 && <RefreshComp />}
 							</div>
 

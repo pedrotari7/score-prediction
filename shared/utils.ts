@@ -74,7 +74,15 @@ export const competitions = {
 		start: '2026-06-11',
 		end: '2026-07-19',
 		logo: '/wc2026-logo.svg',
-		points: { exact: 3, result: 2, onescore: 1, penalty: 1, groups: 1, upset: 2, boosts: 3 },
+		points: {
+			exact: 3,
+			result: 2,
+			onescore: 1,
+			penalty: 1,
+			groups: 1,
+			upset: 2,
+			boosts: { groups: 1, perRound: 1 },
+		},
 		color: '#3a0a5e',
 	},
 } as const;
@@ -215,6 +223,34 @@ export const initializeTeamResult = (): PredResult => ({
 });
 
 export const isGroupStage = (f: Fixture) => f.league.round.includes('Group');
+
+export const getGameStage = (f: Fixture): string => {
+	if (!isGroupStage(f)) return f.league.round;
+	const leg = f.league.round.split('-').pop()?.trim();
+	return leg ? `Groups - ${leg}` : 'Groups';
+};
+
+export const hasBoosts = (competition: Competition): boolean =>
+	!!competition.points.boosts && (competition.points.boosts.groups > 0 || competition.points.boosts.perRound > 0);
+
+export const getMaxBoostsForStage = (competition: Competition, stage: string): number => {
+	const boosts = competition.points.boosts;
+	if (!boosts) return 0;
+	if (stage.startsWith('Groups')) return boosts.groups;
+	if (stage === 'Final' || stage === '3rd Place Final') return 0;
+	return boosts.perRound;
+};
+
+export const getStageBoostInfo = (
+	competition: Competition,
+	stage: string,
+	userBoosts: number[],
+	fixtures: Record<number, Fixture>
+): { max: number; used: number; remaining: number } => {
+	const max = getMaxBoostsForStage(competition, stage);
+	const used = userBoosts.filter(id => fixtures[id] && getGameStage(fixtures[id]) === stage).length;
+	return { max, used, remaining: max - used };
+};
 
 export const calculatePoints = ({ wins, draws }: PredResult) => 3 * wins + draws;
 
