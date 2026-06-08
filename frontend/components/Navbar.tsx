@@ -170,7 +170,7 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 								)}
 								{/* Profile dropdown */}
 								<Menu as='div' className='relative'>
-									{({ open }) => (
+									{({ open, close }) => (
 										<div className='flex flex-row gap-2'>
 											<div className='flex items-center justify-center'>
 												{user && (
@@ -268,6 +268,7 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 																	href=''
 																	onClick={e => {
 																		e.preventDefault();
+																		close();
 																		setLoading(true);
 																		router.push(`/${comp}`);
 																	}}
