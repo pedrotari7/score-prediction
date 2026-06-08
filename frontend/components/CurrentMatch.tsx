@@ -514,10 +514,20 @@ const GameStoryStrip = ({
 								)
 							) : (
 								<span className='opacity-40'>
-									{new Date(fixture.fixture.date).toLocaleTimeString([], {
-										hour: '2-digit',
-										minute: '2-digit',
-									})}
+									<span>
+										{new Date(fixture.fixture.date).toLocaleDateString([], {
+											day: 'numeric',
+											month: 'short',
+										})}
+									</span>
+									<br />
+									<span>
+										{new Date(fixture.fixture.date).toLocaleTimeString([], {
+											hour: '2-digit',
+											minute: '2-digit',
+											hour12: false,
+										})}
+									</span>
 								</span>
 							)}
 						</div>
