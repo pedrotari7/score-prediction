@@ -210,11 +210,6 @@ const Game = memo(function Game({
 										Upset pick
 									</div>
 								)}
-							{boosts?.[userID]?.includes(gameID) && (
-								<div className='absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-indigo-500 px-1.5 py-0.5 text-[9px] font-bold text-white'>
-									2x
-								</div>
-							)}
 						</div>
 					)}
 
