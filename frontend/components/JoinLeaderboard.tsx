@@ -22,9 +22,11 @@ const JoinLeaderboard = ({ leaderboardId, joinToken }: { leaderboardId: string; 
 	useEffect(() => {
 		const doAsync = async () => {
 			if (token) {
-				const l = await fetchLeaderboard(leaderboardId, token);
+				const l = await fetchLeaderboard(leaderboardId, token, joinToken);
 
-				if (l && l.members.includes(uid)) {
+				if (!l || !l.members) return;
+
+				if (l.members.includes(uid)) {
 					setRoute({ page: Route.Leaderboard, data: leaderboardId });
 					const { pathname, query } = router;
 					delete router.query.join;
@@ -36,7 +38,7 @@ const JoinLeaderboard = ({ leaderboardId, joinToken }: { leaderboardId: string; 
 		};
 
 		doAsync();
-	}, [token, uid, setRoute, router, leaderboardId]);
+	}, [token, uid, setRoute, router, leaderboardId, joinToken]);
 
 	if (!leaderboard) return <></>;
 

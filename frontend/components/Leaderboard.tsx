@@ -3,7 +3,7 @@ import type { MouseEventHandler, ReactNode } from 'react';
 import { useMemo, useState } from 'react';
 import { ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import type { Leaderboard, Users } from '../../interfaces/main';
-import { isGameFinished } from '../../shared/utils';
+import { DEFAULT_USER_RESULT, isGameFinished } from '../../shared/utils';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import { classNames } from '../lib/utils/reactHelper';
 import DesktopOnly from './DesktopOnly';
@@ -113,18 +113,21 @@ const Leaderboards = ({
 	const sortedUsers = useMemo(
 		() =>
 			Object.values(users)
-				.filter(user => user.score && user.score[stage] && members.includes(user.uid))
-				.sort(
-					(a, b) =>
-						b.score[stage][sortOption.key] - a.score[stage][sortOption.key] ||
-						b.score[stage].points - a.score[stage].points ||
-						b.score[stage].exact - a.score[stage].exact ||
-						b.score[stage].result - a.score[stage].result ||
-						b.score[stage].onescore - a.score[stage].onescore ||
-						b.score[stage].groups - a.score[stage].groups ||
-						b.score[stage].penalty - a.score[stage].penalty ||
-						b.score[stage].fail - a.score[stage].fail
-				),
+				.filter(user => members.includes(user.uid))
+				.sort((a, b) => {
+					const aScore = a.score?.[stage] ?? DEFAULT_USER_RESULT;
+					const bScore = b.score?.[stage] ?? DEFAULT_USER_RESULT;
+					return (
+						bScore[sortOption.key] - aScore[sortOption.key] ||
+						bScore.points - aScore.points ||
+						bScore.exact - aScore.exact ||
+						bScore.result - aScore.result ||
+						bScore.onescore - aScore.onescore ||
+						bScore.groups - aScore.groups ||
+						bScore.penalty - aScore.penalty ||
+						bScore.fail - aScore.fail
+					);
+				}),
 		[users, members, stage, sortOption]
 	);
 

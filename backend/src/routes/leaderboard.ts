@@ -62,7 +62,11 @@ export const registerRoutes = (app: Express) => {
 
     if (!leaderboard) return res.status(404).json({ error: 'Leaderboard not found' });
 
-    if (!isAdmin && (!Array.isArray(leaderboard.members) || !leaderboard.members.includes(callerUID))) {
+    const queryJoinToken = req.query.joinToken as string | undefined;
+    const isMember = Array.isArray(leaderboard.members) && leaderboard.members.includes(callerUID);
+    const hasValidJoinToken = queryJoinToken && leaderboard.joinToken === queryJoinToken;
+
+    if (!isAdmin && !isMember && !hasValidJoinToken) {
       return res.status(403).json({ error: 'Forbidden' });
     }
 

@@ -27,7 +27,7 @@ const highlight = (key: string, activeKey?: string) => (key === activeKey ? 'rin
 
 export const UserScores = ({ user, stage, highlightKey }: { user: User; stage: string; highlightKey?: string }) => {
 	const { competition } = useCompetition();
-	const stageScore = user.score[stage] ?? DEFAULT_USER_RESULT;
+	const stageScore = user.score?.[stage] ?? DEFAULT_USER_RESULT;
 	const hasUpset = (competition.points.upset ?? 0) > 0;
 	const hasBoosts = (competition.points.boosts ?? 0) > 0;
 	return (
