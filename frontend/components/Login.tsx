@@ -37,7 +37,11 @@ const Login = () => {
 
 	const isAllowedBrowser = !isFacebookApp();
 
-	const signIn = () => signInWithPopup(getAuth(app), new GoogleAuthProvider());
+	const signIn = () => {
+		const provider = new GoogleAuthProvider();
+		provider.setCustomParameters({ prompt: 'select_account' });
+		return signInWithPopup(getAuth(app), provider);
+	};
 
 	return (
 		<div className='h-screen w-screen'>
