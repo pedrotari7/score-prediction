@@ -69,6 +69,7 @@ export async function seedSettings(overrides: Partial<Settings> = {}): Promise<v
     allowUpdateStandings: false,
     disableLiveScoresApi: true,
     allowUpdatePoints: false,
+    enableMetricsCollection: false,
     ...overrides,
   };
   await getDb().collection('admin').doc('settings').set(settings);
