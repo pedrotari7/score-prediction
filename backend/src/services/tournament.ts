@@ -136,15 +136,12 @@ export const updateFixtures = async (competition: Competition, gamesToUpdate: nu
 
 export const updateOdds = async (competition: Competition, fixtures: Fixtures): Promise<FixtureOdds> => {
   const doc = await getDBOdds(competition).get();
-  const existingOdds: FixtureOdds = ((doc.exists ? doc.data()?.data : {}) as FixtureOdds) ?? {};
+  const odds: FixtureOdds = ((doc.exists ? doc.data()?.data : {}) as FixtureOdds) ?? {};
 
   const fixtureIds = new Set(Object.values(fixtures).map(f => f.fixture.id));
-  const hasMissing = [...fixtureIds].some(id => !existingOdds[id]);
-  if (!hasMissing) return existingOdds;
 
   let page = 1;
   let totalPages = 1;
-  let updated = false;
 
   while (page <= totalPages) {
     const response = await apiGetOdds({
@@ -158,7 +155,7 @@ export const updateOdds = async (competition: Competition, fixtures: Fixtures): 
 
     for (const item of response.data.response) {
       const fixtureId = item.fixture.id;
-      if (existingOdds[fixtureId] || !fixtureIds.has(fixtureId)) continue;
+      if (!fixtureIds.has(fixtureId)) continue;
 
       const bookmaker = item.bookmakers?.[0];
       if (!bookmaker) continue;
@@ -171,17 +168,16 @@ export const updateOdds = async (competition: Competition, fixtures: Fixtures): 
       const draw = parseFloat(matchWinner.values.find((v: { value: string }) => v.value === 'Draw')?.odd);
 
       if (!isNaN(home) && !isNaN(away) && !isNaN(draw)) {
-        existingOdds[fixtureId] = { home, away, draw };
-        updated = true;
+        odds[fixtureId] = { home, away, draw };
       }
     }
 
     page++;
   }
 
-  if (updated) await getDBOdds(competition).set({ data: existingOdds, timestamp: FieldValue.serverTimestamp() });
+  await getDBOdds(competition).set({ data: odds, timestamp: FieldValue.serverTimestamp() });
 
-  return existingOdds;
+  return odds;
 };
 
 export const updatePoints = async (competition: Competition, predictions: Predictions, fixtures: Fixtures) => {
