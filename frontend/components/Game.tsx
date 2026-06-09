@@ -157,25 +157,23 @@ const Game = memo(function Game({
 
 				<div className='flex w-4/12 flex-row items-center justify-center lg:w-4/12'>
 					{!isInPast && isMyPredictions && (
-						<div className='relative flex flex-col items-center'>
-							<div className='relative flex flex-row items-center'>
-								<UserInputPrediction
-									gameID={gameID}
-									prediction={prediction}
-									updatePrediction={updatePrediction}
-									homeInputRef={homeInputRef}
-									awayInputRef={awayInputRef}
-								/>
-								{(competition.points.upset ?? 0) > 0 &&
-									odds?.[gameID] &&
-									isNum(prediction.home) &&
-									isNum(prediction.away) &&
-									isPredictionUpset(prediction, odds[gameID]) && (
-										<div className='absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-cyan-700 px-1.5 py-0.5 text-[9px] font-bold'>
-											Upset pick
-										</div>
-									)}
-							</div>
+						<div className='relative flex flex-row items-center'>
+							<UserInputPrediction
+								gameID={gameID}
+								prediction={prediction}
+								updatePrediction={updatePrediction}
+								homeInputRef={homeInputRef}
+								awayInputRef={awayInputRef}
+							/>
+							{(competition.points.upset ?? 0) > 0 &&
+								odds?.[gameID] &&
+								isNum(prediction.home) &&
+								isNum(prediction.away) &&
+								isPredictionUpset(prediction, odds[gameID]) && (
+									<div className='absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-cyan-700 px-1.5 py-0.5 text-[9px] font-bold'>
+										Upset pick
+									</div>
+								)}
 							{maxBoosts > 0 && (
 								<button
 									onClick={e => {
@@ -184,15 +182,16 @@ const Game = memo(function Game({
 									}}
 									disabled={!isBoosted && remainingBoosts <= 0}
 									className={classNames(
-										'mt-1 rounded-full px-2 py-0.5 text-[10px] font-bold transition-colors',
+										'absolute -bottom-5 left-1/2 -translate-x-1/2',
+										'flex size-7 items-center justify-center rounded-full text-[10px] font-black transition-all',
 										isBoosted
-											? 'bg-indigo-500 text-white'
+											? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-400/50'
 											: remainingBoosts > 0
-												? 'bg-gray-600 text-gray-300 hover:bg-indigo-500/50'
-												: 'cursor-not-allowed bg-gray-700 text-gray-500'
+												? 'bg-gray-700/80 text-gray-300 ring-1 ring-gray-500/50 hover:bg-indigo-500/30 hover:text-white hover:ring-indigo-400/50'
+												: 'cursor-not-allowed bg-gray-800/50 text-gray-600'
 									)}
 								>
-									{isBoosted ? '2x Boosted' : `2x (${remainingBoosts} left)`}
+									2x
 								</button>
 							)}
 						</div>

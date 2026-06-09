@@ -359,7 +359,7 @@ const UserGuess = ({
 			{invalidScore && !emptyScore && <div className='text-sm font-bold'>Invalid</div>}
 
 			{!hiddenScore && (
-				<div className='flex justify-center text-xl sm:justify-start'>
+				<div className='flex items-center justify-center gap-3 text-xl sm:justify-start'>
 					{(isInPast || !myGuess) && !invalidScore && (
 						<>
 							<div className='flex flex-row items-center justify-end font-bold'>
@@ -374,35 +374,35 @@ const UserGuess = ({
 						</>
 					)}
 					{!isInPast && myGuess && (
-						<UserInputPrediction
-							gameID={gameID}
-							prediction={guess}
-							updatePrediction={updatePrediction}
-							homeInputRef={homeInputRef}
-							awayInputRef={awayInputRef}
-						/>
+						<>
+							<UserInputPrediction
+								gameID={gameID}
+								prediction={guess}
+								updatePrediction={updatePrediction}
+								homeInputRef={homeInputRef}
+								awayInputRef={awayInputRef}
+							/>
+							{maxBoosts > 0 && (
+								<button
+									onClick={e => {
+										e.stopPropagation();
+										doUpdateBoost(gameID);
+									}}
+									disabled={!isBoosted && remainingBoosts <= 0}
+									className={classNames(
+										'relative flex size-10 items-center justify-center rounded-full text-sm font-black transition-all',
+										isBoosted
+											? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-400/50'
+											: remainingBoosts > 0
+												? 'bg-gray-700/80 text-gray-300 ring-1 ring-gray-500/50 hover:bg-indigo-500/30 hover:text-white hover:ring-indigo-400/50'
+												: 'cursor-not-allowed bg-gray-800/50 text-gray-600'
+									)}
+								>
+									2x
+								</button>
+							)}
+						</>
 					)}
-				</div>
-			)}
-			{!isInPast && myGuess && maxBoosts > 0 && (
-				<div className='flex justify-center sm:justify-start'>
-					<button
-						onClick={e => {
-							e.stopPropagation();
-							doUpdateBoost(gameID);
-						}}
-						disabled={!isBoosted && remainingBoosts <= 0}
-						className={classNames(
-							'rounded-full px-3 py-1 text-xs font-bold transition-colors',
-							isBoosted
-								? 'bg-indigo-500 text-white'
-								: remainingBoosts > 0
-									? 'bg-gray-600 text-gray-300 hover:bg-indigo-500/50'
-									: 'cursor-not-allowed bg-gray-700 text-gray-500'
-						)}
-					>
-						{isBoosted ? '2x Boosted' : `2x (${remainingBoosts} left)`}
-					</button>
 				</div>
 			)}
 			{showReactions && (
