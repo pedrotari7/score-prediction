@@ -337,6 +337,7 @@ export interface Leaderboard {
 	members: string[];
 	creator: string;
 	joinToken?: string;
+	emailDomain?: string;
 }
 
 export interface ResponseStatus {

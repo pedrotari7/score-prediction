@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import type { Express } from 'express';
 import type { Leaderboard, CreateLeaderboardResult } from '../../../interfaces/main';
 import { authenticate, parseBody } from '../lib/auth';
-import { getFirestore, firebaseApp, getDBUser } from '../lib/firebase';
+import { getFirestore, firebaseApp, getDBUser, FieldValue } from '../lib/firebase';
 
 export const registerRoutes = (app: Express) => {
   app.post('/create-leaderboard', async (req, res) => {
@@ -141,6 +141,29 @@ export const registerRoutes = (app: Express) => {
     }
 
     return res.json({ success: true, updated });
+  });
+
+  app.post('/leaderboard-email-domain', async (req, res) => {
+    const authResult = await authenticate(req, res, true);
+    if (!authResult.success) return authResult.result;
+
+    const { leaderboardId, emailDomain } = parseBody(req.body);
+
+    if (!leaderboardId || typeof leaderboardId !== 'string') {
+      return res.status(400).json({ error: 'leaderboardId is required' });
+    }
+
+    const leaderboardDoc = getFirestore(firebaseApp).collection('leaderboards').doc(leaderboardId);
+    const doc = await leaderboardDoc.get();
+    if (!doc.exists) return res.status(404).json({ error: 'Leaderboard not found' });
+
+    if (emailDomain && typeof emailDomain !== 'string') {
+      return res.status(400).json({ error: 'emailDomain must be a string' });
+    }
+
+    await leaderboardDoc.update(emailDomain ? { emailDomain } : { emailDomain: FieldValue.delete() });
+
+    return res.json({ success: true });
   });
 
   app.delete('/leaderboard', async (req, res) => {

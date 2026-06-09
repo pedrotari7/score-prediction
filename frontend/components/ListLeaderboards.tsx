@@ -1,3 +1,4 @@
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import React, { useMemo, useState } from 'react';
 import type { Leaderboard, Users } from '../../interfaces/main';
@@ -5,7 +6,7 @@ import { Route, useTournamentStore } from '../store/tournamentStore';
 import useCompetition from '../hooks/useCompetition';
 import useLeaderboards from '../hooks/useLeaderboards';
 import { classNames } from '../lib/utils/reactHelper';
-import { deleteLeaderboard } from '../pages/api';
+import { deleteLeaderboard, updateLeaderboardEmailDomain } from '../pages/api';
 import DeleteButton from './DeleteButton';
 import Loading from './Loading';
 import RefreshButton from './RefreshButton';
@@ -24,6 +25,83 @@ const sortLeaderboards = (list: Leaderboard[], key: SortKey, asc: boolean) => {
 		}
 	});
 	return asc ? sorted : sorted.reverse();
+};
+
+const EmailDomainEditor = ({
+	leaderboard,
+	token,
+	onUpdate,
+}: {
+	leaderboard: Leaderboard;
+	token: string | null;
+	onUpdate: () => Promise<void>;
+}) => {
+	const [editing, setEditing] = useState(false);
+	const [value, setValue] = useState(leaderboard.emailDomain ?? '');
+	const [saving, setSaving] = useState(false);
+
+	const save = async () => {
+		if (!token) return;
+		setSaving(true);
+		await updateLeaderboardEmailDomain(leaderboard.id, value.trim() || null, token);
+		await onUpdate();
+		setSaving(false);
+		setEditing(false);
+	};
+
+	const cancel = () => {
+		setValue(leaderboard.emailDomain ?? '');
+		setEditing(false);
+	};
+
+	if (editing) {
+		return (
+			<div className='flex items-center gap-2' onClick={e => e.stopPropagation()}>
+				<span className='text-sm opacity-60'>Auto-join:</span>
+				<input
+					type='text'
+					value={value}
+					onChange={e => setValue(e.target.value)}
+					placeholder='e.g. spotify.com'
+					className='rounded bg-gray-700 px-2 py-1 text-sm text-white outline-none focus:ring-1 focus:ring-gray-400'
+					onKeyDown={e => {
+						if (e.key === 'Enter') save();
+						if (e.key === 'Escape') cancel();
+					}}
+					autoFocus
+					disabled={saving}
+				/>
+				{saving ? (
+					<Loading />
+				) : (
+					<>
+						<CheckIcon
+							className='size-5 cursor-pointer text-green-400 hover:text-green-300'
+							onClick={save}
+						/>
+						<XMarkIcon className='size-5 cursor-pointer text-red-400 hover:text-red-300' onClick={cancel} />
+					</>
+				)}
+			</div>
+		);
+	}
+
+	return (
+		<div
+			className='flex cursor-pointer items-center gap-2 text-sm'
+			onClick={e => {
+				e.stopPropagation();
+				setEditing(true);
+			}}
+		>
+			<span className='opacity-60'>Auto-join:</span>
+			{leaderboard.emailDomain ? (
+				<span className='rounded bg-green-900/50 px-2 py-0.5 text-green-300'>@{leaderboard.emailDomain}</span>
+			) : (
+				<span className='opacity-40'>none</span>
+			)}
+		</div>
+	);
 };
 
 const ListLeaderboards = ({ users }: { users: Users }) => {
@@ -116,6 +194,8 @@ const ListLeaderboards = ({ users }: { users: Users }) => {
 										</span>
 										<span>{l.id}</span>
 									</div>
+
+									<EmailDomainEditor leaderboard={l} token={token} onUpdate={update} />
 
 									<div className='flex flex-row flex-wrap gap-4'>
 										{l.members.map((m, index) =>

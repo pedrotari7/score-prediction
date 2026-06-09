@@ -188,6 +188,29 @@ export const registerRoutes = (app: Express) => {
 
     const userExtraInfo = userExtraInfoDoc.data() ?? { leaderboards: [] };
 
+    const email = decodedToken.email;
+    if (email) {
+      const domain = email.split('@')[1];
+      if (domain) {
+        const autoJoinSnapshot = await getFirestore(firebaseApp)
+          .collection('leaderboards')
+          .where('emailDomain', '==', domain)
+          .get();
+
+        for (const doc of autoJoinSnapshot.docs) {
+          const lb = doc.data() as Leaderboard;
+          if (!lb.members.includes(decodedToken.uid)) {
+            await Promise.all([
+              doc.ref.update({ members: FieldValue.arrayUnion(decodedToken.uid) }),
+              getDBUser(decodedToken.uid).set({ leaderboards: FieldValue.arrayUnion(doc.id) }, { merge: true }),
+            ]);
+            if (!userExtraInfo.leaderboards) userExtraInfo.leaderboards = [];
+            userExtraInfo.leaderboards.push(doc.id);
+          }
+        }
+      }
+    }
+
     const leaderboards: Record<string, Leaderboard> =
       (
         await Promise.all<Leaderboard>(

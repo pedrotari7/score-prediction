@@ -144,6 +144,22 @@ export const joinLeaderboard = async (
 
 export const fetchLeaderboards = async (token: string) => await cFetch(`${backendUrl}/leaderboards`, token);
 
+export const updateLeaderboardEmailDomain = async (
+	leaderboardId: string,
+	emailDomain: string | null,
+	token: string
+): Promise<ResponseStatus> =>
+	await cFetch(
+		`${backendUrl}/leaderboard-email-domain`,
+		token,
+		undefined,
+		{},
+		{
+			body: JSON.stringify({ leaderboardId, emailDomain }),
+			method: 'POST',
+		}
+	);
+
 export const deleteLeaderboard = async (leaderboardId: string, token: string) =>
 	await cFetch(
 		`${backendUrl}/leaderboard`,
