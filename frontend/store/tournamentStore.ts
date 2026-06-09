@@ -236,6 +236,10 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 			boosts: { ...state.boosts, [uid]: newUserBoosts },
 		}));
 
+		if (!isRemoving && typeof window !== 'undefined') {
+			window.dispatchEvent(new Event('boost-activated'));
+		}
+
 		const result = await apiUpdateBoost(token, gameId, competition);
 
 		if (!result.success) {

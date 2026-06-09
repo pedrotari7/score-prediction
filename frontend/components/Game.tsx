@@ -262,7 +262,7 @@ const Game = memo(function Game({
 				</div>
 			</div>
 
-			<span className='my-2 text-right text-xs lg:my-0 lg:w-2/12'>
+			<span className='mt-6 text-right text-xs lg:mt-0 lg:w-2/12'>
 				{[game?.fixture.venue.name, game?.fixture.venue.city].filter(Boolean).join(', ')}
 			</span>
 		</div>

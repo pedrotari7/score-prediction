@@ -3,6 +3,7 @@ import Image from 'next/image';
 import type { ReactNode } from 'react';
 import { competitions } from '../../shared/utils';
 import { useTournamentStore } from '../store/tournamentStore';
+import BoostAnimation from './BoostAnimation';
 import Navbar from './Navbar';
 import PwaInstallPrompt from './PwaInstallPrompt';
 
@@ -49,6 +50,7 @@ const PageLayout = ({
 
 			<main className='relative top-16 z-10 flex h-[calc(100vh-4rem)] flex-col'>{children}</main>
 
+			<BoostAnimation />
 			<PwaInstallPrompt />
 
 			{hasFooter && (
