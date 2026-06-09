@@ -132,7 +132,7 @@ const MainComponent = () => {
 		}
 	})();
 
-	return <ErrorBoundary>{content}</ErrorBoundary>;
+	return <ErrorBoundary key={route.page}>{content}</ErrorBoundary>;
 };
 
 const Home = () => {

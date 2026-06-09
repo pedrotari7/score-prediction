@@ -20,6 +20,8 @@ import PredictedGroups from './PredictedGroups';
 import RefreshComp from './RefreshComp';
 import { UserScores } from './UserScores';
 
+const EMPTY_BOOSTS: number[] = [];
+
 const StageBoostBadge = ({
 	round,
 	uid,
@@ -31,7 +33,7 @@ const StageBoostBadge = ({
 	competition: Competition;
 	fixtures: Fixtures;
 }) => {
-	const userBoosts = useTournamentStore(s => s.boosts?.[uid] ?? []);
+	const userBoosts = useTournamentStore(s => s.boosts?.[uid]) ?? EMPTY_BOOSTS;
 	const { max, remaining } = getStageBoostInfo(competition, round, userBoosts, fixtures);
 	if (max <= 0 || remaining >= max) return null;
 	return (
