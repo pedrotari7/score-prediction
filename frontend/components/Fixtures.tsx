@@ -1,5 +1,13 @@
 import Image from 'next/image';
-import type { Fixture, Fixtures, Predictions, Standings, User, UpdatePrediction } from '../../interfaces/main';
+import type {
+	Competition,
+	Fixture,
+	Fixtures,
+	Predictions,
+	Standings,
+	User,
+	UpdatePrediction,
+} from '../../interfaces/main';
 import { getStageBoostInfo, isGameFinished } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
@@ -11,6 +19,27 @@ import Panel from './Panel';
 import PredictedGroups from './PredictedGroups';
 import RefreshComp from './RefreshComp';
 import { UserScores } from './UserScores';
+
+const StageBoostBadge = ({
+	round,
+	uid,
+	competition,
+	fixtures,
+}: {
+	round: string;
+	uid: string;
+	competition: Competition;
+	fixtures: Fixtures;
+}) => {
+	const userBoosts = useTournamentStore(s => s.boosts?.[uid] ?? []);
+	const { max, remaining } = getStageBoostInfo(competition, round, userBoosts, fixtures);
+	if (max <= 0 || remaining >= max) return null;
+	return (
+		<span className='rounded-full bg-indigo-500 px-2 py-0.5 text-xs font-bold'>
+			{remaining} boost{remaining !== 1 ? 's' : ''} left
+		</span>
+	);
+};
 
 const FixturesPage = ({
 	fixtures,
@@ -28,8 +57,6 @@ const FixturesPage = ({
 	const { user: currentUser } = useAuth();
 	const { RedactedSpoilers } = useNoSpoilers();
 	const { competition } = useCompetition();
-	const boosts = useTournamentStore(s => s.boosts);
-	const userBoosts = boosts?.[user?.uid] ?? [];
 
 	if (!user)
 		return (
@@ -106,19 +133,18 @@ const FixturesPage = ({
 				.sort(([_, gA], [__, gB]) => gB?.[0]?.fixture.timestamp - gA?.[0]?.fixture.timestamp)
 				.map(([round, games], index) => {
 					games.sort(sortWithFinishedLast);
-					const { max, remaining } =
-						uid === user.uid
-							? getStageBoostInfo(competition, round, userBoosts, fixtures)
-							: { max: 0, remaining: 0 };
 					return (
 						<div key={round} className='mb-6'>
 							<div className={classNames('mb-6 flex flex-row items-center justify-between')}>
 								<div className='flex items-center gap-2 text-3xl'>
 									{round}
-									{max > 0 && remaining < max && (
-										<span className='rounded-full bg-indigo-500 px-2 py-0.5 text-xs font-bold'>
-											{remaining} boost{remaining !== 1 ? 's' : ''} left
-										</span>
+									{uid === user.uid && (
+										<StageBoostBadge
+											round={round}
+											uid={uid}
+											competition={competition}
+											fixtures={fixtures}
+										/>
 									)}
 								</div>
 								{index === 0 && <RefreshComp />}
