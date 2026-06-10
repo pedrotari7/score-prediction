@@ -20,6 +20,8 @@ import {
 	initCompetition,
 	migrateLeaderboardTokens,
 	updateFixtureScore,
+	fetchMissingSignups,
+	type MissingSignupsResult,
 } from '../pages/api';
 import type { Competition } from '../../interfaces/main';
 import { competitions, currentCompetition } from '../../shared/utils';
@@ -129,6 +131,207 @@ const FixtureEditor = ({ token }: { token: string }) => {
 					</div>
 				)}
 			</div>
+		</div>
+	);
+};
+
+type SortKey = 'name' | 'email' | 'lastSignIn' | 'created';
+type SortDir = 'asc' | 'desc';
+
+const SORT_OPTIONS: { key: SortKey; label: string }[] = [
+	{ key: 'lastSignIn', label: 'Last Sign In' },
+	{ key: 'name', label: 'Name' },
+	{ key: 'email', label: 'Email' },
+	{ key: 'created', label: 'Created' },
+];
+
+const sortUsers = (users: MissingSignupsResult['data'], key: SortKey, dir: SortDir) => {
+	const mult = dir === 'asc' ? 1 : -1;
+	return [...users].sort((a, b) => {
+		switch (key) {
+			case 'name':
+				return mult * (a.displayName || '').localeCompare(b.displayName || '');
+			case 'email':
+				return mult * (a.email || '').localeCompare(b.email || '');
+			case 'lastSignIn':
+				return mult * (new Date(a.lastSignInTime).getTime() - new Date(b.lastSignInTime).getTime());
+			case 'created':
+				return mult * (new Date(a.creationTime).getTime() - new Date(b.creationTime).getTime());
+			default:
+				return 0;
+		}
+	});
+};
+
+const MissingSignups = ({ token, competition }: { token: string; competition: Competition }) => {
+	const [result, setResult] = useState<MissingSignupsResult | null>(null);
+	const [loading, setLoading] = useState(false);
+	const [search, setSearch] = useState('');
+	const [sortKey, setSortKey] = useState<SortKey>('lastSignIn');
+	const [sortDir, setSortDir] = useState<SortDir>('desc');
+
+	const handleFetch = async () => {
+		setLoading(true);
+		try {
+			setResult(await fetchMissingSignups(token, competition));
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const handleSort = (key: SortKey) => {
+		if (sortKey === key) {
+			setSortDir(d => (d === 'asc' ? 'desc' : 'asc'));
+		} else {
+			setSortKey(key);
+			setSortDir(key === 'name' || key === 'email' ? 'asc' : 'desc');
+		}
+	};
+
+	const filtered = result?.data.filter(
+		u =>
+			!search ||
+			u.displayName?.toLowerCase().includes(search.toLowerCase()) ||
+			u.email?.toLowerCase().includes(search.toLowerCase())
+	);
+
+	const sorted = filtered ? sortUsers(filtered, sortKey, sortDir) : [];
+
+	const arrow = (key: SortKey) => (sortKey === key ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '');
+
+	return (
+		<div className='mx-4 my-6 rounded-md bg-gray-600 p-4 sm:mx-10'>
+			<div className='mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+				<span className='text-lg font-bold'>Missing Signups ({competition.name})</span>
+				<button
+					onClick={handleFetch}
+					disabled={loading}
+					className='rounded bg-amber-700 px-4 py-2 font-bold text-white hover:bg-amber-600 disabled:opacity-50'
+				>
+					{loading ? 'Loading...' : 'Check Missing Signups'}
+				</button>
+			</div>
+
+			{result && (
+				<>
+					<div className='mb-4 flex flex-wrap gap-3 text-sm'>
+						<span className='rounded bg-gray-700 px-3 py-1'>
+							Total: <span className='font-bold'>{result.total}</span>
+						</span>
+						<span className='rounded bg-green-800 px-3 py-1'>
+							Signed up: <span className='font-bold'>{result.signedUp}</span>
+						</span>
+						<span className='rounded bg-red-800 px-3 py-1'>
+							Missing: <span className='font-bold'>{result.missing}</span>
+						</span>
+					</div>
+
+					{result.data.length > 0 && (
+						<>
+							<div className='mb-3 flex flex-col gap-2 sm:flex-row sm:items-center'>
+								<input
+									type='text'
+									placeholder='Search by name or email...'
+									value={search}
+									onChange={e => setSearch(e.target.value)}
+									className='w-full rounded bg-gray-700 px-3 py-2 text-sm text-white placeholder-gray-400 sm:w-72'
+								/>
+								<div className='flex gap-1 sm:hidden'>
+									{SORT_OPTIONS.map(({ key, label }) => (
+										<button
+											key={key}
+											onClick={() => handleSort(key)}
+											className={`rounded px-2 py-1 text-xs ${
+												sortKey === key
+													? 'bg-gray-500 font-bold text-white'
+													: 'bg-gray-700 text-gray-300'
+											}`}
+										>
+											{label}
+											{arrow(key)}
+										</button>
+									))}
+								</div>
+							</div>
+							<div className='max-h-96 overflow-y-auto rounded bg-gray-700'>
+								<table className='w-full text-left text-sm'>
+									<thead className='sticky top-0 bg-gray-800 text-xs uppercase text-gray-400'>
+										<tr>
+											<th
+												className='cursor-pointer px-3 py-2 hover:text-white'
+												onClick={() => handleSort('name')}
+											>
+												User{arrow('name')}
+											</th>
+											<th
+												className='hidden cursor-pointer px-3 py-2 hover:text-white sm:table-cell'
+												onClick={() => handleSort('email')}
+											>
+												Email{arrow('email')}
+											</th>
+											<th
+												className='hidden cursor-pointer px-3 py-2 hover:text-white sm:table-cell'
+												onClick={() => handleSort('lastSignIn')}
+											>
+												Last Sign In{arrow('lastSignIn')}
+											</th>
+											<th
+												className='hidden cursor-pointer px-3 py-2 hover:text-white sm:table-cell'
+												onClick={() => handleSort('created')}
+											>
+												Created{arrow('created')}
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										{sorted.map(user => (
+											<tr key={user.uid} className='border-t border-gray-600'>
+												<td className='px-3 py-2'>
+													<div className='flex items-center gap-2'>
+														{user.photoURL ? (
+															<img
+																src={user.photoURL}
+																alt=''
+																className='size-6 rounded-full'
+																referrerPolicy='no-referrer'
+															/>
+														) : (
+															<div className='flex size-6 items-center justify-center rounded-full bg-gray-500 text-xs'>
+																?
+															</div>
+														)}
+														<div className='flex flex-col'>
+															<span>{user.displayName || 'Unknown'}</span>
+															<span className='text-xs text-gray-400 sm:hidden'>
+																{user.email}
+															</span>
+														</div>
+													</div>
+												</td>
+												<td className='hidden px-3 py-2 text-gray-300 sm:table-cell'>
+													{user.email}
+												</td>
+												<td className='hidden px-3 py-2 text-gray-400 sm:table-cell'>
+													{user.lastSignInTime
+														? new Date(user.lastSignInTime).toLocaleDateString()
+														: 'Never'}
+												</td>
+												<td className='hidden px-3 py-2 text-gray-400 sm:table-cell'>
+													{user.creationTime
+														? new Date(user.creationTime).toLocaleDateString()
+														: 'Unknown'}
+												</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
+							</div>
+						</>
+					)}
+
+					{result.data.length === 0 && <p className='text-sm text-green-400'>Everyone has signed up!</p>}
+				</>
+			)}
 		</div>
 	);
 };
@@ -424,6 +627,8 @@ const SettingsPage = () => {
 			</div>
 
 			<PwaInstallPrompt forceShow={showPwaPrompt} onDismiss={() => setShowPwaPrompt(false)} />
+
+			<MissingSignups token={userInfo.token} competition={competition} />
 
 			<FixtureEditor token={userInfo.token} />
 

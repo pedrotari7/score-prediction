@@ -627,6 +627,39 @@ export const registerRoutes = (app: Express) => {
     return res.json({ success: true, uid });
   });
 
+  app.get('/missing-signups', async (req, res) => {
+    const authResult = await authenticate(req, res, true);
+    if (!authResult.success) return authResult.result;
+
+    const competition = parseCompetition(req);
+
+    const [authUsers, predictionsDoc] = await Promise.all([listAllUsers(), getDBPredictions(competition).get()]);
+
+    const predictions = (predictionsDoc.exists ? predictionsDoc.data() : {}) as Predictions;
+
+    const signedUpUids = new Set(Object.values(predictions).flatMap(gamePredictions => Object.keys(gamePredictions)));
+
+    const missing = authUsers
+      .filter(u => !signedUpUids.has(u.uid))
+      .map(({ uid, displayName, photoURL, email, metadata }) => ({
+        uid,
+        displayName,
+        photoURL,
+        email: email?.replace(/(.{2}).+(@.+)/, '$1***$2'),
+        lastSignInTime: metadata.lastSignInTime,
+        creationTime: metadata.creationTime,
+      }))
+      .sort((a, b) => new Date(b.lastSignInTime).getTime() - new Date(a.lastSignInTime).getTime());
+
+    return res.json({
+      success: true,
+      total: authUsers.length,
+      signedUp: signedUpUids.size,
+      missing: missing.length,
+      data: missing,
+    });
+  });
+
   app.post('/init-competition', async (req, res) => {
     const authResult = await authenticate(req, res, true);
     if (!authResult.success) return authResult.result;

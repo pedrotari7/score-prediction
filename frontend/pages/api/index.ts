@@ -175,6 +175,26 @@ export const deleteLeaderboard = async (leaderboardId: string, token: string) =>
 export const initCompetition = async (token: string, competition: Competition) =>
 	await cFetch(`${backendUrl}/init-competition`, token, competition, {}, { method: 'POST' });
 
+export interface MissingSignup {
+	uid: string;
+	displayName: string;
+	photoURL: string;
+	email: string;
+	lastSignInTime: string;
+	creationTime: string;
+}
+
+export interface MissingSignupsResult {
+	success: boolean;
+	total: number;
+	signedUp: number;
+	missing: number;
+	data: MissingSignup[];
+}
+
+export const fetchMissingSignups = async (token: string, competition: Competition): Promise<MissingSignupsResult> =>
+	await cFetch(`${backendUrl}/missing-signups`, token, competition);
+
 export const migrateLeaderboardTokens = async (token: string) =>
 	await cFetch(`${backendUrl}/migrate-leaderboard-tokens`, token, undefined, {}, { method: 'POST' });
 
