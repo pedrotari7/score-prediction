@@ -120,20 +120,28 @@ const HeadToHead = ({
 					)}
 				</div>
 
-				<div className='flex w-6/12 flex-col items-center gap-1'>
-					<div className='flex flex-row items-center gap-2'>
+				<div className='flex w-6/12 items-center gap-2'>
+					<div className='flex flex-1 flex-col items-center gap-0.5 sm:flex-row-reverse sm:items-center sm:gap-1'>
 						<Flag team={game.teams.home} />
-						<RedactedSpoilers>
-							<>
-								{started && (
-									<span className='font-bold'>
-										{game.goals.home} - {game.goals.away}
-									</span>
-								)}
-								{!started && <span className='text-xs opacity-50'>vs</span>}
-							</>
-						</RedactedSpoilers>
+						<span className='text-center text-[10px] leading-tight opacity-70 sm:text-right sm:text-xs'>
+							{game.teams.home.name}
+						</span>
+					</div>
+					<RedactedSpoilers>
+						<>
+							{started && (
+								<span className='shrink-0 font-bold'>
+									{game.goals.home} - {game.goals.away}
+								</span>
+							)}
+							{!started && <span className='shrink-0 text-xs opacity-50'>vs</span>}
+						</>
+					</RedactedSpoilers>
+					<div className='flex flex-1 flex-col items-center gap-0.5 sm:flex-row sm:items-center sm:gap-1'>
 						<Flag team={game.teams.away} />
+						<span className='text-center text-[10px] leading-tight opacity-70 sm:text-left sm:text-xs'>
+							{game.teams.away.name}
+						</span>
 					</div>
 				</div>
 
