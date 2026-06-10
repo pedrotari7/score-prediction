@@ -1,6 +1,13 @@
 import { memo } from 'react';
 import type { Predictions, UpdatePrediction } from '../../interfaces/main';
-import { getGameStage, getStageBoostInfo, getUpsetSide, isNum, isPredictionUpset } from '../../shared/utils';
+import {
+	getGameStage,
+	getStageBoostInfo,
+	getUpsetSide,
+	isDrawFavorite,
+	isNum,
+	isPredictionUpset,
+} from '../../shared/utils';
 import Countdown, { zeroPad } from 'react-countdown';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
@@ -122,13 +129,15 @@ const Game = memo(function Game({
 	const upsetSide =
 		!isInPast && (competition.points.upset ?? 0) > 0 && odds?.[gameID] ? getUpsetSide(odds[gameID]) : null;
 
+	const gameOdds = odds?.[gameID];
+
 	return (
 		<div
 			className={classNames(
 				gcc('text-light'),
 				gcc('bg-dark'),
 				gcc('hover:bg-blue'),
-				`my-2 flex flex-col items-center justify-evenly rounded p-2 shadow-pop lg:flex-row`,
+				'my-2 flex flex-col items-center justify-evenly rounded p-2 shadow-pop lg:flex-row',
 				'cursor-pointer'
 			)}
 			onClick={() => handleContainerClick(isMyPredictions)}
@@ -155,7 +164,7 @@ const Game = memo(function Game({
 					</span>
 				</div>
 
-				<div className='flex w-4/12 flex-row items-center justify-center lg:w-4/12'>
+				<div className='flex w-4/12 flex-col items-center justify-center lg:w-4/12'>
 					{!isInPast && isMyPredictions && (
 						<div className='relative flex flex-row items-center'>
 							<UserInputPrediction
@@ -244,6 +253,53 @@ const Game = memo(function Game({
 									<span className='ml-2'>{game.fixture.status.short}</span>
 								</div>
 							</RedactedSpoilers>
+						</div>
+					)}
+
+					{gameOdds && (
+						<div className='flex items-center gap-1 pt-6 text-xs'>
+							<div
+								className={classNames(
+									'group relative rounded px-2 py-0.5',
+									getUpsetSide(gameOdds) === 'home'
+										? 'bg-cyan-700/30 font-bold text-cyan-300'
+										: !isDrawFavorite(gameOdds) && gameOdds.home <= gameOdds.away
+											? 'bg-white/10 font-bold'
+											: 'opacity-50'
+								)}
+							>
+								{gameOdds.home.toFixed(2)}
+								{getUpsetSide(gameOdds) === 'home' && (
+									<div className='pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-[10px] text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100'>
+										Predict this result for +{competition.points.upset} bonus points
+									</div>
+								)}
+							</div>
+							<div
+								className={classNames(
+									'rounded px-2 py-0.5',
+									isDrawFavorite(gameOdds) ? 'bg-white/10 font-bold' : 'opacity-50'
+								)}
+							>
+								{gameOdds.draw.toFixed(2)}
+							</div>
+							<div
+								className={classNames(
+									'group relative rounded px-2 py-0.5',
+									getUpsetSide(gameOdds) === 'away'
+										? 'bg-cyan-700/30 font-bold text-cyan-300'
+										: !isDrawFavorite(gameOdds) && gameOdds.away <= gameOdds.home
+											? 'bg-white/10 font-bold'
+											: 'opacity-50'
+								)}
+							>
+								{gameOdds.away.toFixed(2)}
+								{getUpsetSide(gameOdds) === 'away' && (
+									<div className='pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-[10px] text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100'>
+										Predict this result for +{competition.points.upset} bonus points
+									</div>
+								)}
+							</div>
 						</div>
 					)}
 				</div>
