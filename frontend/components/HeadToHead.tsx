@@ -5,6 +5,7 @@ import {
 	calculateUserResultPoints,
 	DEFAULT_USER_RESULT,
 	getResult,
+	hasBoosts,
 	isGameFinished,
 	isGameStarted,
 	joinResults,
@@ -61,12 +62,19 @@ const HeadToHead = ({
 		}
 		tallyA.groups = userA?.score?.['all']?.groups ?? 0;
 		tallyB.groups = userB?.score?.['all']?.groups ?? 0;
+		tallyA.upset = userA?.score?.['all']?.upset ?? 0;
+		tallyB.upset = userB?.score?.['all']?.upset ?? 0;
+		tallyA.boost = userA?.score?.['all']?.boost ?? 0;
+		tallyB.boost = userB?.score?.['all']?.boost ?? 0;
 		tallyA.points = calculateUserResultPoints(tallyA, competition);
 		tallyB.points = calculateUserResultPoints(tallyB, competition);
 		return { a: tallyA, b: tallyB };
 	}, [fixtures, predictions, myUid, compareUid, competition, userA?.score, userB?.score]);
 
 	if (!userA || !userB) return <div className='p-8 text-center text-xl text-white'>User not found</div>;
+
+	const showUpset = (competition.points.upset ?? 0) > 0;
+	const showBoosts = hasBoosts(competition);
 
 	const now = getCurrentDate().getTime();
 
@@ -207,6 +215,8 @@ const HeadToHead = ({
 				<TallyRow label='Team Score' color='bg-pink-600' keyName='onescore' />
 				<TallyRow label='Fail' color='bg-red-600' keyName='fail' />
 				<TallyRow label='Groups' color='bg-purple-700' keyName='groups' />
+				{showUpset && <TallyRow label='Upsets' color='bg-cyan-700' keyName='upset' />}
+				{showBoosts && <TallyRow label='Boosts' color='bg-indigo-500' keyName='boost' />}
 				<TallyRow label='Penalty' color='bg-gray-500' keyName='penalty' />
 				<TallyRow label='Points' color='bg-gray-700' keyName='points' />
 			</div>
