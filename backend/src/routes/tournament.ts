@@ -211,14 +211,13 @@ export const registerRoutes = (app: Express) => {
       }
     }
 
-    const leaderboards: Record<string, Leaderboard> =
-      (
-        await Promise.all<Leaderboard>(
-          userExtraInfo?.leaderboards?.map(async (l: string) =>
-            (await getFirestore(firebaseApp).collection('leaderboards').doc(l).get()).data()
-          )
+    const leaderboards: Record<string, Leaderboard> = (
+      await Promise.all<Leaderboard>(
+        (userExtraInfo?.leaderboards ?? []).map(async (l: string) =>
+          (await getFirestore(firebaseApp).collection('leaderboards').doc(l).get()).data()
         )
-      ).reduce((acc, l) => ({ ...acc, [l.id]: l }), {}) ?? {};
+      )
+    ).reduce((acc, l) => ({ ...acc, [l.id]: l }), {});
 
     const odds: FixtureOdds | undefined = oddsDocument?.exists ? (oddsDocument.data()?.data as FixtureOdds) : undefined;
     const boosts: Boosts | undefined = boostsDocument?.exists ? (boostsDocument.data() as Boosts) : undefined;
