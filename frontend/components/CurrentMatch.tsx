@@ -300,6 +300,7 @@ const UserGuess = ({
 	const uid = useTournamentStore(s => s.uid);
 	const fixtures = useTournamentStore(s => s.fixtures);
 	const { competition } = useCompetition();
+	const { noSpoilers } = useNoSpoilers();
 
 	const myBoosts = boosts?.[uid] ?? [];
 	const isBoosted = myBoosts.includes(gameID);
@@ -353,7 +354,7 @@ const UserGuess = ({
 					/>
 				)}
 				<span className='text-xl'>{user?.displayName}</span>
-				<span className='text-sm text-light'>{user?.score?.['all']?.points ?? 0} pts</span>
+				{!noSpoilers && <span className='text-sm text-light'>{user?.score?.['all']?.points ?? 0} pts</span>}
 			</div>
 
 			{invalidScore && !emptyScore && <div className='text-sm font-bold'>Invalid</div>}
@@ -660,11 +661,13 @@ const CurrentMatch = ({
 				prediction,
 				result: getResult(prediction, game),
 			}))
-			.sort(
-				(a, b) =>
+			.sort((a, b) => {
+				if (noSpoilers) return users[a.uid].displayName.localeCompare(users[b.uid].displayName);
+				return (
 					(users[b.uid].score?.['all']?.points ?? 0) - (users[a.uid].score?.['all']?.points ?? 0) ||
 					users[a.uid].displayName.localeCompare(users[b.uid].displayName)
-			);
+				);
+			});
 		if (!noSpoilers) {
 			sorted.sort((a, b) => {
 				const gameOdds = odds?.[game.fixture.id];
