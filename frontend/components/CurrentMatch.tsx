@@ -613,7 +613,7 @@ const CurrentMatch = ({
 	});
 
 	useEffect(() => {
-		if (!game || !isGameFinished(game)) {
+		if (!game || !isGameStarted(game)) {
 			setGameReactions({});
 			return;
 		}
