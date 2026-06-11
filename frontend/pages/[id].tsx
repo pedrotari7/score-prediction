@@ -36,6 +36,7 @@ const routeToQuery = (info: RouteInfo): Record<string, string> => {
 	if (info.page === Route.Match && info.data) params.gameId = String(info.data);
 	if (info.page === Route.Predictions && info.data) params.uid = String(info.data);
 	if (info.page === Route.Leaderboard && info.data) params.leaderboardId = String(info.data);
+	if (info.page === Route.Compare && info.data) params.compareUid = String(info.data);
 	return params;
 };
 
@@ -46,6 +47,7 @@ const queryToRoute = (query: QueryParams): RouteInfo => {
 	if (page === Route.Match) return { page: Route.Match, data: query.gameId ? Number(query.gameId) : undefined };
 	if (page === Route.Predictions) return { page: Route.Predictions, data: query.uid as string | undefined };
 	if (page === Route.Leaderboard) return { page: Route.Leaderboard, data: query.leaderboardId as string | undefined };
+	if (page === Route.Compare) return { page: Route.Compare, data: query.compareUid as string | undefined };
 	return { page };
 };
 
@@ -193,7 +195,14 @@ const Home = () => {
 		}
 		useTournamentStore.setState({ route: queryToRoute(router.query) });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [router.query.page, router.query.gameId, router.query.uid, router.query.leaderboardId, router.query.join]);
+	}, [
+		router.query.page,
+		router.query.gameId,
+		router.query.uid,
+		router.query.leaderboardId,
+		router.query.compareUid,
+		router.query.join,
+	]);
 
 	useEffect(() => {
 		useTournamentStore.getState().updateTournament();
