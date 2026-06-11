@@ -169,11 +169,17 @@ const MissingSignups = ({ token, competition }: { token: string; competition: Co
 	const [search, setSearch] = useState('');
 	const [sortKey, setSortKey] = useState<SortKey>('lastSignIn');
 	const [sortDir, setSortDir] = useState<SortDir>('desc');
+	const [compFilter, setCompFilter] = useState<Set<string>>(new Set());
+	const [excluded, setExcluded] = useState<Set<string>>(new Set());
+	const [copied, setCopied] = useState(false);
 
 	const handleFetch = async () => {
 		setLoading(true);
 		try {
-			setResult(await fetchMissingSignups(token, competition));
+			const res = await fetchMissingSignups(token, competition);
+			setResult(res);
+			setCompFilter(new Set());
+			setExcluded(new Set());
 		} finally {
 			setLoading(false);
 		}
@@ -188,14 +194,39 @@ const MissingSignups = ({ token, competition }: { token: string; competition: Co
 		}
 	};
 
-	const filtered = result?.data.filter(
-		u =>
-			!search ||
-			u.displayName?.toLowerCase().includes(search.toLowerCase()) ||
-			u.email?.toLowerCase().includes(search.toLowerCase())
-	);
+	const toggleCompFilter = (comp: string) => {
+		setCompFilter(prev => {
+			const next = new Set(prev);
+			if (next.has(comp)) next.delete(comp);
+			else next.add(comp);
+			return next;
+		});
+	};
+
+	const toggleExcluded = (uid: string) => {
+		setExcluded(prev => {
+			const next = new Set(prev);
+			if (next.has(uid)) next.delete(uid);
+			else next.add(uid);
+			return next;
+		});
+	};
+
+	const filtered = result?.data.filter(u => {
+		if (
+			search &&
+			!u.displayName?.toLowerCase().includes(search.toLowerCase()) &&
+			!u.email?.toLowerCase().includes(search.toLowerCase())
+		)
+			return false;
+		if (compFilter.size > 0 && !Array.from(compFilter).some(c => u.participatedIn.includes(c))) return false;
+		return true;
+	});
 
 	const sorted = filtered ? sortUsers(filtered, sortKey, sortDir) : [];
+	const selected = sorted.filter(u => !excluded.has(u.uid));
+	const allSelected = sorted.length > 0 && excluded.size === 0;
+	const noneSelected = sorted.length > 0 && sorted.every(u => excluded.has(u.uid));
 
 	const arrow = (key: SortKey) => (sortKey === key ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '');
 
@@ -224,7 +255,67 @@ const MissingSignups = ({ token, competition }: { token: string; competition: Co
 						<span className='rounded bg-red-800 px-3 py-1'>
 							Missing: <span className='font-bold'>{result.missing}</span>
 						</span>
+						{excluded.size > 0 && (
+							<span className='rounded bg-amber-800 px-3 py-1'>
+								Selected: <span className='font-bold'>{selected.length}</span>
+							</span>
+						)}
+						{sorted.length > 0 && (
+							<button
+								onClick={() => {
+									const emails = selected
+										.map(u => u.email)
+										.filter(Boolean)
+										.join(', ');
+									navigator.clipboard.writeText(emails);
+									setCopied(true);
+									setTimeout(() => setCopied(false), 2000);
+								}}
+								className={`rounded px-3 py-1 font-medium text-white ${
+									copied ? 'bg-green-700' : 'bg-blue-700 hover:bg-blue-600'
+								}`}
+							>
+								{copied
+									? `Copied ${selected.length} email${selected.length !== 1 ? 's' : ''}!`
+									: `Copy ${selected.length} email${selected.length !== 1 ? 's' : ''}`}
+							</button>
+						)}
 					</div>
+
+					{result.pastCompetitions?.length > 0 && (
+						<div className='mb-4'>
+							<span className='mb-2 block text-xs text-gray-400'>Filter by past participation:</span>
+							<div className='flex flex-wrap gap-2'>
+								{result.pastCompetitions.map(comp => (
+									<button
+										key={comp}
+										onClick={() => toggleCompFilter(comp)}
+										className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+											compFilter.has(comp)
+												? 'bg-amber-600 text-white'
+												: 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+										}`}
+									>
+										{comp}
+									</button>
+								))}
+								{compFilter.size > 0 && (
+									<button
+										onClick={() => setCompFilter(new Set())}
+										className='rounded-full px-3 py-1 text-xs font-medium text-gray-400 hover:text-white'
+									>
+										Clear filters
+									</button>
+								)}
+							</div>
+							{compFilter.size > 0 && (
+								<span className='mt-2 block text-xs text-amber-400'>
+									Showing {sorted.length} user{sorted.length !== 1 ? 's' : ''} who played in{' '}
+									{Array.from(compFilter).join(' or ')}
+								</span>
+							)}
+						</div>
+					)}
 
 					{result.data.length > 0 && (
 						<>
@@ -257,6 +348,21 @@ const MissingSignups = ({ token, competition }: { token: string; competition: Co
 								<table className='w-full text-left text-sm'>
 									<thead className='sticky top-0 bg-gray-800 text-xs uppercase text-gray-400'>
 										<tr>
+											<th className='w-8 px-3 py-2'>
+												<input
+													type='checkbox'
+													checked={allSelected}
+													ref={el => {
+														if (el) el.indeterminate = !allSelected && !noneSelected;
+													}}
+													onChange={() =>
+														setExcluded(
+															allSelected ? new Set(sorted.map(u => u.uid)) : new Set()
+														)
+													}
+													className='size-4 cursor-pointer accent-amber-600'
+												/>
+											</th>
 											<th
 												className='cursor-pointer px-3 py-2 hover:text-white'
 												onClick={() => handleSort('name')}
@@ -285,7 +391,18 @@ const MissingSignups = ({ token, competition }: { token: string; competition: Co
 									</thead>
 									<tbody>
 										{sorted.map(user => (
-											<tr key={user.uid} className='border-t border-gray-600'>
+											<tr
+												key={user.uid}
+												className={`border-t border-gray-600 ${excluded.has(user.uid) ? 'opacity-40' : ''}`}
+											>
+												<td className='px-3 py-2'>
+													<input
+														type='checkbox'
+														checked={!excluded.has(user.uid)}
+														onChange={() => toggleExcluded(user.uid)}
+														className='size-4 cursor-pointer accent-amber-600'
+													/>
+												</td>
 												<td className='px-3 py-2'>
 													<div className='flex items-center gap-2'>
 														{user.photoURL ? (
@@ -305,6 +422,18 @@ const MissingSignups = ({ token, competition }: { token: string; competition: Co
 															<span className='text-xs text-gray-400 sm:hidden'>
 																{user.email}
 															</span>
+															{user.participatedIn.length > 0 && (
+																<div className='mt-0.5 flex flex-wrap gap-1'>
+																	{user.participatedIn.map(c => (
+																		<span
+																			key={c}
+																			className='rounded bg-gray-600 px-1.5 py-0.5 text-[10px] text-gray-300'
+																		>
+																			{c}
+																		</span>
+																	))}
+																</div>
+															)}
 														</div>
 													</div>
 												</td>

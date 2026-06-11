@@ -182,6 +182,7 @@ export interface MissingSignup {
 	email: string;
 	lastSignInTime: string;
 	creationTime: string;
+	participatedIn: string[];
 }
 
 export interface MissingSignupsResult {
@@ -189,6 +190,7 @@ export interface MissingSignupsResult {
 	total: number;
 	signedUp: number;
 	missing: number;
+	pastCompetitions: string[];
 	data: MissingSignup[];
 }
 

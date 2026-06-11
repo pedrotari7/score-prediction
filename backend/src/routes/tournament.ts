@@ -13,6 +13,7 @@ import type {
   Tournament,
 } from '../../../interfaces/main';
 import {
+  competitions,
   currentCompetitions,
   getGameStage,
   getMaxBoostsForStage,
@@ -633,11 +634,27 @@ export const registerRoutes = (app: Express) => {
 
     const competition = parseCompetition(req);
 
-    const [authUsers, predictionsDoc] = await Promise.all([listAllUsers(), getDBPredictions(competition).get()]);
+    const pastCompetitions = Object.values(competitions).filter(c => c.name !== competition.name);
+
+    const [authUsers, predictionsDoc, ...pastPredictionsDocs] = await Promise.all([
+      listAllUsers(),
+      getDBPredictions(competition).get(),
+      ...pastCompetitions.map(c => getDBPredictions(c).get()),
+    ]);
 
     const predictions = (predictionsDoc.exists ? predictionsDoc.data() : {}) as Predictions;
-
     const signedUpUids = new Set(Object.values(predictions).flatMap(gamePredictions => Object.keys(gamePredictions)));
+
+    const pastParticipation = new Map<string, string[]>();
+    pastPredictionsDocs.forEach((doc, i) => {
+      if (!doc.exists) return;
+      const preds = doc.data() as Predictions;
+      const uids = new Set(Object.values(preds).flatMap(gp => Object.keys(gp)));
+      uids.forEach(uid => {
+        if (!pastParticipation.has(uid)) pastParticipation.set(uid, []);
+        pastParticipation.get(uid)!.push(pastCompetitions[i].name);
+      });
+    });
 
     const missing = authUsers
       .filter(u => !signedUpUids.has(u.uid))
@@ -645,9 +662,10 @@ export const registerRoutes = (app: Express) => {
         uid,
         displayName,
         photoURL,
-        email: email?.replace(/(.{2}).+(@.+)/, '$1***$2'),
+        email,
         lastSignInTime: metadata.lastSignInTime,
         creationTime: metadata.creationTime,
+        participatedIn: pastParticipation.get(uid) ?? [],
       }))
       .sort((a, b) => new Date(b.lastSignInTime).getTime() - new Date(a.lastSignInTime).getTime());
 
@@ -656,6 +674,7 @@ export const registerRoutes = (app: Express) => {
       total: authUsers.length,
       signedUp: signedUpUids.size,
       missing: missing.length,
+      pastCompetitions: pastCompetitions.map(c => c.name),
       data: missing,
     });
   });
