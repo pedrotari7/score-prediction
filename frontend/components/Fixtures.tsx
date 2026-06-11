@@ -63,7 +63,7 @@ const FixturesPage = ({
 	if (!user)
 		return (
 			<div className='flex h-full items-center justify-center text-3xl text-light'>
-				<div className='text-center'>User information not available for this competition</div>
+				<div className='text-center'>This user hasn&apos;t participated in this competition</div>
 			</div>
 		);
 

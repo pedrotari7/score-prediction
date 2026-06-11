@@ -175,7 +175,7 @@ export const registerRoutes = (app: Express) => {
     const [predictions, userExtraInfoDoc, users] = await Promise.all([
       getPredictions(decodedToken, competition, fixtures?.data, settings),
       getDBUser(decodedToken.uid).get(),
-      getUsers(competition, undefined),
+      getUsers(competition, undefined, decodedToken.uid),
     ]);
 
     // Fire points recalculation in background — getUsers already read cached scores above

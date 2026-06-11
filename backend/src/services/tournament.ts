@@ -331,7 +331,8 @@ export const getPredictions = async (
 
 export const getUsers = async (
   competition: Competition,
-  cachedPoints: Record<string, Record<string, UserResult>> | undefined
+  cachedPoints: Record<string, Record<string, UserResult>> | undefined,
+  callerUID?: string
 ) => {
   const scores =
     cachedPoints ?? ((await getDBScores(competition).get()).data() as Record<string, Record<string, UserResult>>) ?? {};
@@ -346,7 +347,7 @@ export const getUsers = async (
 
     const isCurrentCompetition = currentCompetitions.some(current => competition.name === current.name);
 
-    if (!(uid in scores) && !(isCurrentCompetition && lastSignInTimeDiff < OneMonth)) {
+    if (uid !== callerUID && !(uid in scores) && !(isCurrentCompetition && lastSignInTimeDiff < OneMonth)) {
       return users;
     }
     const score = (scores && scores[uid]) ?? {};
