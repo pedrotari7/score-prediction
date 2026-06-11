@@ -106,7 +106,7 @@ const HeadToHead = ({
 			>
 				<div className='flex w-3/12 items-center justify-center'>
 					{predA && isInPast ? (
-						<ResultContainer prediction={predA} game={game} className='px-2 py-1'>
+						<ResultContainer prediction={predA} game={game} className='px-2 py-1' showEarnedPoints={false}>
 							<span className='font-bold'>
 								{formatScore(predA.home)} - {formatScore(predA.away)}
 							</span>
@@ -147,7 +147,7 @@ const HeadToHead = ({
 
 				<div className='flex w-3/12 items-center justify-center'>
 					{predB && isInPast ? (
-						<ResultContainer prediction={predB} game={game} className='px-2 py-1'>
+						<ResultContainer prediction={predB} game={game} className='px-2 py-1' showEarnedPoints={false}>
 							<span className='font-bold'>
 								{formatScore(predB.home)} - {formatScore(predB.away)}
 							</span>

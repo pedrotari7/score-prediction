@@ -228,6 +228,7 @@ const Game = memo(function Game({
 								prediction={prediction}
 								game={game}
 								userID={userID}
+								showEarnedPoints={false}
 							>
 								{(!isValidScore(prediction.home) || !isValidScore(prediction.away)) && (
 									<span>No prediction</span>

@@ -1,6 +1,7 @@
 import type { ReactNode, MouseEventHandler } from 'react';
 import type { Fixture, Prediction } from '../../interfaces/main';
 import {
+	getEarnedPoints,
 	getExtraTimeResult,
 	getOutcome,
 	isGameStarted,
@@ -47,6 +48,7 @@ const ResultContainer = ({
 	className = '',
 	onClick = () => {},
 	userID,
+	showEarnedPoints = true,
 }: {
 	className?: string;
 	children: ReactNode;
@@ -54,6 +56,7 @@ const ResultContainer = ({
 	game: Fixture;
 	onClick?: MouseEventHandler<HTMLDivElement>;
 	userID?: string;
+	showEarnedPoints?: boolean;
 }) => {
 	const { gcc, competition } = useCompetition();
 	const odds = useTournamentStore(s => s.odds);
@@ -70,6 +73,8 @@ const ResultContainer = ({
 	const predictionIsUpset = gameOdds && isPredictValid && isPredictionUpset(prediction, gameOdds);
 	const earnedUpsetBonus = started && !noSpoilers && predictionIsUpset && (isExactScore || isCorrectResult);
 	const isBoosted = userID && boosts?.[userID]?.includes(game.fixture.id);
+
+	const totalEarnedPoints = getEarnedPoints(prediction, game, competition, gameOdds, !!isBoosted);
 
 	return (
 		<div
@@ -98,6 +103,11 @@ const ResultContainer = ({
 					<div className='flex size-full items-center justify-center text-xs'>
 						+{competition.points.upset}
 					</div>
+				</div>
+			)}
+			{showEarnedPoints && started && !noSpoilers && totalEarnedPoints > 0 && (
+				<div className='absolute -bottom-3 -right-3 whitespace-nowrap rounded-full bg-gray-900 px-2 py-1 text-xs font-bold text-white'>
+					+{totalEarnedPoints} pts
 				</div>
 			)}
 			{!started && predictionIsUpset && (

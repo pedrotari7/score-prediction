@@ -19,8 +19,8 @@ import { classNames, formatScore, getCurrentDate, getStadiumImageURL } from '../
 import ResultContainer from './ResultContainer';
 import { ChevronLeftIcon, ChevronRightIcon, FaceSmileIcon } from '@heroicons/react/24/outline';
 import {
-	calculateUserResultPoints,
 	DEFAULT_USER_RESULT,
+	getEarnedPoints,
 	getGameStage,
 	getResult,
 	getStageBoostInfo,
@@ -565,6 +565,9 @@ const CurrentMatch = ({
 	const token = useTournamentStore(s => s.token);
 	const userInfo = { uid, token };
 
+	const odds = useTournamentStore(s => s.odds);
+	const boosts = useTournamentStore(s => s.boosts);
+
 	const { gcc, competition } = useCompetition();
 	const { noSpoilers } = useNoSpoilers();
 
@@ -663,15 +666,19 @@ const CurrentMatch = ({
 					users[a.uid].displayName.localeCompare(users[b.uid].displayName)
 			);
 		if (!noSpoilers) {
-			sorted.sort(
-				(a, b) =>
-					calculateUserResultPoints(b.result ?? {}, competition) -
-						calculateUserResultPoints(a.result ?? {}, competition) ||
+			sorted.sort((a, b) => {
+				const gameOdds = odds?.[game.fixture.id];
+				const aBoosted = boosts?.[a.uid]?.includes(game.fixture.id) ?? false;
+				const bBoosted = boosts?.[b.uid]?.includes(game.fixture.id) ?? false;
+				return (
+					getEarnedPoints(b.prediction, game, competition, gameOdds, bBoosted) -
+						getEarnedPoints(a.prediction, game, competition, gameOdds, aBoosted) ||
 					(b.result.onescore ?? 0) - (a.result.onescore ?? 0)
-			);
+				);
+			});
 		}
 		return sorted;
-	}, [currentLeaderboardPredictions, uid, game, users, noSpoilers, competition]);
+	}, [currentLeaderboardPredictions, uid, game, users, noSpoilers, competition, odds, boosts]);
 
 	const resultsTally = useMemo(
 		() =>

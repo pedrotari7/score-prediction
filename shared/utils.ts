@@ -422,3 +422,22 @@ export const calculateUserResultPoints = (ur: Partial<UserResult>, competition: 
 	competition.points.groups * (ur.groups ?? 0) +
 	(competition.points.upset ?? 0) * (ur.upset ?? 0) +
 	(ur.boost ?? 0);
+
+export const getEarnedPoints = (
+	prediction: Prediction,
+	game: Fixture,
+	competition: Competition,
+	odds?: { home: number; away: number; draw: number },
+	isBoosted = false
+): number => {
+	if (!isGameStarted(game)) return 0;
+
+	const isPredictValid = isNum(prediction.home) && isNum(prediction.away);
+	const hasUpsetConfig = (competition.points.upset ?? 0) > 0;
+	const predictionIsUpset = !!(hasUpsetConfig && odds && isPredictValid && isPredictionUpset(prediction, odds));
+
+	const result = getResult(prediction, game, predictionIsUpset);
+	const points = calculateUserResultPoints(result, competition);
+
+	return isBoosted ? points * 2 : points;
+};
