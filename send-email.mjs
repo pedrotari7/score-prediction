@@ -1,35 +1,48 @@
-import { Resend } from 'resend';
+import { createTransport } from 'nodemailer';
 import { readFileSync } from 'fs';
 import { config } from 'dotenv';
 
 config();
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-if (!RESEND_API_KEY) {
-	console.error('Missing RESEND_API_KEY environment variable');
-	console.error('Get one at https://resend.com/api-keys');
+const BREVO_SMTP_LOGIN = process.env.BREVO_SMTP_LOGIN;
+const BREVO_SMTP_KEY = process.env.BREVO_SMTP_KEY;
+if (!BREVO_SMTP_LOGIN || !BREVO_SMTP_KEY) {
+	console.error('Missing BREVO_SMTP_LOGIN or BREVO_SMTP_KEY in .env');
 	process.exit(1);
 }
 
-const to = process.argv[2];
-if (!to) {
-	console.error('Usage: node send-email.mjs <recipient-email>');
+const recipients = process.argv.slice(2);
+if (recipients.length === 0) {
+	console.error('Usage: node send-email.mjs <email1> [email2] [email3] ...');
 	process.exit(1);
 }
 
-const resend = new Resend(RESEND_API_KEY);
-const html = readFileSync(new URL('./email-reminder-wc2026.html', import.meta.url), 'utf8');
-
-const { data, error } = await resend.emails.send({
-	from: 'Score Prediction <noreply@score-prediction.com>',
-	to,
-	subject: "The World Cup starts today — make your predictions!",
-	html,
+const transporter = createTransport({
+	host: 'smtp-relay.brevo.com',
+	port: 587,
+	auth: { user: BREVO_SMTP_LOGIN, pass: BREVO_SMTP_KEY },
 });
 
-if (error) {
-	console.error('Failed to send:', error);
-	process.exit(1);
+const html = readFileSync(new URL('./email-reminder-wc2026.html', import.meta.url), 'utf8');
+const subject = "The World Cup starts today — make your predictions!";
+
+let sent = 0;
+let failed = 0;
+
+for (const to of recipients) {
+	try {
+		await transporter.sendMail({
+			from: 'Score Prediction <noreply@score-prediction.com>',
+			to,
+			subject,
+			html,
+		});
+		sent++;
+		console.log(`  ✓ ${to} (${sent}/${recipients.length})`);
+	} catch (err) {
+		failed++;
+		console.error(`  ✗ ${to}: ${err.message}`);
+	}
 }
 
-console.log(`Email sent to ${to} — id: ${data.id}`);
+console.log(`\nDone: ${sent} sent, ${failed} failed out of ${recipients.length}`);
