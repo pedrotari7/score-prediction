@@ -53,8 +53,8 @@ const LiveGame = ({
 					</div>
 				</span>
 
-				<div className='my-4 flex w-10/12 flex-row items-center justify-evenly sm:justify-center'>
-					<div className='flex flex-col items-center sm:w-4/12 sm:flex-row sm:justify-end'>
+				<div className='my-4 grid w-10/12 grid-cols-3 items-center'>
+					<div className='flex flex-col items-center sm:flex-row sm:justify-end'>
 						<span className='mr-0 hidden text-xl sm:mr-2 sm:block'>{game?.teams.home.name}</span>
 						<Flag team={game?.teams.home} />
 						<span className='mt-1 text-center text-xs font-bold leading-tight sm:hidden'>
@@ -63,7 +63,7 @@ const LiveGame = ({
 					</div>
 
 					{isInPast && isCountdown && (
-						<span className='mx-2 text-center text-3xl sm:w-4/12'>
+						<span className='mx-2 text-center text-3xl'>
 							<ClientOnly>
 								<Countdown
 									date={gameDate.getTime()}
@@ -79,13 +79,11 @@ const LiveGame = ({
 					)}
 
 					{isInPast && !isCountdown && (
-						<span className='mx-2 text-center text-3xl sm:w-4/12'>
-							{formatGameDate(game?.fixture.date)}
-						</span>
+						<span className='mx-2 text-center text-3xl'>{formatGameDate(game?.fixture.date)}</span>
 					)}
 
 					{!isInPast && (
-						<span className='mx-2 text-center text-3xl sm:w-4/12'>
+						<span className='mx-2 text-center text-3xl'>
 							<div>
 								<RedactedSpoilers message='Hidden' withIcon>
 									<>
@@ -115,7 +113,7 @@ const LiveGame = ({
 						</span>
 					)}
 
-					<div className='flex flex-col items-center sm:w-4/12 sm:flex-row sm:justify-start'>
+					<div className='flex flex-col items-center sm:flex-row sm:justify-start'>
 						<Flag team={game?.teams.away} />
 						<span className='mt-1 text-center text-xs font-bold leading-tight sm:hidden'>
 							{game?.teams.away.name}
