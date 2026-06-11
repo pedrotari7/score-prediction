@@ -17,7 +17,6 @@ import {
   currentCompetitions,
   getGameStage,
   getMaxBoostsForStage,
-  isGameFinished,
   isGameOnGoing,
   isGameStarted,
 } from '../../../shared/utils';
@@ -477,8 +476,8 @@ export const registerRoutes = (app: Express) => {
     if (!fixtures?.[parsedGameId]) {
       return res.status(404).json({ error: 'Game not found' });
     }
-    if (!isGameFinished(fixtures[parsedGameId])) {
-      return res.status(403).json({ error: 'Game has not ended yet' });
+    if (!isGameStarted(fixtures[parsedGameId])) {
+      return res.status(403).json({ error: 'Game has not started yet' });
     }
 
     const reactionsDoc = await getDBReactions(competition).get();

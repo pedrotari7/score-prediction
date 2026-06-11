@@ -321,7 +321,7 @@ const UserGuess = ({
 	const isInPast = getCurrentDate().getTime() >= gameDate.getTime();
 
 	const { homeInputRef, awayInputRef } = useInputPrediction(gameID, guess);
-	const showReactions = isGameFinished(game) && !!gameReactions && !!onReact;
+	const showReactions = isGameStarted(game) && !!gameReactions && !!onReact;
 
 	return (
 		<ResultContainer
