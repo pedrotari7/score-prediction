@@ -63,7 +63,7 @@ const LiveGame = ({
 					</div>
 
 					{isInPast && isCountdown && (
-						<span className='mx-2 text-center text-3xl'>
+						<span className='mx-1 text-center text-xl sm:mx-2 sm:text-3xl'>
 							<ClientOnly>
 								<Countdown
 									date={gameDate.getTime()}
