@@ -149,6 +149,7 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 
 		if (!standings || !fixtures || !userExtraInfo) {
 			set({ loading: false });
+			get().setRoute({ page: Route.RefreshPage });
 			return;
 		}
 
