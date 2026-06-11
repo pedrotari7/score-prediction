@@ -189,7 +189,7 @@ export const updatePoints = async (competition: Competition, predictions: Predic
     getDBBoosts(competition).get(),
   ]);
 
-  const groupPoints = groupPointsDoc.data() as GroupPoints;
+  const groupPoints = (groupPointsDoc.data() as GroupPoints) ?? {};
   const fixtureOdds: FixtureOdds = ((oddsDoc?.exists ? oddsDoc.data()?.data : {}) as FixtureOdds) ?? {};
   const allBoosts = (boostsDoc.exists ? boostsDoc.data() : {}) as Record<string, number[]>;
 
