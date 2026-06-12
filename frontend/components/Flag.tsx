@@ -12,7 +12,7 @@ const Flag = ({ className = '', team }: { team: Team; className?: string }) => {
 
 export default Flag;
 
-const FLAGS: Record<number, string> = {
+export const FLAGS: Record<number, string> = {
 	1: '/flags/1.svg',
 	2: '/flags/2.svg',
 	3: '/flags/3.svg',
