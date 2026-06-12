@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useState } from 'react';
 import type {
 	Competition,
 	Fixture,
@@ -8,7 +9,7 @@ import type {
 	User,
 	UpdatePrediction,
 } from '../../interfaces/main';
-import { getStageBoostInfo, isGameFinished } from '../../shared/utils';
+import { getStageBoostInfo, isGameFinished, isGameStarted, isNum } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { useAuth } from '../lib/auth';
@@ -59,6 +60,7 @@ const FixturesPage = ({
 	const { user: currentUser } = useAuth();
 	const { RedactedSpoilers } = useNoSpoilers();
 	const { competition } = useCompetition();
+	const [showOnlyUnpredicted, setShowOnlyUnpredicted] = useState(false);
 
 	if (!user)
 		return (
@@ -68,8 +70,26 @@ const FixturesPage = ({
 		);
 
 	const uid = currentUser?.uid;
+	const isMyPredictions = uid === user.uid;
 
 	const debugCountdowns = <DebugCountdowns />;
+
+	const needsPrediction = (game: Fixture) => {
+		const prediction = predictions?.[game.fixture.id]?.[user.uid];
+		return !isGameStarted(game) && !(isNum(prediction?.home) && isNum(prediction?.away));
+	};
+
+	const unpredictedGames = isMyPredictions
+		? Object.values(fixtures)
+				.filter(needsPrediction)
+				.sort((a, b) => a.fixture.timestamp - b.fixture.timestamp)
+		: [];
+
+	const scrollToNextUnpredicted = () => {
+		const next = unpredictedGames[0];
+		if (!next) return;
+		document.getElementById(`game-${next.fixture.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+	};
 
 	const isGroupStage = (f: Fixture) => f.league.round.includes('Group');
 
@@ -106,6 +126,9 @@ const FixturesPage = ({
 		/>
 	);
 
+	const filterUnpredicted = (games: Fixture[]) =>
+		showOnlyUnpredicted && isMyPredictions ? games.filter(needsPrediction) : games;
+
 	return (
 		<Panel className={classNames('m-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop')}>
 			{debugCountdowns}
@@ -131,10 +154,29 @@ const FixturesPage = ({
 				</RedactedSpoilers>
 			</div>
 
+			{isMyPredictions && unpredictedGames.length > 0 && (
+				<div className='sticky top-16 z-10 mb-6 flex flex-wrap items-center justify-between gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm shadow-pop sm:text-base'>
+					<button onClick={scrollToNextUnpredicted} className='font-bold'>
+						{unpredictedGames.length} game{unpredictedGames.length !== 1 ? 's' : ''} need
+						{unpredictedGames.length === 1 ? 's' : ''} a prediction — jump to next
+					</button>
+					<label className='flex items-center gap-2 text-xs sm:text-sm'>
+						<input
+							type='checkbox'
+							checked={showOnlyUnpredicted}
+							onChange={e => setShowOnlyUnpredicted(e.target.checked)}
+						/>
+						Show only unpredicted
+					</label>
+				</div>
+			)}
+
 			{Object.entries(otherStageFixtures)
 				.sort(([_, gA], [__, gB]) => gB?.[0]?.fixture.timestamp - gA?.[0]?.fixture.timestamp)
 				.map(([round, games], index) => {
 					games.sort(sortWithFinishedLast);
+					const visibleGames = filterUnpredicted(games);
+					if (visibleGames.length === 0) return null;
 					return (
 						<div key={round} className='mb-6'>
 							<div className={classNames('mb-6 flex flex-row items-center justify-between')}>
@@ -152,28 +194,34 @@ const FixturesPage = ({
 								{index === 0 && <RefreshComp />}
 							</div>
 
-							{games.map(GameFilled)}
+							{visibleGames.map(GameFilled)}
 						</div>
 					);
 				})}
 
-			<div className='flex flex-col'>
-				<div className={classNames('mb-6 flex flex-row items-center justify-between')}>
-					<div className='text-3xl'>Group Stage</div>
-					{Object.keys(otherStageFixtures).length === 0 && <RefreshComp />}
-				</div>
+			{(() => {
+				const visibleGroupStageFixtures = filterUnpredicted(sortedGroupStageFixtures);
+				if (showOnlyUnpredicted && isMyPredictions && visibleGroupStageFixtures.length === 0) return null;
+				return (
+					<div className='flex flex-col'>
+						<div className={classNames('mb-6 flex flex-row items-center justify-between')}>
+							<div className='text-3xl'>Group Stage</div>
+							{Object.keys(otherStageFixtures).length === 0 && <RefreshComp />}
+						</div>
 
-				<div className='flex flex-col-reverse md:flex-col'>
-					<PredictedGroups
-						predictions={predictions}
-						fixtures={fixtures}
-						standings={standings}
-						userID={user.uid}
-					/>
+						<div className='flex flex-col-reverse md:flex-col'>
+							<PredictedGroups
+								predictions={predictions}
+								fixtures={fixtures}
+								standings={standings}
+								userID={user.uid}
+							/>
 
-					<div className='flex flex-col'>{sortedGroupStageFixtures.map(GameFilled)}</div>
-				</div>
-			</div>
+							<div className='flex flex-col'>{visibleGroupStageFixtures.map(GameFilled)}</div>
+						</div>
+					</div>
+				);
+			})()}
 		</Panel>
 	);
 };

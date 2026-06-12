@@ -133,6 +133,7 @@ const Game = memo(function Game({
 
 	return (
 		<div
+			id={`game-${gameID}`}
 			className={classNames(
 				gcc('text-light'),
 				gcc('bg-dark'),
