@@ -137,11 +137,9 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 	const fixtureList = useMemo(() => Object.values(fixtures), [fixtures]);
 
 	const [currentDate, setCurrentDate] = useState(() => {
-		const upcoming = fixtureList
-			.filter(f => !isGameFinished(f))
-			.sort((a, b) => a.fixture.timestamp - b.fixture.timestamp)[0];
+		const first = fixtureList.sort((a, b) => a.fixture.timestamp - b.fixture.timestamp)[0];
 
-		return upcoming ? new Date(upcoming.fixture.date) : new Date();
+		return first ? new Date(first.fixture.date) : new Date();
 	});
 
 	const updateUrlDate = (date: Date) => {
