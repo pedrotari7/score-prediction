@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useSwipeable } from 'react-swipeable';
 import type { Fixture, Fixtures } from '../../interfaces/main';
 import { isGameFinished, isNum } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
@@ -198,6 +199,12 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 		updateUrlDate(next);
 	};
 
+	const swipeHandlers = useSwipeable({
+		onSwipedLeft: () => goToAdjacent(1),
+		onSwipedRight: () => goToAdjacent(-1),
+		preventScrollOnSwipe: true,
+	});
+
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.target instanceof HTMLElement && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
@@ -252,39 +259,43 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 				</div>
 			</div>
 
-			<div className='max-h-[75vh] overflow-auto rounded'>
+			<div {...swipeHandlers} className='max-h-[75vh] overflow-auto rounded'>
 				<div
 					className='grid grid-rows-[auto_1fr]'
 					style={{ gridTemplateColumns: `3rem repeat(${days.length}, minmax(4.5rem, 1fr))` }}
 				>
-					<div className={classNames(gcc('bg-dark'), 'sticky left-0 top-0 z-20')} />
+					{!isDayView && (
+						<>
+							<div className={classNames(gcc('bg-dark'), 'sticky left-0 top-0 z-20')} />
 
-					{days.map((day, index) => {
-						const isToday = dateKey(day) === today;
+							{days.map((day, index) => {
+								const isToday = dateKey(day) === today;
 
-						return (
-							<div
-								key={day.toISOString()}
-								className={classNames(
-									gcc('bg-dark'),
-									'sticky top-0 z-10 flex flex-col items-center gap-1 border-l border-white/10 py-1',
-									index === 0 ? 'border-l-0' : ''
-								)}
-							>
-								<span className='text-[10px] font-bold uppercase opacity-70 sm:text-xs'>
-									{WEEKDAY_LABELS[day.getDay()]}
-								</span>
-								<span
-									className={classNames(
-										'flex size-6 items-center justify-center rounded-full text-sm font-bold sm:size-8 sm:text-lg',
-										isToday ? gcc('bg-blue') : ''
-									)}
-								>
-									{day.getDate()}
-								</span>
-							</div>
-						);
-					})}
+								return (
+									<div
+										key={day.toISOString()}
+										className={classNames(
+											gcc('bg-dark'),
+											'sticky top-0 z-10 flex flex-col items-center gap-1 border-l border-white/10 py-1',
+											index === 0 ? 'border-l-0' : ''
+										)}
+									>
+										<span className='text-[10px] font-bold uppercase opacity-70 sm:text-xs'>
+											{WEEKDAY_LABELS[day.getDay()]}
+										</span>
+										<span
+											className={classNames(
+												'flex size-6 items-center justify-center rounded-full text-sm font-bold sm:size-8 sm:text-lg',
+												isToday ? gcc('bg-blue') : ''
+											)}
+										>
+											{day.getDate()}
+										</span>
+									</div>
+								);
+							})}
+						</>
+					)}
 
 					<div
 						className={classNames(gcc('bg-dark'), 'sticky left-0 z-10')}
