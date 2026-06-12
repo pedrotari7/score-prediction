@@ -123,7 +123,7 @@ const layoutDayGames = (games: Fixture[]): PositionedGame[] => {
 };
 
 const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
-	const { gcc } = useCompetition();
+	const { gcc, competition } = useCompetition();
 	const { noSpoilers, RedactedSpoilers } = useNoSpoilers();
 	const setRoute = useTournamentStore(s => s.setRoute);
 	const predictions = useTournamentStore(s => s.predictions);
@@ -137,9 +137,14 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 	const fixtureList = useMemo(() => Object.values(fixtures), [fixtures]);
 
 	const [currentDate, setCurrentDate] = useState(() => {
-		const first = fixtureList.sort((a, b) => a.fixture.timestamp - b.fixture.timestamp)[0];
+		const today = new Date();
+		const competitionEnd = new Date(competition.end);
+		competitionEnd.setHours(23, 59, 59, 999);
 
-		return first ? new Date(first.fixture.date) : new Date();
+		if (today >= new Date(competition.start) && today <= competitionEnd) return today;
+
+		const first = fixtureList.sort((a, b) => a.fixture.timestamp - b.fixture.timestamp)[0];
+		return first ? new Date(first.fixture.date) : today;
 	});
 
 	const updateUrlDate = (date: Date) => {
