@@ -90,7 +90,9 @@ const computeGroupMap = (standings: Standings): GroupMap =>
 		?.flat()
 		?.reduce((acc: GroupMap, val) => {
 			if (!val?.group?.startsWith('Group')) return acc;
-			return { ...acc, [val.team.id]: val.group.split(' ').pop() ?? '' };
+			const letter = val.group.split(' ').pop() ?? '';
+			if (!/^[A-Z]$/.test(letter)) return acc;
+			return { ...acc, [val.team.id]: letter };
 		}, {}) ?? {};
 
 export const useTournamentStore = create<TournamentState>((set, get) => ({

@@ -6,7 +6,7 @@ import { isGameFinished, isNum } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import useMediaQuery from '../hooks/useMediaQuery';
 import useNoSpoilers from '../hooks/useNoSpoilers';
-import { classNames, formatScore } from '../lib/utils/reactHelper';
+import { classNames, formatScore, GROUP_COLORS } from '../lib/utils/reactHelper';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import Flag from './Flag';
 import Panel from './Panel';
@@ -128,6 +128,7 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 	const setRoute = useTournamentStore(s => s.setRoute);
 	const predictions = useTournamentStore(s => s.predictions);
 	const uid = useTournamentStore(s => s.uid);
+	const groupMap = useTournamentStore(s => s.groupMap);
 
 	const router = useRouter();
 	const hasSyncedFromUrl = useRef(false);
@@ -394,6 +395,29 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 													{isPredictValid && <span>{prediction?.away}</span>}
 												</div>
 											</div>
+
+											{(() => {
+												let round = game.league.round;
+												let stageBg = '';
+												if (round.includes('Group')) {
+													const leg = round.split('-').pop();
+													const group = groupMap[game.teams.home.id];
+													if (group) {
+														round = group + leg;
+														stageBg = GROUP_COLORS[group];
+													}
+												}
+												return (
+													<div
+														className={classNames(
+															stageBg || gcc('bg-dark'),
+															'absolute right-1 top-1 rounded px-1 text-[10px] font-bold sm:text-xs'
+														)}
+													>
+														{round}
+													</div>
+												);
+											})()}
 
 											<div
 												className={classNames(

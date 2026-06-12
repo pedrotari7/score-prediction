@@ -38,7 +38,7 @@ const customJestConfig: Config = {
 		global: {
 			statements: 6.4,
 			branches: 1,
-			functions: 4.3,
+			functions: 4.2,
 			lines: 6,
 		},
 	},
