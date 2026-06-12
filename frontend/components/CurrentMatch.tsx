@@ -183,7 +183,7 @@ const ReactionBar = ({
 								onTouchMove={cancelLongPress}
 								className={classNames(
 									'flex items-center gap-0.5 rounded-full px-2 py-0.5 text-sm transition-all',
-									isSelected ? 'bg-white/25 ring-1 ring-white/40' : 'bg-white/10 hover:bg-white/20',
+									isSelected ? 'bg-black/40 ring-1 ring-white/40' : 'bg-black/30 hover:bg-black/40',
 									isMyPrediction ? 'cursor-default' : 'cursor-pointer'
 								)}
 							>
