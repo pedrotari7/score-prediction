@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Fixture, Fixtures } from '../../interfaces/main';
 import { isGameFinished, isNum } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
+import useMediaQuery from '../hooks/useMediaQuery';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import { classNames, formatScore } from '../lib/utils/reactHelper';
 import { Route, useTournamentStore } from '../store/tournamentStore';
@@ -10,7 +11,8 @@ import Flag from './Flag';
 import Panel from './Panel';
 import { getPredictionResult } from './ResultContainer';
 
-const WEEKDAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+// indexed by Date#getDay() (Sunday = 0)
+const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const HOUR_HEIGHT = 48; // px
 const DAY_HEIGHT = HOUR_HEIGHT * 24;
@@ -129,18 +131,19 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 	const router = useRouter();
 	const hasSyncedFromUrl = useRef(false);
 
+	const isDayView = useMediaQuery('(max-width: 1279px)');
+
 	const fixtureList = useMemo(() => Object.values(fixtures), [fixtures]);
 
-	const [weekStart, setWeekStart] = useState(() => {
+	const [currentDate, setCurrentDate] = useState(() => {
 		const upcoming = fixtureList
 			.filter(f => !isGameFinished(f))
 			.sort((a, b) => a.fixture.timestamp - b.fixture.timestamp)[0];
 
-		const reference = upcoming ? new Date(upcoming.fixture.date) : new Date();
-		return startOfWeek(reference);
+		return upcoming ? new Date(upcoming.fixture.date) : new Date();
 	});
 
-	const updateUrlWeek = (date: Date) => {
+	const updateUrlDate = (date: Date) => {
 		router.replace(
 			{ pathname: router.pathname, query: { ...router.query, week: formatDateParam(date) } },
 			undefined,
@@ -154,8 +157,8 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 
 		const params = new URLSearchParams(window.location.search);
 		const parsed = parseDateParam(params.get('week') ?? '');
-		if (parsed) setWeekStart(startOfWeek(parsed));
-		else updateUrlWeek(weekStart);
+		if (parsed) setCurrentDate(parsed);
+		else updateUrlDate(currentDate);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -170,47 +173,58 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 		return map;
 	}, [fixtureList]);
 
-	const days = useMemo(() => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)), [weekStart]);
+	const days = useMemo(() => {
+		if (isDayView) return [currentDate];
+		const start = startOfWeek(currentDate);
+		return Array.from({ length: 7 }, (_, i) => addDays(start, i));
+	}, [currentDate, isDayView]);
 
 	const now = new Date();
 	const today = dateKey(now);
 	const nowOffset = ((now.getHours() * 60 + now.getMinutes()) / 60) * HOUR_HEIGHT;
 
-	const goToWeek = useCallback(
+	const goToAdjacent = useCallback(
 		(delta: number) => {
-			const next = addDays(weekStart, delta * 7);
-			setWeekStart(next);
-			updateUrlWeek(next);
+			const next = addDays(currentDate, isDayView ? delta : delta * 7);
+			setCurrentDate(next);
+			updateUrlDate(next);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[weekStart]
+		[currentDate, isDayView]
 	);
 	const goToToday = () => {
-		const next = startOfWeek(new Date());
-		setWeekStart(next);
-		updateUrlWeek(next);
+		const next = new Date();
+		setCurrentDate(next);
+		updateUrlDate(next);
 	};
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.target instanceof HTMLElement && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
-			if (e.key === 'ArrowLeft') goToWeek(-1);
-			if (e.key === 'ArrowRight') goToWeek(1);
+			if (e.key === 'ArrowLeft') goToAdjacent(-1);
+			if (e.key === 'ArrowRight') goToAdjacent(1);
 		};
 
 		window.addEventListener('keydown', handleKeyDown);
 		return () => window.removeEventListener('keydown', handleKeyDown);
-	}, [goToWeek]);
+	}, [goToAdjacent]);
 
-	const weekLabel = `${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${addDays(
-		weekStart,
-		6
-	).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+	const headerLabel = isDayView
+		? currentDate.toLocaleDateString('en-US', {
+				weekday: 'short',
+				month: 'short',
+				day: 'numeric',
+				year: 'numeric',
+			})
+		: `${days[0].toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${days[6].toLocaleDateString(
+				'en-US',
+				{ month: 'short', day: 'numeric', year: 'numeric' }
+			)}`;
 
 	return (
 		<Panel className={classNames('m-2 flex select-none flex-col rounded-md p-2 shadow-pop sm:m-8 sm:p-8')}>
 			<div className='mb-4 flex flex-row items-center justify-between gap-2 text-base sm:mb-6 sm:text-2xl'>
-				<div className='font-bold'>{weekLabel}</div>
+				<div className='font-bold'>{headerLabel}</div>
 				<div className='flex items-center gap-1'>
 					<button
 						onClick={goToToday}
@@ -222,16 +236,16 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 						Today
 					</button>
 					<button
-						onClick={() => goToWeek(-1)}
+						onClick={() => goToAdjacent(-1)}
 						className={classNames(gcc('hover:bg-blue'), 'rounded-md px-3 py-1 font-bold')}
-						aria-label='Previous week'
+						aria-label={isDayView ? 'Previous day' : 'Previous week'}
 					>
 						‹
 					</button>
 					<button
-						onClick={() => goToWeek(1)}
+						onClick={() => goToAdjacent(1)}
 						className={classNames(gcc('hover:bg-blue'), 'rounded-md px-3 py-1 font-bold')}
-						aria-label='Next week'
+						aria-label={isDayView ? 'Next day' : 'Next week'}
 					>
 						›
 					</button>
@@ -239,7 +253,10 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 			</div>
 
 			<div className='max-h-[75vh] overflow-auto rounded'>
-				<div className='grid grid-cols-[3rem_repeat(7,minmax(4.5rem,1fr))] grid-rows-[auto_1fr]'>
+				<div
+					className='grid grid-rows-[auto_1fr]'
+					style={{ gridTemplateColumns: `3rem repeat(${days.length}, minmax(4.5rem, 1fr))` }}
+				>
 					<div className={classNames(gcc('bg-dark'), 'sticky left-0 top-0 z-20')} />
 
 					{days.map((day, index) => {
@@ -255,7 +272,7 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 								)}
 							>
 								<span className='text-[10px] font-bold uppercase opacity-70 sm:text-xs'>
-									{WEEKDAY_LABELS[index]}
+									{WEEKDAY_LABELS[day.getDay()]}
 								</span>
 								<span
 									className={classNames(
