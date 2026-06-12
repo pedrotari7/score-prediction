@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import type { CSSProperties, Dispatch, ReactNode, SetStateAction } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Route, useTournamentStore } from '../store/tournamentStore';
@@ -496,7 +496,7 @@ const KeyboardHandle = memo(function KeyboardHandle({
 	nextGameId: number | null;
 	children: ReactNode;
 	className?: string;
-	setGameID: Dispatch<SetStateAction<number>>;
+	setGameID: (id: number) => void;
 	isReactionPanelOpen: boolean;
 }) {
 	useEffect(() => {
@@ -629,11 +629,13 @@ const CurrentMatch = ({
 
 	const odds = useTournamentStore(s => s.odds);
 	const boosts = useTournamentStore(s => s.boosts);
+	const setRoute = useTournamentStore(s => s.setRoute);
 
 	const { gcc, competition } = useCompetition();
 	const { noSpoilers } = useNoSpoilers();
 
-	const [id, setGameID] = useState(gameID);
+	const id = gameID;
+	const setGameID = (newId: number) => setRoute({ page: Route.Match, data: newId });
 	const [currentLeaderboard, setCurrentLeaderboard] = useState('global');
 	const [members, setMembers] = useState<string[]>(Object.keys(users));
 	const [gameReactions, setGameReactions] = useState<GameReactions>({});
