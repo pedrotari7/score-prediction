@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import type { CSSProperties, Dispatch, ReactNode, SetStateAction } from 'react';
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import { useSwipeable } from 'react-swipeable';
 import LiveGame from './LiveGame';
@@ -66,16 +67,65 @@ const ReactionBar = ({
 	const [longPressInfo, setLongPressInfo] = useState<{ emoji: string; uids: string[] } | null>(null);
 	const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const pickerRef = useRef<HTMLDivElement>(null);
+	const popupRef = useRef<HTMLDivElement>(null);
+	const [popupPos, setPopupPos] = useState<{ top: number; left: number } | null>(null);
 
 	useEffect(() => {
 		if (!pickerOpen) return;
 		const handler = (e: MouseEvent) => {
-			if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+			const target = e.target as Node;
+			if (
+				pickerRef.current &&
+				!pickerRef.current.contains(target) &&
+				!(popupRef.current && popupRef.current.contains(target))
+			) {
 				setPickerOpen(false);
 			}
 		};
 		document.addEventListener('mousedown', handler);
 		return () => document.removeEventListener('mousedown', handler);
+	}, [pickerOpen]);
+
+	useLayoutEffect(() => {
+		if (!pickerOpen) {
+			setPopupPos(null);
+			return;
+		}
+
+		const margin = 8;
+		const updatePosition = () => {
+			const trigger = pickerRef.current;
+			const popup = popupRef.current;
+			if (!trigger || !popup) return;
+
+			const triggerRect = trigger.getBoundingClientRect();
+			const popupRect = popup.getBoundingClientRect();
+
+			let top = triggerRect.top - popupRect.height - 4;
+			if (top < margin) {
+				const belowTop = triggerRect.bottom + 4;
+				top = belowTop + popupRect.height <= window.innerHeight - margin ? belowTop : margin;
+			}
+
+			let left = triggerRect.left;
+			if (left + popupRect.width > window.innerWidth - margin) {
+				left = window.innerWidth - popupRect.width - margin;
+			}
+			left = Math.max(margin, left);
+
+			setPopupPos({ top, left });
+		};
+
+		updatePosition();
+		window.addEventListener('resize', updatePosition);
+
+		const resizeObserver = new ResizeObserver(updatePosition);
+		if (popupRef.current) resizeObserver.observe(popupRef.current);
+
+		return () => {
+			window.removeEventListener('resize', updatePosition);
+			resizeObserver.disconnect();
+		};
 	}, [pickerOpen]);
 
 	useEffect(() => {
@@ -187,41 +237,52 @@ const ReactionBar = ({
 							</span>
 						</button>
 
-						{pickerOpen && (
-							<div className='absolute bottom-full left-0 z-50 mb-1 overflow-hidden rounded-xl shadow-xl'>
-								<div className='flex gap-0.5 bg-gray-900/95 p-1.5'>
-									{REACTION_EMOJIS.map(emoji => (
-										<button
-											key={emoji}
-											onClick={e => {
-												e.stopPropagation();
-												onReact(targetUid, emoji);
-												setPickerOpen(false);
-											}}
-											className={classNames(
-												'rounded-lg p-1.5 text-xl transition-all hover:scale-125 hover:bg-white/10',
-												myReactions.has(emoji) ? 'scale-110 bg-white/20' : ''
-											)}
-										>
-											{emoji}
-										</button>
-									))}
-								</div>
-								<EmojiPicker
-									data={data}
-									theme='dark'
-									previewPosition='none'
-									skinTonePosition='none'
-									maxFrequentRows={1}
-									perLine={8}
-									style={{ '--border-radius': '0px' } as CSSProperties}
-									onEmojiSelect={(emoji: { native: string }) => {
-										onReact(targetUid, emoji.native);
-										setPickerOpen(false);
+						{pickerOpen &&
+							createPortal(
+								<div
+									ref={popupRef}
+									className='fixed z-50 max-h-[calc(100vh-1rem)] max-w-[calc(100vw-1rem)] overflow-auto rounded-xl shadow-xl'
+									style={{
+										top: popupPos?.top ?? -9999,
+										left: popupPos?.left ?? -9999,
+										visibility: popupPos ? 'visible' : 'hidden',
 									}}
-								/>
-							</div>
-						)}
+									onClick={e => e.stopPropagation()}
+								>
+									<div className='flex gap-0.5 bg-gray-900/95 p-1.5'>
+										{REACTION_EMOJIS.map(emoji => (
+											<button
+												key={emoji}
+												onClick={e => {
+													e.stopPropagation();
+													onReact(targetUid, emoji);
+													setPickerOpen(false);
+												}}
+												className={classNames(
+													'rounded-lg p-1.5 text-xl transition-all hover:scale-125 hover:bg-white/10',
+													myReactions.has(emoji) ? 'scale-110 bg-white/20' : ''
+												)}
+											>
+												{emoji}
+											</button>
+										))}
+									</div>
+									<EmojiPicker
+										data={data}
+										theme='dark'
+										previewPosition='none'
+										skinTonePosition='none'
+										maxFrequentRows={1}
+										perLine={8}
+										style={{ '--border-radius': '0px' } as CSSProperties}
+										onEmojiSelect={(emoji: { native: string }) => {
+											onReact(targetUid, emoji.native);
+											setPickerOpen(false);
+										}}
+									/>
+								</div>,
+								document.body
+							)}
 					</div>
 				)}
 			</div>
