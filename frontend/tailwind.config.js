@@ -10,6 +10,36 @@ module.exports = {
 			sans: ['PFBeauSansPro'],
 		},
 		extend: {
+			keyframes: {
+				'pop-in': {
+					'0%': { transform: 'scale(0.5)', opacity: '0' },
+					'60%': { transform: 'scale(1.15)', opacity: '1' },
+					'100%': { transform: 'scale(1)', opacity: '1' },
+				},
+				'fade-slide-up': {
+					'0%': { transform: 'translateY(8px)', opacity: '0' },
+					'100%': { transform: 'translateY(0)', opacity: '1' },
+				},
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' },
+				},
+				shimmer: {
+					'100%': { transform: 'translateX(100%)' },
+				},
+				'bounce-in': {
+					'0%': { transform: 'scale(0.3)', opacity: '0' },
+					'50%': { transform: 'scale(1.2)' },
+					'100%': { transform: 'scale(1)', opacity: '1' },
+				},
+			},
+			animation: {
+				'pop-in': 'pop-in 0.4s ease-out',
+				'fade-slide-up': 'fade-slide-up 0.35s ease-out both',
+				'fade-in': 'fade-in 0.3s ease-out both',
+				shimmer: 'shimmer 1.5s infinite',
+				'bounce-in': 'bounce-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
+			},
 			colors: {
 				transparent: 'transparent',
 

@@ -63,7 +63,7 @@ const CreateLeaderboard = ({
 						placeholder='leaderboard name'
 						type='text'
 						maxLength={50}
-						className='w-48 bg-white px-3 py-2 text-black focus:outline-none'
+						className='w-48 animate-fade-slide-up bg-white px-3 py-2 text-black focus:outline-none'
 						ref={inputRef}
 						onKeyDown={e => {
 							if (e.key === 'Enter') handleCreate();
@@ -73,8 +73,9 @@ const CreateLeaderboard = ({
 					<div
 						className={classNames(
 							gcc('bg-blue'),
-							'flex h-10 w-20 cursor-pointer items-center justify-center rounded-md p-2'
+							'flex h-10 w-20 animate-fade-slide-up cursor-pointer items-center justify-center rounded-md p-2'
 						)}
+						style={{ animationDelay: '40ms' }}
 						onClick={async e => {
 							e.stopPropagation();
 							await handleCreate();
@@ -86,8 +87,9 @@ const CreateLeaderboard = ({
 					<div
 						className={classNames(
 							gcc('text-light'),
-							'flex size-10 cursor-pointer items-center justify-center rounded-md p-2 hover:bg-gray-700'
+							'flex size-10 animate-fade-slide-up cursor-pointer items-center justify-center rounded-md p-2 transition-colors hover:bg-gray-700'
 						)}
+						style={{ animationDelay: '80ms' }}
 						onClick={e => {
 							e.stopPropagation();
 							setOpen(false);

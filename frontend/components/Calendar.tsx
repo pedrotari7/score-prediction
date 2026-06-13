@@ -343,7 +343,7 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 									</div>
 								)}
 
-								{layoutDayGames(games).map(({ game, top, height, left, width }) => {
+								{layoutDayGames(games).map(({ game, top, height, left, width }, gameIndex) => {
 									const prediction = predictions?.[game.fixture.id]?.[uid];
 									const isPredictValid = isNum(prediction?.home) && isNum(prediction?.away);
 
@@ -370,13 +370,14 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 												showResultColor && isWrong ? 'bg-red-600' : '',
 												!showResultColor ? gcc('bg-blue') : '',
 												!isPredictValid ? 'ring-2 ring-red-600' : '',
-												'absolute overflow-hidden rounded p-1 text-left hover:z-10 hover:brightness-125'
+												'absolute animate-fade-slide-up overflow-hidden rounded p-1 text-left transition-[filter] hover:z-10 hover:brightness-125'
 											)}
 											style={{
 												top: top + 4,
 												height: height - 8,
 												left: `calc(${left}% + 4px)`,
 												width: `calc(${width}% - 8px)`,
+												animationDelay: `${Math.min(gameIndex, 8) * 30}ms`,
 											}}
 										>
 											<div className='flex flex-col gap-0.5 text-[10px] leading-tight sm:text-xs'>

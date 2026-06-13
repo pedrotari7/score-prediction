@@ -202,12 +202,16 @@ const Leaderboards = ({
 			<div className='flex flex-col justify-center'>
 				{sortedUsers.map((user, index) => {
 					return (
-						<div key={index} className='relative'>
+						<div
+							key={index}
+							className='relative animate-fade-slide-up'
+							style={{ animationDelay: `${Math.min(index, 10) * 40}ms` }}
+						>
 							<div
 								className={
 									classNames(
 										currentUser === user.uid ? 'border-white' : 'border-transparent',
-										'flex cursor-pointer flex-col items-center justify-between border-8 sm:flex-row',
+										'flex cursor-pointer flex-col items-center justify-between border-8 transition-colors sm:flex-row',
 										gcc('bg-blue'),
 										`mx-1 my-4 rounded-md p-3 sm:mx-[5%] md:mx-[5%] lg:mx-[20%]`
 									) +

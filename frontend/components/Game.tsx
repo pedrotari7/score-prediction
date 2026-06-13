@@ -36,7 +36,7 @@ const DeadlineCountdown = ({ gameDate }: { gameDate: Date }) => {
 		<ClientOnly>
 			<div
 				className={classNames(
-					'rounded px-2 py-0.5 text-xs font-bold',
+					'animate-fade-slide-up rounded px-2 py-0.5 text-xs font-bold transition-colors duration-500',
 					isUrgent ? 'animate-pulse bg-red-600 text-white' : 'bg-yellow-600 text-white'
 				)}
 			>
@@ -181,7 +181,7 @@ const Game = memo(function Game({
 								isNum(prediction.away) &&
 								isPredictionUpset(prediction, odds[gameID]) && (
 									<div className='absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-cyan-700 px-1.5 py-0.5 text-[9px] font-bold'>
-										Upset pick
+										<span className='inline-block animate-pop-in'>Upset pick</span>
 									</div>
 								)}
 							{maxBoosts > 0 && (
@@ -193,11 +193,11 @@ const Game = memo(function Game({
 									disabled={!isBoosted && remainingBoosts <= 0}
 									className={classNames(
 										'absolute -bottom-5 left-1/2 -translate-x-1/2',
-										'flex size-7 items-center justify-center rounded-full text-[10px] font-black transition-all',
+										'flex size-7 items-center justify-center rounded-full text-[10px] font-black transition-all duration-300',
 										isBoosted
-											? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-400/50'
+											? 'scale-110 bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-400/50'
 											: remainingBoosts > 0
-												? 'bg-gray-700/80 text-gray-300 ring-1 ring-gray-500/50 hover:bg-indigo-500/30 hover:text-white hover:ring-indigo-400/50'
+												? 'bg-gray-700/80 text-gray-300 ring-1 ring-gray-500/50 hover:scale-110 hover:bg-indigo-500/30 hover:text-white hover:ring-indigo-400/50'
 												: 'cursor-not-allowed bg-gray-800/50 text-gray-600'
 									)}
 								>
@@ -216,7 +216,7 @@ const Game = memo(function Game({
 								isNum(prediction.away) &&
 								isPredictionUpset(prediction, odds[gameID]) && (
 									<div className='absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-cyan-700 px-1.5 py-0.5 text-[9px] font-bold'>
-										Upset pick
+										<span className='inline-block animate-pop-in'>Upset pick</span>
 									</div>
 								)}
 						</div>

@@ -19,6 +19,8 @@ const CARD_GRADIENTS = [
 	'from-indigo-900 via-blue-800 to-slate-900',
 ];
 
+const COUNT_UP_DURATION = 900;
+
 const AnimatedNumber = ({
 	value,
 	label,
@@ -27,19 +29,44 @@ const AnimatedNumber = ({
 	value: number | string;
 	label: string;
 	size?: 'large' | 'small';
-}) => (
-	<div className='flex flex-col items-center'>
-		<span
-			className={classNames(
-				'font-black tabular-nums',
-				size === 'large' ? 'text-6xl sm:text-8xl' : 'text-4xl sm:text-5xl'
-			)}
-		>
-			{value}
-		</span>
-		<span className='mt-1 text-sm font-medium uppercase tracking-widest opacity-70'>{label}</span>
-	</div>
-);
+}) => {
+	const isNumeric = typeof value === 'number';
+	const [displayValue, setDisplayValue] = useState(isNumeric ? 0 : value);
+
+	useEffect(() => {
+		if (!isNumeric) {
+			setDisplayValue(value);
+			return;
+		}
+
+		const start = performance.now();
+		let frame: ReturnType<typeof requestAnimationFrame>;
+
+		const tick = (now: number) => {
+			const progress = Math.min((now - start) / COUNT_UP_DURATION, 1);
+			const eased = 1 - Math.pow(1 - progress, 3);
+			setDisplayValue(Math.round(value * eased));
+			if (progress < 1) frame = requestAnimationFrame(tick);
+		};
+
+		frame = requestAnimationFrame(tick);
+		return () => cancelAnimationFrame(frame);
+	}, [value, isNumeric]);
+
+	return (
+		<div className='flex flex-col items-center'>
+			<span
+				className={classNames(
+					'font-black tabular-nums',
+					size === 'large' ? 'text-6xl sm:text-8xl' : 'text-4xl sm:text-5xl'
+				)}
+			>
+				{displayValue}
+			</span>
+			<span className='mt-1 text-sm font-medium uppercase tracking-widest opacity-70'>{label}</span>
+		</div>
+	);
+};
 
 const MatchCard = ({
 	homeTeam,
@@ -114,7 +141,13 @@ const CardShell = ({
 			))}
 		</div>
 
-		<div className='flex flex-1 flex-col items-center justify-center px-6 py-8 text-center text-white'>
+		<div
+			key={current}
+			className={classNames(
+				'flex flex-1 flex-col items-center justify-center px-6 py-8 text-center text-white',
+				'animate-fade-slide-up'
+			)}
+		>
 			{children}
 		</div>
 
@@ -245,12 +278,13 @@ const TournamentRecap = () => {
 							{recap.boostReport.totalBonusPoints > 3 ? 'Smart picks.' : 'High risk, high reward.'}
 						</h3>
 						<div className='flex flex-col gap-3'>
-							{recap.boostReport.games.map(g => {
+							{recap.boostReport.games.map((g, i) => {
 								const actual = getExtraTimeResult(g.fixture);
 								return (
 									<div
 										key={g.fixture.fixture.id}
-										className='rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm'
+										className='animate-fade-slide-up rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm'
+										style={{ animationDelay: `${i * 80}ms` }}
 									>
 										<div className='flex items-center justify-between text-sm'>
 											<div className='flex items-center gap-2'>
@@ -324,8 +358,12 @@ const TournamentRecap = () => {
 								{ label: 'Correct Result', count: result, color: 'bg-yellow-600', pctVal: pct(result) },
 								{ label: 'One Score', count: onescore, color: 'bg-pink-600', pctVal: pct(onescore) },
 								{ label: 'Missed', count: fail, color: 'bg-red-600', pctVal: pct(fail) },
-							].map(row => (
-								<div key={row.label}>
+							].map((row, i) => (
+								<div
+									key={row.label}
+									className='animate-fade-slide-up'
+									style={{ animationDelay: `${i * 100}ms` }}
+								>
 									<div className='mb-1 flex justify-between text-sm'>
 										<span>{row.label}</span>
 										<span className='font-bold'>
@@ -377,8 +415,12 @@ const TournamentRecap = () => {
 						<div className='mt-8 grid grid-cols-2 gap-3'>
 							{recap.stageRanks
 								.filter(s => s.points > 0)
-								.map(s => (
-									<div key={s.stage} className='rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm'>
+								.map((s, i) => (
+									<div
+										key={s.stage}
+										className='animate-fade-slide-up rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm'
+										style={{ animationDelay: `${i * 80}ms` }}
+									>
 										<div className='text-xs opacity-60'>{s.stage}</div>
 										<div className='text-2xl font-black'>#{s.rank}</div>
 										<div className='text-xs opacity-50'>{s.points} pts</div>

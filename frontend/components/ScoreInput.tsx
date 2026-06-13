@@ -41,9 +41,9 @@ const ScoreInput = ({
 				gcc('text-dark'),
 				`block h-12 w-16 text-center font-bold hover:bg-gray-100 sm:h-11 sm:w-14`,
 				'rounded p-3 leading-tight focus:border-gray-500 focus:bg-white focus:outline-none',
-				'border border-gray-200 transition-colors duration-300',
+				'border border-gray-200 transition-all duration-300',
 				saved
-					? 'border-emerald-400 !bg-emerald-300'
+					? 'scale-110 border-emerald-400 !bg-emerald-300'
 					: isNum(value)
 						? 'bg-green-200'
 						: value === null

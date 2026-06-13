@@ -10,6 +10,7 @@ export const Circle = ({ children, className }: { children: ReactNode; className
 	<div
 		className={classNames(
 			'mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center',
+			'ring-2 ring-transparent transition-all duration-300',
 			className
 		)}
 	>
@@ -23,7 +24,7 @@ const TooltipInto = ({ children, content }: { children: ReactNode; content: stri
 	</a>
 );
 
-const highlight = (key: string, activeKey?: string) => (key === activeKey ? 'ring-2 ring-white scale-110' : '');
+const highlight = (key: string, activeKey?: string) => (key === activeKey ? 'ring-white scale-110' : '');
 
 export const UserScores = ({ user, stage, highlightKey }: { user: User; stage: string; highlightKey?: string }) => {
 	const { competition } = useCompetition();

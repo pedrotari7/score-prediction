@@ -36,12 +36,15 @@ const SelectStage = ({
 					</Listbox.Button>
 					<Transition
 						as={Fragment}
-						leave='transition ease-in duration-100'
-						leaveFrom='opacity-100'
-						leaveTo='opacity-0'
+						enter='transition ease-out duration-100'
+						enterFrom='opacity-0 scale-95'
+						enterTo='opacity-100 scale-100'
+						leave='transition ease-in duration-75'
+						leaveFrom='opacity-100 scale-100'
+						leaveTo='opacity-0 scale-95'
 					>
 						<Listbox.Options
-							className='absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded py-1 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none'
+							className='absolute z-10 mt-1 max-h-60 w-full origin-top overflow-auto rounded py-1 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none'
 							style={{ backgroundColor: competition.color }}
 						>
 							{stages.map(s => (
@@ -50,7 +53,7 @@ const SelectStage = ({
 									value={s}
 									className={({ active }) =>
 										classNames(
-											'relative cursor-pointer select-none py-2 pl-3 pr-4 text-white',
+											'relative cursor-pointer select-none py-2 pl-3 pr-4 text-white transition-colors duration-150',
 											active ? 'bg-[#2b2d2e]' : ''
 										)
 									}

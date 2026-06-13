@@ -168,7 +168,7 @@ const ReactionBar = ({
 					const count = counts[emoji] ?? 0;
 					const isSelected = myReactions.has(emoji);
 					return (
-						<div key={emoji} className='group relative'>
+						<div key={emoji} className='group relative animate-bounce-in'>
 							<button
 								onClick={
 									isMyPrediction
@@ -182,12 +182,16 @@ const ReactionBar = ({
 								onTouchEnd={cancelLongPress}
 								onTouchMove={cancelLongPress}
 								className={classNames(
-									'flex items-center gap-0.5 rounded-full px-2 py-0.5 text-sm transition-all',
-									isSelected ? 'bg-black/40 ring-1 ring-white/40' : 'bg-black/30 hover:bg-black/40',
+									'flex items-center gap-0.5 rounded-full px-2 py-0.5 text-sm transition-all duration-200',
+									isSelected
+										? 'scale-110 bg-black/40 ring-1 ring-white/40'
+										: 'bg-black/30 hover:bg-black/40',
 									isMyPrediction ? 'cursor-default' : 'cursor-pointer'
 								)}
 							>
-								<span>{emoji}</span>
+								<span key={`${emoji}-${count}`} className='inline-block animate-bounce-in'>
+									{emoji}
+								</span>
 								<span className='text-xs opacity-60'>{count}</span>
 							</button>
 							<div className='pointer-events-none absolute bottom-full left-0 z-50 mb-1.5 hidden min-w-max rounded-lg bg-gray-900 p-2 shadow-lg group-hover:block'>

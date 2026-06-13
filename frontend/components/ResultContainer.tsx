@@ -82,7 +82,7 @@ const ResultContainer = ({
 			className={classNames(
 				gcc('text-light'),
 				gcc('bg-blue'),
-				'relative rounded-md border-2 text-center',
+				'relative rounded-md border-2 text-center transition-colors duration-500',
 				!noSpoilers && isExactScore ? 'bg-green-600' : '',
 				!noSpoilers && isCorrectResult ? 'bg-yellow-600' : '',
 				!noSpoilers && isCorrectGoal ? 'bg-pink-600' : '',
@@ -92,32 +92,32 @@ const ResultContainer = ({
 			)}
 		>
 			{!noSpoilers && isPenaltyWinner && (
-				<div className='absolute -right-2 -top-2 size-7 rounded-full bg-gray-500'>
+				<div className='absolute -right-2 -top-2 size-7 animate-pop-in rounded-full bg-gray-500'>
 					<div className='flex size-full items-center justify-center text-xs'>
 						+{competition.points.penalty}
 					</div>
 				</div>
 			)}
 			{earnedUpsetBonus && (
-				<div className='absolute -left-2 -top-2 size-7 rounded-full bg-cyan-700'>
+				<div className='absolute -left-2 -top-2 size-7 animate-pop-in rounded-full bg-cyan-700'>
 					<div className='flex size-full items-center justify-center text-xs'>
 						+{competition.points.upset}
 					</div>
 				</div>
 			)}
 			{showEarnedPoints && started && !noSpoilers && totalEarnedPoints > 0 && (
-				<div className='absolute -bottom-3 -right-3 whitespace-nowrap rounded-full bg-gray-900 px-2 py-1 text-xs font-bold text-white'>
+				<div className='absolute -bottom-3 -right-3 animate-pop-in whitespace-nowrap rounded-full bg-gray-900 px-2 py-1 text-xs font-bold text-white'>
 					+{totalEarnedPoints} pts
 				</div>
 			)}
 			{!started && predictionIsUpset && (
 				<div className='absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-cyan-700 px-1.5 py-0.5 text-[9px] font-bold'>
-					Upset pick
+					<span className='inline-block animate-pop-in'>Upset pick</span>
 				</div>
 			)}
 			{isBoosted && (started || userID === uid) && (
 				<div className='absolute -bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-indigo-500 px-1.5 py-0.5 text-[9px] font-bold text-white'>
-					2x
+					<span className='inline-block animate-pop-in'>2x</span>
 				</div>
 			)}
 			{children}

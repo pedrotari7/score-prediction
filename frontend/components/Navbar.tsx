@@ -129,7 +129,7 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 													key={index}
 													onClick={() => updateRoute(item.info)}
 													className={classNames(
-														'text-lg font-bold hover:bg-gray-700',
+														'text-lg font-bold transition-colors duration-200 hover:bg-gray-700',
 														isCurrent(item)
 															? `${gcc('bg-dark')} ${gcc('text-light')}`
 															: `text-gray-300 ${gcc('hover:text-light')}`,
@@ -313,52 +313,63 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 						</div>
 					</div>
 
-					<DisclosurePanel className={classNames(gcc('bg-blue'), 'lg:hidden')}>
-						<div className='flex flex-col space-y-1 px-2 pb-3 pt-2'>
-							{!loading &&
-								navigation.map(item => (
-									<DisclosureButton
-										key={item.name}
-										as='button'
+					<Transition
+						show={open}
+						enter='transition ease-out duration-200'
+						enterFrom='opacity-0 -translate-y-2'
+						enterTo='opacity-100 translate-y-0'
+						leave='transition ease-in duration-100'
+						leaveFrom='opacity-100 translate-y-0'
+						leaveTo='opacity-0 -translate-y-2'
+					>
+						<DisclosurePanel static className={classNames(gcc('bg-blue'), 'lg:hidden')}>
+							<div className='flex flex-col space-y-1 px-2 pb-3 pt-2'>
+								{!loading &&
+									navigation.map((item, index) => (
+										<DisclosureButton
+											key={item.name}
+											as='button'
+											onClick={() => {
+												updateRoute(item.info);
+												open = false;
+											}}
+											style={{ animationDelay: `${index * 30}ms` }}
+											className={classNames(
+												'w-full animate-fade-slide-up text-left text-lg font-bold transition-colors duration-200',
+												isCurrent(item)
+													? `${gcc('bg-dark')} ${gcc('text-light')}`
+													: `text-gray-300 hover:bg-gray-700 ${gcc('hover:text-light')}`,
+												'block cursor-pointer rounded-md px-3 py-2'
+											)}
+											aria-current={isCurrent(item) ? 'page' : undefined}
+										>
+											{item.name}
+										</DisclosureButton>
+									))}
+								{concurrentCompetition && !loading ? (
+									<button
 										onClick={() => {
-											updateRoute(item.info);
-											open = false;
+											setLoading(true);
+											router.push(`/${concurrentCompetition?.name}`);
 										}}
 										className={classNames(
-											'w-full text-left text-lg font-bold',
-											isCurrent(item)
-												? `${gcc('bg-dark')} ${gcc('text-light')}`
-												: `text-gray-300 hover:bg-gray-700 ${gcc('hover:text-light')}`,
-											'block cursor-pointer rounded-md px-3 py-2'
+											'text-lg font-bold',
+											`text-gray-300 hover:bg-gray-700 ${gcc('hover:text-light')}`,
+											'flex cursor-pointer items-center justify-start gap-2 rounded-md px-3 py-8'
 										)}
-										aria-current={isCurrent(item) ? 'page' : undefined}
 									>
-										{item.name}
-									</DisclosureButton>
-								))}
-							{concurrentCompetition && !loading ? (
-								<button
-									onClick={() => {
-										setLoading(true);
-										router.push(`/${concurrentCompetition?.name}`);
-									}}
-									className={classNames(
-										'text-lg font-bold',
-										`text-gray-300 hover:bg-gray-700 ${gcc('hover:text-light')}`,
-										'flex cursor-pointer items-center justify-start gap-2 rounded-md px-3 py-8'
-									)}
-								>
-									<Image
-										src={concurrentCompetition.logo}
-										width={80}
-										height={40}
-										alt=''
-										className='h-10 w-auto'
-									/>
-								</button>
-							) : null}
-						</div>
-					</DisclosurePanel>
+										<Image
+											src={concurrentCompetition.logo}
+											width={80}
+											height={40}
+											alt=''
+											className='h-10 w-auto'
+										/>
+									</button>
+								) : null}
+							</div>
+						</DisclosurePanel>
+					</Transition>
 				</>
 			)}
 		</Disclosure>

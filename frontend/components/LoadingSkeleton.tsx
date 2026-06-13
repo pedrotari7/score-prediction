@@ -3,7 +3,9 @@ import { classNames } from '../lib/utils/reactHelper';
 import Panel from './Panel';
 
 const Pulse = ({ className = '' }: { className?: string }) => (
-	<div className={classNames('animate-pulse rounded bg-white/10', className)} />
+	<div className={classNames('relative overflow-hidden rounded bg-white/10', className)}>
+		<div className='absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent' />
+	</div>
 );
 
 const SkeletonUserRow = () => {
