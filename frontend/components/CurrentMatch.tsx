@@ -395,18 +395,13 @@ const UserGuess = ({
 			prediction={guess}
 			game={game}
 			userID={user.uid}
-			className={
-				classNames(
-					'my-2 flex w-full rounded p-4 sm:m-2 sm:w-max',
-					!isInPast && myGuess
-						? 'flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4'
-						: classNames('flex-row items-center justify-between gap-4', showReactions ? 'flex-wrap' : ''),
-					'cursor-pointer select-none'
-				) +
-				' ' +
-				// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
-				classNames('hover:bg-opacity-50')
-			}
+			className={classNames(
+				'my-2 flex w-full rounded-xl p-4 transition-colors hover:bg-white/20 sm:m-2 sm:w-max',
+				!isInPast && myGuess
+					? 'flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4'
+					: classNames('flex-row items-center justify-between gap-4', showReactions ? 'flex-wrap' : ''),
+				'cursor-pointer select-none'
+			)}
 			onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 		>
 			<div className='flex items-center gap-2'>

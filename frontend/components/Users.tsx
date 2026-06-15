@@ -34,18 +34,7 @@ const UsersList = () => {
 								className='relative w-full'
 								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 							>
-								<div
-									className={
-										classNames(
-											gcc('bg-dark'),
-											'my-2 flex w-full flex-row items-center gap-2 rounded p-4 sm:m-2',
-											'cursor-pointer select-none'
-										) +
-										' ' +
-										// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
-										classNames('hover:bg-opacity-50')
-									}
-								>
+								<div className='glass-card my-2 flex w-full cursor-pointer select-none flex-row items-center gap-2 rounded-2xl p-4 transition-all hover:-translate-y-0.5 hover:shadow-card-hover sm:m-2'>
 									<DesktopOnly>
 										<div className='m-2 flex size-8 flex-row items-center justify-center text-xl font-bold'>
 											<span
