@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import {
 	Dialog,
 	DialogBackdrop,
@@ -81,10 +81,6 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 	const route = useTournamentStore(s => s.route);
 	const setRoute = useTournamentStore(s => s.setRoute);
 
-	if (!competition) return <></>;
-
-	const updateRoute = (info: RouteInfo) => setRoute(info);
-
 	const isCurrent = ({ info: { page } }: NavItem) => {
 		return page === Route.Predictions && route.page === Route.Predictions
 			? route.data === user?.uid
@@ -95,6 +91,27 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 		.map(page => navigation.find(item => item.info.page === page))
 		.filter((item): item is NavItem => !!item);
 	const moreNav = navigation.filter(item => !primaryPages.includes(item.info.page));
+
+	const primaryActiveIndex = primaryNav.findIndex(isCurrent);
+	const activeIndex =
+		primaryActiveIndex !== -1 ? primaryActiveIndex : moreNav.some(isCurrent) ? primaryNav.length : -1;
+
+	const navItemRefs = useRef<(HTMLButtonElement | null)[]>([]);
+	const [indicatorRect, setIndicatorRect] = useState<{ left: number; width: number } | null>(null);
+
+	useEffect(() => {
+		const update = () => {
+			const el = navItemRefs.current[activeIndex];
+			setIndicatorRect(el ? { left: el.offsetLeft, width: el.offsetWidth } : null);
+		};
+		update();
+		window.addEventListener('resize', update);
+		return () => window.removeEventListener('resize', update);
+	}, [activeIndex, loading]);
+
+	if (!competition) return <></>;
+
+	const updateRoute = (info: RouteInfo) => setRoute(info);
 
 	const concurrentCompetition = currentCompetitions.find(c => c.name !== competition.name);
 
@@ -328,19 +345,28 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 
 			{/* Mobile bottom navigation */}
 			<nav className='glass-panel fixed inset-x-2 bottom-2 z-20 flex h-14 select-none items-center justify-around rounded-2xl px-1 shadow-glass lg:hidden'>
+				{indicatorRect && (
+					<div
+						className='absolute inset-y-1 rounded-xl shadow-md transition-all duration-300 ease-out'
+						style={{ ...activeStyle, left: indicatorRect.left, width: indicatorRect.width }}
+						aria-hidden='true'
+					/>
+				)}
 				{!loading &&
-					primaryNav.map(item => {
+					primaryNav.map((item, index) => {
 						const Icon = pageIcons[item.info.page] ?? HomeIcon;
-						const active = isCurrent(item);
+						const active = index === activeIndex;
 						return (
 							<button
 								key={item.name}
+								ref={el => {
+									navItemRefs.current[index] = el;
+								}}
 								onClick={() => updateRoute(item.info)}
-								style={active ? activeStyle : undefined}
 								className={classNames(
-									'mx-0.5 flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[11px] font-semibold transition-all duration-200',
+									'relative z-10 mx-0.5 flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[11px] font-semibold transition-colors duration-200',
 									active
-										? 'text-white shadow-md'
+										? 'text-white'
 										: `text-gray-400 hover:text-gray-200 ${gcc('hover:text-light')}`
 								)}
 								aria-current={active ? 'page' : undefined}
@@ -352,10 +378,15 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 					})}
 				{!loading && (
 					<button
+						ref={el => {
+							navItemRefs.current[primaryNav.length] = el;
+						}}
 						onClick={() => setMoreOpen(true)}
 						className={classNames(
-							'flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[11px] font-semibold transition-colors',
-							`text-gray-400 hover:text-gray-200 ${gcc('hover:text-light')}`
+							'relative z-10 flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[11px] font-semibold transition-colors duration-200',
+							activeIndex === primaryNav.length
+								? 'text-white'
+								: `text-gray-400 hover:text-gray-200 ${gcc('hover:text-light')}`
 						)}
 					>
 						<EllipsisHorizontalIcon className='size-6' aria-hidden='true' />
