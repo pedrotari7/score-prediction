@@ -1,17 +1,87 @@
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { Dialog, DialogBackdrop, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useTournamentStore } from '../store/tournamentStore';
 import useCompetition from '../hooks/useCompetition';
 import { getGameStage, getStageBoostInfo, hasBoosts, isNum } from '../../shared/utils';
-import { getCurrentDate } from '../lib/utils/reactHelper';
-import type { Team } from '../../interfaces/main';
+import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
+import type { Fixture, Team } from '../../interfaces/main';
 import Flag from './Flag';
+import ScoreInput from './ScoreInput';
 
 const DISMISSED_KEY = 'boost-reminder-dismissed';
 
 const EXAMPLE_HOME = { id: 6, name: 'Brazil' } as Team;
 const EXAMPLE_AWAY = { id: 26, name: 'Argentina' } as Team;
+
+const BoostableGameRow = ({ game }: { game: Fixture }) => {
+	const predictions = useTournamentStore(s => s.predictions);
+	const boosts = useTournamentStore(s => s.boosts);
+	const uid = useTournamentStore(s => s.uid);
+	const doUpdateBoost = useTournamentStore(s => s.updateBoost);
+	const doUpdatePrediction = useTournamentStore(s => s.updatePrediction);
+	const fixtures = useTournamentStore(s => s.fixtures);
+	const { competition } = useCompetition();
+
+	const homeRef = useRef<HTMLInputElement>(null);
+	const awayRef = useRef<HTMLInputElement>(null);
+
+	const gameID = game.fixture.id;
+	const pred = predictions[gameID]?.[uid] ?? { home: null, away: null };
+	const myBoosts = boosts?.[uid] ?? [];
+	const isBoosted = myBoosts.includes(gameID);
+	const stage = getGameStage(game);
+	const { remaining } = getStageBoostInfo(competition, stage, myBoosts, fixtures);
+
+	return (
+		<div className='flex items-center gap-2 rounded-lg bg-white/5 px-3 py-2'>
+			<span className='shrink-0 text-xs font-medium text-white'>{game.teams.home.name}</span>
+			<Flag team={game.teams.home} className='scale-75' />
+			<div className='flex items-center gap-1'>
+				<ScoreInput
+					innerRef={homeRef}
+					id={`boost-modal-${gameID}-home`}
+					value={pred.home}
+					className='!h-7 !w-8 !p-0 text-xs'
+					onchange={e => {
+						const val = parseInt(e.target.value);
+						doUpdatePrediction({ ...pred, home: isNaN(val) ? (null as unknown as number) : val }, gameID);
+					}}
+				/>
+				<span className='text-[10px] text-gray-400'>-</span>
+				<ScoreInput
+					innerRef={awayRef}
+					id={`boost-modal-${gameID}-away`}
+					value={pred.away}
+					className='!h-7 !w-8 !p-0 text-xs'
+					onchange={e => {
+						const val = parseInt(e.target.value);
+						doUpdatePrediction({ ...pred, away: isNaN(val) ? (null as unknown as number) : val }, gameID);
+					}}
+				/>
+			</div>
+			<Flag team={game.teams.away} className='scale-75' />
+			<span className='shrink-0 text-xs font-medium text-white'>{game.teams.away.name}</span>
+			<button
+				onClick={e => {
+					e.stopPropagation();
+					doUpdateBoost(gameID);
+				}}
+				disabled={!isBoosted && remaining <= 0}
+				className={classNames(
+					'ml-auto flex size-7 shrink-0 items-center justify-center rounded-full text-[10px] font-black transition-all duration-300',
+					isBoosted
+						? 'scale-110 bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-400/50'
+						: remaining > 0
+							? 'bg-gray-700/80 text-gray-300 ring-1 ring-gray-500/50 hover:scale-110 hover:bg-indigo-500/30 hover:text-white hover:ring-indigo-400/50'
+							: 'cursor-not-allowed bg-gray-800/50 text-gray-600'
+				)}
+			>
+				2x
+			</button>
+		</div>
+	);
+};
 
 const BoostReminderModal = ({ forceShow = false, onDismiss }: { forceShow?: boolean; onDismiss?: () => void }) => {
 	const [visible, setVisible] = useState(false);
@@ -21,25 +91,27 @@ const BoostReminderModal = ({ forceShow = false, onDismiss }: { forceShow?: bool
 	const uid = useTournamentStore(s => s.uid);
 	const { competition } = useCompetition();
 
-	const shouldShow = useMemo(() => {
-		if (!hasBoosts(competition) || !uid || !fixtures || !predictions) return false;
+	const boostableGames = useMemo(() => {
+		if (!hasBoosts(competition) || !uid || !fixtures || !predictions) return [];
 
 		const myBoosts = boosts?.[uid] ?? [];
 		const now = getCurrentDate().getTime();
 
-		return Object.values(fixtures).some(game => {
-			const gameDate = new Date(game.fixture.date).getTime();
-			if (gameDate <= now) return false;
+		return Object.values(fixtures)
+			.filter(game => {
+				const gameDate = new Date(game.fixture.date).getTime();
+				if (gameDate <= now) return false;
 
-			const pred = predictions[game.fixture.id]?.[uid];
-			if (!pred || !isNum(pred.home) || !isNum(pred.away)) return false;
+				const pred = predictions[game.fixture.id]?.[uid];
+				if (!pred || !isNum(pred.home) || !isNum(pred.away)) return false;
 
-			if (myBoosts.includes(game.fixture.id)) return false;
+				if (myBoosts.includes(game.fixture.id)) return false;
 
-			const stage = getGameStage(game);
-			const { remaining } = getStageBoostInfo(competition, stage, myBoosts, fixtures);
-			return remaining > 0;
-		});
+				const stage = getGameStage(game);
+				const { remaining } = getStageBoostInfo(competition, stage, myBoosts, fixtures);
+				return remaining > 0;
+			})
+			.sort((a, b) => a.fixture.timestamp - b.fixture.timestamp);
 	}, [fixtures, predictions, boosts, uid, competition]);
 
 	useEffect(() => {
@@ -47,12 +119,12 @@ const BoostReminderModal = ({ forceShow = false, onDismiss }: { forceShow?: bool
 			setVisible(true);
 			return;
 		}
-		if (!shouldShow) return;
+		if (boostableGames.length === 0) return;
 		const dismissed = sessionStorage.getItem(DISMISSED_KEY);
 		if (!dismissed) {
 			setVisible(true);
 		}
-	}, [forceShow, shouldShow]);
+	}, [forceShow, boostableGames]);
 
 	const dismiss = () => {
 		setVisible(false);
@@ -88,7 +160,10 @@ const BoostReminderModal = ({ forceShow = false, onDismiss }: { forceShow?: bool
 						leaveFrom='opacity-100 scale-100'
 						leaveTo='opacity-0 scale-95'
 					>
-						<DialogPanel className='relative w-full max-w-sm overflow-hidden rounded-2xl bg-[#1c1e20] p-6 shadow-xl ring-1 ring-white/10'>
+						<DialogPanel
+							onKeyDown={e => e.stopPropagation()}
+							className='relative max-h-[85vh] w-full max-w-sm overflow-y-auto rounded-2xl bg-[#1c1e20] p-4 shadow-xl ring-1 ring-white/10'
+						>
 							<button
 								onClick={dismiss}
 								className='absolute right-3 top-3 rounded-full p-1 text-gray-400 transition-colors hover:text-white'
@@ -96,20 +171,21 @@ const BoostReminderModal = ({ forceShow = false, onDismiss }: { forceShow?: bool
 								<XMarkIcon className='size-5' />
 							</button>
 
-							<div className='mb-4 flex items-center gap-3'>
-								<div className='flex size-10 items-center justify-center rounded-full bg-indigo-500/20 text-sm font-black text-indigo-400'>
+							<div className='mb-3 flex items-center gap-3'>
+								<div className='flex size-9 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-sm font-black text-indigo-400'>
 									2x
 								</div>
-								<h2 className='text-lg font-bold text-white'>You have boosts available!</h2>
+								<h2 className='text-base font-bold text-white'>You have boosts available!</h2>
 							</div>
 
-							<p className='mb-4 text-sm leading-relaxed text-gray-300'>
-								Boosts double the points you earn on a prediction. You have a limited number of boosts
-								per stage, use them on the games you feel most confident about.
+							<p className='mb-3 text-xs leading-relaxed text-gray-300'>
+								Boosts double your points on a prediction. Tap the{' '}
+								<span className='font-bold text-indigo-400'>2x</span> button below your score to
+								activate — use them on games you&apos;re most confident about.
 							</p>
 
-							<div className='glass-card mb-4 rounded-2xl p-3'>
-								<div className='mb-2 flex items-center justify-between'>
+							<div className='glass-card mb-3 rounded-2xl p-3'>
+								<div className='mb-1.5 flex items-center justify-between'>
 									<span className='rounded-full bg-green-700 px-2 py-0.5 text-[10px] font-bold text-white'>
 										L 1
 									</span>
@@ -124,19 +200,19 @@ const BoostReminderModal = ({ forceShow = false, onDismiss }: { forceShow?: bool
 
 									<div className='relative flex flex-col items-center'>
 										<div className='flex items-center gap-1'>
-											<span className='flex h-10 w-12 items-center justify-center rounded bg-green-200 text-lg font-bold text-gray-800'>
+											<span className='flex h-8 w-10 items-center justify-center rounded bg-green-200 text-base font-bold text-gray-800'>
 												2
 											</span>
-											<span className='flex h-10 w-12 items-center justify-center rounded bg-green-200 text-lg font-bold text-gray-800'>
+											<span className='flex h-8 w-10 items-center justify-center rounded bg-green-200 text-base font-bold text-gray-800'>
 												1
 											</span>
 										</div>
-										<div className='mt-1.5 flex flex-col items-center'>
-											<div className='flex size-7 animate-pulse items-center justify-center rounded-full bg-indigo-500 text-[10px] font-black text-white shadow-lg shadow-indigo-500/40 ring-2 ring-indigo-400/50'>
+										<div className='mt-1 flex flex-col items-center'>
+											<div className='flex size-6 animate-pulse items-center justify-center rounded-full bg-indigo-500 text-[10px] font-black text-white shadow-lg shadow-indigo-500/40 ring-2 ring-indigo-400/50'>
 												2x
 											</div>
 											<svg
-												className='mt-0.5 size-3.5 animate-bounce text-indigo-400'
+												className='mt-0.5 size-3 animate-bounce text-indigo-400'
 												fill='none'
 												viewBox='0 0 24 24'
 												stroke='currentColor'
@@ -154,24 +230,31 @@ const BoostReminderModal = ({ forceShow = false, onDismiss }: { forceShow?: bool
 									</div>
 								</div>
 
-								<div className='mt-2 flex items-center justify-center gap-1 text-[10px]'>
-									<span className='rounded bg-white/10 px-1.5 py-0.5 font-bold'>1.74</span>
-									<span className='px-1.5 py-0.5 opacity-50'>3.60</span>
-									<span className='rounded bg-cyan-700/30 px-1.5 py-0.5 font-bold text-cyan-300'>
+								<div className='mt-1.5 flex items-center justify-center gap-1 text-[10px]'>
+									<span className='rounded bg-white/15 px-1.5 py-0.5 font-bold text-white'>1.74</span>
+									<span className='px-1.5 py-0.5 font-bold text-gray-400'>3.60</span>
+									<span className='rounded bg-cyan-500/20 px-1.5 py-0.5 font-bold text-cyan-200'>
 										4.85
 									</span>
 								</div>
 							</div>
 
-							<p className='mb-5 text-xs leading-relaxed text-gray-400'>
-								The <span className='font-bold text-indigo-400'>2x</span> button appears below your
-								prediction score. Tap it to activate, tap again to remove. Boosts can only be set on
-								games that haven&apos;t started yet.
-							</p>
+							{boostableGames.length > 0 && (
+								<div className='mb-4'>
+									<p className='mb-1.5 text-xs font-semibold text-gray-400'>
+										Games you can boost ({boostableGames.length})
+									</p>
+									<div className='flex flex-col gap-1'>
+										{boostableGames.map(game => (
+											<BoostableGameRow key={game.fixture.id} game={game} />
+										))}
+									</div>
+								</div>
+							)}
 
 							<button
 								onClick={dismiss}
-								className='w-full rounded-xl bg-indigo-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-400'
+								className='w-full rounded-xl bg-indigo-500 py-2 text-sm font-semibold text-white transition-colors hover:bg-indigo-400'
 							>
 								Got it
 							</button>
