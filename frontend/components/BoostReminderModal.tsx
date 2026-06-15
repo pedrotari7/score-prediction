@@ -34,10 +34,14 @@ const BoostableGameRow = ({ game }: { game: Fixture }) => {
 	const { remaining } = getStageBoostInfo(competition, stage, myBoosts, fixtures);
 
 	return (
-		<div className='flex items-center gap-2 rounded-lg bg-white/5 px-3 py-2'>
-			<span className='shrink-0 text-xs font-medium text-white'>{game.teams.home.name}</span>
-			<Flag team={game.teams.home} className='scale-75' />
-			<div className='flex items-center gap-1'>
+		<div className='flex items-center rounded-lg bg-white/5 px-2 py-2'>
+			<div className='flex min-w-0 flex-1 flex-col items-center gap-0.5 sm:flex-row sm:justify-end sm:gap-1'>
+				<span className='min-w-0 truncate text-center text-xs font-medium text-white sm:text-right'>
+					{game.teams.home.name}
+				</span>
+				<Flag team={game.teams.home} className='shrink-0 scale-75' />
+			</div>
+			<div className='flex shrink-0 items-center gap-1 px-1'>
 				<ScoreInput
 					innerRef={homeRef}
 					id={`boost-modal-${gameID}-home`}
@@ -60,8 +64,12 @@ const BoostableGameRow = ({ game }: { game: Fixture }) => {
 					}}
 				/>
 			</div>
-			<Flag team={game.teams.away} className='scale-75' />
-			<span className='shrink-0 text-xs font-medium text-white'>{game.teams.away.name}</span>
+			<div className='flex min-w-0 flex-1 flex-col items-center gap-0.5 sm:flex-row sm:gap-1'>
+				<Flag team={game.teams.away} className='shrink-0 scale-75' />
+				<span className='min-w-0 truncate text-center text-xs font-medium text-white'>
+					{game.teams.away.name}
+				</span>
+			</div>
 			<button
 				onClick={e => {
 					e.stopPropagation();
@@ -69,7 +77,7 @@ const BoostableGameRow = ({ game }: { game: Fixture }) => {
 				}}
 				disabled={!isBoosted && remaining <= 0}
 				className={classNames(
-					'ml-auto flex size-7 shrink-0 items-center justify-center rounded-full text-[10px] font-black transition-all duration-300',
+					'flex size-7 shrink-0 items-center justify-center rounded-full text-[10px] font-black transition-all duration-300',
 					isBoosted
 						? 'scale-110 bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-400/50'
 						: remaining > 0
@@ -162,7 +170,7 @@ const BoostReminderModal = ({ forceShow = false, onDismiss }: { forceShow?: bool
 					>
 						<DialogPanel
 							onKeyDown={e => e.stopPropagation()}
-							className='relative max-h-[85vh] w-full max-w-sm overflow-y-auto rounded-2xl bg-[#1c1e20] p-4 shadow-xl ring-1 ring-white/10'
+							className='relative max-h-[85vh] w-full max-w-sm overflow-y-auto rounded-2xl bg-[#1c1e20] p-4 shadow-xl ring-1 ring-white/10 sm:max-w-lg'
 						>
 							<button
 								onClick={dismiss}
@@ -181,7 +189,7 @@ const BoostReminderModal = ({ forceShow = false, onDismiss }: { forceShow?: bool
 							<p className='mb-3 text-xs leading-relaxed text-gray-300'>
 								Boosts double your points on a prediction. Tap the{' '}
 								<span className='font-bold text-indigo-400'>2x</span> button below your score to
-								activate — use them on games you&apos;re most confident about.
+								activate, use them on games you&apos;re most confident about.
 							</p>
 
 							<div className='glass-card mb-3 rounded-2xl p-3'>
