@@ -82,9 +82,9 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 	const setRoute = useTournamentStore(s => s.setRoute);
 
 	const isCurrent = ({ info: { page } }: NavItem) => {
-		return page === Route.Predictions && route.page === Route.Predictions
-			? route.data === user?.uid
-			: page === route.page;
+		if (page === Route.Predictions && route.page === Route.Predictions) return route.data === user?.uid;
+		if (page === Route.Match && route.page === Route.Home) return true;
+		return page === route.page;
 	};
 
 	const primaryNav = primaryPages
