@@ -146,13 +146,7 @@ const Rules = () => {
 	const updateRoute = (info: RouteInfo) => setRoute(info);
 
 	return (
-		<Panel
-			className={classNames(
-				gcc('bg-dark'),
-				`m-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop`,
-				'mx-8 md:mx-24 lg:mx-48'
-			)}
-		>
+		<Panel className={classNames(`m-8 flex select-none flex-col justify-center p-8`, 'mx-8 md:mx-24 lg:mx-48')}>
 			<div>
 				<div className='mb-4 text-4xl font-bold'>Rules</div>
 				<div className='mb-4 text-2xl font-bold'>Points in each game</div>

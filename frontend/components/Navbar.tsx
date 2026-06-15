@@ -76,240 +76,242 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 		.map(c => c.name)
 		.filter(comp => comp !== competition.name);
 
+	const activeStyle = { background: `linear-gradient(135deg, ${competition.color}, ${competition.color}aa)` };
+
 	return (
-		<Disclosure as='nav' className={classNames(gcc('bg-blue'), 'fixed top-0 z-20 h-16 w-full select-none')}>
+		<Disclosure as='nav' className='fixed inset-x-0 top-0 z-20 h-16 select-none px-2 pt-2 sm:px-4'>
 			{({ open }) => (
 				<>
-					<div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8'>
-						<div className='relative flex h-16 items-center justify-between'>
-							<div className='absolute inset-y-0 left-0 flex items-center lg:hidden'>
-								{/* Mobile menu button */}
-								{!loading && (
-									<DisclosureButton
-										className={classNames(
-											gcc('text-light'),
-											'inline-flex items-center justify-center rounded-md p-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'
-										)}
-										onFocus={e => {
-											if (!open) e.currentTarget.blur();
-										}}
-									>
-										<span className='sr-only'>Open main menu</span>
-										{open ? (
-											<XMarkIcon className='block size-6' aria-hidden='true' />
-										) : (
-											<Bars3Icon className='block size-6' aria-hidden='true' />
-										)}
-									</DisclosureButton>
-								)}
-								{!open && !loading && (
-									<span className={classNames(gcc('text-light'), 'ml-1 text-sm font-bold')}>
-										{navigation.find(item => isCurrent(item))?.name}
-									</span>
-								)}
-							</div>
-							<div className='flex flex-1 items-center justify-center lg:items-stretch lg:justify-start'>
-								<div
-									className='flex shrink-0 cursor-pointer items-center'
-									onClick={() => updateRoute({ page: Route.Home })}
+					<div className='glass-panel mx-auto flex h-12 max-w-7xl items-center justify-between rounded-2xl px-2 shadow-glass sm:px-4'>
+						<div className='flex items-center gap-1 lg:hidden'>
+							{/* Mobile menu button */}
+							{!loading && (
+								<DisclosureButton
+									className={classNames(
+										gcc('text-light'),
+										'inline-flex items-center justify-center rounded-xl p-2 transition-colors hover:bg-white/10 focus:outline-none'
+									)}
+									onFocus={e => {
+										if (!open) e.currentTarget.blur();
+									}}
 								>
-									<Image
-										src={competition.logo}
-										width={80}
-										height={32}
-										alt='logo'
-										className='block h-8 w-auto'
-									/>
-								</div>
-								<div className='hidden lg:ml-6 lg:block'>
-									<div className='flex space-x-4'>
-										{!loading &&
-											navigation.map((item, index) => (
-												<button
-													key={index}
-													onClick={() => updateRoute(item.info)}
-													className={classNames(
-														'text-lg font-bold transition-colors duration-200 hover:bg-gray-700',
-														isCurrent(item)
-															? `${gcc('bg-dark')} ${gcc('text-light')}`
-															: `text-gray-300 ${gcc('hover:text-light')}`,
-														'cursor-pointer select-none rounded-md px-3 py-2'
-													)}
-													aria-current={isCurrent(item) ? 'page' : undefined}
-												>
-													{item.name}
-												</button>
-											))}
-										{concurrentCompetition && !loading ? (
+									<span className='sr-only'>Open main menu</span>
+									{open ? (
+										<XMarkIcon className='block size-5' aria-hidden='true' />
+									) : (
+										<Bars3Icon className='block size-5' aria-hidden='true' />
+									)}
+								</DisclosureButton>
+							)}
+							{!open && !loading && (
+								<span className={classNames(gcc('text-light'), 'ml-1 text-sm font-bold')}>
+									{navigation.find(item => isCurrent(item))?.name}
+								</span>
+							)}
+						</div>
+						<div className='flex flex-1 items-center justify-center lg:items-stretch lg:justify-start'>
+							<div
+								className='flex shrink-0 cursor-pointer items-center transition-transform hover:scale-105'
+								onClick={() => updateRoute({ page: Route.Home })}
+							>
+								<Image
+									src={competition.logo}
+									width={80}
+									height={32}
+									alt='logo'
+									className='block h-8 w-auto'
+								/>
+							</div>
+							<div className='hidden lg:ml-6 lg:block'>
+								<div className='flex items-center space-x-1'>
+									{!loading &&
+										navigation.map((item, index) => (
 											<button
-												onClick={() => {
-													setLoading(true);
-													router.push(`/${concurrentCompetition?.name}`);
-												}}
+												key={index}
+												onClick={() => updateRoute(item.info)}
+												style={isCurrent(item) ? activeStyle : undefined}
 												className={classNames(
-													'text-lg font-bold hover:bg-gray-700',
-													`text-gray-300 ${gcc('hover:text-light')}`,
-													'cursor-pointer select-none rounded-md px-3 py-2'
+													'text-sm font-semibold transition-all duration-200',
+													isCurrent(item)
+														? 'text-white shadow-md'
+														: `text-gray-300 hover:bg-white/10 ${gcc('hover:text-light')}`,
+													'cursor-pointer select-none rounded-full px-4 py-2'
 												)}
+												aria-current={isCurrent(item) ? 'page' : undefined}
 											>
-												{concurrentCompetition.name}
+												{item.name}
 											</button>
-										) : null}
-									</div>
+										))}
+									{concurrentCompetition && !loading ? (
+										<button
+											onClick={() => {
+												setLoading(true);
+												router.push(`/${concurrentCompetition?.name}`);
+											}}
+											className={classNames(
+												'text-sm font-semibold transition-colors hover:bg-white/10',
+												`text-gray-300 ${gcc('hover:text-light')}`,
+												'cursor-pointer select-none rounded-full px-4 py-2'
+											)}
+										>
+											{concurrentCompetition.name}
+										</button>
+									) : null}
 								</div>
 							</div>
-							<div className='absolute inset-y-0 right-0 flex items-center gap-2 pr-2 lg:static lg:inset-auto lg:pr-0'>
-								{noSpoilers !== null && user && (
-									<button
-										onClick={() => setNoSpoilers(!noSpoilers)}
-										title={noSpoilers ? 'Show results' : 'Hide results'}
-										className={classNames(gcc('text-light'), 'rounded-md p-2 hover:bg-gray-700')}
-									>
-										{noSpoilers ? (
-											<EyeSlashIcon className='size-5' aria-hidden='true' />
-										) : (
-											<EyeIcon className='size-5' aria-hidden='true' />
-										)}
-									</button>
-								)}
-								{/* Profile dropdown */}
-								<Menu as='div' className='relative'>
-									{({ open, close }) => (
-										<div className='flex flex-row gap-2'>
-											<div className='flex items-center justify-center'>
-												{user && (
-													<MenuButton
-														className={classNames(
-															'flex items-center rounded-full bg-gray-800 text-sm',
-															'focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-2 focus:ring-offset-gray-800'
-														)}
-													>
-														<span className='sr-only'>Open user menu</span>
-														<Image
-															className='size-10 rounded-full border-4 border-transparent bg-[#181a1b] hover:border-white'
-															src={user?.photoURL || '/default-avatar.png'}
-															alt={user?.displayName || ''}
-															width={40}
-															height={40}
-														/>
-													</MenuButton>
-												)}
-											</div>
-											<Transition
-												show={open}
-												as={Fragment}
-												enter='transition ease-out duration-100'
-												enterFrom='transform opacity-0 scale-95'
-												enterTo='transform opacity-100 scale-100'
-												leave='transition ease-in duration-75'
-												leaveFrom='transform opacity-100 scale-100'
-												leaveTo='transform opacity-0 scale-95'
-											>
-												<MenuItems
-													static
+						</div>
+						<div className='flex items-center gap-1 sm:gap-2'>
+							{noSpoilers !== null && user && (
+								<button
+									onClick={() => setNoSpoilers(!noSpoilers)}
+									title={noSpoilers ? 'Show results' : 'Hide results'}
+									className={classNames(
+										gcc('text-light'),
+										'rounded-xl p-2 transition-colors hover:bg-white/10'
+									)}
+								>
+									{noSpoilers ? (
+										<EyeSlashIcon className='size-5' aria-hidden='true' />
+									) : (
+										<EyeIcon className='size-5' aria-hidden='true' />
+									)}
+								</button>
+							)}
+							{/* Profile dropdown */}
+							<Menu as='div' className='relative'>
+								{({ open, close }) => (
+									<div className='flex flex-row gap-2'>
+										<div className='flex items-center justify-center'>
+											{user && (
+												<MenuButton
 													className={classNames(
-														gcc('bg-light'),
-														'absolute right-0 mt-2 w-48 origin-top-right rounded-md py-1 shadow-lg ring-1 ring-black/5 focus:outline-none'
+														'flex items-center rounded-full text-sm',
+														'focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent'
 													)}
 												>
-													{noSpoilers !== null && <NoSpoilersToggle />}
-													{user?.admin && (
-														<>
-															<MenuItem>
-																{({ focus }) => (
-																	<div
-																		onClick={() =>
-																			updateRoute({ page: Route.Users })
-																		}
-																		className={classNames(
-																			focus ? 'bg-gray-100' : '',
-																			'block cursor-pointer px-4 py-2 text-sm text-gray-700'
-																		)}
-																	>
-																		Users
-																	</div>
-																)}
-															</MenuItem>
-															<MenuItem>
-																{({ focus }) => (
-																	<div
-																		onClick={() =>
-																			updateRoute({
-																				page: Route.ListLeaderboards,
-																			})
-																		}
-																		className={classNames(
-																			focus ? 'bg-gray-100' : '',
-																			'block cursor-pointer px-4 py-2 text-sm text-gray-700'
-																		)}
-																	>
-																		Leaderboards
-																	</div>
-																)}
-															</MenuItem>
-															<MenuItem>
-																{({ focus }) => (
-																	<div
-																		onClick={() =>
-																			updateRoute({ page: Route.Settings })
-																		}
-																		className={classNames(
-																			focus ? 'bg-gray-100' : '',
-																			'block cursor-pointer px-4 py-2 text-sm text-gray-700'
-																		)}
-																	>
-																		Settings
-																	</div>
-																)}
-															</MenuItem>
-														</>
-													)}
-
-													{otherCompetitions.map(comp => (
-														<MenuItem key={comp}>
+													<span className='sr-only'>Open user menu</span>
+													<Image
+														className='size-9 rounded-full border-2 border-white/10 bg-[#181a1b] transition-colors hover:border-white/40'
+														src={user?.photoURL || '/default-avatar.png'}
+														alt={user?.displayName || ''}
+														width={36}
+														height={36}
+													/>
+												</MenuButton>
+											)}
+										</div>
+										<Transition
+											show={open}
+											as={Fragment}
+											enter='transition ease-out duration-100'
+											enterFrom='transform opacity-0 scale-95'
+											enterTo='transform opacity-100 scale-100'
+											leave='transition ease-in duration-75'
+											leaveFrom='transform opacity-100 scale-100'
+											leaveTo='transform opacity-0 scale-95'
+										>
+											<MenuItems
+												static
+												className={classNames(
+													gcc('text-light'),
+													'glass-panel absolute right-0 mt-2 w-48 origin-top-right rounded-2xl bg-[#181a1b]/80 py-1 shadow-glass focus:outline-none'
+												)}
+											>
+												{noSpoilers !== null && <NoSpoilersToggle />}
+												{user?.admin && (
+													<>
+														<MenuItem>
 															{({ focus }) => (
-																<a
-																	href=''
-																	onClick={e => {
-																		e.preventDefault();
-																		close();
-																		setLoading(true);
-																		router.push(`/${comp}`);
-																	}}
+																<div
+																	onClick={() => updateRoute({ page: Route.Users })}
 																	className={classNames(
-																		focus ? 'bg-gray-100' : '',
-																		'block px-4 py-2 text-sm text-gray-700'
+																		focus ? 'bg-white/10' : '',
+																		'block cursor-pointer px-4 py-2 text-sm'
 																	)}
 																>
-																	{comp.toUpperCase()}
-																</a>
+																	Users
+																</div>
 															)}
 														</MenuItem>
-													))}
+														<MenuItem>
+															{({ focus }) => (
+																<div
+																	onClick={() =>
+																		updateRoute({
+																			page: Route.ListLeaderboards,
+																		})
+																	}
+																	className={classNames(
+																		focus ? 'bg-white/10' : '',
+																		'block cursor-pointer px-4 py-2 text-sm'
+																	)}
+																>
+																	Leaderboards
+																</div>
+															)}
+														</MenuItem>
+														<MenuItem>
+															{({ focus }) => (
+																<div
+																	onClick={() =>
+																		updateRoute({ page: Route.Settings })
+																	}
+																	className={classNames(
+																		focus ? 'bg-white/10' : '',
+																		'block cursor-pointer px-4 py-2 text-sm'
+																	)}
+																>
+																	Settings
+																</div>
+															)}
+														</MenuItem>
+													</>
+												)}
 
-													<MenuItem>
+												{otherCompetitions.map(comp => (
+													<MenuItem key={comp}>
 														{({ focus }) => (
 															<a
 																href=''
-																onClick={async e => {
+																onClick={e => {
 																	e.preventDefault();
-																	await getAuth(app).signOut();
+																	close();
+																	setLoading(true);
+																	router.push(`/${comp}`);
 																}}
 																className={classNames(
-																	focus ? 'bg-gray-100' : '',
-																	'block px-4 py-2 text-sm text-gray-700'
+																	focus ? 'bg-white/10' : '',
+																	'block px-4 py-2 text-sm'
 																)}
 															>
-																Sign out
+																{comp.toUpperCase()}
 															</a>
 														)}
 													</MenuItem>
-												</MenuItems>
-											</Transition>
-										</div>
-									)}
-								</Menu>
-							</div>
+												))}
+
+												<MenuItem>
+													{({ focus }) => (
+														<a
+															href=''
+															onClick={async e => {
+																e.preventDefault();
+																await getAuth(app).signOut();
+															}}
+															className={classNames(
+																focus ? 'bg-white/10' : '',
+																'block px-4 py-2 text-sm'
+															)}
+														>
+															Sign out
+														</a>
+													)}
+												</MenuItem>
+											</MenuItems>
+										</Transition>
+									</div>
+								)}
+							</Menu>
 						</div>
 					</div>
 
@@ -322,8 +324,14 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 						leaveFrom='opacity-100 translate-y-0'
 						leaveTo='opacity-0 -translate-y-2'
 					>
-						<DisclosurePanel static className={classNames(gcc('bg-blue'), 'lg:hidden')}>
-							<div className='flex flex-col space-y-1 px-2 pb-3 pt-2'>
+						<DisclosurePanel
+							static
+							className={classNames(
+								gcc('text-light'),
+								'glass-panel mx-auto mt-2 max-w-7xl rounded-2xl shadow-glass lg:hidden'
+							)}
+						>
+							<div className='flex flex-col gap-1 p-2'>
 								{!loading &&
 									navigation.map((item, index) => (
 										<DisclosureButton
@@ -333,13 +341,16 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 												updateRoute(item.info);
 												open = false;
 											}}
-											style={{ animationDelay: `${index * 30}ms` }}
+											style={{
+												animationDelay: `${index * 30}ms`,
+												...(isCurrent(item) ? activeStyle : {}),
+											}}
 											className={classNames(
-												'w-full animate-fade-slide-up text-left text-lg font-bold transition-colors duration-200',
+												'w-full animate-fade-slide-up text-left text-sm font-semibold transition-all duration-200',
 												isCurrent(item)
-													? `${gcc('bg-dark')} ${gcc('text-light')}`
-													: `text-gray-300 hover:bg-gray-700 ${gcc('hover:text-light')}`,
-												'block cursor-pointer rounded-md px-3 py-2'
+													? 'text-white shadow-md'
+													: `text-gray-300 hover:bg-white/10 ${gcc('hover:text-light')}`,
+												'block cursor-pointer rounded-xl px-4 py-2.5'
 											)}
 											aria-current={isCurrent(item) ? 'page' : undefined}
 										>
@@ -353,9 +364,9 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 											router.push(`/${concurrentCompetition?.name}`);
 										}}
 										className={classNames(
-											'text-lg font-bold',
-											`text-gray-300 hover:bg-gray-700 ${gcc('hover:text-light')}`,
-											'flex cursor-pointer items-center justify-start gap-2 rounded-md px-3 py-8'
+											'text-sm font-semibold',
+											`text-gray-300 hover:bg-white/10 ${gcc('hover:text-light')}`,
+											'flex cursor-pointer items-center justify-start gap-2 rounded-xl p-4'
 										)}
 									>
 										<Image

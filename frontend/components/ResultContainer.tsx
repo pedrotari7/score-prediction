@@ -81,8 +81,8 @@ const ResultContainer = ({
 			onClick={onClick}
 			className={classNames(
 				gcc('text-light'),
-				gcc('bg-blue'),
-				'relative rounded-md border-2 text-center transition-colors duration-500',
+				'bg-white/10',
+				'relative rounded-xl border-2 text-center transition-colors duration-500',
 				!noSpoilers && isExactScore ? 'bg-green-600' : '',
 				!noSpoilers && isCorrectResult ? 'bg-yellow-600' : '',
 				!noSpoilers && isCorrectGoal ? 'bg-pink-600' : '',

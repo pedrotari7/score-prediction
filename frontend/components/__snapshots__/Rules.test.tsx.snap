@@ -3,7 +3,7 @@
 exports[`Rules renders rules page 1`] = `
 <div>
   <div
-    class="mx-2 md:mx-24 lg:mx-48 text-light-wc2026 bg-dark-wc2026 bg-dark-wc2026 m-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop mx-8 md:mx-24 lg:mx-48"
+    class="mx-2 md:mx-24 lg:mx-48 text-light-wc2026 glass-panel rounded-2xl shadow-glass m-8 flex select-none flex-col justify-center p-8 mx-8 md:mx-24 lg:mx-48"
   >
     <div>
       <div

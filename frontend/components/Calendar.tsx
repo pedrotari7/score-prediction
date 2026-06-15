@@ -233,7 +233,7 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 			)}`;
 
 	return (
-		<Panel className={classNames('m-2 flex select-none flex-col rounded-md p-2 shadow-pop sm:m-8 sm:p-8')}>
+		<Panel className={classNames('m-2 flex select-none flex-col p-2 sm:m-8 sm:p-8')}>
 			<div className='mb-4 flex flex-row items-center justify-between gap-2 text-base sm:mb-6 sm:text-2xl'>
 				<div className='font-bold'>{headerLabel}</div>
 				<div className='flex items-center gap-1'>

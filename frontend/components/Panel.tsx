@@ -11,7 +11,14 @@ const Panel = ({ className = '', children }: Props) => {
 	const { gcc } = useCompetition();
 
 	return (
-		<div className={classNames('mx-2 md:mx-24 lg:mx-48', gcc('text-light'), gcc('bg-dark'), className)}>
+		<div
+			className={classNames(
+				'mx-2 md:mx-24 lg:mx-48',
+				gcc('text-light'),
+				'glass-panel rounded-2xl shadow-glass',
+				className
+			)}
+		>
 			{children}
 		</div>
 	);

@@ -130,7 +130,7 @@ const FixturesPage = ({
 		showOnlyUnpredicted && isMyPredictions ? games.filter(needsPrediction) : games;
 
 	return (
-		<Panel className={classNames('m-8 flex select-none flex-col justify-center rounded-md p-8 shadow-pop')}>
+		<Panel className={classNames('m-8 flex select-none flex-col justify-center p-8')}>
 			{debugCountdowns}
 			<div className='mb-6 flex flex-col items-center gap-2 text-3xl sm:flex-row'>
 				<div className='flex flex-row items-center justify-center'>

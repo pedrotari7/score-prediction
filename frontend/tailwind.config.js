@@ -83,6 +83,9 @@ module.exports = {
 			boxShadow: {
 				pop: '0px 2px 40px rgba(0, 0, 0, 0.33)',
 				panel: '0px 2px 4px rgba(0, 0, 0, 0.33)',
+				glass: '0px 8px 32px rgba(0, 0, 0, 0.25)',
+				card: '0px 4px 24px rgba(0, 0, 0, 0.2)',
+				'card-hover': '0px 12px 32px rgba(0, 0, 0, 0.35)',
 			},
 			height: {
 				panel: 'calc(100vh - 4rem)',

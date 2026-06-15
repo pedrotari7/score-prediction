@@ -50,17 +50,12 @@ const FilterOption = ({
 }) => (
 	<div
 		onClick={onClick}
-		className={
-			classNames(
-				'm-2 cursor-pointer select-none rounded-md p-2 text-xs sm:text-lg',
-				'border-2 hover:border-2 hover:border-gray-400',
-				active ? 'border-white' : 'border-transparent',
-				className
-			) +
-			' ' +
-			// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
-			classNames('hover:bg-opacity-50')
-		}
+		className={classNames(
+			'm-1 cursor-pointer select-none rounded-full px-3 py-1.5 text-xs font-semibold transition-all sm:text-sm',
+			'ring-2 ring-transparent hover:ring-white/40',
+			active ? 'scale-105 shadow-md ring-white/80' : 'opacity-50 hover:opacity-100',
+			className
+		)}
 	>
 		{children}
 	</div>
@@ -79,7 +74,7 @@ const Leaderboards = ({
 	const { RedactedSpoilers } = useNoSpoilers();
 	const route = useTournamentStore(s => s.route);
 	const setRoute = useTournamentStore(s => s.setRoute);
-	const { gcc, competition } = useCompetition();
+	const { competition } = useCompetition();
 	const fixtures = useTournamentStore(s => s.fixtures);
 	const finalGame = Object.values(fixtures).find(f => f.league.round === 'Final');
 	const isTournamentFinished = !!finalGame && isGameFinished(finalGame);
@@ -132,7 +127,7 @@ const Leaderboards = ({
 	);
 
 	return (
-		<Panel className={classNames('m-3 select-none rounded-md p-3 shadow-pop sm:mx-[5%] sm:p-6')}>
+		<Panel className={classNames('m-3 select-none p-3 sm:mx-[5%] sm:p-6')}>
 			<div className={classNames('mb-4 flex flex-row items-center justify-between')}>
 				<div className='text-2xl font-bold'>Leaderboards</div>
 				<div className='flex items-center gap-2'>
@@ -208,28 +203,22 @@ const Leaderboards = ({
 							style={{ animationDelay: `${Math.min(index, 10) * 40}ms` }}
 						>
 							<div
-								className={
-									classNames(
-										currentUser === user.uid ? 'border-white' : 'border-transparent',
-										'flex cursor-pointer flex-col items-center justify-between border-8 transition-colors sm:flex-row',
-										gcc('bg-blue'),
-										`mx-1 my-4 rounded-md p-3 sm:mx-[5%] md:mx-[5%] lg:mx-[20%]`
-									) +
-									' ' +
-									// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
-									classNames('hover:bg-opacity-50')
-								}
+								className={classNames(
+									'glass-card flex cursor-pointer flex-col items-center justify-between rounded-2xl border-2 p-3 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover sm:flex-row',
+									currentUser === user.uid ? '' : 'border-transparent',
+									'mx-1 my-4 sm:mx-[5%] md:mx-[5%] lg:mx-[20%]'
+								)}
+								style={currentUser === user.uid ? { borderColor: competition.color } : undefined}
 								onClick={() => setRoute({ page: Route.Predictions, data: user.uid })}
 							>
 								<div className='mb-0 flex flex-col flex-wrap items-center justify-evenly sm:mr-4 sm:flex-row sm:justify-start'>
 									<DesktopOnly>
 										<div className='m-2 mr-6 flex flex-row items-center gap-2 text-xl font-bold'>
 											<span
-												className={classNames(
-													gcc('bg-light'),
-													gcc('text-dark'),
-													'flex size-8 items-center justify-center rounded-full px-6'
-												)}
+												className='flex size-8 items-center justify-center rounded-full text-white shadow-md'
+												style={{
+													background: `linear-gradient(135deg, ${competition.color}, ${competition.color}aa)`,
+												}}
 											>
 												{index + 1}
 											</span>
@@ -249,11 +238,10 @@ const Leaderboards = ({
 									</DesktopOnly>
 									<MobileOnly>
 										<div
-											className={classNames(
-												gcc('bg-light'),
-												gcc('text-dark'),
-												'absolute -left-0 top-0 flex flex-row items-center gap-1 rounded-md px-2 text-center font-bold'
-											)}
+											className='absolute -left-0 top-0 flex flex-row items-center gap-1 rounded-full px-2 text-center font-bold text-white shadow-md'
+											style={{
+												background: `linear-gradient(135deg, ${competition.color}, ${competition.color}aa)`,
+											}}
 										>
 											<span className='p-1'>{index + 1}</span>
 											{currentUser && currentUser !== user.uid && (

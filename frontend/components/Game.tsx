@@ -136,10 +136,7 @@ const Game = memo(function Game({
 			id={`game-${gameID}`}
 			className={classNames(
 				gcc('text-light'),
-				gcc('bg-dark'),
-				gcc('hover:bg-blue'),
-				'my-2 flex flex-col items-center justify-evenly rounded p-2 shadow-pop lg:flex-row',
-				'cursor-pointer'
+				'glass-card my-2 flex cursor-pointer flex-col items-center justify-evenly rounded-2xl p-3 shadow-card transition-shadow hover:shadow-card-hover lg:flex-row'
 			)}
 			onClick={() => handleContainerClick(isMyPredictions)}
 		>

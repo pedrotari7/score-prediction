@@ -173,7 +173,7 @@ const HeadToHead = ({
 	};
 
 	return (
-		<Panel className={classNames('m-4 select-none rounded-md p-4 shadow-pop sm:m-8 sm:p-8')}>
+		<Panel className={classNames('m-4 select-none p-4 sm:m-8 sm:p-8')}>
 			<button
 				onClick={() => setRoute({ page: Route.Leaderboard })}
 				className={classNames(gcc('bg-blue'), 'mb-4 rounded-md px-4 py-2 font-bold hover:opacity-80')}

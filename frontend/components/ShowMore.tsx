@@ -3,7 +3,6 @@ import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import { useRef } from 'react';
 import { classNames } from '../lib/utils/reactHelper';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
-import useCompetition from '../hooks/useCompetition';
 
 const ShowMore = ({
 	children,
@@ -22,8 +21,6 @@ const ShowMore = ({
 		disclosureRef.current?.scrollIntoView({ block: 'start', inline: 'nearest' });
 		setIsOpen(!open);
 	};
-
-	const { gcc } = useCompetition();
 
 	return (
 		<div ref={disclosureRef}>
@@ -46,8 +43,7 @@ const ShowMore = ({
 							<div onClick={() => executeScroll(open)} className='mt-4 flex justify-center'>
 								<DisclosureButton
 									className={classNames(
-										gcc('hover:bg-blue'),
-										'flex w-full justify-center rounded-md p-2 focus:outline-none'
+										'flex w-full justify-center rounded-xl p-2 transition-colors hover:bg-white/10 focus:outline-none'
 									)}
 								>
 									{!open && (

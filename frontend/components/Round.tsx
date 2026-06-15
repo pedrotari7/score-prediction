@@ -22,7 +22,13 @@ export const Round = ({ game }: { game: Fixture }) => {
 	}
 
 	return (
-		<div className={classNames(bgColor, gcc('text-light'), 'items-center rounded-xl px-3 py-1 font-bold')}>
+		<div
+			className={classNames(
+				bgColor || 'bg-white/10',
+				gcc('text-light'),
+				'items-center rounded-full px-3 py-1 text-xs font-bold sm:text-sm'
+			)}
+		>
 			<span>{round}</span>
 		</div>
 	);

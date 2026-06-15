@@ -63,7 +63,7 @@ const SkeletonLiveGame = () => {
 };
 
 const LoadingSkeleton = () => (
-	<Panel className='relative m-4 flex select-none flex-col justify-center rounded-md p-4 shadow-pop sm:m-8 sm:p-8 md:mx-24'>
+	<Panel className='relative m-4 flex select-none flex-col justify-center p-4 sm:m-8 sm:p-8 md:mx-24'>
 		{/* Header: "Next Game" + refresh icon */}
 		<div className='mb-4 flex flex-row items-center justify-between'>
 			<Pulse className='h-9 w-32' />

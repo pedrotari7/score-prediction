@@ -39,12 +39,28 @@ const PageLayout = ({
 		};
 	}
 	return (
-		<div className='flex h-screen w-screen flex-col overflow-x-hidden bg-cover bg-center bg-repeat-y' style={style}>
+		<div
+			className='relative flex h-screen w-screen flex-col overflow-x-hidden bg-cover bg-center bg-repeat-y'
+			style={style}
+		>
 			<Head>
 				<title>{title}</title>
 				<link rel='icon' href='/favicon.ico' />
 				<meta name='viewport' content='width=device-width, initial-scale=1.0' />
 			</Head>
+
+			{competition?.color && (
+				<div className='pointer-events-none fixed inset-0 z-0 overflow-hidden'>
+					<div
+						className='absolute -left-1/4 -top-1/4 size-[60vmax] rounded-full opacity-30 blur-[120px]'
+						style={{ background: competition.color }}
+					/>
+					<div
+						className='absolute -bottom-1/4 -right-1/4 size-[60vmax] rounded-full opacity-20 blur-[120px]'
+						style={{ background: competition.color }}
+					/>
+				</div>
+			)}
 
 			<Navbar loading={loading} setLoading={setLoading} />
 

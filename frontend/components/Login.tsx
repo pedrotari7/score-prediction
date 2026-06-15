@@ -62,31 +62,38 @@ const Login = () => {
 				<source src='/sample.mp4' type='video/mp4' />
 				<source src='/sample.m4v' type='video/x-m4v' />
 			</video>
-			<div className='absolute flex h-full w-screen flex-col items-center justify-evenly bg-[#181a1b]/95'>
-				<div className='select-none text-center text-4xl font-bold text-light md:text-8xl'>
-					SCORE PREDICTION
-				</div>
-				<Image
-					src={competition.logo}
-					width={192}
-					height={192}
-					alt='logo'
-					className='block h-16 w-auto sm:h-48'
-				/>
-				{isAllowedBrowser ? (
-					<button
-						onClick={signIn}
-						className='flex cursor-pointer items-center gap-3 rounded-md bg-white px-6 py-3 text-sm font-medium text-gray-800 shadow-md transition hover:bg-gray-100 active:bg-gray-200'
+			<div className='absolute flex h-full w-screen flex-col items-center justify-center bg-[#181a1b]/80 px-4'>
+				<div className='glass-panel flex w-full max-w-md animate-fade-slide-up flex-col items-center gap-8 rounded-3xl p-8 shadow-glass sm:p-12'>
+					<div
+						className='select-none bg-clip-text text-center text-4xl font-extrabold tracking-tight text-transparent sm:text-6xl'
+						style={{
+							backgroundImage: `linear-gradient(135deg, #ffffff, ${competition?.color ?? '#ffffff'})`,
+						}}
 					>
-						<GoogleIcon />
-						Sign in with Google
-					</button>
-				) : (
-					<div className='flex flex-row items-center gap-2 rounded-md bg-red-200 p-4 text-2xl'>
-						<ExclamationTriangleIcon className='size-10 font-bold text-red-800' />
-						<span className='text-red-800'> Browser not supported </span>
+						SCORE PREDICTION
 					</div>
-				)}
+					<Image
+						src={competition.logo}
+						width={192}
+						height={192}
+						alt='logo'
+						className='block h-16 w-auto drop-shadow-lg sm:h-40'
+					/>
+					{isAllowedBrowser ? (
+						<button
+							onClick={signIn}
+							className='flex w-full cursor-pointer items-center justify-center gap-3 rounded-full bg-white px-6 py-3 text-sm font-semibold text-gray-800 shadow-lg transition-all hover:scale-105 hover:shadow-xl active:scale-100'
+						>
+							<GoogleIcon />
+							Sign in with Google
+						</button>
+					) : (
+						<div className='flex flex-row items-center gap-2 rounded-xl bg-red-200 p-4 text-2xl'>
+							<ExclamationTriangleIcon className='size-10 font-bold text-red-800' />
+							<span className='text-red-800'> Browser not supported </span>
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	);
