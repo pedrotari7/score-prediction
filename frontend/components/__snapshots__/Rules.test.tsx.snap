@@ -179,7 +179,7 @@ exports[`Rules renders rules page 1`] = `
       class="text-light-wc2026 m-8 flex select-none flex-col justify-center rounded-md p-8 mx-8 mb-10 md:mx-24 lg:mx-48"
     />
     <div
-      class="bg-light-wc2026 text-dark-wc2026 fixed bottom-4 right-4 cursor-pointer rounded-md p-4 font-bold shadow-pop"
+      class="bg-light-wc2026 text-dark-wc2026 fixed bottom-20 right-4 cursor-pointer rounded-md p-4 font-bold shadow-pop lg:bottom-4"
       test-id="my-predictions-button"
     >
       My Predictions

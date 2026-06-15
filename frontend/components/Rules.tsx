@@ -174,7 +174,7 @@ const Rules = () => {
 					gcc('bg-light'),
 					gcc('text-dark'),
 
-					'fixed bottom-4 right-4 cursor-pointer rounded-md p-4 font-bold shadow-pop'
+					'fixed bottom-20 right-4 cursor-pointer rounded-md p-4 font-bold shadow-pop lg:bottom-4'
 				)}
 				onClick={() => updateRoute({ page: Route.Predictions, data: route.data })}
 			>

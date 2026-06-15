@@ -64,7 +64,10 @@ const PageLayout = ({
 
 			<Navbar loading={loading} setLoading={setLoading} />
 
-			<main className='relative top-16 z-10 flex h-[calc(100vh-4rem)] flex-col'>{children}</main>
+			<main className='relative top-16 z-10 flex h-[calc(100vh-4rem-4.5rem)] flex-col lg:h-[calc(100vh-4rem)]'>
+				{children}
+				<div className='h-20 shrink-0 lg:hidden' aria-hidden='true' />
+			</main>
 
 			<BoostAnimation />
 			<PwaInstallPrompt />

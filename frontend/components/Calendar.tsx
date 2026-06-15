@@ -263,7 +263,10 @@ const CalendarPage = ({ fixtures }: { fixtures: Fixtures }) => {
 				</div>
 			</div>
 
-			<div {...swipeHandlers} className='max-h-[75vh] overflow-auto rounded'>
+			<div
+				{...swipeHandlers}
+				className='max-h-[calc(75vh-4.5rem)] overflow-auto rounded pb-20 lg:max-h-[75vh] lg:pb-0'
+			>
 				<div
 					className='grid grid-rows-[auto_1fr]'
 					style={{ gridTemplateColumns: `3rem repeat(${days.length}, minmax(4.5rem, 1fr))` }}
