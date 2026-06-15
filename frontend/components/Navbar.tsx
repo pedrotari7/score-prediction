@@ -367,7 +367,7 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 									'relative z-10 mx-0.5 flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[11px] font-semibold transition-colors duration-200',
 									active
 										? 'text-white'
-										: `text-gray-400 hover:text-gray-200 ${gcc('hover:text-light')}`
+										: `text-gray-200 hover:bg-white/10 hover:text-white ${gcc('hover:text-light')}`
 								)}
 								aria-current={active ? 'page' : undefined}
 							>
@@ -386,7 +386,7 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 							'relative z-10 flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[11px] font-semibold transition-colors duration-200',
 							activeIndex === primaryNav.length
 								? 'text-white'
-								: `text-gray-400 hover:text-gray-200 ${gcc('hover:text-light')}`
+								: `text-gray-200 hover:bg-white/10 hover:text-white ${gcc('hover:text-light')}`
 						)}
 					>
 						<EllipsisHorizontalIcon className='size-6' aria-hidden='true' />
