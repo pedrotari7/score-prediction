@@ -23,6 +23,7 @@ import {
 	DEFAULT_USER_RESULT,
 	getEarnedPoints,
 	getGameStage,
+	getOutcome,
 	getResult,
 	getStageBoostInfo,
 	isGameFinished,
@@ -31,7 +32,7 @@ import {
 } from '../../shared/utils';
 import LoadingSkeleton from './LoadingSkeleton';
 import RefreshComp from './RefreshComp';
-import PredictionsStats from './PredictionsStats';
+import PredictionsStats, { type PredictionStatFilter } from './PredictionsStats';
 import SelectLeaderboard from './SelectLeaderboard';
 import useNoSpoilers from '../hooks/useNoSpoilers';
 import useCompetition from '../hooks/useCompetition';
@@ -644,6 +645,11 @@ const CurrentMatch = ({
 	const [members, setMembers] = useState<string[]>(Object.keys(users));
 	const [gameReactions, setGameReactions] = useState<GameReactions>({});
 	const [isReactionPanelOpen, setIsReactionPanelOpen] = useState(false);
+	const [statsFilter, setStatsFilter] = useState<PredictionStatFilter | null>(null);
+
+	useEffect(() => {
+		setStatsFilter(null);
+	}, [gameID]);
 
 	useEffect(() => {
 		if (currentLeaderboard === 'global') {
@@ -768,6 +774,14 @@ const CurrentMatch = ({
 		[gamePredictionsAndResults, game, gamePredictions, uid]
 	);
 
+	const filteredPredictionsAndResults = useMemo(() => {
+		if (!statsFilter) return gamePredictionsAndResults;
+		if (statsFilter === 'winH' || statsFilter === 'winA' || statsFilter === 'draw') {
+			return gamePredictionsAndResults.filter(({ prediction }) => getOutcome(prediction) === statsFilter);
+		}
+		return gamePredictionsAndResults.filter(({ result: r }) => (r[statsFilter] ?? 0) > 0);
+	}, [gamePredictionsAndResults, statsFilter]);
+
 	if (!game || !userInfo) return <LoadingSkeleton />;
 
 	const stadiumImage = getStadiumImageURL(game?.fixture.venue);
@@ -862,12 +876,18 @@ const CurrentMatch = ({
 						game={game}
 						gamePredictions={currentLeaderboardPredictions.map(([_, p]) => p)}
 						resultsTally={resultsTally}
+						activeFilter={statsFilter}
+						onFilterChange={setStatsFilter}
 					/>
 
 					<div className='z-10 mb-20 mt-6'>
 						<div className='mb-4 flex flex-row items-center justify-between text-xl'>
 							<div className='font-bold'>
-								Predictions <span className='opacity-50'>({gamePredictionsAndResults.length})</span>
+								Predictions{' '}
+								<span className='opacity-50'>
+									({filteredPredictionsAndResults.length}
+									{statsFilter ? ` / ${gamePredictionsAndResults.length}` : ''})
+								</span>
 							</div>
 							{Object.keys(leaderboards).length > 0 && (
 								<SelectLeaderboard
@@ -881,7 +901,7 @@ const CurrentMatch = ({
 							)}
 						</div>
 						<div className='flex flex-row flex-wrap'>
-							{gamePredictionsAndResults.map(({ uid, prediction }) => (
+							{filteredPredictionsAndResults.map(({ uid, prediction }) => (
 								<UserGuess
 									gameID={game.fixture.id}
 									user={users[uid]}

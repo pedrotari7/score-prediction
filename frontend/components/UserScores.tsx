@@ -6,11 +6,21 @@ import useCompetition from '../hooks/useCompetition';
 import { classNames } from '../lib/utils/reactHelper';
 import { Tooltip } from 'react-tooltip';
 
-export const Circle = ({ children, className }: { children: ReactNode; className: string }) => (
+export const Circle = ({
+	children,
+	className,
+	onClick,
+}: {
+	children: ReactNode;
+	className: string;
+	onClick?: () => void;
+}) => (
 	<div
+		onClick={onClick}
 		className={classNames(
 			'mx-1 flex size-6 select-none flex-row items-center justify-center rounded-full p-4 text-center',
 			'ring-2 ring-transparent transition-all duration-300',
+			onClick ? 'cursor-pointer' : '',
 			className
 		)}
 	>
