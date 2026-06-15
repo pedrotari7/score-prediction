@@ -554,7 +554,7 @@ const GameStoryStrip = ({
 						ref={isActive ? activeRef : undefined}
 						onClick={() => onSelect(fixture.fixture.id)}
 						className={classNames(
-							'flex shrink-0 flex-col items-center justify-between rounded-xl border-2 px-2 py-1.5 transition-all duration-200 focus:outline-none',
+							'flex shrink-0 flex-col items-center justify-center gap-1 rounded-xl border-2 px-2 py-1.5 transition-all duration-200 focus:outline-none',
 							isActive ? 'scale-105 border-white bg-white/15' : 'border-transparent',
 							isLive && !isActive ? 'bg-green-900/40' : '',
 							isFinished && !isActive ? 'bg-white/5' : '',
