@@ -76,17 +76,25 @@ const ResultContainer = ({
 
 	const totalEarnedPoints = getEarnedPoints(prediction, game, competition, gameOdds, !!isBoosted);
 
+	const resultBgColor = noSpoilers
+		? 'bg-white/10'
+		: isExactScore
+			? 'bg-green-600'
+			: isCorrectResult
+				? 'bg-yellow-600'
+				: isCorrectGoal
+					? 'bg-pink-600'
+					: isWrong
+						? 'bg-red-600'
+						: 'bg-white/10';
+
 	return (
 		<div
 			onClick={onClick}
 			className={classNames(
 				gcc('text-light'),
-				'bg-white/10',
+				resultBgColor,
 				'relative rounded-xl border-2 text-center transition-colors duration-500',
-				!noSpoilers && isExactScore ? 'bg-green-600' : '',
-				!noSpoilers && isCorrectResult ? 'bg-yellow-600' : '',
-				!noSpoilers && isCorrectGoal ? 'bg-pink-600' : '',
-				!noSpoilers && isWrong ? 'bg-red-600' : '',
 				isPredictValid ? 'border-transparent' : 'border-red-600',
 				className
 			)}

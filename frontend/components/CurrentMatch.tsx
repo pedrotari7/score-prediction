@@ -822,7 +822,7 @@ const CurrentMatch = ({
 						{!isExtraInfoOpen && prevGameId !== null && (
 							<div
 								className={classNames(
-									`absolute left-0 top-1/2 w-max -translate-y-1/2 cursor-pointer rounded-md sm:-translate-x-full`
+									`absolute left-0 top-1/2 z-10 w-max -translate-y-1/2 cursor-pointer rounded-md sm:-translate-x-full`
 								)}
 								onClick={() => !isReactionPanelOpen && setGameID(prevGameId)}
 							>
