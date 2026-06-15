@@ -3,8 +3,11 @@ import type { Lineup, LineupPlayer, LineupPlayers, Player, PlayersMap } from '..
 import { classNames, DEFAULT_IMAGE } from '../lib/utils/reactHelper';
 
 const LineupUnavailable = () => (
-	<div className={'flex flex-col items-center rounded-md bg-gray-700 p-8 text-sm sm:text-base'}>
-		{' '}
+	<div
+		className={
+			'flex flex-col items-center rounded-2xl border border-white/10 bg-white/5 p-8 text-sm shadow-panel sm:text-base'
+		}
+	>
 		Lineups Unavailable
 	</div>
 );
@@ -28,12 +31,17 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 		const url = playerInfo?.photo ? playerInfo.photo : DEFAULT_IMAGE;
 		return (
 			<div
-				className={classNames('flex items-center', reverse ? 'justify-start sm:flex-row-reverse' : 'flex-row')}
+				className={classNames(
+					'flex items-center rounded-lg p-1 transition-colors duration-150 hover:bg-white/5',
+					reverse ? 'justify-start sm:flex-row-reverse' : 'flex-row'
+				)}
 			>
-				<div className='mx-2 w-4 text-center'>{player.number}</div>
-				<div className='mx-2 w-4 text-center'>{player.pos}</div>
+				<div className='mx-2 w-4 text-center text-xs font-semibold text-light/50'>{player.number}</div>
+				<div className='mx-2 w-6 rounded bg-white/5 text-center text-xs font-semibold text-light/60'>
+					{player.pos}
+				</div>
 				<Image
-					className='m-2 size-6 rounded-full object-cover sm:size-10'
+					className='m-2 size-6 rounded-full object-cover ring-1 ring-white/10 sm:size-10'
 					src={url}
 					width={40}
 					height={40}
@@ -46,25 +54,29 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 
 	const Lineup = ({ lineup, isHomeTeam = false }: { lineup: Lineup; isHomeTeam?: boolean }) => {
 		return (
-			<div className='mt-2'>
-				<div className='mb-2 text-center text-lg font-bold'>
-					{lineup.team.name} - {lineup.formation}
+			<div className='flex flex-1 flex-col rounded-2xl border border-white/10 bg-white/5 p-3 shadow-panel sm:p-4'>
+				<div className='mb-3 text-center'>
+					<div className='text-base font-bold sm:text-lg'>{lineup.team.name}</div>
+					<div className='text-xs font-semibold uppercase tracking-widest text-light/50'>
+						{lineup.formation}
+					</div>
 				</div>
 
-				<div className='flex flex-col items-center rounded-md p-3'>
-					{/* <div className="text-center mb-2 font-bold">Coach</div> */}
+				<div className='flex flex-col items-center gap-2 rounded-lg bg-white/5 p-3'>
 					<Image
-						className='my-2 size-8 rounded-full object-cover sm:size-10'
+						className='size-8 rounded-full object-cover ring-1 ring-white/10 sm:size-10'
 						src={lineup.coach.photo}
 						width={40}
 						height={40}
 						alt=''
 					/>
-					<div>{lineup.coach.name}</div>
+					<div className='text-sm'>{lineup.coach.name}</div>
 				</div>
 
-				<div className='rounded-md p-3'>
-					<div className='mb-2 text-center font-bold'>Bench</div>
+				<div className='mt-3'>
+					<div className='mb-1 text-center text-xs font-semibold uppercase tracking-widest text-light/50'>
+						Bench
+					</div>
 					{lineup.substitutes.map(({ player }: { player: LineupPlayer }) => (
 						<Player key={player.id} player={player} playerInfo={players[player.id]} reverse={isHomeTeam} />
 					))}
@@ -107,19 +119,21 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 					<div className='flex flex-col items-center'>
 						<div className='relative'>
 							<Image
-								className='my-1 size-6 rounded-full object-cover sm:size-8 lg:size-12 xl:size-16'
+								className='my-1 size-6 rounded-full object-cover ring-1 ring-white/20 sm:size-8 lg:size-12 xl:size-16'
 								src={url}
 								width={64}
 								height={64}
 								alt=''
 							/>
-							<div className='absolute -left-4 top-1/2 w-3 text-center text-xs text-gray-400 lg:-left-6 lg:text-base'>
+							<div className='absolute -left-4 top-1/2 w-3 text-center text-xs text-light/50 lg:-left-6 lg:text-base'>
 								{player.number}
 							</div>
 							<div className='absolute left-1/2 -translate-x-1/2'>
 								<div className='flex flex-row'>
-									<div className='xl:hidden'>{shortName}</div>
-									<div className='hidden w-max xl:block'>{player.name}</div>
+									<div className='rounded bg-gray-900/70 px-1 py-0.5 xl:hidden'>{shortName}</div>
+									<div className='hidden w-max rounded bg-gray-900/70 px-1.5 py-0.5 xl:block'>
+										{player.name}
+									</div>
 								</div>
 							</div>
 						</div>
@@ -137,7 +151,12 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 		);
 
 		return (
-			<div className={classNames('relative flex flex-row justify-center', className)}>
+			<div
+				className={classNames(
+					'relative flex flex-row justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5',
+					className
+				)}
+			>
 				<Image
 					src='/area_horizontal.svg'
 					className='hidden size-full opacity-10 sm:block'
@@ -163,9 +182,9 @@ const GameLineup = ({ lineups, players }: { lineups: Lineup[]; players: PlayersM
 	};
 
 	return (
-		<div className='flex flex-col rounded-md bg-gray-700 p-2 text-sm sm:text-base'>
+		<div className='flex flex-col gap-3 text-sm sm:text-base'>
 			<LineupField className='' homeXI={homeLineup.startXI} awayXI={awayLineup.startXI} />
-			<div className='flex flex-col justify-evenly sm:flex-row'>
+			<div className='flex flex-col justify-evenly gap-3 sm:flex-row'>
 				<Lineup lineup={homeLineup} isHomeTeam />
 				<Lineup lineup={awayLineup} />
 			</div>

@@ -29,36 +29,37 @@ const GameStats = ({ stats, colors }: { stats: Statistic[] | undefined; colors: 
 	delete combStats['Ball Possession'];
 
 	const BallPossession = () => (
-		<div className='my-2 flex w-full flex-col'>
-			<div className='w-full text-center'>Ball Possession</div>
+		<div className='mb-3 flex w-full flex-col gap-1.5'>
+			<div className='text-center text-xs font-semibold uppercase tracking-widest text-light/50'>
+				Ball Possession
+			</div>
 
-			<div className='my-2 flex h-6 w-full flex-row items-center'>
+			<div className='flex h-3 w-full flex-row overflow-hidden rounded-full bg-white/5'>
 				<div
-					className='rounded-l-md py-2 text-left'
+					className='transition-all duration-500'
 					style={{
 						backgroundColor: `#${homeColor}`,
-						color: getContrastYIQ(homeColor),
 						width: ballPossession[1] ?? '50%',
 					}}
-				>
-					<span className='my-2 h-6 w-12 px-2'>{ballPossession[1]}</span>
-				</div>
+				/>
 				<div
-					className='rounded-r-md py-2 text-right'
+					className='transition-all duration-500'
 					style={{
 						backgroundColor: `#${awayColor}`,
-						color: getContrastYIQ(awayColor),
 						width: ballPossession[2] ?? '50%',
 					}}
-				>
-					<span className='my-2 h-6 w-12 px-2'>{ballPossession[2]}</span>
-				</div>
+				/>
+			</div>
+
+			<div className='flex w-full flex-row justify-between text-sm font-semibold'>
+				<span>{ballPossession[1]}</span>
+				<span>{ballPossession[2]}</span>
 			</div>
 		</div>
 	);
 
 	return (
-		<div className='flex justify-center rounded-md bg-gray-700 p-6'>
+		<div className='flex justify-center rounded-2xl border border-white/10 bg-white/5 p-4 shadow-panel sm:p-6'>
 			<div className='flex w-full flex-col items-center justify-center text-sm sm:w-1/2 sm:text-base xl:w-1/3'>
 				<BallPossession />
 				{Object.entries(combStats).map(([type, [idx, homeValue, awayValue]]) => {
@@ -71,16 +72,21 @@ const GameStats = ({ stats, colors }: { stats: Statistic[] | undefined; colors: 
 						awayStyle = { backgroundColor: `#${awayColor}`, color: getContrastYIQ(awayColor) };
 					}
 					return (
-						<div key={idx} className='flex w-full flex-row items-center justify-between'>
+						<div
+							key={idx}
+							className='flex w-full flex-row items-center justify-between gap-2 rounded-lg px-1 py-1.5 transition-colors duration-150 hover:bg-white/5'
+						>
 							<div
-								className='my-2 flex h-6 w-12 items-center justify-center rounded-md px-2 text-center'
+								className='flex h-7 w-12 items-center justify-center rounded-full bg-white/5 px-2 text-center font-semibold'
 								style={homeStyle}
 							>
 								{homeValue ?? 0}
 							</div>
-							<div className='my-2 flex h-6 items-center text-center'>{type}</div>
+							<div className='flex h-6 items-center text-center text-xs uppercase tracking-wide text-light/60 sm:text-sm'>
+								{type}
+							</div>
 							<div
-								className='my-2 flex h-6 w-12 items-center justify-center rounded-md px-2 text-center'
+								className='flex h-7 w-12 items-center justify-center rounded-full bg-white/5 px-2 text-center font-semibold'
 								style={awayStyle}
 							>
 								{awayValue ?? 0}

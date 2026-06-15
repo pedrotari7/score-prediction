@@ -17,21 +17,17 @@ enum GamePanel {
 const NavOption = ({ option, active, onClick }: { option: GamePanel; active: boolean; onClick: () => void }) => {
 	const { gcc } = useCompetition();
 	return (
-		<div
+		<button
 			onClick={onClick}
-			className={
-				classNames(
-					gcc('hover:bg-light'),
-					active ? gcc('bg-dark') : '',
-					'mx-2 my-4 cursor-pointer rounded-md px-4 py-2 sm:mx-4'
-				) +
-				' ' +
-				// eslint-disable-next-line tailwindcss/migration-from-tailwind-2
-				classNames('hover:bg-opacity-50')
-			}
+			className={classNames(
+				'mx-0.5 cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 sm:px-5 sm:text-base',
+				active
+					? classNames(gcc('bg-blue'), 'text-white shadow-pop')
+					: 'text-light/60 hover:bg-white/5 hover:text-light'
+			)}
 		>
 			{option}
-		</div>
+		</button>
 	);
 };
 
@@ -79,17 +75,21 @@ const GameExtraInfo = ({ game }: { game: Fixture }) => {
 
 	return (
 		<>
-			<div className='flex flex-row items-center justify-center'>
-				{options.map((option, idx) => (
-					<NavOption
-						key={idx}
-						active={panelMode === option}
-						option={option}
-						onClick={() => setPanelMode(option)}
-					/>
-				))}
+			<div className='flex flex-row items-center justify-center py-3'>
+				<div className='flex flex-row rounded-full bg-white/5 p-1'>
+					{options.map((option, idx) => (
+						<NavOption
+							key={idx}
+							active={panelMode === option}
+							option={option}
+							onClick={() => setPanelMode(option)}
+						/>
+					))}
+				</div>
 			</div>
-			<PanelComponent panelMode={panelMode} game={game} extraInfo={extraInfo} players={players} />
+			<div key={panelMode} className='animate-fade-in'>
+				<PanelComponent panelMode={panelMode} game={game} extraInfo={extraInfo} players={players} />
+			</div>
 		</>
 	);
 };

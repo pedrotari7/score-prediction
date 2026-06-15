@@ -15,20 +15,20 @@ enum EventType {
 const Score = ({ score, label }: { score: Result; label: string }) => {
 	if (score.home === null || score.away == null) return <></>;
 	return (
-		<div className='flex flex-row items-center text-sm'>
-			<div className='flex h-0.5 grow bg-gray-500 opacity-80'></div>
-			<div className='mx-8 w-max'>
+		<div className='my-3 flex w-full flex-row items-center gap-3'>
+			<div className='h-px grow bg-white/10'></div>
+			<div className='whitespace-nowrap rounded-full bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-light/60'>
 				{label} {score.home} - {score.away}
 			</div>
-			<div className='flex h-0.5 grow bg-gray-500 opacity-80'></div>
+			<div className='h-px grow bg-white/10'></div>
 		</div>
 	);
 };
 
 const Referee = ({ referee }: { referee: string | null | undefined }) => (
-	<div className='my-6 flex flex-row items-center justify-center'>
-		<Image className='mx-3' src='/whistle.svg' width={32} height={32} alt='' />
-		<div className='text-center text-sm'>{referee}</div>
+	<div className='mt-4 flex flex-row items-center justify-center gap-2 border-t border-white/10 pt-4 text-light/60'>
+		<Image className='opacity-60' src='/whistle.svg' width={20} height={20} alt='' />
+		<div className='text-center text-xs sm:text-sm'>{referee}</div>
 	</div>
 );
 
@@ -40,7 +40,14 @@ const TimeElapsed = ({ event }: { event: Event }) => (
 );
 
 const EventContainer = ({ children, isAwayTeam }: { children: ReactNode; isAwayTeam: boolean }) => (
-	<div className={classNames('my-2 flex items-center', isAwayTeam ? 'flex-row-reverse' : 'flex-row')}>{children}</div>
+	<div
+		className={classNames(
+			'my-1 flex items-center rounded-lg p-1 transition-colors duration-150 hover:bg-white/5',
+			isAwayTeam ? 'flex-row-reverse' : 'flex-row'
+		)}
+	>
+		{children}
+	</div>
 );
 
 const PlayerWithPhoto = ({
@@ -104,13 +111,13 @@ const GameEvent = ({ event, game, players }: { event: Event; game: Fixture; play
 				/>
 				<div className={classNames('flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
 					<PlayerWithPhoto
-						color='text-green-600'
+						color='text-green-400'
 						player={event.player}
 						isAwayTeam={isAwayTeam}
 						players={players}
 					/>
 					<PlayerWithPhoto
-						color='text-red-600'
+						color='text-red-400'
 						player={event.assist}
 						isAwayTeam={isAwayTeam}
 						players={players}
@@ -202,7 +209,7 @@ const GameFacts = ({
 	});
 
 	return (
-		<div className='flex flex-col justify-center rounded-md bg-gray-700 p-2 text-sm sm:text-base xl:items-center'>
+		<div className='flex flex-col justify-center rounded-2xl border border-white/10 bg-white/5 p-3 text-sm shadow-panel sm:p-4 sm:text-base xl:items-center'>
 			{isGameFinished(game) ? events : events?.reverse()}
 			<Referee referee={game.fixture.referee} />
 		</div>
