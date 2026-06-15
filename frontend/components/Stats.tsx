@@ -59,7 +59,7 @@ const Stats = ({ fixtures, predictions }: Props) => {
 									className='cursor-pointer lg:w-1/3'
 									onClick={() => setRoute({ page: Route.Match, data: fixtureID })}
 								>
-									<Match game={fixture} />
+									<Match game={fixture} showTeamNames />
 								</div>
 								<div className='w-full lg:w-2/3'>
 									<div
