@@ -28,6 +28,7 @@ import { competitions, currentCompetition } from '../../shared/utils';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
 import { getCompetitionClass } from '../lib/utils/reactHelper';
 import useSettings from '../hooks/useSettings';
+import BoostReminderModal from './BoostReminderModal';
 import Loading from './Loading';
 import useStatus from '../hooks/useStatus';
 import RefreshButton from './RefreshButton';
@@ -472,6 +473,7 @@ const SettingsPage = () => {
 	const [response, setResponse] = useState({});
 	const [competition, setCompetition] = useState<Competition>(currentCompetition);
 	const [showPwaPrompt, setShowPwaPrompt] = useState(false);
+	const [showBoostReminder, setShowBoostReminder] = useState(false);
 
 	const { settings, toggleSetting, loading: loadSettings } = useSettings();
 
@@ -741,6 +743,13 @@ const SettingsPage = () => {
 				</button>
 
 				<button
+					onClick={() => setShowBoostReminder(true)}
+					className={`m-5 rounded bg-indigo-700 px-4 py-2 font-bold text-white`}
+				>
+					Test Boost Reminder
+				</button>
+
+				<button
 					onClick={() => useTournamentStore.getState().setRoute({ page: Route.DebugCards })}
 					className={`m-5 rounded bg-purple-700 px-4 py-2 font-bold text-white`}
 				>
@@ -756,6 +765,7 @@ const SettingsPage = () => {
 			</div>
 
 			<PwaInstallPrompt forceShow={showPwaPrompt} onDismiss={() => setShowPwaPrompt(false)} />
+			<BoostReminderModal forceShow={showBoostReminder} onDismiss={() => setShowBoostReminder(false)} />
 
 			<MissingSignups token={userInfo.token} competition={competition} />
 

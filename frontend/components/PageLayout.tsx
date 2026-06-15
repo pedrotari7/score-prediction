@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { competitions } from '../../shared/utils';
 import { useTournamentStore } from '../store/tournamentStore';
 import BoostAnimation from './BoostAnimation';
+import BoostReminderModal from './BoostReminderModal';
 import Navbar from './Navbar';
 import PwaInstallPrompt from './PwaInstallPrompt';
 
@@ -70,6 +71,7 @@ const PageLayout = ({
 			</main>
 
 			<BoostAnimation />
+			<BoostReminderModal />
 			<PwaInstallPrompt />
 
 			{hasFooter && (
