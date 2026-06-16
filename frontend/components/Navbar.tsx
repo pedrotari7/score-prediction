@@ -344,7 +344,7 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 			</nav>
 
 			{/* Mobile bottom navigation */}
-			<nav className='glass-panel fixed inset-x-2 bottom-2 z-20 flex h-14 select-none items-center justify-around rounded-2xl px-1 shadow-glass lg:hidden'>
+			<nav className='glass-panel fixed inset-x-2 bottom-2 z-20 flex h-14 select-none items-center justify-around rounded-2xl px-3 shadow-glass lg:hidden'>
 				{indicatorRect && (
 					<div
 						className='absolute inset-y-1 rounded-xl shadow-md transition-all duration-300 ease-out'
@@ -364,7 +364,7 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 								}}
 								onClick={() => updateRoute(item.info)}
 								className={classNames(
-									'relative z-10 mx-0.5 flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[11px] font-semibold transition-colors duration-200',
+									'relative z-10 mx-1 flex flex-1 flex-col items-center gap-0.5 rounded-xl px-2 py-1.5 text-[11px] font-semibold transition-colors duration-200',
 									active
 										? 'text-white'
 										: `text-gray-200 hover:bg-white/10 hover:text-white ${gcc('hover:text-light')}`
@@ -383,7 +383,7 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 						}}
 						onClick={() => setMoreOpen(true)}
 						className={classNames(
-							'relative z-10 flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[11px] font-semibold transition-colors duration-200',
+							'relative z-10 mx-1 flex flex-1 flex-col items-center gap-0.5 rounded-xl px-2 py-1.5 text-[11px] font-semibold transition-colors duration-200',
 							activeIndex === primaryNav.length
 								? 'text-white'
 								: `text-gray-200 hover:bg-white/10 hover:text-white ${gcc('hover:text-light')}`
