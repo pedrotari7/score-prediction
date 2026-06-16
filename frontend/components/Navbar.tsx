@@ -131,14 +131,14 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 		<>
 			<nav className='fixed inset-x-0 top-0 z-20 h-16 select-none px-2 pt-2 sm:px-4'>
 				<div className='glass-panel mx-auto flex h-12 max-w-7xl items-center justify-between rounded-2xl px-2 shadow-glass sm:px-4'>
-					<div className='flex items-center gap-1 lg:hidden'>
+					<div className='flex flex-1 items-center gap-1 lg:hidden'>
 						{!loading && (
 							<span className={classNames(gcc('text-light'), 'ml-1 text-sm font-bold')}>
 								{navigation.find(item => isCurrent(item))?.name}
 							</span>
 						)}
 					</div>
-					<div className='flex flex-1 items-center justify-center lg:items-stretch lg:justify-start'>
+					<div className='flex shrink-0 items-center justify-center lg:flex-1 lg:items-stretch lg:justify-start'>
 						<div
 							className='flex shrink-0 cursor-pointer items-center transition-transform hover:scale-105'
 							onClick={() => updateRoute({ page: Route.Home })}
@@ -189,7 +189,7 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 							</div>
 						</div>
 					</div>
-					<div className='flex items-center gap-1 sm:gap-2'>
+					<div className='flex flex-1 items-center justify-end gap-1 sm:gap-2 lg:flex-none'>
 						{noSpoilers !== null && user && (
 							<button
 								onClick={() => setNoSpoilers(!noSpoilers)}
