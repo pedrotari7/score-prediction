@@ -122,12 +122,16 @@ const BoostReminderModal = ({ forceShow = false, onDismiss }: { forceShow?: bool
 			.sort((a, b) => a.fixture.timestamp - b.fixture.timestamp);
 	}, [fixtures, predictions, boosts, uid, competition]);
 
+	const hasAutoShown = useRef(false);
+
 	useEffect(() => {
 		if (forceShow) {
 			setVisible(true);
 			return;
 		}
+		if (hasAutoShown.current) return;
 		if (boostableGames.length === 0) return;
+		hasAutoShown.current = true;
 		const dismissed = sessionStorage.getItem(DISMISSED_KEY);
 		if (!dismissed) {
 			setVisible(true);
