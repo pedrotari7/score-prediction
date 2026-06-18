@@ -12,6 +12,7 @@ import type {
 	Users,
 } from '../../interfaces/main';
 import { currentCompetition, isGameFinished } from '../../shared/utils';
+import { hapticHeavy } from '../lib/utils/haptics';
 import { getMetrics } from '../lib/metrics';
 import { fetchTournament, postNoSpoilers, updateBoost as apiUpdateBoost, updatePredictions } from '../pages/api';
 
@@ -242,6 +243,7 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 
 		if (!isRemoving && typeof window !== 'undefined') {
 			window.dispatchEvent(new Event('boost-activated'));
+			hapticHeavy();
 		}
 
 		const result = await apiUpdateBoost(token, gameId, competition);

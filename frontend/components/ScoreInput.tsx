@@ -2,6 +2,7 @@ import type { ChangeEvent, MutableRefObject } from 'react';
 import { useState } from 'react';
 import { isNum } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
+import { hapticLight } from '../lib/utils/haptics';
 import { classNames } from '../lib/utils/reactHelper';
 
 const ScoreInput = ({
@@ -31,6 +32,7 @@ const ScoreInput = ({
 				const val = parseInt(e.target.value);
 				if (!isNaN(val) && (val < 0 || val > 99)) return;
 				onchange(e);
+				hapticLight();
 				setSaved(true);
 				setTimeout(() => setSaved(false), 1000);
 			}}
