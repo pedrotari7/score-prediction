@@ -28,6 +28,7 @@ const TournamentRecap = dynamic(() => import('../components/TournamentRecap'));
 const DebugCardGallery = dynamic(() => import('../components/DebugCardGallery'));
 const MetricsDashboard = dynamic(() => import('../components/MetricsDashboard'));
 const CalendarPage = dynamic(() => import('../components/Calendar'));
+const PredictionTimeline = dynamic(() => import('../components/PredictionTimeline'));
 
 type QueryParams = Record<string, string | string[] | undefined>;
 
@@ -132,6 +133,8 @@ const MainComponent = () => {
 				return <MetricsDashboard />;
 			case Route.Calendar:
 				return <CalendarPage fixtures={fixtures} />;
+			case Route.Timeline:
+				return <PredictionTimeline fixtures={fixtures} predictions={predictions} />;
 			default:
 				return <></>;
 		}

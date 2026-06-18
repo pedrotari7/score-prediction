@@ -16,6 +16,7 @@ import {
 	CalendarDaysIcon,
 	ChartBarIcon,
 	ClipboardDocumentListIcon,
+	ClockIcon,
 	EllipsisHorizontalIcon,
 	EyeIcon,
 	EyeSlashIcon,
@@ -49,6 +50,7 @@ const pageIcons: Partial<Record<Route, typeof HomeIcon>> = {
 	[Route.Calendar]: CalendarDaysIcon,
 	[Route.Stats]: ChartBarIcon,
 	[Route.Recap]: FilmIcon,
+	[Route.Timeline]: ClockIcon,
 	[Route.Rules]: BookOpenIcon,
 };
 
@@ -68,6 +70,7 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 	const navigation: NavItem[] = [
 		{ name: 'NextGame', info: { page: Route.Match } },
 		{ name: 'MyPredictions', info: { page: Route.Predictions, data: user?.uid } },
+		{ name: 'Timeline', info: { page: Route.Timeline } },
 		{ name: 'Leaderboard', info: { page: Route.Leaderboard } },
 		{ name: 'Standings', info: { page: Route.Standings } },
 		{ name: 'Calendar', info: { page: Route.Calendar } },
@@ -76,7 +79,9 @@ export default function Navbar({ loading, setLoading }: { loading: boolean; setL
 		{ name: 'Rules', info: { page: Route.Rules, data: user?.uid } },
 	]
 		.filter(it => it.info.page !== Route.Recap || isTournamentFinished)
-		.filter(it => !noSpoilers || (noSpoilers && it.info.page !== Route.Standings));
+		.filter(
+			it => !noSpoilers || (noSpoilers && it.info.page !== Route.Standings && it.info.page !== Route.Timeline)
+		);
 
 	const route = useTournamentStore(s => s.route);
 	const setRoute = useTournamentStore(s => s.setRoute);
