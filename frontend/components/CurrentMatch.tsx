@@ -420,7 +420,9 @@ const UserGuess = ({
 
 			{invalidScore && !emptyScore && <div className='text-sm font-bold'>Invalid</div>}
 
-			{!hiddenScore && (
+			{emptyScore && isInPast && <div className='text-sm font-medium text-gray-300/70'>No prediction</div>}
+
+			{!hiddenScore && !(emptyScore && isInPast) && (
 				<div className='flex items-center justify-center gap-3 text-xl sm:justify-start'>
 					{(isInPast || !myGuess) && !invalidScore && (
 						<>

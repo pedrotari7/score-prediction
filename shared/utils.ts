@@ -171,6 +171,8 @@ export const isUpsetResult = (game: Fixture, fixtureOdds: FixtureOdds): boolean 
 };
 
 export const getResult = (prediction: Prediction, game: Fixture, isUpset = false): Partial<UserResult> => {
+	if (!prediction) return {};
+
 	const result = getExtraTimeResult(game);
 
 	let ret = {};
