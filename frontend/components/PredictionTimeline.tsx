@@ -17,12 +17,12 @@ import Flag from './Flag';
 import Panel from './Panel';
 import ResultContainer from './ResultContainer';
 
-type ResultType = 'exact' | 'result' | 'onescore' | 'fail';
+type ResultType = 'exact' | 'result' | 'onescore' | 'fail' | 'missed';
 type Filter = ResultType | 'all';
 
 interface TimelineEntry {
 	fixture: Fixture;
-	prediction: { home: number; away: number };
+	prediction: { home: number; away: number } | null;
 	actual: { home: number; away: number };
 	points: number;
 	resultType: ResultType;
@@ -36,6 +36,7 @@ const RESULT_CONFIG: Record<ResultType, { label: string; bg: string; dot: string
 	result: { label: 'Result', bg: 'bg-yellow-600', dot: 'bg-yellow-500' },
 	onescore: { label: '1 Score', bg: 'bg-pink-600', dot: 'bg-pink-500' },
 	fail: { label: 'Wrong', bg: 'bg-red-600', dot: 'bg-red-500' },
+	missed: { label: 'Missed', bg: 'bg-gray-600', dot: 'bg-gray-500' },
 };
 
 const FILTERS: { key: Filter; label: string }[] = [
@@ -44,6 +45,7 @@ const FILTERS: { key: Filter; label: string }[] = [
 	{ key: 'result', label: 'Result' },
 	{ key: 'onescore', label: '1 Score' },
 	{ key: 'fail', label: 'Wrong' },
+	{ key: 'missed', label: 'Missed' },
 ];
 
 const getResultType = (pred: { home: number; away: number }, game: Fixture, isUpset: boolean): ResultType => {
@@ -76,7 +78,22 @@ const PredictionTimeline = ({ fixtures, predictions }: { fixtures: Fixtures; pre
 
 		for (const game of finished) {
 			const pred = predictions[game.fixture.id]?.[uid];
-			if (!pred || !isNum(pred.home) || !isNum(pred.away)) continue;
+			const hasPrediction = pred && isNum(pred.home) && isNum(pred.away);
+			const actual = getExtraTimeResult(game);
+
+			if (!hasPrediction) {
+				result.push({
+					fixture: game,
+					prediction: null,
+					actual,
+					points: 0,
+					resultType: 'missed',
+					wasBoosted: false,
+					wasUpset: false,
+					cumulativePoints: cumulative,
+				});
+				continue;
+			}
 
 			const isUpset = isUpsetResult(game, odds);
 			const resultType = getResultType(pred, game, isUpset);
@@ -86,7 +103,6 @@ const PredictionTimeline = ({ fixtures, predictions }: { fixtures: Fixtures; pre
 			if (wasBoosted) points *= 2;
 
 			cumulative += points;
-			const actual = getExtraTimeResult(game);
 
 			result.push({
 				fixture: game,
@@ -129,6 +145,7 @@ const PredictionTimeline = ({ fixtures, predictions }: { fixtures: Fixtures; pre
 			result: entries.filter(e => e.resultType === 'result').length,
 			onescore: entries.filter(e => e.resultType === 'onescore').length,
 			fail: entries.filter(e => e.resultType === 'fail').length,
+			missed: entries.filter(e => e.resultType === 'missed').length,
 		}),
 		[entries]
 	);
@@ -201,16 +218,20 @@ const PredictionTimeline = ({ fixtures, predictions }: { fixtures: Fixtures; pre
 											>
 												{/* Prediction (left) */}
 												<div className='flex w-3/12 items-center justify-center'>
-													<ResultContainer
-														prediction={entry.prediction}
-														game={entry.fixture}
-														className='px-2 py-1'
-														showEarnedPoints={false}
-													>
-														<span className='font-bold'>
-															{entry.prediction.home} - {entry.prediction.away}
-														</span>
-													</ResultContainer>
+													{entry.prediction ? (
+														<ResultContainer
+															prediction={entry.prediction}
+															game={entry.fixture}
+															className='px-2 py-1'
+															showEarnedPoints={false}
+														>
+															<span className='font-bold'>
+																{entry.prediction.home} - {entry.prediction.away}
+															</span>
+														</ResultContainer>
+													) : (
+														<span className='text-xs text-gray-500'>—</span>
+													)}
 												</div>
 
 												{/* Teams + actual (center) */}
