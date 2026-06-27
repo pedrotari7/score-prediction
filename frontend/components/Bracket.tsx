@@ -1,5 +1,5 @@
 import { Fragment, type JSX, useMemo } from 'react';
-import type { BracketConfig, BracketSlot, Fixture, Fixtures, Standings } from '../../interfaces/main';
+import type { BracketConfig, Fixture, Fixtures, Standings, Team } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
 import useMediaQuery from '../hooks/useMediaQuery';
@@ -121,7 +121,14 @@ const BracketMatchCard = ({
 	);
 };
 
-const PlaceholderCard = ({ slot, matchHeight }: { slot: BracketSlot; matchHeight: number }) => {
+interface PlaceholderSlot {
+	home: string;
+	away: string;
+	homeTeam?: Team;
+	awayTeam?: Team;
+}
+
+const PlaceholderCard = ({ slot, matchHeight }: { slot: PlaceholderSlot; matchHeight: number }) => {
 	const { gcc } = useCompetition();
 
 	return (
@@ -132,9 +139,15 @@ const PlaceholderCard = ({ slot, matchHeight }: { slot: BracketSlot; matchHeight
 			)}
 			style={{ minHeight: matchHeight }}
 		>
-			<div className='px-2.5 py-1.5 text-xs'>{slot.home}</div>
+			<div className='flex items-center gap-1.5 px-2.5 py-1.5 text-xs'>
+				{slot.homeTeam && <Flag team={slot.homeTeam} className='!mx-0' />}
+				{slot.home}
+			</div>
 			<div className='mx-2.5 border-t border-white/10' />
-			<div className='px-2.5 py-1.5 text-xs'>{slot.away}</div>
+			<div className='flex items-center gap-1.5 px-2.5 py-1.5 text-xs'>
+				{slot.awayTeam && <Flag team={slot.awayTeam} className='!mx-0' />}
+				{slot.away}
+			</div>
 		</div>
 	);
 };
@@ -193,7 +206,7 @@ const MirroredConnectors = ({ matchCount, slotHeight }: { matchCount: number; sl
 	return <>{elements}</>;
 };
 
-type ResolvedSlot = { fixture: Fixture } | { slot: BracketSlot };
+type ResolvedSlot = { fixture: Fixture } | { slot: PlaceholderSlot };
 
 type RoundSlots = { name: string; slots: ResolvedSlot[] };
 
@@ -216,6 +229,29 @@ const getSlotTeamIds = (resolved: ResolvedSlot): number[] => {
 	return [resolved.fixture.teams.home.id, resolved.fixture.teams.away.id];
 };
 
+const describeSlotOutcome = (
+	resolved: ResolvedSlot,
+	type: 'W' | 'L',
+	roundName: string
+): { label: string; team?: Team } => {
+	if ('fixture' in resolved) {
+		const f = resolved.fixture;
+		if (isGameFinished(f)) {
+			const homeWins =
+				f.goals.home > f.goals.away ||
+				(f.goals.home === f.goals.away && f.score.penalty.home > f.score.penalty.away);
+			const team = (type === 'W') === homeWins ? f.teams.home : f.teams.away;
+			return { label: team.name, team };
+		}
+		return { label: `${type} ${f.teams.home.name} / ${f.teams.away.name}` };
+	}
+	const short = ROUND_SHORT[roundName] ?? roundName;
+	if (resolved.slot.home.startsWith('W ') || resolved.slot.home.startsWith('L ')) {
+		return { label: `${type} ${short}` };
+	}
+	return { label: `${type} ${resolved.slot.home} / ${resolved.slot.away}` };
+};
+
 const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, standings: Standings) => {
 	return useMemo(() => {
 		if (!bracket) return { roundData: [], thirdPlace: null };
@@ -223,11 +259,18 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 		const allFixtures = Object.values(fixtures);
 
 		const groupMap = new Map<string, number>();
+		const groupNameMap = new Map<string, string>();
+		const groupTeamMap = new Map<string, Team>();
 		for (const [, groupStandings] of standings) {
 			for (const s of groupStandings) {
 				const letter = s.group.split(' ').pop() ?? '';
 				const ordinal = s.rank === 1 ? '1st' : s.rank === 2 ? '2nd' : s.rank === 3 ? '3rd' : null;
-				if (ordinal && letter) groupMap.set(`${ordinal} ${letter}`, s.team.id);
+				if (ordinal && letter) {
+					const key = `${ordinal} ${letter}`;
+					groupMap.set(key, s.team.id);
+					groupNameMap.set(key, s.team.name);
+					groupTeamMap.set(key, s.team);
+				}
 			}
 		}
 
@@ -267,7 +310,30 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 					usedIds.add(fixture.fixture.id);
 					return { fixture } as ResolvedSlot;
 				}
-				return { slot } as ResolvedSlot;
+
+				if (r > 0) {
+					const prevRoundName = bracket.rounds[r - 1].name;
+					const feed1 = prevSlots[slotIndex * 2];
+					const feed2 = prevSlots[slotIndex * 2 + 1];
+					const home = describeSlotOutcome(feed1, 'W', prevRoundName);
+					const away = describeSlotOutcome(feed2, 'W', prevRoundName);
+					return {
+						slot: {
+							home: home.label,
+							away: away.label,
+							homeTeam: home.team,
+							awayTeam: away.team,
+						},
+					} as ResolvedSlot;
+				}
+				return {
+					slot: {
+						home: groupNameMap.get(slot.home) ?? slot.home,
+						away: groupNameMap.get(slot.away) ?? slot.away,
+						homeTeam: groupTeamMap.get(slot.home),
+						awayTeam: groupTeamMap.get(slot.away),
+					},
+				} as ResolvedSlot;
 			});
 
 			roundData.push({ name: round.name, slots: resolved });
@@ -277,7 +343,25 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 		let thirdPlace: ResolvedSlot | null = null;
 		if (bracket.thirdPlace) {
 			const thirdPlaceFixture = allFixtures.find(f => f.league.round === '3rd Place Final');
-			thirdPlace = thirdPlaceFixture ? { fixture: thirdPlaceFixture } : { slot: bracket.thirdPlace };
+			if (thirdPlaceFixture) {
+				thirdPlace = { fixture: thirdPlaceFixture };
+			} else {
+				const sfRound = roundData.find(r => r.name === 'Semi-finals');
+				if (sfRound && sfRound.slots.length === 2) {
+					const tpHome = describeSlotOutcome(sfRound.slots[0], 'L', 'Semi-finals');
+					const tpAway = describeSlotOutcome(sfRound.slots[1], 'L', 'Semi-finals');
+					thirdPlace = {
+						slot: {
+							home: tpHome.label,
+							away: tpAway.label,
+							homeTeam: tpHome.team,
+							awayTeam: tpAway.team,
+						},
+					};
+				} else {
+					thirdPlace = { slot: bracket.thirdPlace };
+				}
+			}
 		}
 
 		return { roundData, thirdPlace };
