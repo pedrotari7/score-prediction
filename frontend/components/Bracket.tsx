@@ -309,7 +309,7 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 			const comboKey = getQualifyingThirdPlaceKey(standings, matchups.length);
 			const assignments = comboKey ? table[comboKey] : null;
 			if (assignments) {
-				bracket.rounds[0].slots.forEach((slot, i) => {
+				bracket.rounds[0].slots?.forEach((slot, i) => {
 					if (!slot.away.includes('/')) return;
 					const homeMatch = slot.home.match(/^1st\s+([A-L])$/);
 					if (!homeMatch) return;
@@ -328,10 +328,12 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 			const roundFixtures = allFixtures.filter(f => f.league.round === round.name);
 			const usedIds = new Set<number>();
 
-			const resolved: ResolvedSlot[] = round.slots.map((slot, slotIndex) => {
+			const slotCount = round.slots?.length ?? prevSlots.length / 2;
+			const resolved: ResolvedSlot[] = Array.from({ length: slotCount }, (_, slotIndex) => {
 				let fixture: Fixture | undefined;
+				const slot = round.slots?.[slotIndex];
 
-				if (r === 0) {
+				if (slot) {
 					const awayLabel = r32ResolvedAway.get(slotIndex) ?? slot.away;
 					const homeIds = resolveSlotTeamIds(slot.home, groupMap);
 					const awayIds = resolveSlotTeamIds(awayLabel, groupMap);
@@ -358,7 +360,7 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 					return { fixture } as ResolvedSlot;
 				}
 
-				if (r > 0) {
+				if (!slot) {
 					const prevRoundName = bracket.rounds[r - 1].name;
 					const feed1 = prevSlots[slotIndex * 2];
 					const feed2 = prevSlots[slotIndex * 2 + 1];

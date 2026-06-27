@@ -248,8 +248,7 @@ export interface BracketSlot {
 
 export interface BracketRound {
 	readonly name: string;
-	readonly fixtureOrder: readonly number[];
-	readonly slots: readonly BracketSlot[];
+	readonly slots?: readonly BracketSlot[];
 }
 
 export interface BracketConfig {
