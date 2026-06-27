@@ -255,6 +255,10 @@ export interface BracketRound {
 export interface BracketConfig {
 	readonly rounds: readonly BracketRound[];
 	readonly thirdPlace?: BracketSlot;
+	readonly thirdPlaceCombinations?: {
+		readonly matchups: readonly string[];
+		readonly table: Record<string, string>;
+	};
 }
 
 export interface Competition {

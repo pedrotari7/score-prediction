@@ -252,6 +252,35 @@ const describeSlotOutcome = (
 	return { label: `${type} ${resolved.slot.home} / ${resolved.slot.away}` };
 };
 
+const getQualifyingThirdPlaceKey = (standings: Standings, count: number): string | null => {
+	const seen = new Map<string, { points: number; goalsDiff: number; goalsFor: number }>();
+	for (const [, groupStandings] of standings) {
+		for (const s of groupStandings) {
+			if (s.rank !== 3) continue;
+			const letter = s.group?.split(' ').pop() ?? '';
+			if (!letter || !/^[A-L]$/.test(letter)) continue;
+			seen.set(letter, {
+				points: s.points ?? 0,
+				goalsDiff: s.goalsDiff ?? 0,
+				goalsFor: s.all?.goals?.for ?? 0,
+			});
+		}
+	}
+	if (seen.size < count) return null;
+	const sorted = [...seen.entries()]
+		.map(([group, stats]) => ({ group, ...stats }))
+		.sort((a, b) => {
+			if (a.points !== b.points) return b.points - a.points;
+			if (a.goalsDiff !== b.goalsDiff) return b.goalsDiff - a.goalsDiff;
+			return b.goalsFor - a.goalsFor;
+		});
+	return sorted
+		.slice(0, count)
+		.map(t => t.group)
+		.sort()
+		.join('');
+};
+
 const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, standings: Standings) => {
 	return useMemo(() => {
 		if (!bracket) return { roundData: [], thirdPlace: null };
@@ -274,6 +303,23 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 			}
 		}
 
+		const r32ResolvedAway = new Map<number, string>();
+		if (bracket.thirdPlaceCombinations) {
+			const { matchups, table } = bracket.thirdPlaceCombinations;
+			const comboKey = getQualifyingThirdPlaceKey(standings, matchups.length);
+			const assignments = comboKey ? table[comboKey] : null;
+			if (assignments) {
+				bracket.rounds[0].slots.forEach((slot, i) => {
+					if (!slot.away.includes('/')) return;
+					const homeMatch = slot.home.match(/^1st\s+([A-L])$/);
+					if (!homeMatch) return;
+					const idx = matchups.indexOf(homeMatch[1]);
+					if (idx === -1) return;
+					r32ResolvedAway.set(i, `3rd ${assignments[idx]}`);
+				});
+			}
+		}
+
 		const roundData: RoundSlots[] = [];
 		let prevSlots: ResolvedSlot[] = [];
 
@@ -286,8 +332,9 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 				let fixture: Fixture | undefined;
 
 				if (r === 0) {
+					const awayLabel = r32ResolvedAway.get(slotIndex) ?? slot.away;
 					const homeIds = resolveSlotTeamIds(slot.home, groupMap);
-					const awayIds = resolveSlotTeamIds(slot.away, groupMap);
+					const awayIds = resolveSlotTeamIds(awayLabel, groupMap);
 					fixture = roundFixtures.find(
 						f =>
 							!usedIds.has(f.fixture.id) &&
@@ -326,12 +373,13 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 						},
 					} as ResolvedSlot;
 				}
+				const awayLabel = r32ResolvedAway.get(slotIndex) ?? slot.away;
 				return {
 					slot: {
 						home: groupNameMap.get(slot.home) ?? slot.home,
-						away: groupNameMap.get(slot.away) ?? slot.away,
+						away: groupNameMap.get(awayLabel) ?? awayLabel,
 						homeTeam: groupTeamMap.get(slot.home),
-						awayTeam: groupTeamMap.get(slot.away),
+						awayTeam: groupTeamMap.get(awayLabel),
 					},
 				} as ResolvedSlot;
 			});

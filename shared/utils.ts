@@ -9,6 +9,7 @@ import {
 	Result,
 	UserResult,
 } from '../interfaces/main';
+import { WC2026_THIRD_PLACE_TABLE } from './thirdPlaceCombinations';
 
 export const competitions = {
 	euro2016: {
@@ -162,6 +163,10 @@ export const competitions = {
 				},
 			],
 			thirdPlace: { home: 'L M101', away: 'L M102' }, // M103
+			thirdPlaceCombinations: {
+				matchups: ['A', 'B', 'D', 'E', 'G', 'I', 'K', 'L'],
+				table: WC2026_THIRD_PLACE_TABLE,
+			},
 		},
 	},
 } as const;
