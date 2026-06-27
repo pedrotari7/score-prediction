@@ -126,6 +126,7 @@ interface PlaceholderSlot {
 	away: string;
 	homeTeam?: Team;
 	awayTeam?: Team;
+	date?: string;
 }
 
 const PlaceholderCard = ({ slot, matchHeight }: { slot: PlaceholderSlot; matchHeight: number }) => {
@@ -133,20 +134,22 @@ const PlaceholderCard = ({ slot, matchHeight }: { slot: PlaceholderSlot; matchHe
 
 	return (
 		<div
-			className={classNames(
-				gcc('text-light'),
-				'glass-card flex w-full flex-col justify-center rounded-lg opacity-50'
-			)}
+			className={classNames(gcc('text-light'), 'glass-card flex w-full flex-col rounded-lg opacity-50')}
 			style={{ minHeight: matchHeight }}
 		>
-			<div className='flex items-center gap-1.5 px-2.5 py-1.5 text-xs'>
+			{slot.date && (
+				<div className='px-2.5 pt-1.5 text-center text-[9px] tabular-nums opacity-40'>
+					{formatMatchTime(slot.date)}
+				</div>
+			)}
+			<div className={classNames('flex items-center gap-1.5 px-2.5 py-1', slot.date ? '' : 'pt-1.5')}>
 				{slot.homeTeam && <Flag team={slot.homeTeam} className='!mx-0' />}
-				{slot.home}
+				<span className='truncate text-xs'>{slot.home}</span>
 			</div>
 			<div className='mx-2.5 border-t border-white/10' />
-			<div className='flex items-center gap-1.5 px-2.5 py-1.5 text-xs'>
+			<div className='flex items-center gap-1.5 px-2.5 py-1 pb-1.5'>
 				{slot.awayTeam && <Flag team={slot.awayTeam} className='!mx-0' />}
-				{slot.away}
+				<span className='truncate text-xs'>{slot.away}</span>
 			</div>
 		</div>
 	);
@@ -332,6 +335,7 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 			const resolved: ResolvedSlot[] = Array.from({ length: slotCount }, (_, slotIndex) => {
 				let fixture: Fixture | undefined;
 				const slot = round.slots?.[slotIndex];
+				const date = round.matchInfo?.[slotIndex]?.date;
 
 				if (slot) {
 					const awayLabel = r32ResolvedAway.get(slotIndex) ?? slot.away;
@@ -372,6 +376,7 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 							away: away.label,
 							homeTeam: home.team,
 							awayTeam: away.team,
+							date,
 						},
 					} as ResolvedSlot;
 				}
@@ -382,6 +387,7 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 						away: groupNameMap.get(awayLabel) ?? awayLabel,
 						homeTeam: groupTeamMap.get(slot.home),
 						awayTeam: groupTeamMap.get(awayLabel),
+						date,
 					},
 				} as ResolvedSlot;
 			});
@@ -392,6 +398,7 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 
 		let thirdPlace: ResolvedSlot | null = null;
 		if (bracket.thirdPlace) {
+			const tpDate = bracket.thirdPlaceInfo?.date;
 			const thirdPlaceFixture = allFixtures.find(f => f.league.round === '3rd Place Final');
 			if (thirdPlaceFixture) {
 				thirdPlace = { fixture: thirdPlaceFixture };
@@ -406,10 +413,11 @@ const useBracketData = (fixtures: Fixtures, bracket: BracketConfig | undefined, 
 							away: tpAway.label,
 							homeTeam: tpHome.team,
 							awayTeam: tpAway.team,
+							date: tpDate,
 						},
 					};
 				} else {
-					thirdPlace = { slot: bracket.thirdPlace };
+					thirdPlace = { slot: { ...bracket.thirdPlace, date: tpDate } };
 				}
 			}
 		}

@@ -246,14 +246,20 @@ export interface BracketSlot {
 	readonly away: string;
 }
 
+export interface MatchInfo {
+	readonly date: string;
+}
+
 export interface BracketRound {
 	readonly name: string;
 	readonly slots?: readonly BracketSlot[];
+	readonly matchInfo?: readonly MatchInfo[];
 }
 
 export interface BracketConfig {
 	readonly rounds: readonly BracketRound[];
 	readonly thirdPlace?: BracketSlot;
+	readonly thirdPlaceInfo?: MatchInfo;
 	readonly thirdPlaceCombinations?: {
 		readonly matchups: readonly string[];
 		readonly table: Record<string, string>;
