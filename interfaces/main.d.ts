@@ -241,6 +241,22 @@ export interface UserResult extends Record<string, number> {
 	boost: number;
 }
 
+export interface BracketSlot {
+	readonly home: string;
+	readonly away: string;
+}
+
+export interface BracketRound {
+	readonly name: string;
+	readonly fixtureOrder: readonly number[];
+	readonly slots: readonly BracketSlot[];
+}
+
+export interface BracketConfig {
+	readonly rounds: readonly BracketRound[];
+	readonly thirdPlace?: BracketSlot;
+}
+
 export interface Competition {
 	name: string;
 	league: number;
@@ -258,6 +274,7 @@ export interface Competition {
 		boosts?: { groups: number; perRound: number };
 	};
 	color: string;
+	bracket?: BracketConfig;
 }
 
 export type Competitions = Record<string, Competition>;

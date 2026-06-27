@@ -84,6 +84,85 @@ export const competitions = {
 			boosts: { groups: 1, perRound: 1 },
 		},
 		color: '#3a0a5e',
+		bracket: {
+			rounds: [
+				{
+					name: 'Round of 32',
+					// bracket position → chronological index (fixtures sorted by date)
+					fixtureOrder: [0, 3, 2, 5, 11, 10, 9, 8, 1, 4, 6, 7, 14, 13, 12, 15],
+					slots: [
+						// top half → SF Match 101
+						// → QF Match 97
+						//   → R16 Match 90
+						{ home: '2nd A', away: '2nd B' }, // M73
+						{ home: '1st F', away: '2nd C' }, // M75
+						//   → R16 Match 89
+						{ home: '1st E', away: '3rd A/B/C/D/F' }, // M74
+						{ home: '1st I', away: '3rd C/D/F/G/H' }, // M77
+						// → QF Match 98
+						//   → R16 Match 93
+						{ home: '2nd K', away: '2nd L' }, // M83
+						{ home: '1st H', away: '2nd J' }, // M84
+						//   → R16 Match 94
+						{ home: '1st D', away: '3rd B/E/F/I/J' }, // M81
+						{ home: '1st G', away: '3rd A/E/H/I/J' }, // M82
+						// bottom half → SF Match 102
+						// → QF Match 99
+						//   → R16 Match 91
+						{ home: '1st C', away: '2nd F' }, // M76
+						{ home: '2nd E', away: '2nd I' }, // M78
+						//   → R16 Match 92
+						{ home: '1st A', away: '3rd C/E/F/H/I' }, // M79
+						{ home: '1st L', away: '3rd E/H/I/J/K' }, // M80
+						// → QF Match 100
+						//   → R16 Match 95
+						{ home: '1st J', away: '2nd H' }, // M86
+						{ home: '2nd D', away: '2nd G' }, // M88
+						//   → R16 Match 96
+						{ home: '1st B', away: '3rd E/F/G/I/J' }, // M85
+						{ home: '1st K', away: '3rd D/E/I/J/L' }, // M87
+					],
+				},
+				{
+					name: 'Round of 16',
+					fixtureOrder: [0, 1, 4, 5, 2, 3, 6, 7],
+					slots: [
+						{ home: 'W M73', away: 'W M75' }, // M90
+						{ home: 'W M74', away: 'W M77' }, // M89
+						{ home: 'W M83', away: 'W M84' }, // M93
+						{ home: 'W M81', away: 'W M82' }, // M94
+						{ home: 'W M76', away: 'W M78' }, // M91
+						{ home: 'W M79', away: 'W M80' }, // M92
+						{ home: 'W M86', away: 'W M88' }, // M95
+						{ home: 'W M85', away: 'W M87' }, // M96
+					],
+				},
+				{
+					name: 'Quarter-finals',
+					fixtureOrder: [0, 1, 2, 3],
+					slots: [
+						{ home: 'W M89', away: 'W M90' }, // M97
+						{ home: 'W M93', away: 'W M94' }, // M98
+						{ home: 'W M91', away: 'W M92' }, // M99
+						{ home: 'W M95', away: 'W M96' }, // M100
+					],
+				},
+				{
+					name: 'Semi-finals',
+					fixtureOrder: [0, 1],
+					slots: [
+						{ home: 'W M97', away: 'W M98' }, // M101
+						{ home: 'W M99', away: 'W M100' }, // M102
+					],
+				},
+				{
+					name: 'Final',
+					fixtureOrder: [0],
+					slots: [{ home: 'W M101', away: 'W M102' }], // M104
+				},
+			],
+			thirdPlace: { home: 'L M101', away: 'L M102' }, // M103
+		},
 	},
 } as const;
 
