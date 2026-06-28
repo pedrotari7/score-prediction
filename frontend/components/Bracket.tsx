@@ -693,6 +693,31 @@ const MirroredBracket = ({
 	);
 };
 
+const M_PAIR_GAP = 8;
+const M_PAIR_BETWEEN_GAP = 20;
+const M_CONN_WIDTH = 24;
+
+const MobilePairConnector = () => {
+	const pairHeight = M_MATCH_HEIGHT * 2 + M_PAIR_GAP;
+	const topCenter = M_MATCH_HEIGHT / 2;
+	const bottomCenter = M_MATCH_HEIGHT + M_PAIR_GAP + M_MATCH_HEIGHT / 2;
+	const midY = (topCenter + bottomCenter) / 2;
+
+	return (
+		<div className='relative shrink-0' style={{ width: M_CONN_WIDTH, height: pairHeight }}>
+			<div
+				className='absolute left-0 w-1/2 rounded-tr border-r-2 border-t-2 border-white/15'
+				style={{ top: topCenter, height: midY - topCenter }}
+			/>
+			<div
+				className='absolute left-0 w-1/2 rounded-br border-b-2 border-r-2 border-white/15'
+				style={{ top: midY, height: bottomCenter - midY }}
+			/>
+			<div className='absolute right-0 w-1/2 border-t-2 border-white/15' style={{ top: midY }} />
+		</div>
+	);
+};
+
 const MobileSwipeableBracket = ({
 	roundData,
 	thirdPlace,
@@ -710,6 +735,20 @@ const MobileSwipeableBracket = ({
 	const prevRoundRef = useRef(0);
 
 	const totalSlides = roundData.length + (thirdPlace ? 1 : 0);
+
+	const slides = useMemo(() => {
+		const result: ({ type: 'round'; roundIndex: number; round: RoundSlots } | { type: '3rd' })[] = [];
+		for (let i = 0; i < roundData.length; i++) {
+			if (thirdPlace && i === roundData.length - 1) {
+				result.push({ type: '3rd' });
+			}
+			result.push({ type: 'round', roundIndex: i, round: roundData[i] });
+		}
+		if (thirdPlace && roundData.length === 0) {
+			result.push({ type: '3rd' });
+		}
+		return result;
+	}, [roundData, thirdPlace]);
 
 	const onScroll = useCallback(() => {
 		const el = scrollRef.current;
@@ -738,9 +777,8 @@ const MobileSwipeableBracket = ({
 		<div className='flex flex-col gap-3 px-1 pb-4'>
 			{/* Round indicator pills */}
 			<div className='flex items-center justify-center gap-1.5 px-4 pt-1'>
-				{Array.from({ length: totalSlides }, (_, i) => {
-					const isThirdPlace = i === roundData.length;
-					const label = isThirdPlace ? '3rd' : (ROUND_SHORT[roundData[i].name] ?? roundData[i].name);
+				{slides.map((slide, i) => {
+					const label = slide.type === '3rd' ? '3rd' : (ROUND_SHORT[slide.round.name] ?? slide.round.name);
 					return (
 						<button
 							key={i}
@@ -764,58 +802,111 @@ const MobileSwipeableBracket = ({
 				onScroll={onScroll}
 				className='bracket-swipe-container flex snap-x snap-mandatory overflow-x-auto'
 			>
-				{roundData.map((round, roundIndex) => (
-					<div key={round.name} className='flex w-full shrink-0 snap-center flex-col gap-2 px-4'>
-						{/* Round title */}
-						<div
-							className={classNames(
-								gcc('text-light'),
-								'text-center text-sm font-bold tracking-wide',
-								animatingRound === roundIndex ? 'bracket-title-flash' : ''
-							)}
-						>
-							{round.name}
-						</div>
+				{slides.map((slide, slideIndex) => {
+					if (slide.type === '3rd') {
+						return (
+							<div key='3rd-place' className='flex w-full shrink-0 snap-center flex-col gap-2 px-4'>
+								<div
+									className={classNames(
+										gcc('text-light'),
+										'text-center text-sm font-bold tracking-wide',
+										animatingRound === slideIndex ? 'bracket-title-flash' : ''
+									)}
+								>
+									3rd Place
+								</div>
+								<div className={animatingRound === slideIndex ? 'bracket-card-enter' : ''}>
+									{renderSlot(thirdPlace!, M_MATCH_HEIGHT)}
+								</div>
+							</div>
+						);
+					}
 
-						{/* Match cards */}
-						<div className='flex flex-col gap-2.5'>
-							{round.slots.map((resolved, slotIndex) => {
-								const key = 'fixture' in resolved ? resolved.fixture.fixture.id : `ph-${slotIndex}`;
-								return (
-									<div
-										key={key}
-										className={animatingRound === roundIndex ? 'bracket-card-enter' : ''}
-										style={
-											animatingRound === roundIndex
-												? { animationDelay: `${slotIndex * 60}ms` }
-												: undefined
+					const { round, roundIndex } = slide;
+					const isLastRound = roundIndex === roundData.length - 1;
+					const showConnectors = !isLastRound && round.slots.length >= 2;
+
+					return (
+						<div key={round.name} className='flex w-full shrink-0 snap-center flex-col gap-2 px-4'>
+							<div
+								className={classNames(
+									gcc('text-light'),
+									'text-center text-sm font-bold tracking-wide',
+									animatingRound === slideIndex ? 'bracket-title-flash' : ''
+								)}
+							>
+								{round.name}
+							</div>
+
+							{!showConnectors ? (
+								<div className='flex flex-col gap-2.5'>
+									{round.slots.map((resolved, slotIndex) => {
+										const key =
+											'fixture' in resolved ? resolved.fixture.fixture.id : `ph-${slotIndex}`;
+										return (
+											<div
+												key={key}
+												className={animatingRound === slideIndex ? 'bracket-card-enter' : ''}
+												style={
+													animatingRound === slideIndex
+														? { animationDelay: `${slotIndex * 60}ms` }
+														: undefined
+												}
+											>
+												{renderSlot(resolved, M_MATCH_HEIGHT)}
+											</div>
+										);
+									})}
+								</div>
+							) : (
+								<div className='flex flex-col' style={{ gap: M_PAIR_BETWEEN_GAP }}>
+									{(() => {
+										const pairs: ResolvedSlot[][] = [];
+										for (let i = 0; i < round.slots.length; i += 2) {
+											pairs.push(round.slots.slice(i, i + 2));
 										}
-									>
-										{renderSlot(resolved, M_MATCH_HEIGHT)}
-									</div>
-								);
-							})}
-						</div>
-					</div>
-				))}
-
-				{/* Third place slide */}
-				{thirdPlace && (
-					<div className='flex w-full shrink-0 snap-center flex-col gap-2 px-4'>
-						<div
-							className={classNames(
-								gcc('text-light'),
-								'text-center text-sm font-bold tracking-wide',
-								animatingRound === roundData.length ? 'bracket-title-flash' : ''
+										return pairs.map((pair, pairIndex) => (
+											<div key={pairIndex} className='flex items-stretch'>
+												<div
+													className='flex min-w-0 flex-1 flex-col'
+													style={{ gap: M_PAIR_GAP }}
+												>
+													{pair.map((resolved, i) => {
+														const slotIndex = pairIndex * 2 + i;
+														const key =
+															'fixture' in resolved
+																? resolved.fixture.fixture.id
+																: `ph-${slotIndex}`;
+														return (
+															<div
+																key={key}
+																className={
+																	animatingRound === slideIndex
+																		? 'bracket-card-enter'
+																		: ''
+																}
+																style={
+																	animatingRound === slideIndex
+																		? {
+																				animationDelay: `${slotIndex * 60}ms`,
+																			}
+																		: undefined
+																}
+															>
+																{renderSlot(resolved, M_MATCH_HEIGHT)}
+															</div>
+														);
+													})}
+												</div>
+												<MobilePairConnector />
+											</div>
+										));
+									})()}
+								</div>
 							)}
-						>
-							3rd Place
 						</div>
-						<div className={animatingRound === roundData.length ? 'bracket-card-enter' : ''}>
-							{renderSlot(thirdPlace, M_MATCH_HEIGHT)}
-						</div>
-					</div>
-				)}
+					);
+				})}
 			</div>
 
 			{/* Swipe hint */}
