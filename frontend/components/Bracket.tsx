@@ -1,4 +1,4 @@
-import { Fragment, type JSX, useMemo } from 'react';
+import { Fragment, type JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { BracketConfig, Fixture, Fixtures, Standings, Team } from '../../interfaces/main';
 import { isGameFinished } from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
@@ -693,12 +693,146 @@ const MirroredBracket = ({
 	);
 };
 
+const MobileSwipeableBracket = ({
+	roundData,
+	thirdPlace,
+	renderSlot,
+	gcc,
+}: {
+	roundData: RoundSlots[];
+	thirdPlace: ResolvedSlot | null;
+	renderSlot: (resolved: ResolvedSlot, matchHeight: number) => JSX.Element;
+	gcc: (p?: string) => string;
+}) => {
+	const scrollRef = useRef<HTMLDivElement>(null);
+	const [activeRound, setActiveRound] = useState(0);
+	const [animatingRound, setAnimatingRound] = useState<number | null>(null);
+	const prevRoundRef = useRef(0);
+
+	const totalSlides = roundData.length + (thirdPlace ? 1 : 0);
+
+	const onScroll = useCallback(() => {
+		const el = scrollRef.current;
+		if (!el) return;
+		const slideWidth = el.clientWidth;
+		const idx = Math.round(el.scrollLeft / slideWidth);
+		setActiveRound(idx);
+	}, []);
+
+	useEffect(() => {
+		if (activeRound !== prevRoundRef.current) {
+			setAnimatingRound(activeRound);
+			prevRoundRef.current = activeRound;
+			const timer = setTimeout(() => setAnimatingRound(null), 600);
+			return () => clearTimeout(timer);
+		}
+	}, [activeRound]);
+
+	const scrollToRound = (idx: number) => {
+		const el = scrollRef.current;
+		if (!el) return;
+		el.scrollTo({ left: el.clientWidth * idx, behavior: 'smooth' });
+	};
+
+	return (
+		<div className='flex flex-col gap-3 px-1 pb-4'>
+			{/* Round indicator pills */}
+			<div className='flex items-center justify-center gap-1.5 px-4 pt-1'>
+				{Array.from({ length: totalSlides }, (_, i) => {
+					const isThirdPlace = i === roundData.length;
+					const label = isThirdPlace ? '3rd' : (ROUND_SHORT[roundData[i].name] ?? roundData[i].name);
+					return (
+						<button
+							key={i}
+							onClick={() => scrollToRound(i)}
+							className={classNames(
+								'rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition-all duration-300',
+								i === activeRound
+									? 'bracket-pill-active scale-110 bg-white/20 text-white shadow-lg shadow-white/10'
+									: 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white/60'
+							)}
+						>
+							{label}
+						</button>
+					);
+				})}
+			</div>
+
+			{/* Swipeable rounds container */}
+			<div
+				ref={scrollRef}
+				onScroll={onScroll}
+				className='bracket-swipe-container flex snap-x snap-mandatory overflow-x-auto'
+			>
+				{roundData.map((round, roundIndex) => (
+					<div key={round.name} className='flex w-full shrink-0 snap-center flex-col gap-2 px-4'>
+						{/* Round title */}
+						<div
+							className={classNames(
+								gcc('text-light'),
+								'text-center text-sm font-bold tracking-wide',
+								animatingRound === roundIndex ? 'bracket-title-flash' : ''
+							)}
+						>
+							{round.name}
+						</div>
+
+						{/* Match cards */}
+						<div className='flex flex-col gap-2.5'>
+							{round.slots.map((resolved, slotIndex) => {
+								const key = 'fixture' in resolved ? resolved.fixture.fixture.id : `ph-${slotIndex}`;
+								return (
+									<div
+										key={key}
+										className={animatingRound === roundIndex ? 'bracket-card-enter' : ''}
+										style={
+											animatingRound === roundIndex
+												? { animationDelay: `${slotIndex * 60}ms` }
+												: undefined
+										}
+									>
+										{renderSlot(resolved, M_MATCH_HEIGHT)}
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				))}
+
+				{/* Third place slide */}
+				{thirdPlace && (
+					<div className='flex w-full shrink-0 snap-center flex-col gap-2 px-4'>
+						<div
+							className={classNames(
+								gcc('text-light'),
+								'text-center text-sm font-bold tracking-wide',
+								animatingRound === roundData.length ? 'bracket-title-flash' : ''
+							)}
+						>
+							3rd Place
+						</div>
+						<div className={animatingRound === roundData.length ? 'bracket-card-enter' : ''}>
+							{renderSlot(thirdPlace, M_MATCH_HEIGHT)}
+						</div>
+					</div>
+				)}
+			</div>
+
+			{/* Swipe hint */}
+			<div className={classNames(gcc('text-light'), 'text-center text-[10px] opacity-30')}>
+				{activeRound < totalSlides - 1 ? 'Swipe for next round →' : '← Swipe back'}
+			</div>
+		</div>
+	);
+};
+
 const BracketPage = ({ fixtures }: { fixtures: Fixtures }) => {
 	const { gcc, competition } = useCompetition();
 	const bracket = competition.bracket;
 	const standings = useTournamentStore(s => s.standings);
 	const { roundData, thirdPlace } = useBracketData(fixtures, bracket, standings);
 	const renderSlot = useRenderSlot();
+	const isMobile = useMediaQuery('(max-width: 767px)');
 	const isDesktop = useMediaQuery('(min-width: 1536px)');
 
 	if (!bracket || roundData.length === 0) {
@@ -706,6 +840,12 @@ const BracketPage = ({ fixtures }: { fixtures: Fixtures }) => {
 			<div className={classNames(gcc('text-light'), 'flex items-center justify-center p-12 text-lg opacity-60')}>
 				Bracket not available
 			</div>
+		);
+	}
+
+	if (isMobile) {
+		return (
+			<MobileSwipeableBracket roundData={roundData} thirdPlace={thirdPlace} renderSlot={renderSlot} gcc={gcc} />
 		);
 	}
 
