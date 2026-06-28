@@ -1,12 +1,21 @@
 import { Fragment, type JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { BracketConfig, Fixture, Fixtures, Standings, Team } from '../../interfaces/main';
-import { isGameFinished } from '../../shared/utils';
+import type { BracketConfig, Fixture, Fixtures, Prediction, Standings, Team } from '../../interfaces/main';
+import {
+	getUpsetSide,
+	isDrawFavorite,
+	isGameFinished,
+	isGameStarted,
+	isNum,
+	isPredictionUpset,
+} from '../../shared/utils';
 import useCompetition from '../hooks/useCompetition';
+import ScoreInput from './ScoreInput';
 import useMediaQuery from '../hooks/useMediaQuery';
 import useNoSpoilers from '../hooks/useNoSpoilers';
-import { classNames } from '../lib/utils/reactHelper';
+import { classNames, getCurrentDate } from '../lib/utils/reactHelper';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import Flag from './Flag';
+import { getPredictionResult } from './ResultContainer';
 
 const ROUND_SHORT: Record<string, string> = {
 	'Round of 32': 'R32',
@@ -151,6 +160,229 @@ const PlaceholderCard = ({ slot, matchHeight }: { slot: PlaceholderSlot; matchHe
 				{slot.awayTeam && <Flag team={slot.awayTeam} className='!mx-0' />}
 				<span className='truncate text-xs'>{slot.away}</span>
 			</div>
+		</div>
+	);
+};
+
+const DEFAULT_PREDICTION = { home: null, away: null } as unknown as Prediction;
+
+const MobileBracketMatchCard = ({ fixture }: { fixture: Fixture }) => {
+	const { gcc, competition } = useCompetition();
+	const { RedactedSpoilers, noSpoilers } = useNoSpoilers();
+	const setRoute = useTournamentStore(s => s.setRoute);
+	const predictions = useTournamentStore(s => s.predictions);
+	const updatePrediction = useTournamentStore(s => s.updatePrediction);
+	const odds = useTournamentStore(s => s.odds);
+	const uid = useTournamentStore(s => s.uid);
+
+	const homeInputRef = useRef<HTMLInputElement>(null);
+	const awayInputRef = useRef<HTMLInputElement>(null);
+
+	const finished = isGameFinished(fixture);
+	const started = isGameStarted(fixture);
+	const gameID = fixture.fixture.id;
+	const prediction = predictions?.[gameID]?.[uid] || DEFAULT_PREDICTION;
+	const gameOdds = odds?.[gameID];
+	const isInPast = getCurrentDate().getTime() >= new Date(fixture.fixture.date).getTime();
+	const hasUpsetConfig = (competition.points.upset ?? 0) > 0;
+
+	const winner = finished
+		? fixture.goals.home > fixture.goals.away ||
+			(fixture.goals.home === fixture.goals.away && fixture.score.penalty.home > fixture.score.penalty.away)
+			? 'home'
+			: 'away'
+		: null;
+
+	const hasPenalties = finished && fixture.score.penalty.home != null;
+
+	const { isExactScore, isCorrectResult, isCorrectGoal, isWrong, isPredictValid } = started
+		? getPredictionResult(prediction, fixture)
+		: { isExactScore: false, isCorrectResult: false, isCorrectGoal: false, isWrong: false, isPredictValid: false };
+
+	const resultBg =
+		noSpoilers || !started
+			? ''
+			: isExactScore
+				? 'bracket-result-exact'
+				: isCorrectResult
+					? 'bracket-result-correct'
+					: isCorrectGoal
+						? 'bracket-result-goal'
+						: isWrong
+							? 'bracket-result-wrong'
+							: '';
+
+	const upsetSide = !isInPast && hasUpsetConfig && gameOdds ? getUpsetSide(gameOdds) : null;
+
+	const onPredictionChange = useCallback(
+		async (value: string, team: 'home' | 'away') => {
+			const parsed = parseInt(value);
+			await updatePrediction({ ...prediction, [team]: isNaN(parsed) ? null : parsed }, gameID);
+		},
+		[prediction, gameID, updatePrediction]
+	);
+
+	const hasPrediction = isNum(prediction.home) && isNum(prediction.away);
+
+	const handleClick = () => {
+		if (!isInPast && !hasPrediction) {
+			homeInputRef.current?.focus();
+			return;
+		}
+		setRoute({ page: Route.Match, data: gameID });
+	};
+
+	const renderTeamScore = (side: 'home' | 'away') => {
+		if (!isInPast) {
+			return (
+				<div className='flex shrink-0 items-center gap-1' onClick={e => e.stopPropagation()}>
+					<ScoreInput
+						innerRef={side === 'home' ? homeInputRef : awayInputRef}
+						id={`bracket-${gameID}-${side}`}
+						value={prediction[side]}
+						className='!sm:h-7 !sm:w-9 !h-7 !w-9 !p-0 text-xs'
+						onchange={e => onPredictionChange(e.target.value, side)}
+					/>
+				</div>
+			);
+		}
+		return (
+			<RedactedSpoilers>
+				<span
+					className={classNames(
+						'shrink-0 text-xs font-bold tabular-nums',
+						isPredictValid ? 'opacity-70' : 'text-red-400 opacity-40'
+					)}
+				>
+					{isNum(prediction[side]) ? prediction[side] : '–'}
+				</span>
+			</RedactedSpoilers>
+		);
+	};
+
+	return (
+		<div
+			className={classNames(
+				gcc('text-light'),
+				'glass-card relative flex w-full flex-col rounded-lg shadow-card transition-shadow hover:shadow-card-hover',
+				resultBg
+			)}
+			onClick={handleClick}
+		>
+			{/* Date + Odds row */}
+			<div className='flex items-center justify-between px-2.5 pt-1.5'>
+				<span className='text-[9px] tabular-nums opacity-40'>{formatMatchTime(fixture.fixture.date)}</span>
+				{gameOdds ? (
+					<div className='flex items-center gap-0.5 text-[9px] tabular-nums'>
+						<span
+							className={classNames(
+								'rounded px-1 py-0.5',
+								upsetSide === 'home'
+									? 'bg-cyan-700/30 font-bold text-cyan-300'
+									: !isDrawFavorite(gameOdds) && gameOdds.home <= gameOdds.away
+										? 'font-bold opacity-80'
+										: 'opacity-40'
+							)}
+						>
+							{gameOdds.home.toFixed(2)}
+						</span>
+						<span
+							className={classNames(
+								'rounded px-1 py-0.5',
+								isDrawFavorite(gameOdds) ? 'font-bold opacity-80' : 'opacity-40'
+							)}
+						>
+							{gameOdds.draw.toFixed(2)}
+						</span>
+						<span
+							className={classNames(
+								'rounded px-1 py-0.5',
+								upsetSide === 'away'
+									? 'bg-cyan-700/30 font-bold text-cyan-300'
+									: !isDrawFavorite(gameOdds) && gameOdds.away <= gameOdds.home
+										? 'font-bold opacity-80'
+										: 'opacity-40'
+							)}
+						>
+							{gameOdds.away.toFixed(2)}
+						</span>
+					</div>
+				) : (
+					<span />
+				)}
+			</div>
+
+			{/* Home team row */}
+			<div
+				className={classNames(
+					'flex items-center justify-between gap-1.5 px-2.5 py-1',
+					finished && winner === 'home' ? 'font-bold' : finished ? 'opacity-50' : ''
+				)}
+			>
+				<span className='flex min-w-0 items-center gap-1.5'>
+					<Flag team={fixture.teams.home} className='!mx-0' />
+					<span className='truncate text-xs'>{fixture.teams.home.name}</span>
+					{upsetSide === 'home' && <span className='size-1.5 shrink-0 rounded-full bg-cyan-500' />}
+				</span>
+				<span className='flex shrink-0 items-center gap-2'>
+					{renderTeamScore('home')}
+					{finished && (
+						<RedactedSpoilers>
+							<span className='text-sm font-bold tabular-nums'>
+								{fixture.goals.home}
+								{hasPenalties && (
+									<span className='ml-0.5 text-[10px] opacity-60'>
+										({fixture.score.penalty.home})
+									</span>
+								)}
+							</span>
+						</RedactedSpoilers>
+					)}
+				</span>
+			</div>
+
+			<div className='mx-2.5 border-t border-white/10' />
+
+			{/* Away team row */}
+			<div
+				className={classNames(
+					'flex items-center justify-between gap-1.5 px-2.5 py-1 pb-1.5',
+					finished && winner === 'away' ? 'font-bold' : finished ? 'opacity-50' : ''
+				)}
+			>
+				<span className='flex min-w-0 items-center gap-1.5'>
+					<Flag team={fixture.teams.away} className='!mx-0' />
+					<span className='truncate text-xs'>{fixture.teams.away.name}</span>
+					{upsetSide === 'away' && <span className='size-1.5 shrink-0 rounded-full bg-cyan-500' />}
+				</span>
+				<span className='flex shrink-0 items-center gap-2'>
+					{renderTeamScore('away')}
+					{finished && (
+						<RedactedSpoilers>
+							<span className='text-sm font-bold tabular-nums'>
+								{fixture.goals.away}
+								{hasPenalties && (
+									<span className='ml-0.5 text-[10px] opacity-60'>
+										({fixture.score.penalty.away})
+									</span>
+								)}
+							</span>
+						</RedactedSpoilers>
+					)}
+				</span>
+			</div>
+
+			{/* Upset badge */}
+			{!isInPast &&
+				hasUpsetConfig &&
+				gameOdds &&
+				isNum(prediction.home) &&
+				isNum(prediction.away) &&
+				isPredictionUpset(prediction, gameOdds) && (
+					<div className='border-t border-white/10 px-2.5 py-1 text-center'>
+						<span className='rounded-full bg-cyan-700 px-1.5 py-0.5 text-[8px] font-bold'>Upset pick</span>
+					</div>
+				)}
 		</div>
 	);
 };
@@ -440,6 +672,15 @@ const useRenderSlot = () => {
 					matchHeight={matchHeight}
 				/>
 			);
+		}
+		return <PlaceholderCard slot={resolved.slot} matchHeight={matchHeight} />;
+	};
+};
+
+const useMobileRenderSlot = () => {
+	return (resolved: ResolvedSlot, matchHeight: number) => {
+		if ('fixture' in resolved) {
+			return <MobileBracketMatchCard fixture={resolved.fixture} />;
 		}
 		return <PlaceholderCard slot={resolved.slot} matchHeight={matchHeight} />;
 	};
@@ -923,6 +1164,7 @@ const BracketPage = ({ fixtures }: { fixtures: Fixtures }) => {
 	const standings = useTournamentStore(s => s.standings);
 	const { roundData, thirdPlace } = useBracketData(fixtures, bracket, standings);
 	const renderSlot = useRenderSlot();
+	const mobileRenderSlot = useMobileRenderSlot();
 	const isMobile = useMediaQuery('(max-width: 767px)');
 	const isDesktop = useMediaQuery('(min-width: 1536px)');
 
@@ -936,7 +1178,12 @@ const BracketPage = ({ fixtures }: { fixtures: Fixtures }) => {
 
 	if (isMobile) {
 		return (
-			<MobileSwipeableBracket roundData={roundData} thirdPlace={thirdPlace} renderSlot={renderSlot} gcc={gcc} />
+			<MobileSwipeableBracket
+				roundData={roundData}
+				thirdPlace={thirdPlace}
+				renderSlot={mobileRenderSlot}
+				gcc={gcc}
+			/>
 		);
 	}
 
