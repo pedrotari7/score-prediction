@@ -56,7 +56,7 @@ const pageIcons: Partial<Record<Route, typeof HomeIcon>> = {
 	[Route.Rules]: BookOpenIcon,
 };
 
-const primaryPages = [Route.Match, Route.Predictions, Route.Leaderboard, Route.Calendar];
+const primaryPages = [Route.Match, Route.Predictions, Route.Leaderboard, Route.Bracket];
 
 export default function Navbar({ loading, setLoading }: { loading: boolean; setLoading: (loading: boolean) => void }) {
 	const router = useRouter();
