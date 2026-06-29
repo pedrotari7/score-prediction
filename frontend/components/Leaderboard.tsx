@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import type { MouseEventHandler, ReactNode } from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import type { Leaderboard, Users } from '../../interfaces/main';
 import { DEFAULT_USER_RESULT, hasBoosts, isGameFinished, isGameStarted } from '../../shared/utils';
@@ -99,11 +99,6 @@ const Leaderboards = ({
 	const [members, setMembers] = useState<string[]>(initialMembers);
 	const [stage, setCurrentStage] = useState<string>('all');
 	const [minPredictionPct, setMinPredictionPct] = useLocalStorage('minPredictionPct', 0);
-	const [sliderValue, setSliderValue] = useState(minPredictionPct);
-
-	useEffect(() => {
-		setSliderValue(minPredictionPct);
-	}, [minPredictionPct]);
 
 	const currentUser = auth.user?.uid;
 
@@ -123,16 +118,20 @@ const Leaderboards = ({
 
 	const totalClosed = closedGameIds.length;
 
-	const getUserPredictionPct = (uid: string) => {
-		if (totalClosed === 0) return 100;
-		return (closedGameIds.filter(id => predictions[id]?.[uid]).length / totalClosed) * 100;
-	};
+	const predictionPctByUser = useMemo(() => {
+		if (totalClosed === 0) return {};
+		const result: Record<string, number> = {};
+		for (const uid of Object.keys(users)) {
+			result[uid] = (closedGameIds.filter(id => predictions[id]?.[uid]).length / totalClosed) * 100;
+		}
+		return result;
+	}, [users, closedGameIds, predictions, totalClosed]);
 
 	const sortedUsers = useMemo(
 		() =>
 			Object.values(users)
 				.filter(user => members.includes(user.uid))
-				.filter(user => getUserPredictionPct(user.uid) >= minPredictionPct)
+				.filter(user => (predictionPctByUser[user.uid] ?? 100) >= minPredictionPct)
 				.sort((a, b) => {
 					const aScore = a.score?.[stage] ?? DEFAULT_USER_RESULT;
 					const bScore = b.score?.[stage] ?? DEFAULT_USER_RESULT;
@@ -147,8 +146,7 @@ const Leaderboards = ({
 						bScore.fail - aScore.fail
 					);
 				}),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[users, members, stage, sortOption, minPredictionPct, closedGameIds, predictions]
+		[users, members, stage, sortOption, minPredictionPct, predictionPctByUser]
 	);
 
 	return (
@@ -224,13 +222,11 @@ const Leaderboards = ({
 								min={0}
 								max={100}
 								step={5}
-								value={sliderValue}
-								onChange={e => setSliderValue(Number(e.target.value))}
-								onPointerUp={() => setMinPredictionPct(sliderValue)}
-								onTouchEnd={() => setMinPredictionPct(sliderValue)}
+								value={minPredictionPct}
+								onChange={e => setMinPredictionPct(Number(e.target.value))}
 								className='h-2 w-32 cursor-pointer appearance-none rounded-full bg-zinc-700 accent-white sm:w-48'
 							/>
-							<span className='w-10 text-center text-sm font-bold'>{sliderValue}%</span>
+							<span className='w-10 text-center text-sm font-bold'>{minPredictionPct}%</span>
 						</div>
 					)}
 				</div>
