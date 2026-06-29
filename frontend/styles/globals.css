@@ -159,22 +159,22 @@ a {
 	animation: bracket-pill-pulse 0.6s ease-out;
 }
 
-/* Prediction result backgrounds for mobile bracket cards */
+/* Prediction result backgrounds for bracket cards — matches ResultContainer colors */
 .bracket-result-exact {
-	background-color: rgba(22, 163, 74, 0.35) !important;
-	border-color: rgba(22, 163, 74, 0.5) !important;
+	background-color: rgb(22 163 74) !important; /* green-600 */
+	border-color: rgb(22 163 74) !important;
 }
 .bracket-result-correct {
-	background-color: rgba(202, 138, 4, 0.35) !important;
-	border-color: rgba(202, 138, 4, 0.5) !important;
+	background-color: rgb(202 138 4) !important; /* yellow-600 */
+	border-color: rgb(202 138 4) !important;
 }
 .bracket-result-goal {
-	background-color: rgba(219, 39, 119, 0.3) !important;
-	border-color: rgba(219, 39, 119, 0.45) !important;
+	background-color: rgb(219 39 119) !important; /* pink-600 */
+	border-color: rgb(219 39 119) !important;
 }
 .bracket-result-wrong {
-	background-color: rgba(220, 38, 38, 0.25) !important;
-	border-color: rgba(220, 38, 38, 0.4) !important;
+	background-color: rgb(220 38 38) !important; /* red-600 */
+	border-color: rgb(220 38 38) !important;
 }
 
 input[type='number']::-webkit-inner-spin-button,

@@ -48,6 +48,29 @@ const formatMatchTime = (isoStr: string) => {
 
 type RedactedSpoilersType = ReturnType<typeof useNoSpoilers>['RedactedSpoilers'];
 
+const usePredictionResultBg = (fixture: Fixture) => {
+	const predictions = useTournamentStore(s => s.predictions);
+	const uid = useTournamentStore(s => s.uid);
+	const { noSpoilers } = useNoSpoilers();
+
+	const started = isGameStarted(fixture);
+	const prediction = predictions?.[fixture.fixture.id]?.[uid] || DEFAULT_PREDICTION;
+
+	if (noSpoilers || !started) return '';
+
+	const { isExactScore, isCorrectResult, isCorrectGoal, isWrong } = getPredictionResult(prediction, fixture);
+
+	return isExactScore
+		? 'bracket-result-exact'
+		: isCorrectResult
+			? 'bracket-result-correct'
+			: isCorrectGoal
+				? 'bracket-result-goal'
+				: isWrong
+					? 'bracket-result-wrong'
+					: '';
+};
+
 const BracketMatchCard = ({
 	fixture,
 	onClick,
@@ -61,6 +84,7 @@ const BracketMatchCard = ({
 }) => {
 	const { gcc } = useCompetition();
 	const finished = isGameFinished(fixture);
+	const resultBg = usePredictionResultBg(fixture);
 
 	const winner = finished
 		? fixture.goals.home > fixture.goals.away ||
@@ -75,7 +99,8 @@ const BracketMatchCard = ({
 		<button
 			className={classNames(
 				gcc('text-light'),
-				'glass-card flex w-full cursor-pointer flex-col rounded-lg text-left shadow-card transition-shadow hover:shadow-card-hover'
+				'glass-card flex w-full cursor-pointer flex-col rounded-lg text-left shadow-card transition-shadow hover:shadow-card-hover',
+				resultBg
 			)}
 			style={{ minHeight: matchHeight }}
 			onClick={onClick}
@@ -168,7 +193,7 @@ const DEFAULT_PREDICTION = { home: null, away: null } as unknown as Prediction;
 
 const MobileBracketMatchCard = ({ fixture }: { fixture: Fixture }) => {
 	const { gcc, competition } = useCompetition();
-	const { RedactedSpoilers, noSpoilers } = useNoSpoilers();
+	const { RedactedSpoilers } = useNoSpoilers();
 	const setRoute = useTournamentStore(s => s.setRoute);
 	const predictions = useTournamentStore(s => s.predictions);
 	const updatePrediction = useTournamentStore(s => s.updatePrediction);
@@ -195,22 +220,9 @@ const MobileBracketMatchCard = ({ fixture }: { fixture: Fixture }) => {
 
 	const hasPenalties = finished && fixture.score.penalty.home != null;
 
-	const { isExactScore, isCorrectResult, isCorrectGoal, isWrong, isPredictValid } = started
-		? getPredictionResult(prediction, fixture)
-		: { isExactScore: false, isCorrectResult: false, isCorrectGoal: false, isWrong: false, isPredictValid: false };
+	const { isPredictValid } = started ? getPredictionResult(prediction, fixture) : { isPredictValid: false };
 
-	const resultBg =
-		noSpoilers || !started
-			? ''
-			: isExactScore
-				? 'bracket-result-exact'
-				: isCorrectResult
-					? 'bracket-result-correct'
-					: isCorrectGoal
-						? 'bracket-result-goal'
-						: isWrong
-							? 'bracket-result-wrong'
-							: '';
+	const resultBg = usePredictionResultBg(fixture);
 
 	const upsetSide = !isInPast && hasUpsetConfig && gameOdds ? getUpsetSide(gameOdds) : null;
 
