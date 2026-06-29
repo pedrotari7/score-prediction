@@ -111,13 +111,13 @@ const GameEvent = ({ event, game, players }: { event: Event; game: Fixture; play
 				/>
 				<div className={classNames('flex flex-col', isAwayTeam ? 'items-end' : 'items-start')}>
 					<PlayerWithPhoto
-						color='text-green-400'
+						color='text-red-400'
 						player={event.player}
 						isAwayTeam={isAwayTeam}
 						players={players}
 					/>
 					<PlayerWithPhoto
-						color='text-red-400'
+						color='text-green-400'
 						player={event.assist}
 						isAwayTeam={isAwayTeam}
 						players={players}
