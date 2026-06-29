@@ -1,38 +1,28 @@
-import { useCallback, useRef, useSyncExternalStore } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 const useLocalStorage = <T>(key: string, initialValue: T): [T, (value: T) => void] => {
-	const listeners = useRef(new Set<() => void>());
+	const [storedValue, setStoredValue] = useState<T>(initialValue);
 
-	const subscribe = useCallback((callback: () => void) => {
-		listeners.current.add(callback);
-		return () => {
-			listeners.current.delete(callback);
-		};
-	}, []);
-
-	const getSnapshot = useCallback(() => {
+	useEffect(() => {
 		const item = localStorage.getItem(key);
-		if (item === null) return initialValue;
-		try {
-			return JSON.parse(item) as T;
-		} catch {
-			return initialValue;
+		if (item !== null) {
+			try {
+				setStoredValue(JSON.parse(item) as T);
+			} catch {
+				// ignore malformed values
+			}
 		}
-	}, [key, initialValue]);
-
-	const getServerSnapshot = useCallback(() => initialValue, [initialValue]);
-
-	const value = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+	}, [key]);
 
 	const setValue = useCallback(
-		(newValue: T) => {
-			localStorage.setItem(key, JSON.stringify(newValue));
-			listeners.current.forEach(l => l());
+		(value: T) => {
+			setStoredValue(value);
+			localStorage.setItem(key, JSON.stringify(value));
 		},
 		[key]
 	);
 
-	return [value, setValue];
+	return [storedValue, setValue];
 };
 
 export default useLocalStorage;
