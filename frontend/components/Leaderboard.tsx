@@ -3,7 +3,7 @@ import type { MouseEventHandler, ReactNode } from 'react';
 import { useMemo, useState } from 'react';
 import { ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import type { Leaderboard, Users } from '../../interfaces/main';
-import { DEFAULT_USER_RESULT, hasBoosts, isGameFinished } from '../../shared/utils';
+import { DEFAULT_USER_RESULT, hasBoosts, isGameFinished, isGameStarted } from '../../shared/utils';
 import { Route, useTournamentStore } from '../store/tournamentStore';
 import { classNames } from '../lib/utils/reactHelper';
 import DesktopOnly from './DesktopOnly';
@@ -82,10 +82,10 @@ const Leaderboards = ({
 	const isTournamentFinished = !!finalGame && isGameFinished(finalGame);
 	const [sortOption, setSortOption] = useState(SortOptions.points);
 
-	const finishedGameIds = useMemo(
+	const closedGameIds = useMemo(
 		() =>
 			Object.values(fixtures)
-				.filter(isGameFinished)
+				.filter(isGameStarted)
 				.map(f => f.fixture.id),
 		[fixtures]
 	);
@@ -116,11 +116,11 @@ const Leaderboards = ({
 		[users]
 	);
 
-	const totalFinished = finishedGameIds.length;
+	const totalClosed = closedGameIds.length;
 
 	const getUserPredictionPct = (uid: string) => {
-		if (totalFinished === 0) return 100;
-		return (finishedGameIds.filter(id => predictions[id]?.[uid]).length / totalFinished) * 100;
+		if (totalClosed === 0) return 100;
+		return (closedGameIds.filter(id => predictions[id]?.[uid]).length / totalClosed) * 100;
 	};
 
 	const sortedUsers = useMemo(
@@ -143,7 +143,7 @@ const Leaderboards = ({
 					);
 				}),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[users, members, stage, sortOption, minPredictionPct, finishedGameIds, predictions]
+		[users, members, stage, sortOption, minPredictionPct, closedGameIds, predictions]
 	);
 
 	return (
@@ -211,7 +211,7 @@ const Leaderboards = ({
 							))}
 					</div>
 					<SelectStage setCurrentStage={setCurrentStage} currentStage={stage} stages={[...stages.values()]} />
-					{totalFinished > 0 && (
+					{totalClosed > 0 && (
 						<div className='mt-4 flex flex-row items-center justify-center gap-3'>
 							<span className='whitespace-nowrap text-sm font-bold text-zinc-400'>Min predictions</span>
 							<input
@@ -302,14 +302,14 @@ const Leaderboards = ({
 											alt=''
 										/>
 										<span className='text-center font-bold sm:text-2xl'>{user.displayName}</span>
-										{finishedGameIds.length > 0 && (
+										{closedGameIds.length > 0 && (
 											<span
 												className='ml-2 text-xs text-gray-400'
 												data-tooltip-id='my-tooltip'
 												data-tooltip-content='Predictions submitted'
 											>
-												{finishedGameIds.filter(id => predictions[id]?.[user.uid]).length}/
-												{finishedGameIds.length}
+												{closedGameIds.filter(id => predictions[id]?.[user.uid]).length}/
+												{closedGameIds.length}
 											</span>
 										)}
 									</div>
