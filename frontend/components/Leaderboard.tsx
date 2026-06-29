@@ -18,6 +18,7 @@ import useCompetition from '../hooks/useCompetition';
 import Panel from './Panel';
 import { useAuth } from '../lib/auth';
 import SelectStage from './SelectStage';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 interface SortOption {
 	key: string;
@@ -97,6 +98,7 @@ const Leaderboards = ({
 
 	const [members, setMembers] = useState<string[]>(initialMembers);
 	const [stage, setCurrentStage] = useState<string>('all');
+	const [minPredictionPct, setMinPredictionPct] = useLocalStorage('minPredictionPct', 0);
 
 	const currentUser = auth.user?.uid;
 
@@ -114,10 +116,18 @@ const Leaderboards = ({
 		[users]
 	);
 
+	const totalFinished = finishedGameIds.length;
+
+	const getUserPredictionPct = (uid: string) => {
+		if (totalFinished === 0) return 100;
+		return (finishedGameIds.filter(id => predictions[id]?.[uid]).length / totalFinished) * 100;
+	};
+
 	const sortedUsers = useMemo(
 		() =>
 			Object.values(users)
 				.filter(user => members.includes(user.uid))
+				.filter(user => getUserPredictionPct(user.uid) >= minPredictionPct)
 				.sort((a, b) => {
 					const aScore = a.score?.[stage] ?? DEFAULT_USER_RESULT;
 					const bScore = b.score?.[stage] ?? DEFAULT_USER_RESULT;
@@ -132,7 +142,8 @@ const Leaderboards = ({
 						bScore.fail - aScore.fail
 					);
 				}),
-		[users, members, stage, sortOption]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[users, members, stage, sortOption, minPredictionPct, finishedGameIds, predictions]
 	);
 
 	return (
@@ -200,6 +211,21 @@ const Leaderboards = ({
 							))}
 					</div>
 					<SelectStage setCurrentStage={setCurrentStage} currentStage={stage} stages={[...stages.values()]} />
+					{totalFinished > 0 && (
+						<div className='mt-4 flex flex-row items-center justify-center gap-3'>
+							<span className='whitespace-nowrap text-sm font-bold text-zinc-400'>Min predictions</span>
+							<input
+								type='range'
+								min={0}
+								max={100}
+								step={5}
+								value={minPredictionPct}
+								onChange={e => setMinPredictionPct(Number(e.target.value))}
+								className='h-2 w-32 cursor-pointer appearance-none rounded-full bg-zinc-700 accent-white sm:w-48'
+							/>
+							<span className='w-10 text-center text-sm font-bold'>{minPredictionPct}%</span>
+						</div>
+					)}
 				</div>
 			</RedactedSpoilers>
 
