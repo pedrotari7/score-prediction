@@ -76,9 +76,18 @@ const Leaderboards = ({
 	const setRoute = useTournamentStore(s => s.setRoute);
 	const { competition } = useCompetition();
 	const fixtures = useTournamentStore(s => s.fixtures);
+	const predictions = useTournamentStore(s => s.predictions);
 	const finalGame = Object.values(fixtures).find(f => f.league.round === 'Final');
 	const isTournamentFinished = !!finalGame && isGameFinished(finalGame);
 	const [sortOption, setSortOption] = useState(SortOptions.points);
+
+	const finishedGameIds = useMemo(
+		() =>
+			Object.values(fixtures)
+				.filter(isGameFinished)
+				.map(f => f.fixture.id),
+		[fixtures]
+	);
 	const initialLeaderboard = route.data ? (route.data as string) : 'global';
 
 	const [currentLeaderboard, setCurrentLeaderboard] = useState(initialLeaderboard);
@@ -267,6 +276,16 @@ const Leaderboards = ({
 											alt=''
 										/>
 										<span className='text-center font-bold sm:text-2xl'>{user.displayName}</span>
+										{finishedGameIds.length > 0 && (
+											<span
+												className='ml-2 text-xs text-gray-400'
+												data-tooltip-id='my-tooltip'
+												data-tooltip-content='Predictions submitted'
+											>
+												{finishedGameIds.filter(id => predictions[id]?.[user.uid]).length}/
+												{finishedGameIds.length}
+											</span>
+										)}
 									</div>
 								</div>
 								<RedactedSpoilers>
