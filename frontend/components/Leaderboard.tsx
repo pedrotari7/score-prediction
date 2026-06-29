@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import type { MouseEventHandler, ReactNode } from 'react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import type { Leaderboard, Users } from '../../interfaces/main';
 import { DEFAULT_USER_RESULT, hasBoosts, isGameFinished, isGameStarted } from '../../shared/utils';
@@ -99,6 +99,11 @@ const Leaderboards = ({
 	const [members, setMembers] = useState<string[]>(initialMembers);
 	const [stage, setCurrentStage] = useState<string>('all');
 	const [minPredictionPct, setMinPredictionPct] = useLocalStorage('minPredictionPct', 0);
+	const [sliderValue, setSliderValue] = useState(minPredictionPct);
+
+	useEffect(() => {
+		setSliderValue(minPredictionPct);
+	}, [minPredictionPct]);
 
 	const currentUser = auth.user?.uid;
 
@@ -219,11 +224,13 @@ const Leaderboards = ({
 								min={0}
 								max={100}
 								step={5}
-								value={minPredictionPct}
-								onChange={e => setMinPredictionPct(Number(e.target.value))}
+								value={sliderValue}
+								onChange={e => setSliderValue(Number(e.target.value))}
+								onPointerUp={() => setMinPredictionPct(sliderValue)}
+								onTouchEnd={() => setMinPredictionPct(sliderValue)}
 								className='h-2 w-32 cursor-pointer appearance-none rounded-full bg-zinc-700 accent-white sm:w-48'
 							/>
-							<span className='w-10 text-center text-sm font-bold'>{minPredictionPct}%</span>
+							<span className='w-10 text-center text-sm font-bold'>{sliderValue}%</span>
 						</div>
 					)}
 				</div>
