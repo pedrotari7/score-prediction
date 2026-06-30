@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import type { MouseEventHandler, ReactNode } from 'react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import type { Leaderboard, Users } from '../../interfaces/main';
 import { DEFAULT_USER_RESULT, hasBoosts, isGameFinished, isGameStarted } from '../../shared/utils';
@@ -98,7 +98,24 @@ const Leaderboards = ({
 
 	const [members, setMembers] = useState<string[]>(initialMembers);
 	const [stage, setCurrentStage] = useState<string>('all');
-	const [minPredictionPct, setMinPredictionPct] = useLocalStorage('minPredictionPct', 0);
+	const [savedMinPct, setSavedMinPct] = useLocalStorage('minPredictionPct', 0);
+	const [sliderPct, setSliderPct] = useState(savedMinPct);
+	const [debouncedPct, setDebouncedPct] = useState(savedMinPct);
+	const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+	useEffect(() => {
+		setSliderPct(savedMinPct);
+		setDebouncedPct(savedMinPct);
+	}, [savedMinPct]);
+
+	const handleSliderChange = (value: number) => {
+		setSliderPct(value);
+		clearTimeout(debounceRef.current);
+		debounceRef.current = setTimeout(() => {
+			setDebouncedPct(value);
+			setSavedMinPct(value);
+		}, 150);
+	};
 
 	const currentUser = auth.user?.uid;
 
@@ -131,7 +148,7 @@ const Leaderboards = ({
 		() =>
 			Object.values(users)
 				.filter(user => members.includes(user.uid))
-				.filter(user => (predictionPctByUser[user.uid] ?? 100) >= minPredictionPct)
+				.filter(user => (predictionPctByUser[user.uid] ?? 100) >= debouncedPct)
 				.sort((a, b) => {
 					const aScore = a.score?.[stage] ?? DEFAULT_USER_RESULT;
 					const bScore = b.score?.[stage] ?? DEFAULT_USER_RESULT;
@@ -146,7 +163,7 @@ const Leaderboards = ({
 						bScore.fail - aScore.fail
 					);
 				}),
-		[users, members, stage, sortOption, minPredictionPct, predictionPctByUser]
+		[users, members, stage, sortOption, debouncedPct, predictionPctByUser]
 	);
 
 	return (
@@ -222,11 +239,11 @@ const Leaderboards = ({
 								min={0}
 								max={100}
 								step={5}
-								value={minPredictionPct}
-								onChange={e => setMinPredictionPct(Number(e.target.value))}
+								value={sliderPct}
+								onChange={e => handleSliderChange(Number(e.target.value))}
 								className='h-2 w-32 cursor-pointer appearance-none rounded-full bg-zinc-700 accent-white sm:w-48'
 							/>
-							<span className='w-10 text-center text-sm font-bold'>{minPredictionPct}%</span>
+							<span className='w-10 text-center text-sm font-bold'>{sliderPct}%</span>
 						</div>
 					)}
 				</div>
