@@ -396,7 +396,7 @@ const UserGuess = ({
 			game={game}
 			userID={user.uid}
 			className={classNames(
-				'my-2 flex w-full rounded-xl p-4 transition-colors hover:bg-white/20 sm:m-2 sm:w-max',
+				'my-2 flex w-full rounded-xl p-4 transition-all hover:brightness-125 sm:m-2 sm:w-max',
 				!isInPast && myGuess
 					? 'flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4'
 					: classNames('flex-row items-center justify-between gap-4', showReactions ? 'flex-wrap' : ''),

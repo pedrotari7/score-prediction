@@ -23,7 +23,7 @@ const NavOption = ({ option, active, onClick }: { option: GamePanel; active: boo
 				'mx-0.5 cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 sm:px-5 sm:text-base',
 				active
 					? classNames(gcc('bg-blue'), 'text-white shadow-pop')
-					: 'text-light/60 hover:bg-white/5 hover:text-light'
+					: 'text-light/60 hover:bg-white/10 hover:text-white'
 			)}
 		>
 			{option}
