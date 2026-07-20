@@ -353,7 +353,7 @@ export const getUsers = async (
     const score = (scores && scores[uid]) ?? {};
     const admin = customClaims?.admin as boolean;
 
-    const shouldOnboard = isNewUser || lastSignInTimeDiff > OneMonth;
+    const shouldOnboard = isNewUser || (lastSignInTimeDiff > OneMonth && !(uid in scores));
 
     const name = displayName?.split(' ').shift() ?? 'Unknown User';
 
