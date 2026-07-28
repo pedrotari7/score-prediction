@@ -54,8 +54,8 @@ importers:
         specifier: 7.1.0
         version: 7.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react-tooltip:
-        specifier: 6.0.4
-        version: 6.0.4(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: 6.0.8
+        version: 6.0.8(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       zustand:
         specifier: 5.0.13
         version: 5.0.13(@types/react@19.2.15)(react@19.2.6)(use-sync-external-store@1.6.0(react@19.2.6))
@@ -3389,8 +3389,8 @@ packages:
       react: ^15.3.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^15.3.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  react-tooltip@6.0.4:
-    resolution: {integrity: sha512-UqRnj2wzkPQL12K+Zx12lY0oVrgCftGBfXjsN13H0qMt6rGQfZc/vyu2Hgrbujv3ZorvCc6GJMcNPYg+hhM/Dg==}
+  react-tooltip@6.0.8:
+    resolution: {integrity: sha512-VPjtBPyoFwq72QVE6GYB/LtfEg/mnFBHqL0nD0oNNmjH8EZYFyBwgnFKNCOp5zCte45k1weXjKc0wXE6NICpfg==}
     peerDependencies:
       react: '>=16.14.0'
       react-dom: '>=16.14.0'
@@ -7795,7 +7795,7 @@ snapshots:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
 
-  react-tooltip@6.0.4(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+  react-tooltip@6.0.8(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
       '@floating-ui/dom': 1.7.6
       clsx: 2.1.1
