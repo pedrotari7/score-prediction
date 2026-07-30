@@ -21,8 +21,8 @@ importers:
         specifier: 12.13.0
         version: 12.13.0
       firebase-tools:
-        specifier: 15.24.0
-        version: 15.24.0(@types/node@24.12.4)
+        specifier: 15.25.0
+        version: 15.25.0(@types/node@24.12.4)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -1789,8 +1789,8 @@ packages:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
     engines: {node: '>=8'}
 
-  firebase-tools@15.24.0:
-    resolution: {integrity: sha512-2P5qd3O3YD7a7AaA89lt/zgRIgR7FGS0Ye7fW9z/sNt9/b6cbmI1TtQtYDlmJDUOh9nMk+72ll/gu4MlN/qY7Q==}
+  firebase-tools@15.25.0:
+    resolution: {integrity: sha512-oqa+4WbczJWFy9T3zZiecHhYGLiRhkUP2+/mx0dW/DVAyqfoLYKvAYH48aRXr2lErCuXGca1s4Yk+5OIFW/S5g==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -3640,18 +3640,6 @@ packages:
   write-file-atomic@4.0.2:
     resolution: {integrity: sha512-7KxauUdBmSdWnmpaGFg+ppNjKF8uNLry8LyzjauQDOVONfFLNKrKvQOxZ/VuTIcS/gge/YNahf5RIIQWTSarlg==}
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
-
-  ws@7.5.11:
-    resolution: {integrity: sha512-zS54Oen9bITtp7kp2XM3AydrCIq1D+HwJOuH+c+e4LfpL/lotP5osijd+UoMnxwAam1GN8R4KtLAyIrIcBNpiA==}
-    engines: {node: '>=8.3.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: ^5.0.2
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
 
   ws@8.21.1:
     resolution: {integrity: sha512-+0NTnW77fFN/DjQi6k/Sq/Yvk4Sgajw7urW8V+asjXnRgDs9gyGkdb7EzgfhA4goXsRIZKE28fzIXBHEzhuiWw==}
@@ -5801,7 +5789,7 @@ snapshots:
       locate-path: 5.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.24.0(@types/node@24.12.4):
+  firebase-tools@15.25.0(@types/node@24.12.4):
     dependencies:
       '@apphosting/common': 0.0.8
       '@electric-sql/pglite': 0.3.16
@@ -5870,7 +5858,7 @@ snapshots:
       update-notifier-cjs: 5.1.7
       winston: 3.19.0
       winston-transport: 4.9.0
-      ws: 7.5.11
+      ws: 8.21.1
       yaml: 2.9.0
       zod: 4.4.3
     transitivePeerDependencies:
@@ -8048,8 +8036,6 @@ snapshots:
     dependencies:
       imurmurhash: 0.1.4
       signal-exit: 3.0.7
-
-  ws@7.5.11: {}
 
   ws@8.21.1: {}
 
