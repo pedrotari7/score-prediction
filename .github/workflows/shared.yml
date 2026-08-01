@@ -14,13 +14,13 @@ jobs:
                 working-directory: ./shared
         steps:
             - name: Setup Node
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v4.4.0
               with:
                   node-version: '24.18.1'
             - name: Checkout Repo
-              uses: actions/checkout@v4
+              uses: actions/checkout@v4.4.0
             - name: Install Dependencies
-              uses: pnpm/action-setup@v6
+              uses: pnpm/action-setup@v6.0.9
               with:
                   run_install: |
                       args: [--frozen-lockfile, --strict-peer-dependencies]
