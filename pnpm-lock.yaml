@@ -21,8 +21,8 @@ importers:
         specifier: 12.13.0
         version: 12.13.0
       firebase-tools:
-        specifier: 15.25.0
-        version: 15.25.0(@types/node@24.13.3)
+        specifier: 15.26.0
+        version: 15.26.0(@types/node@24.13.3)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -1789,8 +1789,8 @@ packages:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
     engines: {node: '>=8'}
 
-  firebase-tools@15.25.0:
-    resolution: {integrity: sha512-oqa+4WbczJWFy9T3zZiecHhYGLiRhkUP2+/mx0dW/DVAyqfoLYKvAYH48aRXr2lErCuXGca1s4Yk+5OIFW/S5g==}
+  firebase-tools@15.26.0:
+    resolution: {integrity: sha512-5GlK9O7/FffndJ3XFk6fBPTBJH4lNWCxQDP9YoKFWDO85YiGOOpmYyr4lqSyCTkTeQpj1KI1vhPnd9aO6E73ww==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -5789,7 +5789,7 @@ snapshots:
       locate-path: 5.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.25.0(@types/node@24.13.3):
+  firebase-tools@15.26.0(@types/node@24.13.3):
     dependencies:
       '@apphosting/common': 0.0.8
       '@electric-sql/pglite': 0.3.16
