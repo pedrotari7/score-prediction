@@ -30,7 +30,7 @@
 		"react-swipeable": "7.0.2",
 		"react-switch": "7.1.0",
 		"react-tooltip": "6.0.8",
-		"zustand": "5.0.14"
+		"zustand": "5.0.15"
 	},
 	"devDependencies": {
 		"@stylistic/eslint-plugin-ts": "2.13.0",
