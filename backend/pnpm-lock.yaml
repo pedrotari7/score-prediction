@@ -31,8 +31,8 @@ importers:
         version: 7.3.2(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0))
     devDependencies:
       '@firebase/app-types':
-        specifier: 0.9.5
-        version: 0.9.5
+        specifier: 0.9.6
+        version: 0.9.6
       '@stylistic/eslint-plugin-ts':
         specifier: 2.13.0
         version: 2.13.0(eslint@8.57.1)(typescript@6.0.3)
@@ -379,6 +379,9 @@ packages:
   '@firebase/app-types@0.9.5':
     resolution: {integrity: sha512-YevqTjvo7Iujsa9Dwowmd6dSoElhzmD63ZSrq6bzjvQ6POjYgNjOFHLmNIgJs48eNO093NCERibuFnxbfOvU7A==}
 
+  '@firebase/app-types@0.9.6':
+    resolution: {integrity: sha512-yPLahy7Esfu2w/yme3msVK4xTkDXQqq6szfQn8yVOQpCKiT5GVFjqNpLbuz6NkX0WuTwUidkmPewW3r4xkvpeg==}
+
   '@firebase/app@0.16.0':
     resolution: {integrity: sha512-G+ZGEyVP8YTb3ay6A+XpcYgFH3sTESHcnHU/EyTktodqhz2BHkLq+QEP7IVwjiMX0cxYwpVKip0/wC0KZcn9vQ==}
     engines: {node: '>=20.0.0'}
@@ -490,6 +493,10 @@ packages:
 
   '@firebase/logger@0.5.1':
     resolution: {integrity: sha512-vZKLsqE1ABOy8OjQiE7cUTFn4gvaqlk88yp8N94Pk/sDpq61YqZGqmVFZTvOyflTwuYFcWirBdYGoJgbDaXKYQ==}
+    engines: {node: '>=20.0.0'}
+
+  '@firebase/logger@0.5.2':
+    resolution: {integrity: sha512-J2VO4NFTc0xQFrxV1B/lm5balicm9cwuX2acR9Yn41fN8KgUeQFo+VJV222IqW2FPSXKDu9uo5WdQFWf9TPbYg==}
     engines: {node: '>=20.0.0'}
 
   '@firebase/messaging-compat@0.2.28':
@@ -5314,6 +5321,10 @@ snapshots:
     dependencies:
       '@firebase/logger': 0.5.1
 
+  '@firebase/app-types@0.9.6':
+    dependencies:
+      '@firebase/logger': 0.5.2
+
   '@firebase/app@0.16.0':
     dependencies:
       '@firebase/component': 0.7.4
@@ -5467,6 +5478,10 @@ snapshots:
       tslib: 2.8.1
 
   '@firebase/logger@0.5.1':
+    dependencies:
+      tslib: 2.8.1
+
+  '@firebase/logger@0.5.2':
     dependencies:
       tslib: 2.8.1
 
