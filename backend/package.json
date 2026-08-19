@@ -29,7 +29,7 @@
     "firebase-functions": "7.3.2"
   },
   "devDependencies": {
-    "@firebase/app-types": "0.9.5",
+    "@firebase/app-types": "0.9.6",
     "@stylistic/eslint-plugin-ts": "2.13.0",
     "@types/cors": "2.8.19",
     "@types/express": "5.0.6",
