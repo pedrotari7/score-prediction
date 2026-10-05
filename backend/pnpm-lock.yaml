@@ -27,8 +27,8 @@ importers:
         specifier: 13.10.0
         version: 13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0)
       firebase-functions:
-        specifier: 7.3.2
-        version: 7.3.2(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0))
+        specifier: 7.4.0
+        version: 7.4.0(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0))
     devDependencies:
       '@firebase/app-types':
         specifier: 0.9.6
@@ -80,7 +80,7 @@ importers:
         version: 12.17.1
       firebase-functions-test:
         specifier: 3.5.0
-        version: 3.5.0(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0))(firebase-functions@7.3.2(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0)))(jest@29.7.0(@types/node@26.2.0)(ts-node@10.9.2(@types/node@26.2.0)(typescript@6.0.3)))
+        version: 3.5.0(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0))(firebase-functions@7.4.0(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0)))(jest@29.7.0(@types/node@26.2.0)(ts-node@10.9.2(@types/node@26.2.0)(typescript@6.0.3)))
       firebase-tools:
         specifier: 15.32.1
         version: 15.32.1(@types/node@26.2.0)
@@ -2500,8 +2500,8 @@ packages:
       firebase-functions: '>=4.9.0'
       jest: '>=28.0.0'
 
-  firebase-functions@7.3.2:
-    resolution: {integrity: sha512-DTa5CtCNxFE1gPjkjlhl5uh8AcNWXLKORAMRenfkecP8zGstbje+r2TaNh4Ehdxp0qTPvTUe/sS23VESW32Gbg==}
+  firebase-functions@7.4.0:
+    resolution: {integrity: sha512-jR+c16q1E07dPVqU/sdbIEVEQJYSxjY6BFI+QR5/AvrnII8C6UkJv6fR8LJ+GKmcGUBe7SjO/MnEWLAeOiHWMw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     peerDependencies:
@@ -7913,16 +7913,16 @@ snapshots:
       - encoding
       - supports-color
 
-  firebase-functions-test@3.5.0(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0))(firebase-functions@7.3.2(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0)))(jest@29.7.0(@types/node@26.2.0)(ts-node@10.9.2(@types/node@26.2.0)(typescript@6.0.3))):
+  firebase-functions-test@3.5.0(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0))(firebase-functions@7.4.0(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0)))(jest@29.7.0(@types/node@26.2.0)(ts-node@10.9.2(@types/node@26.2.0)(typescript@6.0.3))):
     dependencies:
       '@types/lodash': 4.17.25
       firebase-admin: 13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0)
-      firebase-functions: 7.3.2(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0))
+      firebase-functions: 7.4.0(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0))
       jest: 29.7.0(@types/node@26.2.0)(ts-node@10.9.2(@types/node@26.2.0)(typescript@6.0.3))
       lodash: 4.18.1
       ts-deepmerge: 2.0.7
 
-  firebase-functions@7.3.2(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0)):
+  firebase-functions@7.4.0(firebase-admin@13.10.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0)):
     dependencies:
       '@types/cors': 2.8.19
       '@types/express': 5.0.6
