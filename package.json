@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Score prediction game",
   "main": "index.js",
-  "packageManager": "pnpm@10.34.8",
+  "packageManager": "pnpm@10.34.9",
   "scripts": {
     "firebase": "firebase",
     "prepare": "husky",
