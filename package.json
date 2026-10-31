@@ -21,7 +21,7 @@
     "firebase-tools": "15.34.2",
     "husky": "9.1.7",
     "jest": "29.7.0",
-    "nodemailer": "9.0.5",
+    "nodemailer": "10.1.4",
     "puppeteer": "25.16.0",
     "resend": "6.37.0",
     "ts-jest": "29.4.15",
