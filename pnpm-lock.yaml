@@ -21,8 +21,8 @@ importers:
         specifier: 12.19.0
         version: 12.19.0
       firebase-tools:
-        specifier: 15.34.2
-        version: 15.34.2(@types/node@24.19.2)
+        specifier: 15.36.0
+        version: 15.36.0(@types/node@24.19.2)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -1769,8 +1769,8 @@ packages:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
     engines: {node: '>=8'}
 
-  firebase-tools@15.34.2:
-    resolution: {integrity: sha512-Xo010+PZAj5sL6hn33p19egXDmVlowPZknbs2Rf4nxd6Ulx6gLCd76qHd9XT2lV3B0u7yi0iO0BU5qrLeY8Y+g==}
+  firebase-tools@15.36.0:
+    resolution: {integrity: sha512-z1fnT75IkGmARzRSP9Blb4BzAnYJOhwoSbe/lKpUKy/hpQzLhUM39KUesAfUM5U1PnDu6syFdwV1JsSGcdQ32w==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -2559,11 +2559,6 @@ packages:
   mime@1.6.0:
     resolution: {integrity: sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==}
     engines: {node: '>=4'}
-    hasBin: true
-
-  mime@2.6.0:
-    resolution: {integrity: sha512-USPkMeET31rOMiarsBNIHZKLGgvKc/LrjofAnBlOttf5ajRvqiRA8QsenbcooctK6d6Ts6aqZXBA+XbkKthiQg==}
-    engines: {node: '>=4.0.0'}
     hasBin: true
 
   mimic-fn@2.1.0:
@@ -5715,7 +5710,7 @@ snapshots:
       locate-path: 5.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.34.2(@types/node@24.19.2):
+  firebase-tools@15.36.0(@types/node@24.19.2):
     dependencies:
       '@electric-sql/pglite': 0.3.16
       '@electric-sql/pglite-tools': 0.2.21(@electric-sql/pglite@0.3.16)
@@ -5756,7 +5751,6 @@ snapshots:
       lsofi: 2.0.0
       marked: 13.0.3
       marked-terminal: 7.3.0(marked@13.0.3)
-      mime: 2.6.0
       minimatch: 3.1.5
       morgan: 1.12.1
       node-fetch: 2.7.0
@@ -6829,8 +6823,6 @@ snapshots:
       mime-db: 1.54.0
 
   mime@1.6.0: {}
-
-  mime@2.6.0: {}
 
   mimic-fn@2.1.0: {}
 
