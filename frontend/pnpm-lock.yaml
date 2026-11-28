@@ -116,7 +116,7 @@ importers:
         version: 17.24.0(eslint@8.57.1(supports-color@8.1.1))(typescript@6.0.3)
       eslint-plugin-prettier:
         specifier: 5.5.7
-        version: 5.5.7(eslint-config-prettier@10.1.9(eslint@8.57.1(supports-color@8.1.1)))(eslint@8.57.1(supports-color@8.1.1))(prettier@3.8.3)
+        version: 5.5.7(eslint-config-prettier@10.1.9(eslint@8.57.1(supports-color@8.1.1)))(eslint@8.57.1(supports-color@8.1.1))(prettier@3.10.1)
       eslint-plugin-promise:
         specifier: 7.3.0
         version: 7.3.0(eslint@8.57.1(supports-color@8.1.1))
@@ -139,11 +139,11 @@ importers:
         specifier: 8.5.34
         version: 8.5.34
       prettier:
-        specifier: 3.8.3
-        version: 3.8.3
+        specifier: 3.10.1
+        version: 3.10.1
       prettier-plugin-tailwindcss:
         specifier: 0.8.1
-        version: 0.8.1(prettier@3.8.3)
+        version: 0.8.1(prettier@3.10.1)
       react-countdown:
         specifier: 2.3.6
         version: 2.3.6(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -3264,8 +3264,8 @@ packages:
       prettier-plugin-svelte:
         optional: true
 
-  prettier@3.8.3:
-    resolution: {integrity: sha512-7igPTM53cGHMW8xWuVTydi2KO233VFiTNyF5hLJqpilHfmn8C8gPf+PS7dUT64YcXFbiMGZxS9pCSxL/Dxm/Jw==}
+  prettier@3.10.1:
+    resolution: {integrity: sha512-70vp3ZUYoPlFbF9uiTdXHUUCGEIp7d4+6p+8DYbkm2jP7x/3i/paXVF6dopSI3zd/CEitrZN1rc4i85xWmmXlg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -6184,10 +6184,10 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  eslint-plugin-prettier@5.5.7(eslint-config-prettier@10.1.9(eslint@8.57.1(supports-color@8.1.1)))(eslint@8.57.1(supports-color@8.1.1))(prettier@3.8.3):
+  eslint-plugin-prettier@5.5.7(eslint-config-prettier@10.1.9(eslint@8.57.1(supports-color@8.1.1)))(eslint@8.57.1(supports-color@8.1.1))(prettier@3.10.1):
     dependencies:
       eslint: 8.57.1(supports-color@8.1.1)
-      prettier: 3.8.3
+      prettier: 3.10.1
       prettier-linter-helpers: 1.0.1
       synckit: 0.12.3
     optionalDependencies:
@@ -7564,11 +7564,11 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier-plugin-tailwindcss@0.8.1(prettier@3.8.3):
+  prettier-plugin-tailwindcss@0.8.1(prettier@3.10.1):
     dependencies:
-      prettier: 3.8.3
+      prettier: 3.10.1
 
-  prettier@3.8.3: {}
+  prettier@3.10.1: {}
 
   pretty-format@27.5.1:
     dependencies:
